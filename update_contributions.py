@@ -188,9 +188,12 @@ def write_markdown_files(grouped_contributions):
 
         for section, title in sections.items():
             items = data[section]
-            markdown_content += f"## {title}\n\n"
+            
+            markdown_content += "<details>\n"
+            markdown_content += f"  <summary><h2>{title}</h2></summary>\n"
+            
             if not items:
-                markdown_content += f"No {title.lower()} contributions in this quarter.\n\n"
+                markdown_content += f"No {title.lower()} contributions in this quarter.\n"
             else:
                 markdown_content += "<table style='width:100%; table-layout:fixed;'>\n"
                 markdown_content += "  <thead>\n"
@@ -219,7 +222,8 @@ def write_markdown_files(grouped_contributions):
                 
                 markdown_content += "  </tbody>\n"
                 markdown_content += "</table>\n"
-                markdown_content += "\n"
+            
+            markdown_content += "</details>\n\n"
         
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(markdown_content)
