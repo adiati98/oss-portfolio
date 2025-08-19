@@ -70,6 +70,11 @@ def fetch_contributions():
             repo_parts = urlparse(pr["repository_url"]).path.split("/")
             owner = repo_parts[-2]
             repo_name = repo_parts[-1]
+            
+            # Filter out PRs from your own repositories
+            if owner == GITHUB_USERNAME:
+                continue
+
             pr_details = session.get(f"{BASE_URL}/repos/{owner}/{repo_name}/pulls/{pr['number']}")
             
             if pr_details.status_code == 200:
@@ -77,7 +82,7 @@ def fetch_contributions():
                 contributions["pullRequests"].append({
                     "title": pr_data["title"],
                     "url": pr_data["html_url"],
-                    "repo": repo_name,
+                    "repo": f"{owner}/{repo_name}",
                     "description": pr_data["body"] or "No description provided.",
                     "date": pr_data["created_at"],
                 })
@@ -87,10 +92,13 @@ def fetch_contributions():
         # Fetch created issues
         issues = get_all_pages(f"is:issue author:{GITHUB_USERNAME} created:>={year_start} created:<{year_end}")
         for issue in issues:
+            repo_parts = urlparse(issue["repository_url"]).path.split("/")
+            owner = repo_parts[-2]
+            repo_name = repo_parts[-1]
             contributions["issues"].append({
                 "title": issue["title"],
                 "url": issue["html_url"],
-                "repo": urlparse(issue["repository_url"]).path.split("/")[-1],
+                "repo": f"{owner}/{repo_name}",
                 "description": issue["body"] or "No description provided.",
                 "date": issue["created_at"],
             })
@@ -98,10 +106,13 @@ def fetch_contributions():
         # Fetch reviewed PRs
         reviewed_prs = get_all_pages(f"is:pr reviewed-by:{GITHUB_USERNAME} reviewed:>={year_start} reviewed:<{year_end}")
         for pr in reviewed_prs:
+            repo_parts = urlparse(pr["repository_url"]).path.split("/")
+            owner = repo_parts[-2]
+            repo_name = repo_parts[-1]
             contributions["reviewedPrs"].append({
                 "title": pr["title"],
                 "url": pr["html_url"],
-                "repo": urlparse(pr["repository_url"]).path.split("/")[-1],
+                "repo": f"{owner}/{repo_name}",
                 "description": pr["body"] or "No description provided.",
                 "date": pr["updated_at"],
             })
@@ -109,10 +120,13 @@ def fetch_contributions():
         # Fetch triaged issues
         triaged_issues = get_all_pages(f"is:issue assignee:{GITHUB_USERNAME} created:>={year_start} created:<{year_end}")
         for issue in triaged_issues:
+            repo_parts = urlparse(issue["repository_url"]).path.split("/")
+            owner = repo_parts[-2]
+            repo_name = repo_parts[-1]
             contributions["triagedIssues"].append({
                 "title": issue["title"],
                 "url": issue["html_url"],
-                "repo": urlparse(issue["repository_url"]).path.split("/")[-1],
+                "repo": f"{owner}/{repo_name}",
                 "description": issue["body"] or "No description provided.",
                 "date": issue["updated_at"],
             })
@@ -178,18 +192,33 @@ def write_markdown_files(grouped_contributions):
             if not items:
                 markdown_content += f"No {title.lower()} contributions in this quarter.\n\n"
             else:
-                markdown_content += "| Project Name | PR Title | Description | Date |\n"
-                markdown_content += "|---|---|---|---|\n"
+                markdown_content += "<table style='width:100%; table-layout:fixed;'>\n"
+                markdown_content += "  <thead>\n"
+                markdown_content += "    <tr>\n"
+                markdown_content += "      <th style='width:20%;'>Project Name</th>\n"
+                markdown_content += "      <th style='width:20%;'>PR Title</th>\n"
+                markdown_content += "      <th style='width:40%;'>Description</th>\n"
+                markdown_content += "      <th style='width:20%;'>Date</th>\n"
+                markdown_content += "    </tr>\n"
+                markdown_content += "  </thead>\n"
+                markdown_content += "  <tbody>\n"
+                
                 for item in items:
                     date_str = item.get("date")
                     date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
                     formatted_date = date_obj.strftime("%Y-%m-%d")
                     
-                    description = item["description"].replace("\n", " ")
-                    if len(description) > 100:
-                        description = description[:100] + "..."
-                        
-                    markdown_content += f"| {item['repo']} | [{item['title']}]({item['url']}) | {description} | {formatted_date} |\n"
+                    description_html = item["description"].replace(">", "&gt;").replace("<", "&lt;").replace('"', "&quot;")
+                    
+                    markdown_content += "    <tr>\n"
+                    markdown_content += f"      <td>{item['repo']}</td>\n"
+                    markdown_content += f"      <td><a href='{item['url']}'>{item['title']}</a></td>\n"
+                    markdown_content += f"      <td>{description_html}</td>\n"
+                    markdown_content += f"      <td>{formatted_date}</td>\n"
+                    markdown_content += "    </tr>\n"
+                
+                markdown_content += "  </tbody>\n"
+                markdown_content += "</table>\n"
                 markdown_content += "\n"
         
         with open(file_path, "w", encoding="utf-8") as f:
