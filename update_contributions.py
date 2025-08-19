@@ -4,7 +4,7 @@ import datetime
 from urllib.parse import urlparse
 import time
 
-GITHUB_USERNAME = "your-github-username"  # Replace with your GitHub username
+GITHUB_USERNAME = "adiati98"  # Replace with your GitHub username
 SINCE_YEAR = 2019
 BASE_URL = "https://api.github.com"
 
