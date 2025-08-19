@@ -42,17 +42,26 @@ def fetch_contributions():
             results = []
             page = 1
             while True:
-                response = session.get(
-                    f"{BASE_URL}/search/issues?q={query}&per_page=100&page={page}"
-                )
-                response.raise_for_status()
-                data = response.json()
-                results.extend(data["items"])
-                
-                if "next" in response.links:
-                    page += 1
-                else:
-                    break
+                response = None
+                try:
+                    response = session.get(
+                        f"{BASE_URL}/search/issues?q={query}&per_page=100&page={page}"
+                    )
+                    response.raise_for_status() # This will raise an HTTPError for 4xx/5xx responses
+                    data = response.json()
+                    results.extend(data["items"])
+
+                    if "next" in response.links:
+                        page += 1
+                    else:
+                        break
+                except requests.exceptions.HTTPError as err:
+                    if response.status_code == 403:
+                        print("Rate limit hit. Waiting for 60 seconds...")
+                        time.sleep(60) # Pause for a minute to reset the rate limit
+                        continue # Retry the same page
+                    else:
+                        raise err
             return results
 
         # Fetch merged PRs
