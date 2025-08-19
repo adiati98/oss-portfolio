@@ -47,7 +47,7 @@ def fetch_contributions():
                     response = session.get(
                         f"{BASE_URL}/search/issues?q={query}&per_page=100&page={page}"
                     )
-                    response.raise_for_status() # This will raise an HTTPError for 4xx/5xx responses
+                    response.raise_for_status()
                     data = response.json()
                     results.extend(data["items"])
 
@@ -58,8 +58,8 @@ def fetch_contributions():
                 except requests.exceptions.HTTPError as err:
                     if response.status_code == 403:
                         print("Rate limit hit. Waiting for 60 seconds...")
-                        time.sleep(60) # Pause for a minute to reset the rate limit
-                        continue # Retry the same page
+                        time.sleep(60)
+                        continue
                     else:
                         raise err
             return results
@@ -79,7 +79,7 @@ def fetch_contributions():
                     "url": pr_data["html_url"],
                     "repo": repo_name,
                     "description": pr_data["body"] or "No description provided.",
-                    "merged_at": pr_data["merged_at"],
+                    "date": pr_data["created_at"],
                 })
             else:
                 print(f"Could not fetch details for {pr['html_url']}")
@@ -92,10 +92,10 @@ def fetch_contributions():
                 "url": issue["html_url"],
                 "repo": urlparse(issue["repository_url"]).path.split("/")[-1],
                 "description": issue["body"] or "No description provided.",
-                "created_at": issue["created_at"],
+                "date": issue["created_at"],
             })
 
-        # Fetch reviewed PRs and triaged issues (body is available in search results)
+        # Fetch reviewed PRs
         reviewed_prs = get_all_pages(f"is:pr reviewed-by:{GITHUB_USERNAME} reviewed:>={year_start} reviewed:<{year_end}")
         for pr in reviewed_prs:
             contributions["reviewedPrs"].append({
@@ -103,9 +103,10 @@ def fetch_contributions():
                 "url": pr["html_url"],
                 "repo": urlparse(pr["repository_url"]).path.split("/")[-1],
                 "description": pr["body"] or "No description provided.",
-                "reviewed_at": pr["updated_at"],
+                "date": pr["updated_at"],
             })
             
+        # Fetch triaged issues
         triaged_issues = get_all_pages(f"is:issue assignee:{GITHUB_USERNAME} created:>={year_start} created:<{year_end}")
         for issue in triaged_issues:
             contributions["triagedIssues"].append({
@@ -113,7 +114,7 @@ def fetch_contributions():
                 "url": issue["html_url"],
                 "repo": urlparse(issue["repository_url"]).path.split("/")[-1],
                 "description": issue["body"] or "No description provided.",
-                "triaged_at": issue["updated_at"],
+                "date": issue["updated_at"],
             })
 
     return contributions
@@ -125,7 +126,7 @@ def group_contributions_by_quarter(contributions):
     grouped = {}
     for type_name, items in contributions.items():
         for item in items:
-            date_str = item.get("merged_at") or item.get("created_at") or item.get("reviewed_at") or item.get("triaged_at")
+            date_str = item.get("date")
             if not date_str:
                 continue
             
@@ -175,12 +176,12 @@ def write_markdown_files(grouped_contributions):
             items = data[section]
             markdown_content += f"## {title}\n\n"
             if not items:
-                markdown_content += "No contributions found for this section.\n\n"
+                markdown_content += f"No {title.lower()} contributions in this quarter.\n\n"
             else:
-                markdown_content += "| Project Name | Link | Description | Date |\n"
+                markdown_content += "| Project Name | PR Title | Description | Date |\n"
                 markdown_content += "|---|---|---|---|\n"
                 for item in items:
-                    date_str = item.get("merged_at") or item.get("created_at") or item.get("reviewed_at") or item.get("triaged_at")
+                    date_str = item.get("date")
                     date_obj = datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
                     formatted_date = date_obj.strftime("%Y-%m-%d")
                     
