@@ -1,0 +1,40 @@
+name: Update Contributions
+
+on:
+  schedule:
+    # Runs every Monday at 00:01 UTC for simplicity
+    - cron: '1 0 * * 1'
+
+  workflow_dispatch:
+
+jobs:
+  update-contributions:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run contribution script
+        id: run-script
+        run: python update_contributions.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add contributions/
+          
+          git diff --staged --quiet || (git commit -m "docs: Update contributions [skip ci]" && git push)
