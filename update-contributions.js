@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs/promises');
 const axios = require('axios');
 
-const GITHUB_USERNAME = "your-github-username"; // Replace with your GitHub username
+const GITHUB_USERNAME = "adiati98"; // Replace with your GitHub username
 const SINCE_YEAR = 2019; // Change with the year of your first contribution
 const BASE_URL = "https://api.github.com";
 
@@ -271,16 +271,62 @@ async function main() {
     try {
         const baseDir = "contributions";
         const currentYear = new Date().getFullYear();
-        const currentYearDir = path.join(baseDir, currentYear.toString());
-        
-        let startYearToFetch;
+        let startYearToFetch = currentYear;
+        let isFullSync = false;
+
+        // Check if the contributions folder exists at all
         try {
-            await fs.access(currentYearDir);
-            console.log(`Current year directory "${currentYearDir}" exists. Only updating this year.`);
-            startYearToFetch = currentYear;
+            await fs.access(baseDir);
+            
+            // Check if any historical year directory or quarter file is missing
+            for (let year = SINCE_YEAR; year <= currentYear; year++) {
+                const yearDir = path.join(baseDir, year.toString());
+                try {
+                    await fs.access(yearDir);
+                    // Check for quarter files only if the year directory exists
+                    for (let q = 1; q <= 4; q++) {
+                        const quarterFile = path.join(yearDir, `Q${q}-${year}.md`);
+                        try {
+                            // Check if the file exists and is not empty
+                            const stats = await fs.stat(quarterFile);
+                            if (stats.size === 0) {
+                                isFullSync = true;
+                                console.log(`Empty quarter file "${quarterFile}" found. Running full sync.`);
+                                break;
+                            }
+                        } catch (e) {
+                            if (e.code === 'ENOENT') {
+                                isFullSync = true;
+                                console.log(`Historical quarter file "${quarterFile}" not found. Running full sync.`);
+                                break;
+                            } else {
+                                throw e;
+                            }
+                        }
+                    }
+                    if (isFullSync) break;
+                } catch (e) {
+                    if (e.code === 'ENOENT') {
+                        isFullSync = true;
+                        console.log(`Historical directory "${yearDir}" not found. Running full sync.`);
+                        break;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
         } catch (e) {
-            console.log(`Current year directory "${currentYearDir}" not found. Running full sync from ${SINCE_YEAR}.`);
+            // contributions folder doesn't exist, so it's the first run
+            isFullSync = true;
+            console.log(`Contributions folder not found. Running full sync from ${SINCE_YEAR}.`);
+        }
+
+        if (isFullSync) {
             startYearToFetch = SINCE_YEAR;
+            console.log(`Starting a full sync from ${startYearToFetch}. Removing old contributions folder...`);
+            await fs.rm(baseDir, { recursive: true, force: true });
+        } else {
+            console.log(`All historical data is present. Only updating the current year: ${currentYear}.`);
         }
 
         const contributions = await fetchContributions(startYearToFetch);
