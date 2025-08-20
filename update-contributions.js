@@ -70,8 +70,9 @@ async function fetchContributions(startYear) {
             return results;
         }
 
-        // Fetch merged PRs
+        // Fetch merged PRs from others only
         const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd} -author:${GITHUB_USERNAME}`);
+        
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
