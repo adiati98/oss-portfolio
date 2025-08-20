@@ -110,8 +110,8 @@ async function fetchContributions(startYear) {
             seenUrls.issues.add(issue.html_url);
         }
 
-        // Fetch PRs that were either reviewed or merged by me (excluding my own PRs)
-        const reviewedPrs = await getAllPages(`is:pr is:merged -author:${GITHUB_USERNAME} (reviewed-by:${GITHUB_USERNAME} OR merged-by:${GITHUB_USERNAME}) merged:>=${yearStart} merged:<${yearEnd}`);
+        // Fetch PRs that I reviewed AND merged, or formally reviewed with approval
+        const reviewedPrs = await getAllPages(`is:pr is:merged -author:${GITHUB_USERNAME} (review:approved reviewed-by:${GITHUB_USERNAME} OR merged-by:${GITHUB_USERNAME}) merged:>=${yearStart} merged:<${yearEnd}`);
         for (const pr of reviewedPrs) {
             if (seenUrls.reviewedPrs.has(pr.html_url)) {
                 continue;
