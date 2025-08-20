@@ -26,6 +26,12 @@ async function fetchContributions() {
         reviewedPrs: [],
     };
 
+    const seenUrls = {
+        pullRequests: new Set(),
+        issues: new Set(),
+        reviewedPrs: new Set(),
+    };
+
     const currentYear = new Date().getFullYear();
 
     for (let year = SINCE_YEAR; year <= currentYear; year++) {
@@ -65,6 +71,9 @@ async function fetchContributions() {
         // Fetch merged PRs
         const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`);
         for (const pr of prs) {
+            if (seenUrls.pullRequests.has(pr.html_url)) {
+                continue;
+            }
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
@@ -81,11 +90,15 @@ async function fetchContributions() {
                 description: prDetails.data.body || "No description provided.",
                 date: prDetails.data.created_at,
             });
+            seenUrls.pullRequests.add(pr.html_url);
         }
 
         // Fetch created issues
         const issues = await getAllPages(`is:issue author:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`);
         for (const issue of issues) {
+            if (seenUrls.issues.has(issue.html_url)) {
+                continue;
+            }
             const repoParts = new URL(issue.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
@@ -96,11 +109,15 @@ async function fetchContributions() {
                 description: issue.body || "No description provided.",
                 date: issue.created_at,
             });
+            seenUrls.issues.add(issue.html_url);
         }
 
         // Fetch reviewed PRs from other users
         const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd}`);
         for (const pr of reviewedPrs) {
+            if (seenUrls.reviewedPrs.has(pr.html_url)) {
+                continue;
+            }
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
@@ -111,6 +128,7 @@ async function fetchContributions() {
                 description: pr.body || "No description provided.",
                 date: pr.updated_at,
             });
+            seenUrls.reviewedPrs.add(pr.html_url);
         }
     }
 
@@ -143,6 +161,27 @@ function groupContributionsByQuarter(contributions) {
     return grouped;
 }
 
+// Function to find and resize images in the description
+function resizeImages(description) {
+  // Regex to find <img> tags and capture their attributes
+  const imgRegex = /<img([^>]*)>/g;
+  
+  // Replace each <img> tag with a new one that includes a max-width style
+  const resizedDescription = description.replace(imgRegex, (match, attrs) => {
+    // Check if a style attribute already exists
+    if (attrs.includes('style="')) {
+      // Append the new style to the existing one
+      return `<img${attrs.replace('style="', 'style="max-width: 50%; ')}>`;
+    } else {
+      // Add a new style attribute
+      return `<img${attrs} style="max-width: 50%;">`;
+    }
+  });
+  
+  return resizedDescription;
+}
+
+
 async function writeMarkdownFiles(groupedContributions) {
     const baseDir = "contributions";
     await fs.mkdir(baseDir, { recursive: true });
@@ -160,7 +199,7 @@ async function writeMarkdownFiles(groupedContributions) {
             continue;
         }
 
-        let markdownContent = `# ${quarter} ${year}: ${totalContributions} contributions\n\n`;
+        let markdownContent = `# ${quarter} ${year} — ${totalContributions} contributions\n\n`;
         const sections = {
             pullRequests: "Pull Requests",
             issues: "Issues",
@@ -174,14 +213,14 @@ async function writeMarkdownFiles(groupedContributions) {
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             if (items.length === 0) {
-                markdownContent += `No ${title.toLowerCase()} contributions in this quarter.\n`;
+                markdownContent += `No ${title} contributions in this quarter.\n`;
             } else {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
                 markdownContent += `    <tr>\n`;
                 markdownContent += `      <th style='width:5%;'>No.</th>\n`;
                 markdownContent += `      <th style='width:20%;'>Project Name</th>\n`;
-                markdownContent += `      <th style='width:20%;'>PR Title</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Title</th>\n`;
                 markdownContent += `      <th style='width:35%;'>Description</th>\n`;
                 markdownContent += `      <th style='width:20%;'>Date</th>\n`;
                 markdownContent += `    </tr>\n`;
@@ -192,10 +231,7 @@ async function writeMarkdownFiles(groupedContributions) {
                 for (const item of items) {
                     const dateObj = new Date(item.date);
                     const formattedDate = dateObj.toISOString().split('T')[0];
-                    const descriptionHtml = item.description
-                        .replace(/>/g, "&gt;")
-                        .replace(/</g, "&lt;")
-                        .replace(/"/g, "&quot;");
+                    const descriptionHtml = resizeImages(item.description);
 
                     markdownContent += `    <tr>\n`;
                     markdownContent += `      <td>${counter++}.</td>\n`;
