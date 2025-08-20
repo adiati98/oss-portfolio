@@ -206,18 +206,6 @@ function groupContributionsByQuarter(contributions) {
 	return grouped
 }
 
-// Function to find and resize images in the description
-function resizeImages(description) {
-	const imgRegex = /<img([^>]*)>/g
-
-	// Directly add the style attribute without checking for existing ones
-	const resizedDescription = description.replace(imgRegex, (match, attrs) => {
-		return `<img${attrs} style="max-width: 50%;">`
-	})
-
-	return resizedDescription
-}
-
 async function writeMarkdownFiles(groupedContributions) {
 	const baseDir = "contributions"
 	await fs.mkdir(baseDir, { recursive: true })
