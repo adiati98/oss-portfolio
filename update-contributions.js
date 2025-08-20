@@ -72,7 +72,6 @@ async function fetchContributions(startYear) {
 
         // Fetch merged PRs from others only
         const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd} -author:${GITHUB_USERNAME}`);
-        
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
@@ -80,7 +79,7 @@ async function fetchContributions(startYear) {
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
-
+    
             contributions.pullRequests.push({
                 title: pr.title,
                 url: pr.html_url,
