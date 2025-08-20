@@ -3,7 +3,7 @@ const fs = require('fs/promises');
 const axios = require('axios');
 
 const GITHUB_USERNAME = "adiati98"; // Replace with your GitHub username
-const SINCE_YEAR = 2019; // Change with the year of your first contribution
+const SINCE_YEAR = 2019; // Change the year with the year of your first contribution
 const BASE_URL = "https://api.github.com";
 
 async function fetchContributions(startYear) {
@@ -70,9 +70,8 @@ async function fetchContributions(startYear) {
             return results;
         }
 
-        // Fetch merged PRs from others only
+        // Fetch merged PRs
         const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd} -author:${GITHUB_USERNAME}`);
-        
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
@@ -81,14 +80,11 @@ async function fetchContributions(startYear) {
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
 
-            // A separate API call is needed to get the full PR description
-            const prDetails = await axiosInstance.get(`/repos/${owner}/${repoName}/pulls/${pr.number}`);
-            
             contributions.pullRequests.push({
                 title: pr.title,
                 url: pr.html_url,
                 repo: `${owner}/${repoName}`,
-                description: prDetails.data.body || "No description provided.",
+                description: pr.body || "No description provided.",
                 date: pr.created_at,
             });
             seenUrls.pullRequests.add(pr.html_url);
@@ -131,7 +127,7 @@ async function fetchContributions(startYear) {
             });
             seenUrls.reviewedPrs.add(pr.html_url);
         }
-
+        
         // Fetch collaborations (PRs commented on or with commits)
         const collaborations = await getAllPages(`is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
         for (const pr of collaborations) {
