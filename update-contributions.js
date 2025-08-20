@@ -165,17 +165,13 @@ function groupContributionsByQuarter(contributions) {
 function resizeImages(description) {
   const imgRegex = /<img([^>]*)>/g;
   
+  // Directly add the style attribute without checking for existing ones
   const resizedDescription = description.replace(imgRegex, (match, attrs) => {
-    if (attrs.includes('style="')) {
-      return `<img${attrs.replace('style="', 'style="max-width: 50%; ')}>`;
-    } else {
-      return `<img${attrs} style="max-width: 50%;">`;
-    }
+    return `<img${attrs} style="max-width: 50%;">`;
   });
   
   return resizedDescription;
 }
-
 
 async function writeMarkdownFiles(groupedContributions) {
     const baseDir = "contributions";
