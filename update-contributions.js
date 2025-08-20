@@ -153,13 +153,14 @@ async function writeMarkdownFiles(groupedContributions) {
         await fs.mkdir(yearDir, { recursive: true });
 
         const filePath = path.join(yearDir, `${quarter}-${year}.md`);
-        const hasData = Object.values(data).some(arr => arr.length > 0);
-        if (!hasData) {
+        const totalContributions = Object.values(data).reduce((sum, arr) => sum + arr.length, 0);
+
+        if (totalContributions === 0) {
             console.log(`Skipping empty quarter: ${key}`);
             continue;
         }
 
-        let markdownContent = `# Contributions - ${quarter} ${year}\n\n`;
+        let markdownContent = `# ${quarter} ${year}: ${totalContributions} contributions\n\n`;
         const sections = {
             pullRequests: "Pull Requests",
             issues: "Issues",
@@ -168,6 +169,7 @@ async function writeMarkdownFiles(groupedContributions) {
 
         for (const [section, title] of Object.entries(sections)) {
             const items = data[section];
+            
             markdownContent += `<details>\n`;
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
@@ -177,14 +179,16 @@ async function writeMarkdownFiles(groupedContributions) {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
                 markdownContent += `    <tr>\n`;
+                markdownContent += `      <th style='width:5%;'>No.</th>\n`;
                 markdownContent += `      <th style='width:20%;'>Project Name</th>\n`;
                 markdownContent += `      <th style='width:20%;'>PR Title</th>\n`;
-                markdownContent += `      <th style='width:40%;'>Description</th>\n`;
+                markdownContent += `      <th style='width:35%;'>Description</th>\n`;
                 markdownContent += `      <th style='width:20%;'>Date</th>\n`;
                 markdownContent += `    </tr>\n`;
                 markdownContent += `  </thead>\n`;
                 markdownContent += `  <tbody>\n`;
-
+                
+                let counter = 1;
                 for (const item of items) {
                     const dateObj = new Date(item.date);
                     const formattedDate = dateObj.toISOString().split('T')[0];
@@ -194,6 +198,7 @@ async function writeMarkdownFiles(groupedContributions) {
                         .replace(/"/g, "&quot;");
 
                     markdownContent += `    <tr>\n`;
+                    markdownContent += `      <td>${counter++}.</td>\n`;
                     markdownContent += `      <td>${item.repo}</td>\n`;
                     markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
                     markdownContent += `      <td>${descriptionHtml}</td>\n`;
