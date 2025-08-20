@@ -213,7 +213,7 @@ async function writeMarkdownFiles(groupedContributions) {
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             if (items.length === 0) {
-                markdownContent += `No ${title} contributions in this quarter.\n`;
+                markdownContent += `No contribution in this quarter.\n`;
             } else {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
