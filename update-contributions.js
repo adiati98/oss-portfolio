@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs/promises');
 const axios = require('axios');
 
-const GITHUB_USERNAME = "adiati98"; // Replace with your GitHub username
-const SINCE_YEAR = 2019; // Replace with the year of your first contributions
+const GITHUB_USERNAME = "your-github-username"; // Replace with your GitHub username
+const SINCE_YEAR = 2019; // Change with the year of your first contribution
 const BASE_URL = "https://api.github.com";
 
 async function fetchContributions(startYear) {
@@ -24,12 +24,14 @@ async function fetchContributions(startYear) {
         pullRequests: [],
         issues: [],
         reviewedPrs: [],
+        collaborations: [],
     };
 
     const seenUrls = {
         pullRequests: new Set(),
         issues: new Set(),
         reviewedPrs: new Set(),
+        collaborations: new Set(),
     };
 
     const currentYear = new Date().getFullYear();
@@ -111,8 +113,8 @@ async function fetchContributions(startYear) {
             seenUrls.issues.add(issue.html_url);
         }
 
-        // Fetch reviewed PRs and PRs commented on from other users
-        const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd} or commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+        // Fetch reviewed PRs from other users
+        const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd}`);
         for (const pr of reviewedPrs) {
             if (seenUrls.reviewedPrs.has(pr.html_url)) {
                 continue;
@@ -128,6 +130,25 @@ async function fetchContributions(startYear) {
                 date: pr.updated_at,
             });
             seenUrls.reviewedPrs.add(pr.html_url);
+        }
+
+        // Fetch collaborations (PRs commented on or with commits)
+        const collaborations = await getAllPages(`is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+        for (const pr of collaborations) {
+            if (seenUrls.collaborations.has(pr.html_url)) {
+                continue;
+            }
+            const repoParts = new URL(pr.repository_url).pathname.split("/");
+            const owner = repoParts[repoParts.length - 2];
+            const repoName = repoParts[repoParts.length - 1];
+            contributions.collaborations.push({
+                title: pr.title,
+                url: pr.html_url,
+                repo: `${owner}/${repoName}`,
+                description: pr.body || "No description provided.",
+                date: pr.updated_at,
+            });
+            seenUrls.collaborations.add(pr.html_url);
         }
     }
 
@@ -152,6 +173,7 @@ function groupContributionsByQuarter(contributions) {
                     pullRequests: [],
                     issues: [],
                     reviewedPrs: [],
+                    collaborations: [],
                 };
             }
             grouped[key][type].push(item);
@@ -194,6 +216,7 @@ async function writeMarkdownFiles(groupedContributions) {
             pullRequests: "Pull Requests",
             issues: "Issues",
             reviewedPrs: "Reviewed PRs",
+            collaborations: "Collaborations",
         };
 
         for (const [section, title] of Object.entries(sections)) {
@@ -203,7 +226,7 @@ async function writeMarkdownFiles(groupedContributions) {
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             if (items.length === 0) {
-                markdownContent += `No contribution in this quarter.\n`;
+                markdownContent += `No ${title.toLowerCase()} contributions in this quarter.\n`;
             } else {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
