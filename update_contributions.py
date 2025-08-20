@@ -27,7 +27,6 @@ def fetch_contributions():
     contributions = {
         "pullRequests": [],
         "issues": [],
-        "triagedIssues": [],
         "reviewedPrs": [],
     }
 
@@ -103,8 +102,8 @@ def fetch_contributions():
                 "date": issue["created_at"],
             })
 
-        # Fetch reviewed PRs
-        reviewed_prs = get_all_pages(f"is:pr reviewed-by:{GITHUB_USERNAME} reviewed:>={year_start} reviewed:<{year_end}")
+        # Fetch reviewed PRs from other users
+        reviewed_prs = get_all_pages(f"is:pr reviewed-by:{GITHUB_USERNAME} -author:{GITHUB_USERNAME} reviewed:>={year_start} reviewed:<{year_end}")
         for pr in reviewed_prs:
             repo_parts = urlparse(pr["repository_url"]).path.split("/")
             owner = repo_parts[-2]
@@ -115,20 +114,6 @@ def fetch_contributions():
                 "repo": f"{owner}/{repo_name}",
                 "description": pr["body"] or "No description provided.",
                 "date": pr["updated_at"],
-            })
-            
-        # Fetch triaged issues
-        triaged_issues = get_all_pages(f"is:issue assignee:{GITHUB_USERNAME} created:>={year_start} created:<{year_end}")
-        for issue in triaged_issues:
-            repo_parts = urlparse(issue["repository_url"]).path.split("/")
-            owner = repo_parts[-2]
-            repo_name = repo_parts[-1]
-            contributions["triagedIssues"].append({
-                "title": issue["title"],
-                "url": issue["html_url"],
-                "repo": f"{owner}/{repo_name}",
-                "description": issue["body"] or "No description provided.",
-                "date": issue["updated_at"],
             })
 
     return contributions
@@ -154,7 +139,6 @@ def group_contributions_by_quarter(contributions):
                 grouped[key] = {
                     "pullRequests": [],
                     "issues": [],
-                    "triagedIssues": [],
                     "reviewedPrs": [],
                 }
             grouped[key][type_name].append(item)
@@ -182,7 +166,6 @@ def write_markdown_files(grouped_contributions):
         sections = {
             "pullRequests": "Pull Requests",
             "issues": "Issues",
-            "triagedIssues": "Triaged Issues",
             "reviewedPrs": "Reviewed PRs",
         }
 
