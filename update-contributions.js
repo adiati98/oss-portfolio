@@ -2,8 +2,8 @@ const path = require('path');
 const fs = require('fs/promises');
 const axios = require('axios');
 
-const GITHUB_USERNAME = "adiati98"; // Replace with your GitHub username
-const SINCE_YEAR = 2019; // Change with year of your first contribution
+const GITHUB_USERNAME = "adiati98"; // Change this to your GitHub username
+const SINCE_YEAR = 2019; // Change this to the year of your first contribution
 const BASE_URL = "https://api.github.com";
 
 async function fetchContributions(startYear) {
@@ -71,7 +71,7 @@ async function fetchContributions(startYear) {
         }
 
         // Fetch merged PRs from others only
-        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd} -author:${GITHUB_USERNAME}`);
+        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`);
         
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
