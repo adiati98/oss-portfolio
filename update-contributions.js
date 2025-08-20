@@ -3,10 +3,10 @@ const fs = require('fs/promises');
 const axios = require('axios');
 
 const GITHUB_USERNAME = "adiati98"; // Replace with your GitHub username
-const SINCE_YEAR = 2019;
+const SINCE_YEAR = 2019; // Replace with the year of your first contributions
 const BASE_URL = "https://api.github.com";
 
-async function fetchContributions() {
+async function fetchContributions(startYear) {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
         throw new Error("GITHUB_TOKEN is not set.");
@@ -34,7 +34,7 @@ async function fetchContributions() {
 
     const currentYear = new Date().getFullYear();
 
-    for (let year = SINCE_YEAR; year <= currentYear; year++) {
+    for (let year = startYear; year <= currentYear; year++) {
         console.log(`Fetching contributions for year: ${year}...`);
         const yearStart = `${year}-01-01T00:00:00Z`;
         const yearEnd = `${year + 1}-01-01T00:00:00Z`;
@@ -163,17 +163,12 @@ function groupContributionsByQuarter(contributions) {
 
 // Function to find and resize images in the description
 function resizeImages(description) {
-  // Regex to find <img> tags and capture their attributes
   const imgRegex = /<img([^>]*)>/g;
   
-  // Replace each <img> tag with a new one that includes a max-width style
   const resizedDescription = description.replace(imgRegex, (match, attrs) => {
-    // Check if a style attribute already exists
     if (attrs.includes('style="')) {
-      // Append the new style to the existing one
       return `<img${attrs.replace('style="', 'style="max-width: 50%; ')}>`;
     } else {
-      // Add a new style attribute
       return `<img${attrs} style="max-width: 50%;">`;
     }
   });
@@ -256,7 +251,23 @@ async function writeMarkdownFiles(groupedContributions) {
 
 async function main() {
     try {
-        const contributions = await fetchContributions();
+        const baseDir = "contributions";
+        const currentYear = new Date().getFullYear();
+        const currentYearDir = path.join(baseDir, currentYear.toString());
+        
+        let startYearToFetch;
+        try {
+            // Check if the current year's directory exists
+            await fs.access(currentYearDir);
+            console.log(`Current year directory "${currentYearDir}" exists. Only updating this year.`);
+            startYearToFetch = currentYear;
+        } catch (e) {
+            // If the directory doesn't exist, it's a new year or a fresh run
+            console.log(`Current year directory "${currentYearDir}" not found. Running full sync from ${SINCE_YEAR}.`);
+            startYearToFetch = SINCE_YEAR;
+        }
+
+        const contributions = await fetchContributions(startYearToFetch);
         const grouped = groupContributionsByQuarter(contributions);
         await writeMarkdownFiles(grouped);
         console.log("Contributions update completed successfully.");
