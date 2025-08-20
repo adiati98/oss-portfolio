@@ -70,8 +70,8 @@ async function fetchContributions(startYear) {
             return results;
         }
 
-        // Fetch merged PRs from others only
-        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`);
+        // Fetch merged PRs that I created in repositories that I don't own
+        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged -user:${GITHUB_USERNAME} merged:>=${yearStart} merged:<${yearEnd}`);
         
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
@@ -110,8 +110,8 @@ async function fetchContributions(startYear) {
             seenUrls.issues.add(issue.html_url);
         }
 
-        // Fetch reviewed PRs from other users
-        const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd}`);
+        // Fetch PRs that were either reviewed or merged by me (excluding my own PRs)
+        const reviewedPrs = await getAllPages(`is:pr is:merged -author:${GITHUB_USERNAME} (reviewed-by:${GITHUB_USERNAME} OR merged-by:${GITHUB_USERNAME}) merged:>=${yearStart} merged:<${yearEnd}`);
         for (const pr of reviewedPrs) {
             if (seenUrls.reviewedPrs.has(pr.html_url)) {
                 continue;
@@ -223,7 +223,7 @@ async function writeMarkdownFiles(groupedContributions) {
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             if (items.length === 0) {
-                markdownContent += `No ${title.toLowerCase()} contributions in this quarter.\n`;
+                markdownContent += `No contribution in this quarter.\n`;
             } else {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
