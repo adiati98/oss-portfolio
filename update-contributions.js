@@ -68,8 +68,9 @@ async function fetchContributions(startYear) {
             return results;
         }
 
-        // Fetch merged PRs
-        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`);
+        // Fetch merged PRs from others only
+        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd} -author:${GITHUB_USERNAME}`);
+        
         for (const pr of prs) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
@@ -77,18 +78,16 @@ async function fetchContributions(startYear) {
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
-            
-            if (owner === GITHUB_USERNAME) {
-                continue;
-            }
 
+            // A separate API call is needed to get the full PR description
             const prDetails = await axiosInstance.get(`/repos/${owner}/${repoName}/pulls/${pr.number}`);
+            
             contributions.pullRequests.push({
-                title: prDetails.data.title,
-                url: prDetails.data.html_url,
+                title: pr.title,
+                url: pr.html_url,
                 repo: `${owner}/${repoName}`,
                 description: prDetails.data.body || "No description provided.",
-                date: prDetails.data.created_at,
+                date: pr.created_at,
             });
             seenUrls.pullRequests.add(pr.html_url);
         }
@@ -112,8 +111,8 @@ async function fetchContributions(startYear) {
             seenUrls.issues.add(issue.html_url);
         }
 
-        // Fetch reviewed PRs from other users
-        const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd}`);
+        // Fetch reviewed PRs and PRs commented on from other users
+        const reviewedPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} reviewed:>=${yearStart} reviewed:<${yearEnd} or commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
         for (const pr of reviewedPrs) {
             if (seenUrls.reviewedPrs.has(pr.html_url)) {
                 continue;
@@ -253,12 +252,10 @@ async function main() {
         
         let startYearToFetch;
         try {
-            // Check if the current year's directory exists
             await fs.access(currentYearDir);
             console.log(`Current year directory "${currentYearDir}" exists. Only updating this year.`);
             startYearToFetch = currentYear;
         } catch (e) {
-            // If the directory doesn't exist, it's a new year or a fresh run
             console.log(`Current year directory "${currentYearDir}" not found. Running full sync from ${SINCE_YEAR}.`);
             startYearToFetch = SINCE_YEAR;
         }
