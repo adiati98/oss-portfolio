@@ -238,38 +238,38 @@ async function writeMarkdownFiles(groupedContributions) {
             const items = data[section]
 
             markdownContent += `<details>\n`
-            markdownContent += `  <summary><h2>${title}</h2></summary>\n`
+            markdownContent += `  <summary><h2>${title}</h2></summary>\n`
 
             if (items.length === 0) {
                 markdownContent += `No contribution in this quarter.\n`
             } else {
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`
-                markdownContent += `  <thead>\n`
-                markdownContent += `    <tr>\n`
-                markdownContent += `      <th style='width:5%;'>No.</th>\n`
-                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`
-                markdownContent += `      <th style='width:20%;'>Title</th>\n`
-                markdownContent += `      <th style='width:35%;'>Description</th>\n`
-                markdownContent += `      <th style='width:20%;'>Date</th>\n`
-                markdownContent += `    </tr>\n`
-                markdownContent += `  </thead>\n`
-                markdownContent += `  <tbody>\n`
+                markdownContent += `  <thead>\n`
+                markdownContent += `    <tr>\n`
+                markdownContent += `      <th style='width:5%;'>No.</th>\n`
+                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`
+                markdownContent += `      <th style='width:20%;'>Title</th>\n`
+                markdownContent += `      <th style='width:35%;'>Description</th>\n`
+                markdownContent += `      <th style='width:20%;'>Date</th>\n`
+                markdownContent += `    </tr>\n`
+                markdownContent += `  </thead>\n`
+                markdownContent += `  <tbody>\n`
 
                 let counter = 1
                 for (const item of items) {
                     const dateObj = new Date(item.date)
                     const formattedDate = dateObj.toISOString().split("T")[0]
 
-                    markdownContent += `    <tr>\n`
-                    markdownContent += `      <td>${counter++}.</td>\n`
-                    markdownContent += `      <td>${item.repo}</td>\n`
-                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
-                    markdownContent += `      <td>${item.description}</td>\n`
-                    markdownContent += `      <td>${formattedDate}</td>\n`
-                    markdownContent += `    </tr>\n`
+                    markdownContent += `    <tr>\n`
+                    markdownContent += `      <td>${counter++}.</td>\n`
+                    markdownContent += `      <td>${item.repo}</td>\n`
+                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
+                    markdownContent += `      <td>${item.description}</td>\n`
+                    markdownContent += `      <td>${formattedDate}</td>\n`
+                    markdownContent += `    </tr>\n`
                 }
 
-                markdownContent += `  </tbody>\n`
+                markdownContent += `  </tbody>\n`
                 markdownContent += `</table>\n`
             }
 
@@ -283,85 +283,76 @@ async function writeMarkdownFiles(groupedContributions) {
 
 async function main() {
     try {
-        const baseDir = "contributions"
-        const currentYear = new Date().getFullYear()
-        let startYearToFetch = currentYear
-        let isFullSync = false
+        const baseDir = "contributions";
+        const currentYear = new Date().getFullYear();
+        let startYearToFetch = SINCE_YEAR;
 
         // Check if the contributions folder exists at all
         try {
-            await fs.access(baseDir)
+            await fs.access(baseDir);
+            console.log("Contributions folder found.");
 
-            // Check if any historical year directory or quarter file is missing
-            for (let year = SINCE_YEAR; year <= currentYear; year++) {
-                const yearDir = path.join(baseDir, year.toString())
-                try {
-                    await fs.access(yearDir)
-                    // Check for quarter files only if the year directory exists
-                    for (let q = 1; q <= 4; q++) {
-                        const quarterFile = path.join(yearDir, `Q${q}-${year}.md`)
-                        try {
-                            // Check if the file exists and is not empty
-                            const stats = await fs.stat(quarterFile)
-                            if (stats.size === 0) {
-                                isFullSync = true
-                                console.log(
-                                    `Empty quarter file "${quarterFile}" found. Running full sync.`
-                                )
-                                break
-                            }
-                        } catch (e) {
-                            if (e.code === "ENOENT") {
-                                isFullSync = true
-                                console.log(
-                                    `Historical quarter file "${quarterFile}" not found. Running full sync.`
-                                )
-                                break
-                            } else {
-                                throw e
-                            }
+            const currentYearDir = path.join(baseDir, currentYear.toString());
+            let isCurrentYearComplete = true;
+
+            try {
+                // Check if the current year's directory exists
+                await fs.access(currentYearDir);
+
+                // Check for missing quarter files in the current year
+                const maxQuarter = Math.floor((new Date().getMonth()) / 3) + 1;
+                for (let q = 1; q <= maxQuarter; q++) {
+                    const quarterFile = path.join(currentYearDir, `Q${q}-${currentYear}.md`);
+                    try {
+                        const stats = await fs.stat(quarterFile);
+                        if (stats.size === 0) {
+                            isCurrentYearComplete = false;
+                            break;
+                        }
+                    } catch (e) {
+                        if (e.code === "ENOENT") {
+                            isCurrentYearComplete = false;
+                            break;
                         }
                     }
-                    if (isFullSync) break
-                } catch (e) {
-                    if (e.code === "ENOENT") {
-                        isFullSync = true
-                        console.log(
-                            `Historical directory "${yearDir}" not found. Running full sync.`
-                        )
-                        break
-                    } else {
-                        throw e
-                    }
+                }
+            } catch (e) {
+                if (e.code === "ENOENT") {
+                    isCurrentYearComplete = false;
+                } else {
+                    throw e;
                 }
             }
+
+            if (isCurrentYearComplete) {
+                console.log(`Current year data is up to date. No action needed.`);
+                return; // Exit the script gracefully
+            } else {
+                console.log(`Current year data is incomplete or missing. Starting sync for ${currentYear}.`);
+                startYearToFetch = currentYear;
+            }
+
         } catch (e) {
             // contributions folder doesn't exist, so it's the first run
-            isFullSync = true
-            console.log(
-                `Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
-            )
+            if (e.code === "ENOENT") {
+                console.log(
+                    `Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
+                );
+                // No need to set startYearToFetch as it's already SINCE_YEAR
+            } else {
+                throw e;
+            }
         }
+        
+        console.log(`Starting data fetch from year: ${startYearToFetch}`);
+        const contributions = await fetchContributions(startYearToFetch);
+        const grouped = groupContributionsByQuarter(contributions);
+        await writeMarkdownFiles(grouped);
+        console.log("Contributions update completed successfully.");
 
-        if (isFullSync) {
-            startYearToFetch = SINCE_YEAR
-            console.log(
-                `Starting a full sync from ${startYearToFetch}. Removing old contributions folder...`
-            )
-            await fs.rm(baseDir, { recursive: true, force: true })
-        } else {
-            console.log(
-                `All historical data is present. Only updating the current year: ${currentYear}.`
-            )
-        }
-
-        const contributions = await fetchContributions(startYearToFetch)
-        const grouped = groupContributionsByQuarter(contributions)
-        await writeMarkdownFiles(grouped)
-        console.log("Contributions update completed successfully.")
     } catch (e) {
-        console.error(`Failed to update contributions: ${e.message}`)
-        process.exit(1)
+        console.error(`Failed to update contributions: ${e.message}`);
+        process.exit(1);
     }
 }
 
