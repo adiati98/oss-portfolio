@@ -7,9 +7,9 @@ const SINCE_YEAR = 2019 // Change this to the year of your first contribution
 const BASE_URL = "https://api.github.com"
 
 async function fetchContributions(startYear) {
-    const token = process.env.GITHUB_TOKEN
+    const token = process.env.GITHUB_TOKEN;
     if (!token) {
-        throw new Error("GITHUB_TOKEN is not set.")
+        throw new Error("GITHUB_TOKEN is not set.");
     }
 
     const axiosInstance = axios.create({
@@ -18,70 +18,77 @@ async function fetchContributions(startYear) {
             Authorization: `token ${token}`,
             Accept: "application/vnd.github.v3+json",
         },
-    })
+    });
 
     const contributions = {
         pullRequests: [],
         issues: [],
         reviewedPrs: [],
         collaborations: [],
-    }
+    };
 
     const seenUrls = {
         pullRequests: new Set(),
         issues: new Set(),
         reviewedPrs: new Set(),
         collaborations: new Set(),
-    }
+    };
 
-    const currentYear = new Date().getFullYear()
+    const currentYear = new Date().getFullYear();
 
     for (let year = startYear; year <= currentYear; year++) {
-        console.log(`Fetching contributions for year: ${year}...`)
-        const yearStart = `${year}-01-01T00:00:00Z`
-        const yearEnd = `${year + 1}-01-01T00:00:00Z`
+        console.log(`Fetching contributions for year: ${year}...`);
+        const yearStart = `${year}-01-01T00:00:00Z`;
+        const yearEnd = `${year + 1}-01-01T00:00:00Z`;
 
         async function getAllPages(query) {
-            let results = []
-            let page = 1
+            let results = [];
+            let page = 1;
             while (true) {
                 try {
                     const response = await axiosInstance.get(
                         `/search/issues?q=${query}&per_page=100&page=${page}`
-                    )
-                    results.push(...response.data.items)
+                    );
+                    results.push(...response.data.items);
 
-                    const linkHeader = response.headers.link
+                    const linkHeader = response.headers.link;
                     if (linkHeader && linkHeader.includes('rel="next"')) {
-                        page++
+                        page++;
                     } else {
-                        break
+                        break;
                     }
                 } catch (err) {
                     if (err.response && err.response.status === 403) {
-                        console.log("Rate limit hit. Waiting for 60 seconds...")
-                        await new Promise((resolve) => setTimeout(resolve, 60000))
-                        continue
+                        console.log("Rate limit hit. Waiting for 60 seconds...");
+                        await new Promise((resolve) => setTimeout(resolve, 60000));
+                        continue;
                     } else {
-                        throw err
+                        throw err;
                     }
                 }
             }
-            return results
+            return results;
         }
 
-        // Fetch merged PRs that I created in repositories that I don't own
+        // Fetch merged PRs that I created
         const prs = await getAllPages(
-            `is:pr author:${GITHUB_USERNAME} is:merged -user:${GITHUB_USERNAME} merged:>=${yearStart} merged:<${yearEnd}`
-        )
+            `is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
+        );
 
         for (const pr of prs) {
-            if (seenUrls.pullRequests.has(pr.html_url)) {
-                continue
+            const repoParts = new URL(pr.repository_url).pathname.split("/");
+            const owner = repoParts[repoParts.length - 2];
+            const repoName = repoParts[repoParts.length - 1];
+
+            // Manually filter out PRs from my own repositories
+            if (owner === GITHUB_USERNAME) {
+                console.log(`Skipping PR from own repo: ${owner}/${repoName}`);
+                continue;
             }
-            const repoParts = new URL(pr.repository_url).pathname.split("/")
-            const owner = repoParts[repoParts.length - 2]
-            const repoName = repoParts[repoParts.length - 1]
+
+            if (seenUrls.pullRequests.has(pr.html_url)) {
+                continue;
+            }
 
             contributions.pullRequests.push({
                 title: pr.title,
@@ -89,76 +96,76 @@ async function fetchContributions(startYear) {
                 repo: `${owner}/${repoName}`,
                 description: pr.body || "No description provided.",
                 date: pr.created_at,
-            })
-            seenUrls.pullRequests.add(pr.html_url)
+            });
+            seenUrls.pullRequests.add(pr.html_url);
         }
 
         // Fetch created issues outside of my own repos
         const issues = await getAllPages(
             `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`
-        )
+        );
         for (const issue of issues) {
             if (seenUrls.issues.has(issue.html_url)) {
-                continue
+                continue;
             }
-            const repoParts = new URL(issue.repository_url).pathname.split("/")
-            const owner = repoParts[repoParts.length - 2]
-            const repoName = repoParts[repoParts.length - 1]
+            const repoParts = new URL(issue.repository_url).pathname.split("/");
+            const owner = repoParts[repoParts.length - 2];
+            const repoName = repoParts[repoParts.length - 1];
             contributions.issues.push({
                 title: issue.title,
                 url: issue.html_url,
                 repo: `${owner}/${repoName}`,
                 description: issue.body || "No description provided.",
                 date: issue.created_at,
-            })
-            seenUrls.issues.add(issue.html_url)
+            });
+            seenUrls.issues.add(issue.html_url);
         }
 
         // Fetch reviewed PRs, merged PRs, and closed PRs from other users
         const reviewedByPrs = await getAllPages(
             `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        )
+        );
         const mergedByPrs = await getAllPages(
             `is:pr merged-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        )
+        );
         const closedByPrs = await getAllPages(
             `is:pr is:closed -author:${GITHUB_USERNAME} closed-by:${GITHUB_USERNAME} commenter:${GITHUB_USERNAME} closed:>=${yearStart} closed:<${yearEnd}`
-        )
+        );
 
-        const combinedResults = [...reviewedByPrs, ...mergedByPrs, ...closedByPrs]
-        const uniqueReviewedPrs = new Set()
+        const combinedResults = [...reviewedByPrs, ...mergedByPrs, ...closedByPrs];
+        const uniqueReviewedPrs = new Set();
 
         for (const pr of combinedResults) {
-            const prDate = new Date(pr.updated_at)
-            const yearStartDate = new Date(yearStart)
-            const yearEndDate = new Date(yearEnd)
+            const prDate = new Date(pr.updated_at);
+            const yearStartDate = new Date(yearStart);
+            const yearEndDate = new Date(yearEnd);
 
             if (prDate >= yearStartDate && prDate < yearEndDate) {
                 if (uniqueReviewedPrs.has(pr.html_url)) {
-                    continue
+                    continue;
                 }
-                const repoParts = new URL(pr.repository_url).pathname.split("/")
-                const owner = repoParts[repoParts.length - 2]
-                const repoName = repoParts[repoParts.length - 1]
+                const repoParts = new URL(pr.repository_url).pathname.split("/");
+                const owner = repoParts[repoParts.length - 2];
+                const repoName = repoParts[repoParts.length - 1];
                 contributions.reviewedPrs.push({
                     title: pr.title,
                     url: pr.html_url,
                     repo: `${owner}/${repoName}`,
                     description: pr.body || "No description provided.",
                     date: pr.updated_at,
-                })
-                uniqueReviewedPrs.add(pr.html_url)
+                });
+                uniqueReviewedPrs.add(pr.html_url);
             }
         }
 
         // Fetch collaboration PRs (PRs commented on that are not already captured as reviewed/closed PRs)
         const collaborationsPrs = await getAllPages(
             `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        )
+        );
         // Fetch collaboration Issues (Issues commented on)
         const collaborationsIssues = await getAllPages(
             `is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        )
+        );
         
         const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
 
@@ -167,23 +174,23 @@ async function fetchContributions(startYear) {
                 seenUrls.collaborations.has(pr.html_url) ||
                 uniqueReviewedPrs.has(pr.html_url)
             ) {
-                continue
+                continue;
             }
-            const repoParts = new URL(pr.repository_url).pathname.split("/")
-            const owner = repoParts[repoParts.length - 2]
-            const repoName = repoParts[repoParts.length - 1]
+            const repoParts = new URL(pr.repository_url).pathname.split("/");
+            const owner = repoParts[repoParts.length - 2];
+            const repoName = repoParts[repoParts.length - 1];
             contributions.collaborations.push({
                 title: pr.title,
                 url: pr.html_url,
                 repo: `${owner}/${repoName}`,
                 description: pr.body || "No description provided.",
                 date: pr.updated_at,
-            })
-            seenUrls.collaborations.add(pr.html_url)
+            });
+            seenUrls.collaborations.add(pr.html_url);
         }
     }
 
-    return contributions
+    return contributions;
 }
 
 function groupContributionsByQuarter(contributions) {
