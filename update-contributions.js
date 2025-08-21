@@ -151,11 +151,18 @@ async function fetchContributions(startYear) {
             }
         }
 
-        // Fetch collaborations (PRs commented on that are not already captured as reviewed/closed PRs)
-        const collaborations = await getAllPages(
+        // Fetch collaboration PRs (PRs commented on that are not already captured as reviewed/closed PRs)
+        const collaborationsPrs = await getAllPages(
             `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         )
-        for (const pr of collaborations) {
+        // Fetch collaboration Issues (Issues commented on)
+        const collaborationsIssues = await getAllPages(
+            `is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
+        )
+        
+        const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
+
+        for (const pr of allCollaborations) {
             if (
                 seenUrls.collaborations.has(pr.html_url) ||
                 uniqueReviewedPrs.has(pr.html_url)
