@@ -2,16 +2,27 @@ const path = require("path")
 const fs = require("fs/promises")
 const axios = require("axios")
 
+// --- Configuration Variables ---
 const GITHUB_USERNAME = "adiati98" // Change this to your GitHub username
 const SINCE_YEAR = 2019 // Change this to the year of your first contribution
 const BASE_URL = "https://api.github.com"
 
+/**
+ * Fetches all contribution data from the GitHub API for a given year range.
+ * This includes Pull Requests, Issues, Reviewed PRs, and Collaborations.
+ * It handles pagination and API rate limiting.
+ * @param {number} startYear The year to begin fetching contributions from.
+ * @param {Set<string>} prCache A set of PR URLs that have already been processed to avoid redundant work.
+ * @returns {Promise<{contributions: object, prCache: Set<string>}>} An object containing the fetched contributions and the updated cache.
+ */
 async function fetchContributions(startYear, prCache) {
+    // Ensure the GitHub token is available from the environment variables.
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
         throw new Error("GITHUB_TOKEN is not set.");
     }
 
+    // Create an Axios instance with base URL and authentication headers.
     const axiosInstance = axios.create({
         baseURL: BASE_URL,
         headers: {
@@ -20,6 +31,7 @@ async function fetchContributions(startYear, prCache) {
         },
     });
 
+    // Initialize objects to store the fetched data and track seen URLs to prevent duplicates.
     const contributions = {
         pullRequests: [],
         issues: [],
@@ -36,11 +48,20 @@ async function fetchContributions(startYear, prCache) {
 
     const currentYear = new Date().getFullYear();
 
+    // Loop through each year from the start year to the current year.
     for (let year = startYear; year <= currentYear; year++) {
         console.log(`Fetching contributions for year: ${year}...`);
+        // Define the start and end dates for the year to use in API queries.
         const yearStart = `${year}-01-01T00:00:00Z`;
         const yearEnd = `${year + 1}-01-01T00:00:00Z`;
 
+        /**
+         * A helper function to fetch all pages for a given search query.
+         * GitHub's search API is paginated, so this handles fetching all results.
+         * It also includes logic to handle API rate limits by waiting for 60 seconds if a 403 error is received.
+         * @param {string} query The GitHub search query string.
+         * @returns {Promise<Array<object>>} An array of all results from the search.
+         */
         async function getAllPages(query) {
             let results = [];
             let page = 1;
@@ -51,6 +72,7 @@ async function fetchContributions(startYear, prCache) {
                     );
                     results.push(...response.data.items);
 
+                    // Check for a 'next' page link in the headers.
                     const linkHeader = response.headers.link;
                     if (linkHeader && linkHeader.includes('rel="next"')) {
                         page++;
@@ -58,42 +80,50 @@ async function fetchContributions(startYear, prCache) {
                         break;
                     }
                 } catch (err) {
+                    // Handle rate limit errors (status code 403).
                     if (err.response && err.response.status === 403) {
                         console.log("Rate limit hit. Waiting for 60 seconds...");
                         await new Promise((resolve) => setTimeout(resolve, 60000));
-                        continue;
+                        continue; // Retry the same page after waiting.
                     } else {
-                        throw err;
+                        throw err; // Re-throw other errors.
                     }
                 }
             }
             return results;
         }
 
+        // --- Fetch Pull Requests authored by the user and merged in the given year ---
         const prs = await getAllPages(
             `is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
         );
 
         for (const pr of prs) {
+            // Skip PRs that are already in the cache (from previous runs).
             if (prCache.has(pr.html_url)) {
                 console.log(`Skipping cached PR from own repo: ${pr.html_url}`);
                 continue;
             }
 
+            // Extract the repository owner and name from the URL.
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
 
+            // If the PR is on your own repository, just cache it and skip.
+            // This is to avoid listing contributions to your own repos as "external."
             if (owner === GITHUB_USERNAME) {
                 console.log(`Caching new PR from own repo: ${pr.html_url}`);
                 prCache.add(pr.html_url);
                 continue;
             }
 
+            // Check if the URL has already been added to the list of PRs.
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
             }
 
+            // Push the processed PR data to the contributions object.
             contributions.pullRequests.push({
                 title: pr.title,
                 url: pr.html_url,
@@ -101,9 +131,11 @@ async function fetchContributions(startYear, prCache) {
                 description: pr.body || "No description provided.",
                 date: pr.created_at,
             });
+            // Add the URL to the seen set.
             seenUrls.pullRequests.add(pr.html_url);
         }
 
+        // --- Fetch Issues authored by the user on other people's repositories ---
         const issues = await getAllPages(
             `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`
         );
@@ -124,6 +156,9 @@ async function fetchContributions(startYear, prCache) {
             seenUrls.issues.add(issue.html_url);
         }
 
+        // --- Fetch Reviewed PRs (PRs reviewed, merged, or closed by the user) ---
+        // Note: The GitHub search API doesn't support multiple 'closed-by' or 'merged-by' filters,
+        // so we combine multiple queries and deduplicate the results.
         const reviewedByPrs = await getAllPages(
             `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         );
@@ -160,6 +195,7 @@ async function fetchContributions(startYear, prCache) {
             }
         }
 
+        // --- Fetch Collaborations (PRs/Issues commented on by the user) ---
         const collaborationsPrs = await getAllPages(
             `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         );
@@ -170,6 +206,7 @@ async function fetchContributions(startYear, prCache) {
         const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
 
         for (const pr of allCollaborations) {
+            // Skip collaborations that have already been reviewed or seen.
             if (
                 seenUrls.collaborations.has(pr.html_url) ||
                 uniqueReviewedPrs.has(pr.html_url)
@@ -193,9 +230,16 @@ async function fetchContributions(startYear, prCache) {
     return { contributions, prCache };
 }
 
+/**
+ * Groups the fetched contributions by calendar quarter.
+ * @param {object} contributions The object containing all contribution data.
+ * @returns {object} A new object with contributions grouped by 'YYYY-Qq' keys.
+ */
 function groupContributionsByQuarter(contributions) {
     const grouped = {};
+    // Iterate over each contribution type (pullRequests, issues, etc.).
     for (const [type, items] of Object.entries(contributions)) {
+        // Iterate over each item within the type.
         for (const item of items) {
             const dateStr = item.date;
             if (!dateStr) continue;
@@ -203,9 +247,11 @@ function groupContributionsByQuarter(contributions) {
             const dateObj = new Date(dateStr);
             const year = dateObj.getFullYear();
             const month = dateObj.getMonth() + 1;
+            // Calculate the quarter (1-4).
             const quarter = `Q${Math.floor((month - 1) / 3) + 1}`;
             const key = `${year}-${quarter}`;
 
+            // Initialize the quarter group if it doesn't exist.
             if (!grouped[key]) {
                 grouped[key] = {
                     pullRequests: [],
@@ -214,49 +260,62 @@ function groupContributionsByQuarter(contributions) {
                     collaborations: [],
                 };
             }
+            // Push the item into the correct quarterly group.
             grouped[key][type].push(item);
         }
     }
     return grouped;
 }
 
+/**
+ * Writes the grouped contribution data to Markdown files, one for each quarter.
+ * @param {object} groupedContributions The object with contributions grouped by quarter.
+ */
 async function writeMarkdownFiles(groupedContributions) {
     const baseDir = "contributions";
+    // Create the base contributions directory if it doesn't exist.
     await fs.mkdir(baseDir, { recursive: true });
 
+    // Iterate over each quarter's worth of data.
     for (const [key, data] of Object.entries(groupedContributions)) {
         const [year, quarter] = key.split("-");
         const yearDir = path.join(baseDir, year);
         await fs.mkdir(yearDir, { recursive: true });
 
         const filePath = path.join(yearDir, `${quarter}-${year}.md`);
+        // Calculate the total number of contributions for the quarter.
         const totalContributions = Object.values(data).reduce(
             (sum, arr) => sum + arr.length,
             0
         );
 
+        // Skip writing the file if there are no contributions for this quarter.
         if (totalContributions === 0) {
             console.log(`Skipping empty quarter: ${key}`);
             continue;
         }
 
+        // Start building the Markdown content with a main header.
         let markdownContent = `# ${quarter} ${year} — ${totalContributions} contributions\n\n`;
         const sections = {
             pullRequests: "Merged PRs",
             issues: "Issues",
-            reviewedPrs: "Reviewed PRs",
+            reviewedPrs: "PRs Review",
             collaborations: "Collaborations",
         };
 
+        // Loop through each contribution type to create a collapsible section.
         for (const [section, title] of Object.entries(sections)) {
             const items = data[section];
 
             markdownContent += `<details>\n`;
             markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
-            if (items.length === 0) {
+            // Check if there are any contributions for this section.
+            if (!items || items.length === 0) {
                 markdownContent += `No contribution in this quarter.\n`;
             } else {
+                // If there are items, build an HTML table.
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
                 markdownContent += `  <thead>\n`;
                 markdownContent += `    <tr>\n`;
@@ -270,12 +329,19 @@ async function writeMarkdownFiles(groupedContributions) {
                 markdownContent += `  <tbody>\n`;
 
                 let counter = 1;
+                // Loop through each item to create a table row.
                 for (const item of items) {
                     const dateObj = new Date(item.date);
                     const formattedDate = dateObj.toISOString().split("T")[0];
 
+                    // Sanitize the description to escape HTML characters that could break the table layout.
                     const sanitizedDescription = item.description
-                        ? item.description.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                        ? item.description
+                            .replace(/</g, '&lt;')
+                            .replace(/>/g, '&gt;')
+                            .replace(/"/g, '&quot;')
+                            .replace(/'/g, '&#39;')
+                            .replace(/\n/g, '<br>')
                         : "No description provided.";
 
                     markdownContent += `    <tr>\n`;
@@ -294,20 +360,28 @@ async function writeMarkdownFiles(groupedContributions) {
             markdownContent += `</details>\n\n`;
         }
 
+        // Write the final Markdown content to the file.
         await fs.writeFile(filePath, markdownContent, "utf8");
         console.log(`Written file: ${filePath}`);
     }
 }
 
+/**
+ * The main function to run the entire process.
+ * It handles loading and saving the cache, determining the sync start year,
+ * and orchestrating the data fetching, grouping, and file writing.
+ */
 async function main() {
     const cacheFile = "pr_cache.json";
     let prCache = new Set();
 
+    // Try to load the cache from a JSON file.
     try {
         const cacheData = await fs.readFile(cacheFile, "utf8");
         prCache = new Set(JSON.parse(cacheData));
         console.log("Loaded PR cache from file.");
     } catch (e) {
+        // If the file doesn't exist, we'll start with an empty cache.
         if (e.code !== "ENOENT") {
             console.error("Failed to load PR cache:", e);
         }
@@ -318,6 +392,7 @@ async function main() {
         const currentYear = new Date().getFullYear();
         let startYearToFetch = SINCE_YEAR;
 
+        // Check if the 'contributions' directory exists.
         try {
             await fs.access(baseDir);
             console.log("Contributions folder found.");
@@ -325,12 +400,15 @@ async function main() {
             const currentYearDir = path.join(baseDir, currentYear.toString());
             let isPreviousQuartersComplete = true;
 
+            // Check if the current year's directory exists.
             try {
                 await fs.access(currentYearDir);
 
                 const currentMonth = new Date().getMonth();
                 const currentQuarter = Math.floor(currentMonth / 3) + 1;
 
+                // Check for existing files for previous quarters of the current year.
+                // This helps to determine if a full re-sync is needed for the current year.
                 for (let q = 1; q < currentQuarter; q++) {
                     const quarterFile = path.join(currentYearDir, `Q${q}-${currentYear}.md`);
                     try {
@@ -354,6 +432,7 @@ async function main() {
                 }
             }
 
+            // Set the start year for the fetch based on whether previous data is complete.
             if (isPreviousQuartersComplete) {
                 console.log(`Previous quarters' data is up to date. Starting sync for ${currentYear}.`);
                 startYearToFetch = currentYear;
@@ -363,6 +442,7 @@ async function main() {
             }
 
         } catch (e) {
+            // If the base directory doesn't exist, run a full sync from the configured SINCE_YEAR.
             if (e.code === "ENOENT") {
                 console.log(
                     `Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
@@ -373,18 +453,22 @@ async function main() {
         }
         
         console.log(`Starting data fetch from year: ${startYearToFetch}`);
+        // Call the main functions to fetch, group, and write the data.
         const { contributions, prCache: updatedPrCache } = await fetchContributions(startYearToFetch, prCache);
         const grouped = groupContributionsByQuarter(contributions);
         await writeMarkdownFiles(grouped);
 
+        // Save the updated cache to a file for future runs.
         await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), "utf8");
         console.log("Updated PR cache saved to file.");
 
         console.log("Contributions update completed successfully.");
 
     } catch (e) {
+        // Handle any top-level errors that occur during the process.
         console.error(`Failed to update contributions: ${e.message}`);
         process.exit(1);
     }
 }
+// Start the main execution.
 main();
