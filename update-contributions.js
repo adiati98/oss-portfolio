@@ -6,7 +6,7 @@ const GITHUB_USERNAME = "adiati98" // Change this to your GitHub username
 const SINCE_YEAR = 2019 // Change this to the year of your first contribution
 const BASE_URL = "https://api.github.com"
 
-async function fetchContributions(startYear) {
+async function fetchContributions(startYear, prCache) {
     const token = process.env.GITHUB_TOKEN;
     if (!token) {
         throw new Error("GITHUB_TOKEN is not set.");
@@ -70,19 +70,23 @@ async function fetchContributions(startYear) {
             return results;
         }
 
-        // Fetch merged PRs that I created
         const prs = await getAllPages(
             `is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
         );
 
         for (const pr of prs) {
+            if (prCache.has(pr.html_url)) {
+                console.log(`Skipping cached PR from own repo: ${pr.html_url}`);
+                continue;
+            }
+
             const repoParts = new URL(pr.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
 
-            // Manually filter out PRs from my own repositories
             if (owner === GITHUB_USERNAME) {
-                console.log(`Skipping PR from own repo: ${owner}/${repoName}`);
+                console.log(`Caching new PR from own repo: ${pr.html_url}`);
+                prCache.add(pr.html_url);
                 continue;
             }
 
@@ -100,7 +104,6 @@ async function fetchContributions(startYear) {
             seenUrls.pullRequests.add(pr.html_url);
         }
 
-        // Fetch created issues outside of my own repos
         const issues = await getAllPages(
             `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`
         );
@@ -121,7 +124,6 @@ async function fetchContributions(startYear) {
             seenUrls.issues.add(issue.html_url);
         }
 
-        // Fetch reviewed PRs, merged PRs, and closed PRs from other users
         const reviewedByPrs = await getAllPages(
             `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         );
@@ -158,11 +160,9 @@ async function fetchContributions(startYear) {
             }
         }
 
-        // Fetch collaboration PRs (PRs commented on that are not already captured as reviewed/closed PRs)
         const collaborationsPrs = await getAllPages(
             `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         );
-        // Fetch collaboration Issues (Issues commented on)
         const collaborationsIssues = await getAllPages(
             `is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
         );
@@ -190,21 +190,21 @@ async function fetchContributions(startYear) {
         }
     }
 
-    return contributions;
+    return { contributions, prCache };
 }
 
 function groupContributionsByQuarter(contributions) {
-    const grouped = {}
+    const grouped = {};
     for (const [type, items] of Object.entries(contributions)) {
         for (const item of items) {
-            const dateStr = item.date
-            if (!dateStr) continue
+            const dateStr = item.date;
+            if (!dateStr) continue;
 
-            const dateObj = new Date(dateStr)
-            const year = dateObj.getFullYear()
-            const month = dateObj.getMonth() + 1
-            const quarter = `Q${Math.floor((month - 1) / 3) + 1}`
-            const key = `${year}-${quarter}`
+            const dateObj = new Date(dateStr);
+            const year = dateObj.getFullYear();
+            const month = dateObj.getMonth() + 1;
+            const quarter = `Q${Math.floor((month - 1) / 3) + 1}`;
+            const key = `${year}-${quarter}`;
 
             if (!grouped[key]) {
                 grouped[key] = {
@@ -212,156 +212,174 @@ function groupContributionsByQuarter(contributions) {
                     issues: [],
                     reviewedPrs: [],
                     collaborations: [],
-                }
+                };
             }
-            grouped[key][type].push(item)
+            grouped[key][type].push(item);
         }
     }
-    return grouped
+    return grouped;
 }
 
 async function writeMarkdownFiles(groupedContributions) {
-    const baseDir = "contributions"
-    await fs.mkdir(baseDir, { recursive: true })
+    const baseDir = "contributions";
+    await fs.mkdir(baseDir, { recursive: true });
 
     for (const [key, data] of Object.entries(groupedContributions)) {
-        const [year, quarter] = key.split("-")
-        const yearDir = path.join(baseDir, year)
-        await fs.mkdir(yearDir, { recursive: true })
+        const [year, quarter] = key.split("-");
+        const yearDir = path.join(baseDir, year);
+        await fs.mkdir(yearDir, { recursive: true });
 
-        const filePath = path.join(yearDir, `${quarter}-${year}.md`)
+        const filePath = path.join(yearDir, `${quarter}-${year}.md`);
         const totalContributions = Object.values(data).reduce(
             (sum, arr) => sum + arr.length,
             0
-        )
+        );
 
         if (totalContributions === 0) {
-            console.log(`Skipping empty quarter: ${key}`)
-            continue
+            console.log(`Skipping empty quarter: ${key}`);
+            continue;
         }
 
-        let markdownContent = `# ${quarter} ${year} — ${totalContributions} contributions\n\n`
+        let markdownContent = `# ${quarter} ${year} — ${totalContributions} contributions\n\n`;
         const sections = {
-            pullRequests: "Pull Requests",
+            pullRequests: "Merged PRs",
             issues: "Issues",
             reviewedPrs: "Reviewed PRs",
             collaborations: "Collaborations",
-        }
+        };
 
         for (const [section, title] of Object.entries(sections)) {
-            const items = data[section]
+            const items = data[section];
 
-            markdownContent += `<details>\n`
-            markdownContent += `  <summary><h2>${title}</h2></summary>\n`
+            markdownContent += `<details>\n`;
+            markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             if (items.length === 0) {
-                markdownContent += `No contribution in this quarter.\n`
+                markdownContent += `No contribution in this quarter.\n`;
             } else {
-                markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`
-                markdownContent += `  <thead>\n`
-                markdownContent += `    <tr>\n`
-                markdownContent += `      <th style='width:5%;'>No.</th>\n`
-                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`
-                markdownContent += `      <th style='width:20%;'>Title</th>\n`
-                markdownContent += `      <th style='width:35%;'>Description</th>\n`
-                markdownContent += `      <th style='width:20%;'>Date</th>\n`
-                markdownContent += `    </tr>\n`
-                markdownContent += `  </thead>\n`
-                markdownContent += `  <tbody>\n`
+                markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
+                markdownContent += `  <thead>\n`;
+                markdownContent += `    <tr>\n`;
+                markdownContent += `      <th style='width:5%;'>No.</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Title</th>\n`;
+                markdownContent += `      <th style='width:35%;'>Description</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Date</th>\n`;
+                markdownContent += `    </tr>\n`;
+                markdownContent += `  </thead>\n`;
+                markdownContent += `  <tbody>\n`;
 
-                let counter = 1
+                let counter = 1;
                 for (const item of items) {
-                    const dateObj = new Date(item.date)
-                    const formattedDate = dateObj.toISOString().split("T")[0]
+                    const dateObj = new Date(item.date);
+                    const formattedDate = dateObj.toISOString().split("T")[0];
 
-                    markdownContent += `    <tr>\n`
-                    markdownContent += `      <td>${counter++}.</td>\n`
-                    markdownContent += `      <td>${item.repo}</td>\n`
-                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
-                    markdownContent += `      <td>${item.description}</td>\n`
-                    markdownContent += `      <td>${formattedDate}</td>\n`
-                    markdownContent += `    </tr>\n`
+                    const sanitizedDescription = item.description
+                        ? item.description.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+                        : "No description provided.";
+
+                    markdownContent += `    <tr>\n`;
+                    markdownContent += `      <td>${counter++}.</td>\n`;
+                    markdownContent += `      <td>${item.repo}</td>\n`;
+                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
+                    markdownContent += `      <td>${sanitizedDescription}</td>\n`;
+                    markdownContent += `      <td>${formattedDate}</td>\n`;
+                    markdownContent += `    </tr>\n`;
                 }
 
-                markdownContent += `  </tbody>\n`
-                markdownContent += `</table>\n`
+                markdownContent += `  </tbody>\n`;
+                markdownContent += `</table>\n`;
             }
 
-            markdownContent += `</details>\n\n`
+            markdownContent += `</details>\n\n`;
         }
 
-        await fs.writeFile(filePath, markdownContent, "utf8")
-        console.log(`Written file: ${filePath}`)
+        await fs.writeFile(filePath, markdownContent, "utf8");
+        console.log(`Written file: ${filePath}`);
     }
 }
 
 async function main() {
+    const cacheFile = "pr_cache.json";
+    let prCache = new Set();
+
+    try {
+        const cacheData = await fs.readFile(cacheFile, "utf8");
+        prCache = new Set(JSON.parse(cacheData));
+        console.log("Loaded PR cache from file.");
+    } catch (e) {
+        if (e.code !== "ENOENT") {
+            console.error("Failed to load PR cache:", e);
+        }
+    }
+
     try {
         const baseDir = "contributions";
         const currentYear = new Date().getFullYear();
         let startYearToFetch = SINCE_YEAR;
 
-        // Check if the contributions folder exists at all
         try {
             await fs.access(baseDir);
             console.log("Contributions folder found.");
 
             const currentYearDir = path.join(baseDir, currentYear.toString());
-            let isCurrentYearComplete = true;
+            let isPreviousQuartersComplete = true;
 
             try {
-                // Check if the current year's directory exists
                 await fs.access(currentYearDir);
 
-                // Check for missing quarter files in the current year
-                const maxQuarter = Math.floor((new Date().getMonth()) / 3) + 1;
-                for (let q = 1; q <= maxQuarter; q++) {
+                const currentMonth = new Date().getMonth();
+                const currentQuarter = Math.floor(currentMonth / 3) + 1;
+
+                for (let q = 1; q < currentQuarter; q++) {
                     const quarterFile = path.join(currentYearDir, `Q${q}-${currentYear}.md`);
                     try {
                         const stats = await fs.stat(quarterFile);
                         if (stats.size === 0) {
-                            isCurrentYearComplete = false;
+                            isPreviousQuartersComplete = false;
                             break;
                         }
                     } catch (e) {
                         if (e.code === "ENOENT") {
-                            isCurrentYearComplete = false;
+                            isPreviousQuartersComplete = false;
                             break;
                         }
                     }
                 }
             } catch (e) {
                 if (e.code === "ENOENT") {
-                    isCurrentYearComplete = false;
+                    isPreviousQuartersComplete = false;
                 } else {
                     throw e;
                 }
             }
 
-            if (isCurrentYearComplete) {
-                console.log(`Current year data is up to date. No action needed.`);
-                return; // Exit the script gracefully
+            if (isPreviousQuartersComplete) {
+                console.log(`Previous quarters' data is up to date. Starting sync for ${currentYear}.`);
+                startYearToFetch = currentYear;
             } else {
-                console.log(`Current year data is incomplete or missing. Starting sync for ${currentYear}.`);
+                console.log(`Current year data is incomplete. Starting sync for ${currentYear}.`);
                 startYearToFetch = currentYear;
             }
 
         } catch (e) {
-            // contributions folder doesn't exist, so it's the first run
             if (e.code === "ENOENT") {
                 console.log(
                     `Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
                 );
-                // No need to set startYearToFetch as it's already SINCE_YEAR
             } else {
                 throw e;
             }
         }
         
         console.log(`Starting data fetch from year: ${startYearToFetch}`);
-        const contributions = await fetchContributions(startYearToFetch);
+        const { contributions, prCache: updatedPrCache } = await fetchContributions(startYearToFetch, prCache);
         const grouped = groupContributionsByQuarter(contributions);
         await writeMarkdownFiles(grouped);
+
+        await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), "utf8");
+        console.log("Updated PR cache saved to file.");
+
         console.log("Contributions update completed successfully.");
 
     } catch (e) {
@@ -369,5 +387,4 @@ async function main() {
         process.exit(1);
     }
 }
-
-main()
+main();
