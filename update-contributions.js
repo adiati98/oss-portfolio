@@ -78,6 +78,8 @@ async function fetchContributions(startYear, prCache) {
                     } else {
                         break;
                     }
+                    // Pause between requests
+                    await new Promise((resolve) => setTimeout(resolve, 1000));
                 } catch (err) {
                     // Handle rate limit errors (status code 403).
                     if (err.response && err.response.status === 403) {
@@ -119,7 +121,7 @@ async function fetchContributions(startYear, prCache) {
             if (seenUrls.pullRequests.has(pr.html_url)) {
                 continue;
             }
-
+            
             // Push the processed PR data to the contributions object.
             contributions.pullRequests.push({
                 title: pr.title,
@@ -130,6 +132,9 @@ async function fetchContributions(startYear, prCache) {
             });
             // Add the URL to the seen set.
             seenUrls.pullRequests.add(pr.html_url);
+            
+            // Cache external PRs
+            prCache.add(pr.html_url);
         }
 
         // --- Fetch Issues authored by the user on other people's repositories ---
@@ -334,7 +339,7 @@ ${index + 1}. \`${item[0]}\` (${item[1]} contributions)`;
             const items = data[section];
 
             markdownContent += `<details>\n`;
-            markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
+            markdownContent += `  <summary><h2>${title}</h2></summary>\n`;
 
             // Check if there are any contributions for this section.
             if (!items || items.length === 0) {
@@ -342,16 +347,16 @@ ${index + 1}. \`${item[0]}\` (${item[1]} contributions)`;
             } else {
                 // If there are items, build an HTML table.
                 markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`;
-                markdownContent += `  <thead>\n`;
-                markdownContent += `    <tr>\n`;
-                markdownContent += `      <th style='width:5%;'>No.</th>\n`;
-                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`;
-                markdownContent += `      <th style='width:20%;'>Title</th>\n`;
-                markdownContent += `      <th style='width:35%;'>Description</th>\n`;
-                markdownContent += `      <th style='width:20%;'>Date</th>\n`;
-                markdownContent += `    </tr>\n`;
-                markdownContent += `  </thead>\n`;
-                markdownContent += `  <tbody>\n`;
+                markdownContent += `  <thead>\n`;
+                markdownContent += `    <tr>\n`;
+                markdownContent += `      <th style='width:5%;'>No.</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Project Name</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Title</th>\n`;
+                markdownContent += `      <th style='width:35%;'>Description</th>\n`;
+                markdownContent += `      <th style='width:20%;'>Date</th>\n`;
+                markdownContent += `    </tr>\n`;
+                markdownContent += `  </thead>\n`;
+                markdownContent += `  <tbody>\n`;
 
                 let counter = 1;
                 // Loop through each item to create a table row.
@@ -370,16 +375,16 @@ ${index + 1}. \`${item[0]}\` (${item[1]} contributions)`;
                             .replace(/\n/g, "<br>")
                         : "No description provided.";
 
-                    markdownContent += `    <tr>\n`;
-                    markdownContent += `      <td>${counter++}.</td>\n`;
-                    markdownContent += `      <td>${item.repo}</td>\n`;
-                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
-                    markdownContent += `      <td>${sanitizedDescription}</td>\n`;
-                    markdownContent += `      <td>${formattedDate}</td>\n`;
-                    markdownContent += `    </tr>\n`;
+                    markdownContent += `    <tr>\n`;
+                    markdownContent += `      <td>${counter++}.</td>\n`;
+                    markdownContent += `      <td>${item.repo}</td>\n`;
+                    markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
+                    markdownContent += `      <td>${sanitizedDescription}</td>\n`;
+                    markdownContent += `      <td>${formattedDate}</td>\n`;
+                    markdownContent += `    </tr>\n`;
                 }
 
-                markdownContent += `  </tbody>\n`;
+                markdownContent += `  </tbody>\n`;
                 markdownContent += `</table>\n`;
             }
 
