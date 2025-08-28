@@ -1,11 +1,12 @@
-const path = require("path")
-const fs = require("fs/promises")
-const axios = require("axios")
+const path = require("path");
+const fs = require("fs/promises");
+const axios = require("axios");
 
 // --- Configuration Variables ---
-const GITHUB_USERNAME = "adiati98" // Change this to your GitHub username
-const SINCE_YEAR = 2019 // Change this to the year of your first contribution
-const BASE_URL = "https://api.github.com"
+// Change these values to match your GitHub profile and history.
+const GITHUB_USERNAME = "adiati98"; //Change this to your GitHub username
+const SINCE_YEAR = 2019; //Change this to the first year of your contribution
+const BASE_URL = "https://api.github.com";
 
 /**
  * Fetches all contribution data from the GitHub API for a given year range.
@@ -67,9 +68,7 @@ async function fetchContributions(startYear, prCache) {
             let page = 1;
             while (true) {
                 try {
-                    const response = await axiosInstance.get(
-                        `/search/issues?q=${query}&per_page=100&page=${page}`
-                    );
+                    const response = await axiosInstance.get(`/search/issues?q=${query}&per_page=100&page=${page}`);
                     results.push(...response.data.items);
 
                     // Check for a 'next' page link in the headers.
@@ -94,9 +93,7 @@ async function fetchContributions(startYear, prCache) {
         }
 
         // --- Fetch Pull Requests authored by the user and merged in the given year ---
-        const prs = await getAllPages(
-            `is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
-        );
+        const prs = await getAllPages(`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`);
 
         for (const pr of prs) {
             // Skip PRs that are already in the cache (from previous runs).
@@ -136,9 +133,7 @@ async function fetchContributions(startYear, prCache) {
         }
 
         // --- Fetch Issues authored by the user on other people's repositories ---
-        const issues = await getAllPages(
-            `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`
-        );
+        const issues = await getAllPages(`is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`);
         for (const issue of issues) {
             if (seenUrls.issues.has(issue.html_url)) {
                 continue;
@@ -159,15 +154,9 @@ async function fetchContributions(startYear, prCache) {
         // --- Fetch Reviewed PRs (PRs reviewed, merged, or closed by the user) ---
         // Note: The GitHub search API doesn't support multiple 'closed-by' or 'merged-by' filters,
         // so we combine multiple queries and deduplicate the results.
-        const reviewedByPrs = await getAllPages(
-            `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        );
-        const mergedByPrs = await getAllPages(
-            `is:pr merged-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        );
-        const closedByPrs = await getAllPages(
-            `is:pr is:closed -author:${GITHUB_USERNAME} closed-by:${GITHUB_USERNAME} commenter:${GITHUB_USERNAME} closed:>=${yearStart} closed:<${yearEnd}`
-        );
+        const reviewedByPrs = await getAllPages(`is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+        const mergedByPrs = await getAllPages(`is:pr merged-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+        const closedByPrs = await getAllPages(`is:pr is:closed -author:${GITHUB_USERNAME} closed-by:${GITHUB_USERNAME} commenter:${GITHUB_USERNAME} closed:>=${yearStart} closed:<${yearEnd}`);
 
         const combinedResults = [...reviewedByPrs, ...mergedByPrs, ...closedByPrs];
         const uniqueReviewedPrs = new Set();
@@ -196,34 +185,27 @@ async function fetchContributions(startYear, prCache) {
         }
 
         // --- Fetch Collaborations (PRs/Issues commented on by the user) ---
-        const collaborationsPrs = await getAllPages(
-            `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        );
-        const collaborationsIssues = await getAllPages(
-            `is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
-        );
-        
+        const collaborationsPrs = await getAllPages(`is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+        const collaborationsIssues = await getAllPages(`is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`);
+
         const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
 
-        for (const pr of allCollaborations) {
+        for (const item of allCollaborations) {
             // Skip collaborations that have already been reviewed or seen.
-            if (
-                seenUrls.collaborations.has(pr.html_url) ||
-                uniqueReviewedPrs.has(pr.html_url)
-            ) {
+            if (seenUrls.collaborations.has(item.html_url) || uniqueReviewedPrs.has(item.html_url)) {
                 continue;
             }
-            const repoParts = new URL(pr.repository_url).pathname.split("/");
+            const repoParts = new URL(item.repository_url).pathname.split("/");
             const owner = repoParts[repoParts.length - 2];
             const repoName = repoParts[repoParts.length - 1];
             contributions.collaborations.push({
-                title: pr.title,
-                url: pr.html_url,
+                title: item.title,
+                url: item.html_url,
                 repo: `${owner}/${repoName}`,
-                description: pr.body || "No description provided.",
-                date: pr.updated_at,
+                description: item.body || "No description provided.",
+                date: item.updated_at,
             });
-            seenUrls.collaborations.add(pr.html_url);
+            seenUrls.collaborations.add(item.html_url);
         }
     }
 
@@ -273,7 +255,7 @@ function groupContributionsByQuarter(contributions) {
  */
 async function writeMarkdownFiles(groupedContributions) {
     const baseDir = "contributions";
-    // Create the base contributions directory if it doesn't exist.
+    // Create the base contributions directory if it's doesn't exist.
     await fs.mkdir(baseDir, { recursive: true });
 
     // Iterate over each quarter's worth of data.
@@ -284,10 +266,7 @@ async function writeMarkdownFiles(groupedContributions) {
 
         const filePath = path.join(yearDir, `${quarter}-${year}.md`);
         // Calculate the total number of contributions for the quarter.
-        const totalContributions = Object.values(data).reduce(
-            (sum, arr) => sum + arr.length,
-            0
-        );
+        const totalContributions = Object.values(data).reduce((sum, arr) => sum + arr.length, 0);
 
         // Skip writing the file if there are no contributions for this quarter.
         if (totalContributions === 0) {
@@ -295,12 +274,58 @@ async function writeMarkdownFiles(groupedContributions) {
             continue;
         }
 
-        // Start building the Markdown content with a main header.
-        let markdownContent = `# ${quarter} ${year} — ${totalContributions} contributions\n\n`;
+        // --- Calculate additional statistics ---
+        const allItems = [...data.pullRequests, ...data.issues, ...data.reviewedPrs, ...data.collaborations];
+        const uniqueRepos = new Set(allItems.map((item) => item.repo));
+        const totalRepos = uniqueRepos.size;
+
+        const repoCounts = allItems.reduce((acc, item) => {
+            acc[item.repo] = (acc[item.repo] || 0) + 1;
+            return acc;
+        }, {});
+
+        const sortedRepos = Object.entries(repoCounts).sort(([, a], [, b]) => b - a);
+        const top3Repos = sortedRepos.slice(0, 3);
+
+        // --- Start building the Markdown content with a main header ---
+        let markdownContent = `# ${quarter} ${year}`;
+
+        markdownContent += `
+## 📊 Quarterly Statistics
+
+* **Total Contributions:** ${totalContributions}
+* **Total Repositories:** ${totalRepos}
+
+### Contribution Breakdown
+
+| Type | Count |
+| :--- | :--- |
+| Merged PRs | ${data.pullRequests.length} |
+| Issues | ${data.issues.length} |
+| Reviewed PRs | ${data.reviewedPrs.length} |
+| Collaborations | ${data.collaborations.length} |
+
+### Top 3 Repositories
+`;
+
+        if (top3Repos.length > 0) {
+            top3Repos.forEach((item, index) => {
+                markdownContent += `
+${index + 1}. \`${item[0]}\` (${item[1]} contributions)`;
+            });
+            markdownContent += `\n`;
+        }
+
+        // --- ADD HORIZONTAL BREAK ---
+        markdownContent += `
+---
+
+`;
+
         const sections = {
             pullRequests: "Merged PRs",
             issues: "Issues",
-            reviewedPrs: "PRs Review",
+            reviewedPrs: "Reviewed PRs",
             collaborations: "Collaborations",
         };
 
@@ -337,11 +362,11 @@ async function writeMarkdownFiles(groupedContributions) {
                     // Sanitize the description to escape HTML characters that could break the table layout.
                     const sanitizedDescription = item.description
                         ? item.description
-                            .replace(/</g, '&lt;')
-                            .replace(/>/g, '&gt;')
-                            .replace(/"/g, '&quot;')
-                            .replace(/'/g, '&#39;')
-                            .replace(/\n/g, '<br>')
+                            .replace(/</g, "&lt;")
+                            .replace(/>/g, "&gt;")
+                            .replace(/"/g, "&quot;")
+                            .replace(/'/g, "&#39;")
+                            .replace(/\n/g, "<br>")
                         : "No description provided.";
 
                     markdownContent += `    <tr>\n`;
@@ -403,7 +428,6 @@ async function main() {
             // Check if the current year's directory exists.
             try {
                 await fs.access(currentYearDir);
-
                 const currentMonth = new Date().getMonth();
                 const currentQuarter = Math.floor(currentMonth / 3) + 1;
 
@@ -440,18 +464,15 @@ async function main() {
                 console.log(`Current year data is incomplete. Starting sync for ${currentYear}.`);
                 startYearToFetch = currentYear;
             }
-
         } catch (e) {
             // If the base directory doesn't exist, run a full sync from the configured SINCE_YEAR.
             if (e.code === "ENOENT") {
-                console.log(
-                    `Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
-                );
+                console.log(`Contributions folder not found. Running full sync from ${SINCE_YEAR}.`);
             } else {
                 throw e;
             }
         }
-        
+
         console.log(`Starting data fetch from year: ${startYearToFetch}`);
         // Call the main functions to fetch, group, and write the data.
         const { contributions, prCache: updatedPrCache } = await fetchContributions(startYearToFetch, prCache);
@@ -463,7 +484,6 @@ async function main() {
         console.log("Updated PR cache saved to file.");
 
         console.log("Contributions update completed successfully.");
-
     } catch (e) {
         // Handle any top-level errors that occur during the process.
         console.error(`Failed to update contributions: ${e.message}`);
@@ -472,3 +492,4 @@ async function main() {
 }
 // Start the main execution.
 main();
+
