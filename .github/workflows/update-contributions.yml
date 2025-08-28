@@ -24,8 +24,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          # CORRECTED: Added node-version to the key to prevent conflicts
+          key: ${{ runner.os }}-node-18-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
+            ${{ runner.os }}-node-18-
             ${{ runner.os }}-node-
 
       - name: Install dependencies
