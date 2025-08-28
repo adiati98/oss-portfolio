@@ -288,7 +288,7 @@ async function writeMarkdownFiles(groupedContributions) {
         const top3Repos = sortedRepos.slice(0, 3);
 
         // --- Start building the Markdown content with a main header ---
-        let markdownContent = `# ${quarter} ${year}`;
+        let markdownContent = `# ${quarter} ${year}\n`;
 
         markdownContent += `
 ## 📊 Quarterly Statistics
@@ -362,6 +362,7 @@ ${index + 1}. \`${item[0]}\` (${item[1]} contributions)`;
                     // Sanitize the description to escape HTML characters that could break the table layout.
                     const sanitizedDescription = item.description
                         ? item.description
+                            .replace(/\r/g, "")
                             .replace(/</g, "&lt;")
                             .replace(/>/g, "&gt;")
                             .replace(/"/g, "&quot;")
@@ -492,4 +493,3 @@ async function main() {
 }
 // Start the main execution.
 main();
-
