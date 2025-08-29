@@ -342,12 +342,14 @@ async function writeMarkdownFiles(groupedContributions) {
 `
 
 		if (top3Repos.length > 0) {
-			top3Repos.forEach((item, index) => {
-				markdownContent += `
-${index + 1}. \`${item[0]}\` (${item[1]} contributions)`
-			})
-			markdownContent += `\n`
-		}
+            top3Repos.forEach((item, index) => {
+                // Add the repository URL to the Markdown output
+                const repoUrl = `https://github.com/${item[0]}`
+                markdownContent += `
+${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
+            })
+            markdownContent += `\n`
+        }
 
 		// --- ADD HORIZONTAL BREAK ---
 		markdownContent += `
