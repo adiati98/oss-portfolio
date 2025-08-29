@@ -342,14 +342,14 @@ async function writeMarkdownFiles(groupedContributions) {
 `
 
 		if (top3Repos.length > 0) {
-            top3Repos.forEach((item, index) => {
-                // Add the repository URL to the Markdown output
-                const repoUrl = `https://github.com/${item[0]}`
-                markdownContent += `
+			top3Repos.forEach((item, index) => {
+				// Add the repository URL to the Markdown output
+				const repoUrl = `https://github.com/${item[0]}`
+				markdownContent += `
 ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
-            })
-            markdownContent += `\n`
-        }
+			})
+			markdownContent += `\n`
+		}
 
 		// --- ADD HORIZONTAL BREAK ---
 		markdownContent += `
@@ -369,32 +369,29 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 			const items = data[section]
 
 			markdownContent += `<details>\n`
-			markdownContent += `  <summary><h2>${title}</h2></summary>\n`
+			markdownContent += `  <summary><h2>${title}</h2></summary>\n`
 
-			// Check if there are any contributions for this section.
 			if (!items || items.length === 0) {
 				markdownContent += `No contribution in this quarter.\n`
 			} else {
-				// If there are items, build an HTML table.
-				markdownContent += `<table style='width:100%; table-layout:fixed;'>\n`
-				markdownContent += `  <thead>\n`
-				markdownContent += `    <tr>\n`
-				markdownContent += `      <th style='width:5%;'>No.</th>\n`
-				markdownContent += `      <th style='width:20%;'>Project Name</th>\n`
-				markdownContent += `      <th style='width:20%;'>Title</th>\n`
-				markdownContent += `      <th style='width:35%;'>Description</th>\n`
-				markdownContent += `      <th style='width:20%;'>Date</th>\n`
-				markdownContent += `    </tr>\n`
-				markdownContent += `  </thead>\n`
-				markdownContent += `  <tbody>\n`
+				// Build the HTML table as a single string
+				let tableContent = `<table style='width:100%; table-layout:fixed;'>\n`
+				tableContent += `  <thead>\n`
+				tableContent += `    <tr>\n`
+				tableContent += `      <th style='width:5%;'>No.</th>\n`
+				tableContent += `      <th style='width:20%;'>Project Name</th>\n`
+				tableContent += `      <th style='width:20%;'>Title</th>\n`
+				tableContent += `      <th style='width:35%;'>Description</th>\n`
+				tableContent += `      <th style='width:20%;'>Date</th>\n`
+				tableContent += `    </tr>\n`
+				tableContent += `  </thead>\n`
+				tableContent += `  <tbody>\n`
 
 				let counter = 1
-				// Loop through each item to create a table row.
 				for (const item of items) {
 					const dateObj = new Date(item.date)
 					const formattedDate = dateObj.toISOString().split("T")[0]
 
-					// Sanitize the description to escape HTML characters that could break the table layout.
 					const sanitizedDescription = item.description
 						? item.description
 								.replace(/\r/g, "")
@@ -405,17 +402,20 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 								.replace(/\n/g, "<br>")
 						: "No description provided."
 
-					markdownContent += `    <tr>\n`
-					markdownContent += `      <td>${counter++}.</td>\n`
-					markdownContent += `      <td>${item.repo}</td>\n`
-					markdownContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
-					markdownContent += `      <td>${sanitizedDescription}</td>\n`
-					markdownContent += `      <td>${formattedDate}</td>\n`
-					markdownContent += `    </tr>\n`
+					tableContent += `    <tr>\n`
+					tableContent += `      <td>${counter++}.</td>\n`
+					tableContent += `      <td>${item.repo}</td>\n`
+					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
+					tableContent += `      <td>${sanitizedDescription}</td>\n`
+					tableContent += `      <td>${formattedDate}</td>\n`
+					tableContent += `    </tr>\n`
 				}
 
-				markdownContent += `  </tbody>\n`
-				markdownContent += `</table>\n`
+				tableContent += `  </tbody>\n`
+				tableContent += `</table>\n`
+
+				// Add the finished table string to the markdown content
+				markdownContent += tableContent
 			}
 
 			markdownContent += `</details>\n\n`
