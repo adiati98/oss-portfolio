@@ -106,7 +106,6 @@ async function fetchContributions(startYear, prCache) {
 		for (const pr of prs) {
 			// 1. Check if the PR is already in the long-term cache.
 			if (prCache.has(pr.html_url)) {
-				console.log(`Skipping cached PR: ${pr.html_url}`)
 				continue // If it's cached, skip to the next PR.
 			}
 
@@ -118,14 +117,12 @@ async function fetchContributions(startYear, prCache) {
 			// 2. Check if the PR is from your own repo.
 			if (owner === GITHUB_USERNAME) {
 				// Log and add to the cache. We don't want to list these.
-				console.log(`Caching new PR from own repo: ${pr.html_url}`)
 				prCache.add(pr.html_url)
 				continue
 			}
 
 			// 3. For an external PR, add it to the cache and log it.
 			prCache.add(pr.html_url)
-			console.log(`Caching new PR from other repo: ${pr.html_url}`)
 
 			// 4. Check the temporary, in-run cache to avoid processing the same PR twice within this run.
 			if (seenUrls.pullRequests.has(pr.html_url)) {
@@ -377,7 +374,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 				markdownContent += `No contribution in this quarter.\n`
 			} else {
 				// Build the HTML table as a single string
-				let tableContent = `<table style='width:100%; table-layout:fixed;'>\n`
+				let tableContent = `<table style='width:100%; table-layout:fixed; margin-top:0;'>\n`
 				tableContent += `  <thead>\n`
 				tableContent += `    <tr>\n`
 				tableContent += `      <th style='width:5%;'>No.</th>\n`
@@ -404,13 +401,13 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 								.replace(/\n/g, "<br>")
 						: "No description provided."
 
-					tableContent += `    <tr>\n`
-					tableContent += `      <td>${counter++}.</td>\n`
-					tableContent += `      <td>${item.repo}</td>\n`
-					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
-					tableContent += `      <td>${sanitizedDescription}</td>\n`
-					tableContent += `      <td>${formattedDate}</td>\n`
-					tableContent += `    </tr>\n`
+					tableContent += `      <tr>\n`
+					tableContent += `        <td>${counter++}.</td>\n`
+					tableContent += `        <td>${item.repo}</td>\n`
+					tableContent += `        <td><a href='${item.url}'>${item.title}</a></td>\n`
+					tableContent += `        <td>${sanitizedDescription}</td>\n`
+					tableContent += `        <td>${formattedDate}</td>\n`
+					tableContent += `      </tr>\n`
 				}
 
 				tableContent += `  </tbody>\n`
@@ -451,82 +448,71 @@ async function main() {
 	}
 
 	try {
-		const baseDir = "contributions"
-		const currentYear = new Date().getFullYear()
-		let startYearToFetch = SINCE_YEAR
+		const dataFile = "all-contributions.json"
+		let allContributions = {
+			pullRequests: [],
+			issues: [],
+			reviewedPrs: [],
+			collaborations: [],
+		}
 
-		// Check if the 'contributions' directory exists.
+		// Try to load the full contributions data from a JSON file.
 		try {
-			await fs.access(baseDir)
-			console.log("Contributions folder found.")
-
-			const currentYearDir = path.join(baseDir, currentYear.toString())
-			let isPreviousQuartersComplete = true
-
-			// Check if the current year's directory exists.
-			try {
-				await fs.access(currentYearDir)
-				const currentMonth = new Date().getMonth()
-				const currentQuarter = Math.floor(currentMonth / 3) + 1
-
-				// Check for existing files for previous quarters of the current year.
-				// This helps to determine if a full re-sync is needed for the current year.
-				for (let q = 1; q < currentQuarter; q++) {
-					const quarterFile = path.join(
-						currentYearDir,
-						`Q${q}-${currentYear}.md`
-					)
-					try {
-						const stats = await fs.stat(quarterFile)
-						if (stats.size === 0) {
-							isPreviousQuartersComplete = false
-							break
-						}
-					} catch (e) {
-						if (e.code === "ENOENT") {
-							isPreviousQuartersComplete = false
-							break
-						}
-					}
-				}
-			} catch (e) {
-				if (e.code === "ENOENT") {
-					isPreviousQuartersComplete = false
-				} else {
-					throw e
-				}
-			}
-
-			// Set the start year for the fetch based on whether previous data is complete.
-			if (isPreviousQuartersComplete) {
-				console.log(
-					`Previous quarters' data is up to date. Starting sync for ${currentYear}.`
-				)
-				startYearToFetch = currentYear
-			} else {
-				console.log(
-					`Current year data is incomplete. Starting sync for ${currentYear}.`
-				)
-				startYearToFetch = currentYear
-			}
+			const data = await fs.readFile(dataFile, "utf8")
+			allContributions = JSON.parse(data)
+			console.log("Loaded existing contributions data.")
 		} catch (e) {
-			// If the base directory doesn't exist, run a full sync from the configured SINCE_YEAR.
-			if (e.code === "ENOENT") {
-				console.log(
-					`Contributions folder not found. Running full sync from ${SINCE_YEAR}.`
-				)
-			} else {
-				throw e
+			if (e.code !== "ENOENT") {
+				console.error("Failed to load contributions data:", e)
 			}
 		}
 
-		console.log(`Starting data fetch from year: ${startYearToFetch}`)
-		// Call the main functions to fetch, group, and write the data.
-		const { contributions, prCache: updatedPrCache } = await fetchContributions(
-			startYearToFetch,
-			prCache
+		// Find the most recent date from all existing contributions to set the start date for the next fetch
+		const allItems = [
+			...allContributions.pullRequests,
+			...allContributions.issues,
+			...allContributions.reviewedPrs,
+			...allContributions.collaborations,
+		]
+
+		let mostRecentDate = new Date(SINCE_YEAR, 0, 1).toISOString()
+		if (allItems.length > 0) {
+			allItems.sort((a, b) => new Date(b.date) - new Date(a.date))
+			mostRecentDate = new Date(allItems[0].date).toISOString()
+		}
+
+		console.log(`Fetching new contributions since: ${mostRecentDate}`)
+
+		// Fetch new contributions and update the cache.
+		const { contributions: newContributions, prCache: updatedPrCache } =
+			await fetchContributions(new Date(mostRecentDate).getFullYear(), prCache)
+
+		// Merge the new contributions with the existing ones.
+		for (const type of Object.keys(allContributions)) {
+			const newItems = newContributions[type]
+			for (const item of newItems) {
+				// Check for duplicates before pushing
+				if (
+					!allContributions[type].some(
+						(existingItem) => existingItem.url === item.url
+					)
+				) {
+					allContributions[type].push(item)
+				}
+			}
+		}
+
+		console.log("Merged new contributions with existing data.")
+
+		// Save the updated, full contributions data to a new JSON file
+		await fs.writeFile(
+			dataFile,
+			JSON.stringify(allContributions, null, 2),
+			"utf8"
 		)
-		const grouped = groupContributionsByQuarter(contributions)
+		console.log("Updated contributions data saved to file.")
+
+		const grouped = groupContributionsByQuarter(allContributions)
 		await writeMarkdownFiles(grouped)
 
 		// Save the updated cache to a file for future runs.
