@@ -368,23 +368,23 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 			const items = data[section]
 
 			markdownContent += `<details>\n`
-			markdownContent += `  <summary><h2>${title}</h2></summary>\n`
+			markdownContent += `  <summary><h2>${title}</h2></summary>\n`
 
 			if (!items || items.length === 0) {
 				markdownContent += `No contribution in this quarter.\n`
 			} else {
 				// Build the HTML table as a single string
-				let tableContent = `<table style='width:100%; table-layout:fixed; margin-top:0;'>\n`
-				tableContent += `  <thead>\n`
-				tableContent += `    <tr>\n`
-				tableContent += `      <th style='width:5%;'>No.</th>\n`
-				tableContent += `      <th style='width:20%;'>Project Name</th>\n`
-				tableContent += `      <th style='width:20%;'>Title</th>\n`
-				tableContent += `      <th style='width:35%;'>Description</th>\n`
-				tableContent += `      <th style='width:20%;'>Date</th>\n`
-				tableContent += `    </tr>\n`
-				tableContent += `  </thead>\n`
-				tableContent += `  <tbody>\n`
+				let tableContent = `<table style='width:100%; table-layout:fixed;'>\n`
+				tableContent += `  <thead>\n`
+				tableContent += `    <tr>\n`
+				tableContent += `      <th style='width:5%;'>No.</th>\n`
+				tableContent += `      <th style='width:20%;'>Project Name</th>\n`
+				tableContent += `      <th style='width:20%;'>Title</th>\n`
+				tableContent += `      <th style='width:35%;'>Description</th>\n`
+				tableContent += `      <th style='width:20%;'>Date</th>\n`
+				tableContent += `    </tr>\n`
+				tableContent += `  </thead>\n`
+				tableContent += `  <tbody>\n`
 
 				let counter = 1
 				for (const item of items) {
@@ -401,16 +401,16 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 								.replace(/\n/g, "<br>")
 						: "No description provided."
 
-					tableContent += `      <tr>\n`
-					tableContent += `        <td>${counter++}.</td>\n`
-					tableContent += `        <td>${item.repo}</td>\n`
-					tableContent += `        <td><a href='${item.url}'>${item.title}</a></td>\n`
-					tableContent += `        <td>${sanitizedDescription}</td>\n`
-					tableContent += `        <td>${formattedDate}</td>\n`
-					tableContent += `      </tr>\n`
+					tableContent += `    <tr>\n`
+					tableContent += `      <td>${counter++}.</td>\n`
+					tableContent += `      <td>${item.repo}</td>\n`
+					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
+					tableContent += `      <td>${sanitizedDescription}</td>\n`
+					tableContent += `      <td>${formattedDate}</td>\n`
+					tableContent += `    </tr>\n`
 				}
 
-				tableContent += `  </tbody>\n`
+				tableContent += `  </tbody>\n`
 				tableContent += `</table>\n`
 
 				// Add the finished table string to the markdown content
