@@ -52,7 +52,7 @@ jobs:
         run: node update-contributions.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_USERNAME: ${{ secrets.GITHUB_USERNAME }}
+          USERNAME: ${{ secrets.USERNAME }}
           SINCE_YEAR: ${{ secrets.SINCE_YEAR }}
 
       - name: Commit and push changes
