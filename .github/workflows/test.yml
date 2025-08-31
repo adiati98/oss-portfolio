@@ -1,4 +1,4 @@
-name: Update Contributions
+name: Test Update Contributions
 
 on:
   schedule:
@@ -37,15 +37,15 @@ jobs:
         id: cache-prs
         uses: actions/cache@v4
         with:
-          path: data/pr-cache.json
-          key: pr-cache-3
+          path: test-data/pr-cache.json
+          key: test-pr-cache
 
       - name: Cache all contributions data
         id: cache-all-data
         uses: actions/cache@v4
         with:
-          path: data/all-contributions.json
-          key: contributions-data-1
+          path: test-data/all-contributions.json
+          key: test-contributions-data
 
       - name: Run contribution script
         id: run-script
