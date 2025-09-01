@@ -179,6 +179,13 @@ async function fetchContributions(startYear, prCache) {
 		const uniqueReviewedPrs = new Set()
 
 		for (const pr of combinedResults) {
+			// Skip any PRs created by a bot.
+			if (pr.user && pr.user.type === "Bot") {
+				// Store the bot-authored PR in the cache to avoid future fetching.
+				prCache.add(pr.html_url)
+				continue
+			}
+			
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
