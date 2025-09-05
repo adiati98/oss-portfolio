@@ -51,52 +51,52 @@ async function fetchContributions(startYear, prCache) {
 
 	const currentYear = new Date().getFullYear()
 
+	/**
+	 * A helper function to fetch all pages for a given search query.
+	 * GitHub's search API is paginated, so this handles fetching all results.
+	 * It also includes logic to handle API rate limits by waiting for 60 seconds if a 403 error is received.
+	 * @param {string} query The GitHub search query string.
+	 * @returns {Promise<Array<object>>} An array of all results from the search.
+	 */
+	async function getAllPages(query) {
+		let results = []
+		let page = 1
+		while (true) {
+			try {
+				const response = await axiosInstance.get(
+					`/search/issues?q=${query}&per_page=100&page=${page}`
+				)
+				results.push(...response.data.items)
+
+				// Check for a 'next' page link in the headers.
+				const linkHeader = response.headers.link
+				if (linkHeader && linkHeader.includes('rel="next"')) {
+					page++
+				} else {
+					break
+				}
+				// Pause between requests
+				await new Promise((resolve) => setTimeout(resolve, 1000))
+			} catch (err) {
+				// Handle rate limit errors (status code 403).
+				if (err.response && err.response.status === 403) {
+					console.log("Rate limit hit. Waiting for 60 seconds...")
+					await new Promise((resolve) => setTimeout(resolve, 60000))
+					continue // Retry the same page after waiting.
+				} else {
+					throw err // Re-throw other errors.
+				}
+			}
+		}
+		return results
+	}
+
 	// Loop through each year from the start year to the current year.
 	for (let year = startYear; year <= currentYear; year++) {
 		console.log(`Fetching contributions for year: ${year}...`)
 		// Define the start and end dates for the year to use in API queries.
 		const yearStart = `${year}-01-01T00:00:00Z`
 		const yearEnd = `${year + 1}-01-01T00:00:00Z`
-
-		/**
-		 * A helper function to fetch all pages for a given search query.
-		 * GitHub's search API is paginated, so this handles fetching all results.
-		 * It also includes logic to handle API rate limits by waiting for 60 seconds if a 403 error is received.
-		 * @param {string} query The GitHub search query string.
-		 * @returns {Promise<Array<object>>} An array of all results from the search.
-		 */
-		async function getAllPages(query) {
-			let results = []
-			let page = 1
-			while (true) {
-				try {
-					const response = await axiosInstance.get(
-						`/search/issues?q=${query}&per_page=100&page=${page}`
-					)
-					results.push(...response.data.items)
-
-					// Check for a 'next' page link in the headers.
-					const linkHeader = response.headers.link
-					if (linkHeader && linkHeader.includes('rel="next"')) {
-						page++
-					} else {
-						break
-					}
-					// Pause between requests
-					await new Promise((resolve) => setTimeout(resolve, 1000))
-				} catch (err) {
-					// Handle rate limit errors (status code 403).
-					if (err.response && err.response.status === 403) {
-						console.log("Rate limit hit. Waiting for 60 seconds...")
-						await new Promise((resolve) => setTimeout(resolve, 60000))
-						continue // Retry the same page after waiting.
-					} else {
-						throw err // Re-throw other errors.
-					}
-				}
-			}
-			return results
-		}
 
 		// --- Fetch Pull Requests authored by the user and merged in the given year ---
 		const prs = await getAllPages(
@@ -134,8 +134,12 @@ async function fetchContributions(startYear, prCache) {
 				title: pr.title,
 				url: pr.html_url,
 				repo: `${owner}/${repoName}`,
-				description: pr.body || "No description provided.",
 				date: pr.created_at,
+				mergedAt: pr.pull_request.merged_at,
+				reviewPeriod: Math.round(
+					(new Date(pr.pull_request.merged_at) - new Date(pr.created_at)) /
+						(1000 * 60 * 60 * 24)
+				),
 			})
 			// Add the URL to the seen set for this run.
 			seenUrls.pullRequests.add(pr.html_url)
@@ -152,12 +156,22 @@ async function fetchContributions(startYear, prCache) {
 			const repoParts = new URL(issue.repository_url).pathname.split("/")
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
+
+			const closingPeriod =
+				issue.state === "closed"
+					? Math.round(
+							(new Date(issue.closed_at) - new Date(issue.created_at)) /
+								(1000 * 60 * 60 * 24)
+					  )
+					: "Open"
+
 			contributions.issues.push({
 				title: issue.title,
 				url: issue.html_url,
 				repo: `${owner}/${repoName}`,
-				description: issue.body || "No description provided.",
 				date: issue.created_at,
+				closedAt: issue.closed_at,
+				closingPeriod,
 			})
 			seenUrls.issues.add(issue.html_url)
 		}
@@ -185,7 +199,7 @@ async function fetchContributions(startYear, prCache) {
 				prCache.add(pr.html_url)
 				continue
 			}
-			
+
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
@@ -197,12 +211,41 @@ async function fetchContributions(startYear, prCache) {
 				const repoParts = new URL(pr.repository_url).pathname.split("/")
 				const owner = repoParts[repoParts.length - 2]
 				const repoName = repoParts[repoParts.length - 1]
+
+				let mergedAt = null
+				let mergePeriod = "Open"
+
+				// Check if the PR is merged and fetch the merged_at date.
+				// The search API's PR object often doesn't contain a merged_at date.
+				// This is the most efficient way to get it without making an extra API call for every PR.
+				if (pr.pull_request && pr.pull_request.merged_at) {
+					mergedAt = pr.pull_request.merged_at
+					mergePeriod =
+						Math.round(
+							(new Date(mergedAt) - new Date(pr.created_at)) /
+								(1000 * 60 * 60 * 24)
+						) + " days"
+				} else if (pr.state === "closed" && pr.merged_at) {
+					// Fallback if the search result itself has the merged_at property.
+					mergedAt = pr.merged_at
+					mergePeriod =
+						Math.round(
+							(new Date(mergedAt) - new Date(pr.created_at)) /
+								(1000 * 60 * 60 * 24)
+						) + " days"
+				} else if (pr.state === "closed") {
+					// If the PR is closed but not merged, we can't calculate a merge period.
+					mergePeriod = "Closed"
+				}
+
 				contributions.reviewedPrs.push({
 					title: pr.title,
 					url: pr.html_url,
 					repo: `${owner}/${repoName}`,
-					description: pr.body || "No description provided.",
 					date: pr.updated_at,
+					createdAt: pr.created_at,
+					mergedAt,
+					mergePeriod,
 				})
 				uniqueReviewedPrs.add(pr.html_url)
 			}
@@ -233,8 +276,8 @@ async function fetchContributions(startYear, prCache) {
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				description: item.body || "No description provided.",
 				date: item.updated_at,
+				createdAt: item.created_at,
 			})
 			seenUrls.collaborations.add(item.html_url)
 		}
@@ -364,18 +407,60 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 `
 
 		const sections = {
-			pullRequests: "Merged PRs",
-			issues: "Issues",
-			reviewedPrs: "Reviewed PRs",
-			collaborations: "Collaborations",
+			pullRequests: {
+				title: "Merged PRs",
+				headers: [
+					"No.",
+					"Project Name",
+					"Title",
+					"Created At",
+					"Merged At",
+					"Review Period",
+				],
+				widths: ["5%", "20%", "30%", "15%", "15%", "15%"],
+				keys: ["repo", "title", "date", "mergedAt", "reviewPeriod"],
+			},
+			issues: {
+				title: "Issues",
+				headers: [
+					"No.",
+					"Project Name",
+					"Title",
+					"Created At",
+					"Closed At",
+					"Closing Period",
+				],
+				widths: ["5%", "25%", "35%", "15%", "15%", "10%"],
+				keys: ["repo", "title", "date", "closedAt", "closingPeriod"],
+			},
+			reviewedPrs: {
+				title: "Reviewed PRs",
+				headers: [
+					"No.",
+					"Project Name",
+					"Title",
+					"Created At",
+					"Reviewed At",
+					"Merged At",
+					"Merge Period",
+				],
+				widths: ["5%", "20%", "25%", "15%", "15%", "10%", "10%"],
+				keys: ["repo", "title", "createdAt", "date", "mergedAt", "mergePeriod"],
+			},
+			collaborations: {
+				title: "Collaborations",
+				headers: ["No.", "Project Name", "Title", "Created At", "Commented At"],
+				widths: ["5%", "30%", "35%", "15%", "15%"],
+				keys: ["repo", "title", "createdAt", "date"],
+			},
 		}
 
 		// Loop through each contribution type to create a collapsible section.
-		for (const [section, title] of Object.entries(sections)) {
+		for (const [section, sectionInfo] of Object.entries(sections)) {
 			const items = data[section]
 
 			markdownContent += `<details>\n`
-			markdownContent += `  <summary><h2>${title}</h2></summary>\n`
+			markdownContent += `  <summary><h2>${sectionInfo.title}</h2></summary>\n`
 
 			if (!items || items.length === 0) {
 				markdownContent += `No contribution in this quarter.\n`
@@ -384,36 +469,66 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 				let tableContent = `<table style='width:100%; table-layout:fixed;'>\n`
 				tableContent += `  <thead>\n`
 				tableContent += `    <tr>\n`
-				tableContent += `      <th style='width:5%;'>No.</th>\n`
-				tableContent += `      <th style='width:20%;'>Project Name</th>\n`
-				tableContent += `      <th style='width:20%;'>Title</th>\n`
-				tableContent += `      <th style='width:35%;'>Description</th>\n`
-				tableContent += `      <th style='width:20%;'>Date</th>\n`
+				for (let i = 0; i < sectionInfo.headers.length; i++) {
+					tableContent += `      <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`
+				}
 				tableContent += `    </tr>\n`
 				tableContent += `  </thead>\n`
 				tableContent += `  <tbody>\n`
 
 				let counter = 1
 				for (const item of items) {
-					const dateObj = new Date(item.date)
-					const formattedDate = dateObj.toISOString().split("T")[0]
-
-					const sanitizedDescription = item.description
-						? item.description
-								.replace(/\r/g, "")
-								.replace(/</g, "&lt;")
-								.replace(/>/g, "&gt;")
-								.replace(/"/g, "&quot;")
-								.replace(/'/g, "&#39;")
-								.replace(/\n/g, "<br>")
-						: "No description provided."
-
 					tableContent += `    <tr>\n`
 					tableContent += `      <td>${counter++}.</td>\n`
 					tableContent += `      <td>${item.repo}</td>\n`
 					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
-					tableContent += `      <td>${sanitizedDescription}</td>\n`
-					tableContent += `      <td>${formattedDate}</td>\n`
+
+					if (section === "pullRequests") {
+						const createdAt = new Date(item.date).toISOString().split("T")[0]
+						const mergedAt = item.mergedAt
+							? new Date(item.mergedAt).toISOString().split("T")[0]
+							: "N/A"
+						const reviewPeriod = item.mergedAt
+							? `${item.reviewPeriod} days`
+							: "N/A"
+						tableContent += `      <td>${createdAt}</td>\n`
+						tableContent += `      <td>${mergedAt}</td>\n`
+						tableContent += `      <td>${reviewPeriod}</td>\n`
+					} else if (section === "issues") {
+						const createdAt = new Date(item.date).toISOString().split("T")[0]
+						const closedAt = item.closedAt
+							? new Date(item.closedAt).toISOString().split("T")[0]
+							: "N/A"
+						tableContent += `      <td>${createdAt}</td>\n`
+						tableContent += `      <td>${closedAt}</td>\n`
+						tableContent += `      <td>${
+							item.closingPeriod === "Open"
+								? "Open"
+								: `${item.closingPeriod} days`
+						}</td>\n`
+					} else if (section === "reviewedPrs") {
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
+						const reviewedAt = new Date(item.date).toISOString().split("T")[0]
+						const mergedAt = item.mergedAt
+							? new Date(item.mergedAt).toISOString().split("T")[0]
+							: "N/A"
+						const mergePeriod =
+							item.mergePeriod === "Open" ? "Open" : item.mergePeriod
+						tableContent += `      <td>${createdAt}</td>\n`
+						tableContent += `      <td>${reviewedAt}</td>\n`
+						tableContent += `      <td>${mergedAt}</td>\n`
+						tableContent += `      <td>${mergePeriod}</td>\n`
+					} else if (section === "collaborations") {
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
+						const commentedAt = new Date(item.date).toISOString().split("T")[0]
+						tableContent += `      <td>${createdAt}</td>\n`
+						tableContent += `      <td>${commentedAt}</td>\n`
+					}
+
 					tableContent += `    </tr>\n`
 				}
 
@@ -505,12 +620,16 @@ async function main() {
 		for (const type of Object.keys(allContributions)) {
 			const newItems = newContributions[type]
 			for (const item of newItems) {
-				// Check for duplicates before pushing
-				if (
-					!allContributions[type].some(
-						(existingItem) => existingItem.url === item.url
-					)
-				) {
+				// Find the index of the existing item.
+				const existingIndex = allContributions[type].findIndex(
+					(existingItem) => existingItem.url === item.url
+				)
+
+				if (existingIndex !== -1) {
+					// If the item exists, update the existing entry with the new one.
+					allContributions[type][existingIndex] = item
+				} else {
+					// If the item is new, push it to the array.
 					allContributions[type].push(item)
 				}
 			}
