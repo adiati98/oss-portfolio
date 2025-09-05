@@ -38,14 +38,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: data/pr-cache.json
-          key: pr-cache-4
+          key: pr-cache-5
 
       - name: Cache all contributions data
         id: cache-all-data
         uses: actions/cache@v4
         with:
           path: data/all-contributions.json
-          key: contributions-data-2
+          key: contributions-data-3
 
       - name: Run contribution script
         id: run-script
