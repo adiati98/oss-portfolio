@@ -590,52 +590,128 @@ async function main() {
 			const data = await fs.readFile(dataFile, "utf8")
 			allContributions = JSON.parse(data)
 			console.log("Loaded existing contributions data.")
+
+			// Clean up any duplicates in the cache based on current status
+			const urlToStatus = new Map()
+			
+			// First pass: collect all URLs and their latest status
+			for (const type of Object.keys(allContributions)) {
+				for (const item of allContributions[type]) {
+					const status = {
+						type,
+						date: new Date(item.date),
+						item
+					}
+					
+					// Update only if this is a more recent status
+					const existing = urlToStatus.get(item.url)
+					if (!existing || status.date > existing.date) {
+						urlToStatus.set(item.url, status)
+					}
+				}
+			}
+
+			// Second pass: rebuild collections with correct categorization
+			allContributions = {
+				pullRequests: [],
+				issues: [],
+				reviewedPrs: [],
+				collaborations: []
+			}
+
+			// Re-categorize based on latest status
+			for (const [_, status] of urlToStatus) {
+				allContributions[status.type].push(status.item)
+			}
+
+			console.log("Cleaned up existing contributions and removed duplicates.")
 		} catch (e) {
 			if (e.code !== "ENOENT") {
 				console.error("Failed to load contributions data:", e)
 			}
 		}
 
-		// Find the most recent date from all existing contributions to set the start date for the next fetch
-		const allItems = [
-			...allContributions.pullRequests,
-			...allContributions.issues,
-			...allContributions.reviewedPrs,
-			...allContributions.collaborations,
-		]
-
-		let mostRecentDate = new Date(SINCE_YEAR, 0, 1).toISOString()
-		if (allItems.length > 0) {
-			allItems.sort((a, b) => new Date(b.date) - new Date(a.date))
-			mostRecentDate = new Date(allItems[0].date).toISOString()
+		// Determine optimal fetch strategy based on last update time
+		const cacheStats = await fs.stat(dataFile).catch(() => null)
+		const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null
+		const today = new Date()
+		
+		let fetchStartYear
+		if (!lastUpdate) {
+			// First run - fetch everything
+			fetchStartYear = SINCE_YEAR
+			console.log('First run - fetching all contributions')
+		} else {
+			// Check what month/year we're in compared to last update
+			const sameMonth = lastUpdate.getMonth() === today.getMonth() && 
+							 lastUpdate.getFullYear() === today.getFullYear()
+			const previousMonth = (lastUpdate.getMonth() === today.getMonth() - 1 && 
+								 lastUpdate.getFullYear() === today.getFullYear()) ||
+								(lastUpdate.getMonth() === 11 && today.getMonth() === 0 && 
+								 lastUpdate.getFullYear() === today.getFullYear() - 1)
+			
+			if (sameMonth) {
+				// If updated this month, only fetch current year
+				fetchStartYear = today.getFullYear()
+				console.log('Recent update - fetching only current year')
+			} else if (previousMonth) {
+				// If updated last month, fetch last 2 years (catch late merges/reviews)
+				fetchStartYear = today.getFullYear() - 1
+				console.log('Last month update - fetching last two years')
+			} else {
+				// Older update - fetch everything
+				fetchStartYear = SINCE_YEAR
+				console.log('Older update - fetching all years')
+			}
 		}
 
-		console.log(`Fetching new contributions since: ${mostRecentDate}`)
+		console.log(`Fetching contributions from year: ${fetchStartYear}`)
 
 		// Fetch new contributions and update the cache.
 		const { contributions: newContributions, prCache: updatedPrCache } =
-			await fetchContributions(new Date(mostRecentDate).getFullYear(), prCache)
+			await fetchContributions(fetchStartYear, prCache)
 
-		// Merge the new contributions with the existing ones.
-		for (const type of Object.keys(allContributions)) {
-			const newItems = newContributions[type]
-			for (const item of newItems) {
-				// Find the index of the existing item.
-				const existingIndex = allContributions[type].findIndex(
-					(existingItem) => existingItem.url === item.url
-				)
-
-				if (existingIndex !== -1) {
-					// If the item exists, update the existing entry with the new one.
-					allContributions[type][existingIndex] = item
-				} else {
-					// If the item is new, push it to the array.
-					allContributions[type].push(item)
+		// Combine new and existing contributions, handling category changes
+		const urlToLatestStatus = new Map()
+		
+		// First collect all items (both existing and new) with their latest status
+		const allSources = [allContributions, newContributions]
+		for (const source of allSources) {
+			for (const type of Object.keys(source)) {
+				for (const item of source[type]) {
+					const status = {
+						type,
+						date: new Date(item.date),
+						item
+					}
+					
+					const existing = urlToLatestStatus.get(item.url)
+					if (!existing || status.date > existing.date) {
+						urlToLatestStatus.set(item.url, status)
+					}
 				}
 			}
 		}
 
-		console.log("Merged new contributions with existing data.")
+		// Rebuild collections with correct categorization
+		allContributions = {
+			pullRequests: [],
+			issues: [],
+			reviewedPrs: [],
+			collaborations: []
+		}
+
+		// Categorize each item based on its latest status
+		for (const [_, status] of urlToLatestStatus) {
+			allContributions[status.type].push(status.item)
+		}
+
+		// Sort each category by date
+		for (const type of Object.keys(allContributions)) {
+			allContributions[type].sort((a, b) => new Date(b.date) - new Date(a.date))
+		}
+
+		console.log("Merged and categorized all contributions based on latest status.")
 
 		// Save the updated, full contributions data to a new JSON file
 		await fs.writeFile(
