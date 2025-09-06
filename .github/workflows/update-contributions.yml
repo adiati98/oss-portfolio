@@ -2,7 +2,8 @@ name: Update Contributions
 
 on:
   schedule:
-    - cron: '1 0 * * 1'
+    # Runs every day at 00:01 UTC
+    - cron: '1 0 * * *'
   workflow_dispatch:
 
 jobs:
@@ -13,39 +14,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for better commit context
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Cache Node.js modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-18-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-18-
-            ${{ runner.os }}-node-
+          cache: 'npm'  # Automatically handles node_modules caching
 
       - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: npm install
-
-      - name: Cache PRs
-        id: cache-prs
-        uses: actions/cache@v4
-        with:
-          path: data/pr-cache.json
-          key: pr-cache-5
-
-      - name: Cache all contributions data
-        id: cache-all-data
-        uses: actions/cache@v4
-        with:
-          path: data/all-contributions.json
-          key: contributions-data-3
+        run: npm ci  # Uses package-lock.json for exact versions
 
       - name: Run contribution script
         id: run-script
@@ -60,4 +39,11 @@ jobs:
       
           git add contributions/ data/
       
-          git diff --staged --quiet || (git commit -m "docs: Update contributions [skip ci]" && git push)
+          if ! git diff --staged --quiet; then
+            git commit -m "docs: Update contributions [skip ci]
+            
+            Updated on $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            git push
+          else
+            echo "No changes to commit"
+          fi
