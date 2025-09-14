@@ -578,56 +578,31 @@ async function main() {
 	}
 
 	try {
-		let allContributions = {
-			pullRequests: [],
-			issues: [],
-			reviewedPrs: [],
-			collaborations: [],
-		}
+		const urlToLatestStatus = new Map()
 
 		// Try to load the full contributions data from a JSON file.
 		try {
 			const data = await fs.readFile(dataFile, "utf8")
-			allContributions = JSON.parse(data)
+			const allContributions = JSON.parse(data)
 			console.log("Loaded existing contributions data.")
 
-			// Clean up any duplicates in the cache based on current status
-			const urlToStatus = new Map()
-			
-			// First pass: collect all URLs and their latest status
+			// First pass: collect all URLs and their latest status from the existing file
 			for (const type of Object.keys(allContributions)) {
 				for (const item of allContributions[type]) {
 					const status = {
 						type,
 						date: new Date(item.date),
-						item
+						item,
 					}
-					
-					// Update only if this is a more recent status
-					const existing = urlToStatus.get(item.url)
-					if (!existing || status.date > existing.date) {
-						urlToStatus.set(item.url, status)
-					}
+					urlToLatestStatus.set(item.url, status)
 				}
 			}
-
-			// Second pass: rebuild collections with correct categorization
-			allContributions = {
-				pullRequests: [],
-				issues: [],
-				reviewedPrs: [],
-				collaborations: []
-			}
-
-			// Re-categorize based on latest status
-			for (const [_, status] of urlToStatus) {
-				allContributions[status.type].push(status.item)
-			}
-
-			console.log("Cleaned up existing contributions and removed duplicates.")
+			console.log("Indexed existing contributions for status updates.")
 		} catch (e) {
 			if (e.code !== "ENOENT") {
 				console.error("Failed to load contributions data:", e)
+			} else {
+				console.log("No existing data file found. Starting fresh.")
 			}
 		}
 
@@ -635,33 +610,31 @@ async function main() {
 		const cacheStats = await fs.stat(dataFile).catch(() => null)
 		const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null
 		const today = new Date()
-		
+
 		let fetchStartYear
 		if (!lastUpdate) {
-			// First run - fetch everything
 			fetchStartYear = SINCE_YEAR
-			console.log('First run - fetching all contributions')
+			console.log("First run - fetching all contributions")
 		} else {
-			// Check what month/year we're in compared to last update
-			const sameMonth = lastUpdate.getMonth() === today.getMonth() && 
-							 lastUpdate.getFullYear() === today.getFullYear()
-			const previousMonth = (lastUpdate.getMonth() === today.getMonth() - 1 && 
-								 lastUpdate.getFullYear() === today.getFullYear()) ||
-								(lastUpdate.getMonth() === 11 && today.getMonth() === 0 && 
-								 lastUpdate.getFullYear() === today.getFullYear() - 1)
-			
+			const sameMonth =
+				lastUpdate.getMonth() === today.getMonth() &&
+				lastUpdate.getFullYear() === today.getFullYear()
+			const previousMonth =
+				(lastUpdate.getMonth() === today.getMonth() - 1 &&
+					today.getFullYear() === lastUpdate.getFullYear()) ||
+				(lastUpdate.getMonth() === 11 &&
+					today.getMonth() === 0 &&
+					today.getFullYear() === lastUpdate.getFullYear() + 1)
+
 			if (sameMonth) {
-				// If updated this month, only fetch current year
 				fetchStartYear = today.getFullYear()
-				console.log('Recent update - fetching only current year')
+				console.log("Recent update - fetching only current year")
 			} else if (previousMonth) {
-				// If updated last month, fetch last 2 years (catch late merges/reviews)
 				fetchStartYear = today.getFullYear() - 1
-				console.log('Last month update - fetching last two years')
+				console.log("Last month update - fetching last two years")
 			} else {
-				// Older update - fetch everything
 				fetchStartYear = SINCE_YEAR
-				console.log('Older update - fetching all years')
+				console.log("Older update - fetching all years")
 			}
 		}
 
@@ -671,57 +644,54 @@ async function main() {
 		const { contributions: newContributions, prCache: updatedPrCache } =
 			await fetchContributions(fetchStartYear, prCache)
 
-		// Combine new and existing contributions, handling category changes
-		const urlToLatestStatus = new Map()
-		
-		// First collect all items (both existing and new) with their latest status
-		const allSources = [allContributions, newContributions]
+		// Second pass: merge new contributions, updating status for existing ones.
+		const allSources = [newContributions]
 		for (const source of allSources) {
 			for (const type of Object.keys(source)) {
 				for (const item of source[type]) {
-					const status = {
+					const existing = urlToLatestStatus.get(item.url)
+					// Always use the latest item, as the new fetch is more up-to-date.
+					urlToLatestStatus.set(item.url, {
 						type,
 						date: new Date(item.date),
-						item
-					}
-					
-					const existing = urlToLatestStatus.get(item.url)
-					if (!existing || status.date > existing.date) {
-						urlToLatestStatus.set(item.url, status)
-					}
+						item,
+					})
 				}
 			}
 		}
 
-		// Rebuild collections with correct categorization
-		allContributions = {
+		// Rebuild collections with correct categorization based on latest status
+		let finalContributions = {
 			pullRequests: [],
 			issues: [],
 			reviewedPrs: [],
-			collaborations: []
+			collaborations: [],
 		}
 
-		// Categorize each item based on its latest status
 		for (const [_, status] of urlToLatestStatus) {
-			allContributions[status.type].push(status.item)
+			finalContributions[status.type].push(status.item)
 		}
 
 		// Sort each category by date
-		for (const type of Object.keys(allContributions)) {
-			allContributions[type].sort((a, b) => new Date(b.date) - new Date(a.date))
+		for (const type of Object.keys(finalContributions)) {
+			finalContributions[type].sort(
+				(a, b) => new Date(b.date) - new Date(a.date)
+			)
 		}
 
-		console.log("Merged and categorized all contributions based on latest status.")
+		console.log(
+			"Merged and categorized all contributions based on latest status."
+		)
 
 		// Save the updated, full contributions data to a new JSON file
 		await fs.writeFile(
 			dataFile,
-			JSON.stringify(allContributions, null, 2),
+			JSON.stringify(finalContributions, null, 2),
 			"utf8"
 		)
 		console.log("Updated contributions data saved to file.")
 
-		const grouped = groupContributionsByQuarter(allContributions)
+		const grouped = groupContributionsByQuarter(finalContributions)
 		await writeMarkdownFiles(grouped)
 
 		// Save the updated cache to a file for future runs.
