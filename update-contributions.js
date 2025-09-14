@@ -92,37 +92,108 @@ async function fetchContributions(startYear, prCache) {
 	}
 
 	/**
-	 * Fetches the date of the first review for a given pull request.
+	 * Fetches the date of the first review for a given pull request, ignoring bot reviews.
 	 * @param {string} owner The repository owner.
 	 * @param {string} repo The repository name.
 	 * @param {number} prNumber The pull request number.
-	 * @returns {Promise<string|null>} The date of the first review, or null if no reviews are found.
+	 * @returns {Promise<string|null>} The date of the first human review, or null if no human reviews are found.
 	 */
 	async function getPrFirstReviewDate(owner, repo, prNumber) {
 		try {
 			const response = await axiosInstance.get(
 				`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`
 			)
-			// The API returns reviews in chronological order, so the first one is the first review.
-			if (response.data.length > 0) {
-				return response.data[0].submitted_at
+			// Find the first review that is not from a bot.
+			const firstHumanReview = response.data.find(
+				(review) => review.user.type !== "Bot"
+			)
+			if (firstHumanReview) {
+				return firstHumanReview.submitted_at
 			}
 			return null
 		} catch (err) {
 			// The most reliable way to handle inaccessible PRs is to catch the error and continue.
 			if (err.response && err.response.status === 403) {
 				console.log(
-					`Permission denied (403) for PR #${prNumber} in ${owner}/${repo}. Skipping.`
+					`PR #${prNumber} in ${owner}/${repo} is not publicly available (403). Skipping.`
 				)
 				return null
 			}
 			if (err.response && err.response.status === 404) {
-				console.log(
-					`Resource not found (404) for PR #${prNumber} in ${owner}/${repo}. Skipping.`
-				)
+				console.log(`PR #${prNumber} in ${owner}/${repo} not found (404). Skipping.`)
 				return null
 			}
 			// If it's another type of error, re-throw it.
+			throw err
+		}
+	}
+
+	/**
+	 * Fetches the date of the user's first review on a given pull request.
+	 * @param {string} owner The repository owner.
+	 * @param {string} repo The repository name.
+	 * @param {number} prNumber The pull request number.
+	 * @param {string} username The username to filter by.
+	 * @returns {Promise<string|null>} The date of the user's first review, or null if none is found.
+	 */
+	async function getPrMyFirstReviewDate(owner, repo, prNumber, username) {
+		try {
+			const response = await axiosInstance.get(
+				`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`
+			)
+			// Filter for reviews by the specified user and sort chronologically.
+			const myReviews = response.data
+				.filter((review) => review.user.login === username)
+				.sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at))
+			// The first review in the sorted list is the user's first review.
+			if (myReviews.length > 0) {
+				return myReviews[0].submitted_at
+			}
+			return null
+		} catch (err) {
+			if (
+				err.response &&
+				(err.response.status === 403 || err.response.status === 404)
+			) {
+				return null
+			}
+			throw err
+		}
+	}
+
+	/**
+	 * Fetches the date of the user's first comment on an issue or PR.
+	 * @param {string} url The comments URL for the issue or PR.
+	 * @param {string} username The username to filter comments by.
+	 * @returns {Promise<string|null>} The date of the user's first comment, or null if none is found.
+	 */
+	async function getFirstCommentDate(url, username) {
+		try {
+			let page = 1
+			while (true) {
+				const response = await axiosInstance.get(
+					`${url}?per_page=100&page=${page}`
+				)
+				const myFirstComment = response.data.find(
+					(comment) => comment.user.login === username
+				)
+				if (myFirstComment) {
+					return myFirstComment.created_at
+				}
+				const linkHeader = response.headers.link
+				if (linkHeader && linkHeader.includes('rel="next"')) {
+					page++
+				} else {
+					return null // No more pages and no comment found.
+				}
+			}
+		} catch (err) {
+			if (
+				err.response &&
+				(err.response.status === 403 || err.response.status === 404)
+			) {
+				return null
+			}
 			throw err
 		}
 	}
@@ -229,7 +300,7 @@ async function fetchContributions(startYear, prCache) {
 		const uniqueReviewedPrs = new Set()
 
 		for (const pr of combinedResults) {
-			// --- NEW LOGIC TO CHECK IF REPOSITORY IS PRIVATE ---
+			// --- Check if repository is private ---
 			if (pr.private) {
 				console.log(`Skipping private repository PR: ${pr.html_url}`)
 				prCache.add(pr.html_url)
@@ -288,10 +359,25 @@ async function fetchContributions(startYear, prCache) {
 					repoName,
 					prNumber
 				)
+				const myFirstReviewDate = await getPrMyFirstReviewDate(
+					owner,
+					repoName,
+					prNumber,
+					GITHUB_USERNAME
+				)
+
 				if (firstReviewDate) {
 					firstReviewPeriod =
 						Math.round(
 							(new Date(firstReviewDate) - new Date(pr.created_at)) /
+								(1000 * 60 * 60 * 24)
+						) + " days"
+				}
+				let myFirstReviewPeriod = "N/A"
+				if (myFirstReviewDate) {
+					myFirstReviewPeriod =
+						Math.round(
+							(new Date(myFirstReviewDate) - new Date(pr.created_at)) /
 								(1000 * 60 * 60 * 24)
 						) + " days"
 				}
@@ -305,6 +391,9 @@ async function fetchContributions(startYear, prCache) {
 					mergedAt,
 					mergePeriod,
 					firstReviewPeriod,
+					firstReviewDate,
+					myFirstReviewDate,
+					myFirstReviewPeriod,
 				})
 				uniqueReviewedPrs.add(pr.html_url)
 			}
@@ -331,12 +420,20 @@ async function fetchContributions(startYear, prCache) {
 			const repoParts = new URL(item.repository_url).pathname.split("/")
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
+
+			// --- Fetch first comment date ---
+			const firstCommentDate = await getFirstCommentDate(
+				item.comments_url,
+				GITHUB_USERNAME
+			)
+
 			contributions.collaborations.push({
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: item.updated_at,
+				date: item.updated_at, // Keeping this for the date grouping logic
 				createdAt: item.created_at,
+				firstCommentedAt: firstCommentDate,
 			})
 			seenUrls.collaborations.add(item.html_url)
 		}
@@ -500,10 +597,21 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Title",
 					"Created At",
 					"Reviewed At",
-					"First Review Period",
+					"My First Review",
+					"Time to First Review",
+					"My First Review Period",
 				],
-				widths: ["5%", "20%", "35%", "15%", "15%", "10%"],
-				keys: ["repo", "title", "createdAt", "date", "firstReviewPeriod"],
+				widths: ["5%", "15%", "25%", "10%", "10%", "10%", "10%", "15%"],
+				keys: [
+					"repo",
+					"title",
+					"createdAt",
+					"date",
+					"firstReviewDate",
+					"myFirstReviewDate",
+					"firstReviewPeriod",
+					"myFirstReviewPeriod",
+				],
 			},
 			collaborations: {
 				title: "Collaborations",
@@ -518,7 +626,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 			const items = data[section]
 
 			markdownContent += `<details>\n`
-			markdownContent += `  <summary><h2>${sectionInfo.title}</h2></summary>\n`
+			markdownContent += ` <summary><h2>${sectionInfo.title}</h2></summary>\n`
 
 			if (!items || items.length === 0) {
 				markdownContent += `No contribution in this quarter.\n`
@@ -565,17 +673,31 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 								: `${item.closingPeriod} days`
 						}</td>\n`
 					} else if (section === "reviewedPrs") {
-						const createdAt = new Date(item.createdAt).toISOString().split("T")[0]
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
 						const reviewedAt = new Date(item.date).toISOString().split("T")[0]
-						const firstReviewPeriod = item.firstReviewPeriod || "N/A"
+						const firstReviewAt = item.firstReviewDate
+							? new Date(item.firstReviewDate).toISOString().split("T")[0]
+							: "N/A"
+						const myFirstReviewAt = item.myFirstReviewDate
+							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
+							: "N/A"
+						const timeToFirstReview = item.firstReviewPeriod || "N/A"
+						const myFirstReviewPeriod = item.myFirstReviewPeriod || "N/A"
+
 						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${reviewedAt}</td>\n`
-						tableContent += `      <td>${firstReviewPeriod}</td>\n`
+						tableContent += `      <td>${firstReviewAt}</td>\n`
+						tableContent += `      <td>${myFirstReviewAt}</td>\n`
+						tableContent += `      <td>${timeToFirstReview}</td>\n`
+						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
 							.split("T")[0]
-						const commentedAt = new Date(item.date).toISOString().split("T")[0]
+						const commentedAt = item.firstCommentedAt
+							? new Date(item.firstCommentedAt).toISOString().split("T")[0]
+							: "N/A"
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${commentedAt}</td>\n`
 					}
@@ -701,12 +823,16 @@ async function main() {
 			for (const type of Object.keys(source)) {
 				for (const item of source[type]) {
 					const existing = urlToLatestStatus.get(item.url)
-					// Always use the latest item, as the new fetch is more up-to-date.
-					urlToLatestStatus.set(item.url, {
-						type,
-						date: new Date(item.date),
-						item,
-					})
+					const newItemDate = new Date(item.date)
+
+					// Only update the existing item if the newly fetched item is more recent.
+					if (!existing || newItemDate > existing.date) {
+						urlToLatestStatus.set(item.url, {
+							type,
+							date: newItemDate,
+							item,
+						})
+					}
 				}
 			}
 		}
