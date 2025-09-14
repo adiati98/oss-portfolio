@@ -91,6 +91,42 @@ async function fetchContributions(startYear, prCache) {
 		return results
 	}
 
+	/**
+	 * Fetches the date of the first review for a given pull request.
+	 * @param {string} owner The repository owner.
+	 * @param {string} repo The repository name.
+	 * @param {number} prNumber The pull request number.
+	 * @returns {Promise<string|null>} The date of the first review, or null if no reviews are found.
+	 */
+	async function getPrFirstReviewDate(owner, repo, prNumber) {
+		try {
+			const response = await axiosInstance.get(
+				`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`
+			)
+			// The API returns reviews in chronological order, so the first one is the first review.
+			if (response.data.length > 0) {
+				return response.data[0].submitted_at
+			}
+			return null
+		} catch (err) {
+			// The most reliable way to handle inaccessible PRs is to catch the error and continue.
+			if (err.response && err.response.status === 403) {
+				console.log(
+					`Permission denied (403) for PR #${prNumber} in ${owner}/${repo}. Skipping.`
+				)
+				return null
+			}
+			if (err.response && err.response.status === 404) {
+				console.log(
+					`Resource not found (404) for PR #${prNumber} in ${owner}/${repo}. Skipping.`
+				)
+				return null
+			}
+			// If it's another type of error, re-throw it.
+			throw err
+		}
+	}
+
 	// Loop through each year from the start year to the current year.
 	for (let year = startYear; year <= currentYear; year++) {
 		console.log(`Fetching contributions for year: ${year}...`)
@@ -193,6 +229,13 @@ async function fetchContributions(startYear, prCache) {
 		const uniqueReviewedPrs = new Set()
 
 		for (const pr of combinedResults) {
+			// --- NEW LOGIC TO CHECK IF REPOSITORY IS PRIVATE ---
+			if (pr.private) {
+				console.log(`Skipping private repository PR: ${pr.html_url}`)
+				prCache.add(pr.html_url)
+				continue // Skip to the next PR
+			}
+
 			// Skip any PRs created by a bot.
 			if (pr.user && pr.user.type === "Bot") {
 				// Store the bot-authored PR in the cache to avoid future fetching.
@@ -211,9 +254,11 @@ async function fetchContributions(startYear, prCache) {
 				const repoParts = new URL(pr.repository_url).pathname.split("/")
 				const owner = repoParts[repoParts.length - 2]
 				const repoName = repoParts[repoParts.length - 1]
+				const prNumber = pr.number
 
 				let mergedAt = null
 				let mergePeriod = "Open"
+				let firstReviewPeriod = "N/A"
 
 				// Check if the PR is merged and fetch the merged_at date.
 				// The search API's PR object often doesn't contain a merged_at date.
@@ -238,6 +283,19 @@ async function fetchContributions(startYear, prCache) {
 					mergePeriod = "Closed"
 				}
 
+				const firstReviewDate = await getPrFirstReviewDate(
+					owner,
+					repoName,
+					prNumber
+				)
+				if (firstReviewDate) {
+					firstReviewPeriod =
+						Math.round(
+							(new Date(firstReviewDate) - new Date(pr.created_at)) /
+								(1000 * 60 * 60 * 24)
+						) + " days"
+				}
+
 				contributions.reviewedPrs.push({
 					title: pr.title,
 					url: pr.html_url,
@@ -246,6 +304,7 @@ async function fetchContributions(startYear, prCache) {
 					createdAt: pr.created_at,
 					mergedAt,
 					mergePeriod,
+					firstReviewPeriod,
 				})
 				uniqueReviewedPrs.add(pr.html_url)
 			}
@@ -441,11 +500,10 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Title",
 					"Created At",
 					"Reviewed At",
-					"Merged At",
-					"Merge Period",
+					"First Review Period",
 				],
-				widths: ["5%", "20%", "25%", "15%", "15%", "10%", "10%"],
-				keys: ["repo", "title", "createdAt", "date", "mergedAt", "mergePeriod"],
+				widths: ["5%", "20%", "35%", "15%", "15%", "10%"],
+				keys: ["repo", "title", "createdAt", "date", "firstReviewPeriod"],
 			},
 			collaborations: {
 				title: "Collaborations",
@@ -507,19 +565,12 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 								: `${item.closingPeriod} days`
 						}</td>\n`
 					} else if (section === "reviewedPrs") {
-						const createdAt = new Date(item.createdAt)
-							.toISOString()
-							.split("T")[0]
+						const createdAt = new Date(item.createdAt).toISOString().split("T")[0]
 						const reviewedAt = new Date(item.date).toISOString().split("T")[0]
-						const mergedAt = item.mergedAt
-							? new Date(item.mergedAt).toISOString().split("T")[0]
-							: "N/A"
-						const mergePeriod =
-							item.mergePeriod === "Open" ? "Open" : item.mergePeriod
+						const firstReviewPeriod = item.firstReviewPeriod || "N/A"
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${reviewedAt}</td>\n`
-						tableContent += `      <td>${mergedAt}</td>\n`
-						tableContent += `      <td>${mergePeriod}</td>\n`
+						tableContent += `      <td>${firstReviewPeriod}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
