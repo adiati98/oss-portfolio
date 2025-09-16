@@ -2,12 +2,14 @@ name: Update Contributions
 
 on:
   schedule:
-    # Runs every day at 00:01 UTC
-    - cron: '1 0 * * *'
+    # Monthly full sync at 00:01 UTC on the 1st of the month
+    - cron: '1 0 1 * *'
+    # Daily update at 01:00 UTC
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
-  update-contributions:
+  run_scheduled_update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -15,7 +17,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all history for better commit context
+          # Fetch full history to properly determine the last update date.
+          fetch-depth: 0 
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -26,23 +29,40 @@ jobs:
       - name: Install dependencies
         run: npm ci  # Uses package-lock.json for exact versions
 
-      - name: Run contribution script
-        id: run-script
-        run: node update-contributions.js
+      - name: Conditionally run full sync or daily update
+        run: |
+          echo "github.event.schedule is ${{ github.event.schedule }}"
+          # Check if the triggering schedule is the monthly cron
+          if [ "${{ github.event.schedule }}" = "1 0 1 * *" ]; then
+            echo "Running monthly full sync..."
+            # Force the script to do a full run by deleting the cache files
+            rm -f data/all-contributions.json
+            rm -f data/pr-cache.json
+            node scripts/update-contributions.js
+          else
+            echo "Running daily update..."
+            # Run the script incrementally, relying on existing data files
+            node scripts/update-contributions.js
+          fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+        
       - name: Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      
+          
+          # Add the generated files to the staging area
           git add contributions/ data/
-      
+          
+          # Check if there are any changes to commit
           if ! git diff --staged --quiet; then
-            git commit -m "docs: Update contributions [skip ci]
-            
-            Updated on $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            # Use a different commit message based on the update type
+            if [ "${{ github.event.schedule }}" = "1 0 1 * *" ]; then
+                git commit -m "docs: Monthly full sync [skip ci]"
+            else
+                git commit -m "docs: Daily contributions update [skip ci]"
+            fi
             git push
           else
             echo "No changes to commit"
