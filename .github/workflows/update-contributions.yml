@@ -28,7 +28,7 @@ jobs:
 
       - name: Run contribution script
         id: run-script
-        run: node update-contributions.js
+        run: node scripts/update-contributions.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
