@@ -431,7 +431,7 @@ async function fetchContributions(startYear, prCache) {
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: item.updated_at, // Keeping this for the date grouping logic
+				date: firstCommentDate, // Keeping this for the date grouping logic
 				createdAt: item.created_at,
 				firstCommentedAt: firstCommentDate,
 			})
