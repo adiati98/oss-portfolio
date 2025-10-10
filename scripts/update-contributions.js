@@ -92,43 +92,6 @@ async function fetchContributions(startYear, prCache) {
 	}
 
 	/**
-	 * Fetches the date of the first review for a given pull request, ignoring bot reviews.
-	 * @param {string} owner The repository owner.
-	 * @param {string} repo The repository name.
-	 * @param {number} prNumber The pull request number.
-	 * @returns {Promise<string|null>} The date of the first human review, or null if no human reviews are found.
-	 */
-	async function getPrFirstReviewDate(owner, repo, prNumber) {
-		try {
-			const response = await axiosInstance.get(
-				`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`
-			)
-			// Find the first review that is not from a bot.
-			const firstHumanReview = response.data.find(
-				(review) => review.user.type !== "Bot"
-			)
-			if (firstHumanReview) {
-				return firstHumanReview.submitted_at
-			}
-			return null
-		} catch (err) {
-			// The most reliable way to handle inaccessible PRs is to catch the error and continue.
-			if (err.response && err.response.status === 403) {
-				console.log(
-					`PR #${prNumber} in ${owner}/${repo} is not publicly available (403). Skipping.`
-				)
-				return null
-			}
-			if (err.response && err.response.status === 404) {
-				console.log(`PR #${prNumber} in ${owner}/${repo} not found (404). Skipping.`)
-				return null
-			}
-			// If it's another type of error, re-throw it.
-			throw err
-		}
-	}
-
-	/**
 	 * Fetches the date of the user's first review on a given pull request.
 	 * @param {string} owner The repository owner.
 	 * @param {string} repo The repository name.
@@ -329,7 +292,6 @@ async function fetchContributions(startYear, prCache) {
 
 				let mergedAt = null
 				let mergePeriod = "Open"
-				let firstReviewPeriod = "N/A"
 
 				// Check if the PR is merged and fetch the merged_at date.
 				// The search API's PR object often doesn't contain a merged_at date.
@@ -354,11 +316,6 @@ async function fetchContributions(startYear, prCache) {
 					mergePeriod = "Closed"
 				}
 
-				const firstReviewDate = await getPrFirstReviewDate(
-					owner,
-					repoName,
-					prNumber
-				)
 				const myFirstReviewDate = await getPrMyFirstReviewDate(
 					owner,
 					repoName,
@@ -366,13 +323,6 @@ async function fetchContributions(startYear, prCache) {
 					GITHUB_USERNAME
 				)
 
-				if (firstReviewDate) {
-					firstReviewPeriod =
-						Math.round(
-							(new Date(firstReviewDate) - new Date(pr.created_at)) /
-								(1000 * 60 * 60 * 24)
-						) + " days"
-				}
 				let myFirstReviewPeriod = "N/A"
 				if (myFirstReviewDate) {
 					myFirstReviewPeriod =
@@ -390,8 +340,6 @@ async function fetchContributions(startYear, prCache) {
 					createdAt: pr.created_at,
 					mergedAt,
 					mergePeriod,
-					firstReviewPeriod,
-					firstReviewDate,
 					myFirstReviewDate,
 					myFirstReviewPeriod,
 				})
@@ -596,20 +544,16 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Project Name",
 					"Title",
 					"Created At",
-					"Reviewed At",
 					"My First Review",
-					"Time to First Review",
 					"My First Review Period",
 				],
-				widths: ["5%", "15%", "25%", "10%", "10%", "10%", "10%", "15%"],
+				widths: ["5%", "25%", "35%", "15%", "10%", "10%"],
 				keys: [
 					"repo",
 					"title",
 					"createdAt",
 					"date",
-					"firstReviewDate",
 					"myFirstReviewDate",
-					"firstReviewPeriod",
 					"myFirstReviewPeriod",
 				],
 			},
@@ -676,20 +620,13 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
 							.split("T")[0]
-						const reviewedAt = new Date(item.date).toISOString().split("T")[0]
-						const firstReviewAt = item.firstReviewDate
-							? new Date(item.firstReviewDate).toISOString().split("T")[0]
-							: "N/A"
 						const myFirstReviewAt = item.myFirstReviewDate
 							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
 							: "N/A"
-						const timeToFirstReview = item.firstReviewPeriod || "N/A"
 						const myFirstReviewPeriod = item.myFirstReviewPeriod || "N/A"
 
 						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${firstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
-						tableContent += `      <td>${timeToFirstReview}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
