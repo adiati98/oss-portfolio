@@ -10,6 +10,10 @@ const GITHUB_USERNAME = "adiati98" //Change this to your GitHub username
 const SINCE_YEAR = 2019 //Change this to the first year of your contribution
 const BASE_URL = "https://api.github.com"
 
+// --- Configuration to generate README in the contributions folder ---
+const BASE_DIR = "contributions"
+const README_PATH = path.join(BASE_DIR, "README.md")
+
 /**
  * Fetches all contribution data from the GitHub API for a given year range.
  * This includes Pull Requests, Issues, Reviewed PRs, and Collaborations.
@@ -434,7 +438,7 @@ function groupContributionsByQuarter(contributions) {
 async function writeMarkdownFiles(groupedContributions) {
 	const baseDir = "contributions"
 	// Create the base contributions directory if it's doesn't exist.
-	await fs.mkdir(baseDir, { recursive: true })
+	await fs.mkdir(BASE_DIR, { recursive: true })
 
 	// Iterate over each quarter's worth of data.
 	for (const [key, data] of Object.entries(groupedContributions)) {
@@ -659,6 +663,89 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 }
 
 /**
+ * Calculates aggregate totals from all contribution data and writes the 
+ * contributions/README.md file.
+ * @param {object} finalContributions The object with all contributions, grouped by type.
+ */
+async function createStatsReadme(finalContributions) {
+	await fs.mkdir(BASE_DIR, { recursive: true })
+
+	// 1. Calculate Totals
+	const prCount = finalContributions.pullRequests.length
+	const issueCount = finalContributions.issues.length
+	const reviewedPrCount = finalContributions.reviewedPrs.length
+	const collaborationCount = finalContributions.collaborations.length
+
+	const grandTotal =
+		prCount + issueCount + reviewedPrCount + collaborationCount
+
+	// 2. Calculate Unique Repositories
+	const allItems = [
+		...finalContributions.pullRequests,
+		...finalContributions.issues,
+		...finalContributions.reviewedPrs,
+		...finalContributions.collaborations,
+	]
+	const uniqueRepos = new Set(allItems.map((item) => item.repo))
+	const totalUniqueRepos = uniqueRepos.size
+
+	// 3. Calculate Years Tracked
+	const currentYear = new Date().getFullYear()
+	const yearsTracked = currentYear - SINCE_YEAR + 1
+
+	// 4. Build Markdown Content
+	let markdownContent = `# 📈 My Open Source Contributions Report
+
+This folder contains automatically generated reports of my external open-source contributions, organized by calendar quarter.
+
+These reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, and general Collaborations**.
+
+---
+
+## Report Structure Breakdown
+
+Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a detailed log and summary for that period:
+
+| Section | Description | Key Metric Tracked |
+| :--- | :--- | :--- |
+| **Quarterly Statistics** | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter. | Total Count, Unique Repositories |
+| **Contribution Breakdown** | A table listing the count of contributions for each of the four core categories within that quarter. | Category Counts |
+| **Top 3 Repositories** | The top three projects where contributions were made in that quarter, ranked by total count. | Contribution Frequency |
+| **Merged PRs** | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories. | **Review Period** (Time from creation to merge) |
+| **Issues** | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories. | **Closing Period** (Time from creation to close) |
+| **Reviewed PRs** | **(Collapsible Section)** Detailed list of Pull Requests **reviewed or merged by me** on external repositories. | **My First Review Period** (Time from PR creation to my first review) |
+| **Collaborations** | **(Collapsible Section)** Detailed list of open Issues or PRs where I have **commented** to participate in discussion. | **First Commented At** (The date of my initial comment) |
+
+---
+
+## All-Time Aggregate Contribution Summary
+
+This is a summary of all contributions fetched since the initial tracking year (**${SINCE_YEAR}**), providing a quick overview of the portfolio's scale.
+
+### Overall Counts
+
+| Category | Total Count |
+| :--- | :--- |
+| **All-Time Contributions** | 🚀 **${grandTotal}** |
+| Merged PRs | ${prCount} |
+| Reviewed PRs | ${reviewedPrCount} |
+| Issues | ${issueCount} |
+| Collaborations | ${collaborationCount} |
+
+### Repository Summary
+
+| Category | Total |
+| :--- | :--- |
+| **Unique Repositories** | ${totalUniqueRepos} |
+| **Years Tracked** | ${yearsTracked} |
+`
+
+	// 5. Write the file
+	await fs.writeFile(README_PATH, markdownContent, "utf8")
+	console.log(`Written aggregate README: ${README_PATH}`)
+}
+
+/**
  * The main function to run the entire process.
  * It handles loading and saving the cache, determining the sync start year,
  * and orchestrating the data fetching, grouping, and file writing.
@@ -807,6 +894,7 @@ async function main() {
 
 		const grouped = groupContributionsByQuarter(finalContributions)
 		await writeMarkdownFiles(grouped)
+		await createStatsReadme(finalContributions)
 
 		// Save the updated cache to a file for future runs.
 		await fs.writeFile(
