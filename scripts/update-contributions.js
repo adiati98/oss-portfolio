@@ -383,7 +383,7 @@ async function fetchContributions(startYear, prCache) {
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: item.updated_at, // Keeping this for the date grouping logic
+				date: firstCommentDate, // Keeping this for the date grouping logic
 				createdAt: item.created_at,
 				firstCommentedAt: firstCommentDate,
 			})
@@ -550,15 +550,16 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Created At",
 					"My First Review",
 					"My First Review Period",
+					"Last Update",
 				],
-				widths: ["5%", "25%", "35%", "15%", "10%", "10%"],
+				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "12%"],
 				keys: [
 					"repo",
 					"title",
 					"createdAt",
-					"date",
 					"myFirstReviewDate",
 					"myFirstReviewPeriod",
+					"date",
 				],
 			},
 			collaborations: {
@@ -624,6 +625,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
 							.split("T")[0]
+						const lastUpdateDate = new Date(item.date)
+							.toISOString()
+							.split("T")[0]
 						const myFirstReviewAt = item.myFirstReviewDate
 							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
 							: "N/A"
@@ -632,6 +636,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
+						tableContent += `      <td>${lastUpdateDate}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
