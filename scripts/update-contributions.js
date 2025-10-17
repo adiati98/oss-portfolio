@@ -346,6 +346,7 @@ async function fetchContributions(startYear, prCache) {
 					mergePeriod,
 					myFirstReviewDate,
 					myFirstReviewPeriod,
+					state: pr.state,
 				})
 				uniqueReviewedPrs.add(pr.html_url)
 			}
@@ -552,7 +553,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"My First Review Period",
 					"Last Update",
 				],
-				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "12%"],
+				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "14%"],
 				keys: [
 					"repo",
 					"title",
@@ -625,9 +626,15 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
 							.split("T")[0]
+
 						const lastUpdateDate = new Date(item.date)
 							.toISOString()
 							.split("T")[0]
+
+						const rawPrState = item.state ? item.state.toUpperCase() : "N/A"
+						const displayState = item.mergedAt ? "MERGED" : rawPrState
+						const lastUpdateContent = `${lastUpdateDate}<br><strong>${displayState}</strong>`
+
 						const myFirstReviewAt = item.myFirstReviewDate
 							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
 							: "N/A"
@@ -636,7 +643,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
-						tableContent += `      <td>${lastUpdateDate}</td>\n`
+						tableContent += `      <td>${lastUpdateContent}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
