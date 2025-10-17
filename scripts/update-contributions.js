@@ -552,7 +552,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Created At",
 					"My First Review",
 					"My First Review Period",
-					"Last Update",
+					"Last Update / State",
 				],
 				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "14%"],
 				keys: [
