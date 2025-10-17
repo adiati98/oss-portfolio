@@ -208,8 +208,9 @@ async function fetchContributions(startYear, prCache) {
 				title: pr.title,
 				url: pr.html_url,
 				repo: `${owner}/${repoName}`,
-				date: pr.created_at,
+				date: pr.pull_request.merged_at, // 'date' is used for quarterly grouping, which must be the merge date.
 				mergedAt: pr.pull_request.merged_at,
+				createdAt: pr.created_at,
 				reviewPeriod: Math.round(
 					(new Date(pr.pull_request.merged_at) - new Date(pr.created_at)) /
 						(1000 * 60 * 60 * 24)
@@ -346,6 +347,7 @@ async function fetchContributions(startYear, prCache) {
 					mergePeriod,
 					myFirstReviewDate,
 					myFirstReviewPeriod,
+					state: pr.state,
 				})
 				uniqueReviewedPrs.add(pr.html_url)
 			}
@@ -383,7 +385,7 @@ async function fetchContributions(startYear, prCache) {
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: item.updated_at, // Keeping this for the date grouping logic
+				date: firstCommentDate, // Keeping this for the date grouping logic
 				createdAt: item.created_at,
 				firstCommentedAt: firstCommentDate,
 			})
@@ -550,15 +552,16 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Created At",
 					"My First Review",
 					"My First Review Period",
+					"Last Update / State",
 				],
-				widths: ["5%", "25%", "35%", "15%", "10%", "10%"],
+				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "14%"],
 				keys: [
 					"repo",
 					"title",
 					"createdAt",
-					"date",
 					"myFirstReviewDate",
 					"myFirstReviewPeriod",
+					"date",
 				],
 			},
 			collaborations: {
@@ -598,7 +601,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
 
 					if (section === "pullRequests") {
-						const createdAt = new Date(item.date).toISOString().split("T")[0]
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
 						const mergedAt = item.mergedAt
 							? new Date(item.mergedAt).toISOString().split("T")[0]
 							: "N/A"
@@ -624,6 +629,15 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
 							.split("T")[0]
+
+						const lastUpdateDate = new Date(item.date)
+							.toISOString()
+							.split("T")[0]
+
+						const rawPrState = item.state ? item.state.toUpperCase() : "N/A"
+						const displayState = item.mergedAt ? "MERGED" : rawPrState
+						const lastUpdateContent = `${lastUpdateDate}<br><strong>${displayState}</strong>`
+
 						const myFirstReviewAt = item.myFirstReviewDate
 							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
 							: "N/A"
@@ -632,6 +646,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
+						tableContent += `      <td>${lastUpdateContent}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
