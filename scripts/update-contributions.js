@@ -208,8 +208,9 @@ async function fetchContributions(startYear, prCache) {
 				title: pr.title,
 				url: pr.html_url,
 				repo: `${owner}/${repoName}`,
-				date: pr.created_at,
+				date: pr.pull_request.merged_at, // 'date' is used for quarterly grouping, which must be the merge date.
 				mergedAt: pr.pull_request.merged_at,
+				createdAt: pr.created_at,
 				reviewPeriod: Math.round(
 					(new Date(pr.pull_request.merged_at) - new Date(pr.created_at)) /
 						(1000 * 60 * 60 * 24)
@@ -600,7 +601,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
 
 					if (section === "pullRequests") {
-						const createdAt = new Date(item.date).toISOString().split("T")[0]
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
 						const mergedAt = item.mergedAt
 							? new Date(item.mergedAt).toISOString().split("T")[0]
 							: "N/A"
