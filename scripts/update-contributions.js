@@ -7,7 +7,7 @@ const axios = require("axios")
 // --- Configuration Variables ---
 // Change these values to match your GitHub profile and history.
 const GITHUB_USERNAME = "adiati98" //Change this to your GitHub username
-const SINCE_YEAR = 2024 //Change this to the first year of your contribution
+const SINCE_YEAR = 2019 //Change this to the first year of your contribution
 const BASE_URL = "https://api.github.com"
 
 // --- Configuration to generate README in the contributions folder ---
@@ -130,84 +130,39 @@ async function fetchContributions(startYear, prCache) {
 
 	/**
 	 * Fetches the date of the user's first comment on an issue or PR.
-	 * This function checks multiple comment sources for PRs:
-	 *  - Issue comments (item.comments_url)
-	 *  - Pull request review comments (/repos/:owner/:repo/pulls/:number/comments)
-	 *  - Pull request reviews (/repos/:owner/:repo/pulls/:number/reviews)
-	 * It returns the earliest timestamp found among these sources for the specified username.
-	 * @param {string} owner Repository owner
-	 * @param {string} repo Repository name
-	 * @param {number} number Issue/PR number
-	 * @param {string} commentsUrl The issue comments URL (from the search result)
+	 * @param {string} url The comments URL for the issue or PR.
 	 * @param {string} username The username to filter comments by.
-	 * @returns {Promise<string|null>} The date of the user's first comment/review, or null if none is found.
+	 * @returns {Promise<string|null>} The date of the user's first comment, or null if none is found.
 	 */
-	async function getFirstCommentDate(owner, repo, number, commentsUrl, username) {
-		// Helper to iterate paginated endpoints and return earliest matching created/submitted date
-		async function findEarliestAt(urlTemplate, isSubmittedAt = false) {
+	async function getFirstCommentDate(url, username) {
+		try {
 			let page = 1
-			let earliest = null
 			while (true) {
-				try {
-					const url = `${urlTemplate}?per_page=100&page=${page}`
-					const response = await axiosInstance.get(url)
-					for (const entry of response.data) {
-						const userLogin = entry.user && entry.user.login
-						if (userLogin === username) {
-							const when = isSubmittedAt ? entry.submitted_at || entry.created_at : entry.created_at
-							if (!earliest || new Date(when) < new Date(earliest)) {
-								earliest = when
-							}
-						}
-					}
-					const linkHeader = response.headers.link
-					if (linkHeader && linkHeader.includes('rel="next"')) {
-						page++
-						// small pause to be polite to API
-						await new Promise((r) => setTimeout(r, 300))
-					} else {
-						break
-					}
-				} catch (err) {
-					if (err.response && (err.response.status === 403 || err.response.status === 404)) {
-						break
-					}
-					throw err
+				const response = await axiosInstance.get(
+					`${url}?per_page=100&page=${page}`
+				)
+				const myFirstComment = response.data.find(
+					(comment) => comment.user.login === username
+				)
+				if (myFirstComment) {
+					return myFirstComment.created_at
+				}
+				const linkHeader = response.headers.link
+				if (linkHeader && linkHeader.includes('rel="next"')) {
+					page++
+				} else {
+					return null // No more pages and no comment found.
 				}
 			}
-			return earliest
-		}
-
-		// 1) Check issue comments (commentsUrl)
-		let earliest = null
-		if (commentsUrl) {
-			const found = await findEarliestAt(commentsUrl)
-			if (found) earliest = found
-		}
-
-		// 2) If this is a PR, check pull request review comments
-		try {
-			const prReviewCommentsUrl = `/repos/${owner}/${repo}/pulls/${number}/comments`
-			const foundReviewComments = await findEarliestAt(prReviewCommentsUrl)
-			if (foundReviewComments && (!earliest || new Date(foundReviewComments) < new Date(earliest))) {
-				earliest = foundReviewComments
-			}
 		} catch (err) {
-			// ignore
-		}
-
-		// 3) Check pull request reviews (these have 'submitted_at')
-		try {
-			const prReviewsUrl = `/repos/${owner}/${repo}/pulls/${number}/reviews`
-			const foundPrReviews = await findEarliestAt(prReviewsUrl, true)
-			if (foundPrReviews && (!earliest || new Date(foundPrReviews) < new Date(earliest))) {
-				earliest = foundPrReviews
+			if (
+				err.response &&
+				(err.response.status === 403 || err.response.status === 404)
+			) {
+				return null
 			}
-		} catch (err) {
-			// ignore
+			throw err
 		}
-
-		return earliest
 	}
 
 	// Loop through each year from the start year to the current year.
@@ -327,6 +282,20 @@ async function fetchContributions(startYear, prCache) {
 				continue
 			}
 
+			// --- Skip PRs that belong to the user's own repositories ---
+			try {
+				const ownerCheckParts = new URL(pr.repository_url).pathname.split("/")
+				const possibleOwner = ownerCheckParts[ownerCheckParts.length - 2]
+				if (possibleOwner === GITHUB_USERNAME) {
+					// Add to cache so we don't reprocess this URL in future runs
+					prCache.add(pr.html_url)
+					continue
+				}
+			} catch (e) {
+				// If parsing fails for some reason, fall back to processing the PR normally.
+				// We don't want to crash the whole run for a malformed repository_url.
+			}
+
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
@@ -338,13 +307,6 @@ async function fetchContributions(startYear, prCache) {
 				const repoParts = new URL(pr.repository_url).pathname.split("/")
 				const owner = repoParts[repoParts.length - 2]
 				const repoName = repoParts[repoParts.length - 1]
-
-				// Exclude any contributions that are from the user's own repositories
-				if (owner === GITHUB_USERNAME) {
-					// mark in cache so it's not repeatedly processed in future runs
-					prCache.add(pr.html_url)
-					continue
-				}
 				const prNumber = pr.number
 
 				let mergedAt = null
@@ -406,9 +368,8 @@ async function fetchContributions(startYear, prCache) {
 		}
 
 		// --- Fetch Collaborations (PRs/Issues commented on by the user) ---
-		// Include PRs (open or closed) where the user commented; do not exclude reviewed-by here
 		const collaborationsPrs = await getAllPages(
-			`is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
+			`is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
 		)
 		const collaborationsIssues = await getAllPages(
 			`is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
@@ -417,42 +378,34 @@ async function fetchContributions(startYear, prCache) {
 		const allCollaborations = [...collaborationsPrs, ...collaborationsIssues]
 
 		for (const item of allCollaborations) {
-			// Skip collaborations that have already been seen in this run.
-			if (seenUrls.collaborations.has(item.html_url)) {
+			// Skip collaborations that have already been reviewed or seen.
+			if (
+				seenUrls.collaborations.has(item.html_url) ||
+				uniqueReviewedPrs.has(item.html_url)
+			) {
 				continue
 			}
 			const repoParts = new URL(item.repository_url).pathname.split("/")
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
 
-			// Exclude collaborations in own repositories and cache them to avoid reprocessing
+			// Skip collaborations that are in the user's own repositories.
 			if (owner === GITHUB_USERNAME) {
 				prCache.add(item.html_url)
 				continue
 			}
 
-			// --- Fetch first comment date for external repositories only ---
+			// --- Fetch first comment date ---
 			const firstCommentDate = await getFirstCommentDate(
-				owner,
-				repoName,
-				item.number,
 				item.comments_url,
 				GITHUB_USERNAME
 			)
 
-			// Strict mode: only include collaborations where we can find the user's first comment date
-			if (!firstCommentDate) {
-				// If we can't find the user's comment, skip this collaboration.
-				// Do not cache it so future runs may still find it if comments are paginated or API timing changes.
-				continue
-			}
-
-			// Use the first comment date for grouping
 			contributions.collaborations.push({
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: firstCommentDate, // For grouping by quarter
+				date: firstCommentDate, // Keeping this for the date grouping logic
 				createdAt: item.created_at,
 				firstCommentedAt: firstCommentDate,
 			})
