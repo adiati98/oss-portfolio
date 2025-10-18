@@ -282,6 +282,20 @@ async function fetchContributions(startYear, prCache) {
 				continue
 			}
 
+			// --- Skip PRs that belong to the user's own repositories ---
+			try {
+				const ownerCheckParts = new URL(pr.repository_url).pathname.split("/")
+				const possibleOwner = ownerCheckParts[ownerCheckParts.length - 2]
+				if (possibleOwner === GITHUB_USERNAME) {
+					// Add to cache so we don't reprocess this URL in future runs
+					prCache.add(pr.html_url)
+					continue
+				}
+			} catch (e) {
+				// If parsing fails for some reason, fall back to processing the PR normally.
+				// We don't want to crash the whole run for a malformed repository_url.
+			}
+
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
@@ -374,6 +388,12 @@ async function fetchContributions(startYear, prCache) {
 			const repoParts = new URL(item.repository_url).pathname.split("/")
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
+
+			// Skip collaborations that are in the user's own repositories.
+			if (owner === GITHUB_USERNAME) {
+				prCache.add(item.html_url)
+				continue
+			}
 
 			// --- Fetch first comment date ---
 			const firstCommentDate = await getFirstCommentDate(
