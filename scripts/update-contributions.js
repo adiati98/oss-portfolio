@@ -369,7 +369,7 @@ async function fetchContributions(startYear, prCache) {
 
 		// --- Fetch Collaborations (PRs/Issues commented on by the user) ---
 		const collaborationsPrs = await getAllPages(
-			`is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
+			`is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
 		)
 		const collaborationsIssues = await getAllPages(
 			`is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`
