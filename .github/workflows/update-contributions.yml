@@ -37,6 +37,7 @@ jobs:
             echo "Running monthly full sync..."
             # Force the script to do a full run by deleting the cache files
             rm -f data/all-contributions.json
+            rm -f data/commit-cache.json
             rm -f data/pr-cache.json
             node scripts/update-contributions.js
           else
