@@ -477,17 +477,26 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
 				if (commitDetails) {
 					// Calculate first commit period
-					const firstCommitPeriod = commitDetails.firstCommitDate
-						? Math.round(
-								(new Date(commitDetails.firstCommitDate) -
-									new Date(pr.created_at)) /
-									(1000 * 60 * 60 * 24)
-						  ) + " days"
-						: "N/A"
+					// Add a defensive check to ensure both dates exist and are valid
+					const firstCommitPeriod =
+						commitDetails.firstCommitDate && pr.created_at
+							? Math.round(
+									(new Date(commitDetails.firstCommitDate) -
+										new Date(pr.created_at)) /
+										(1000 * 60 * 60 * 24)
+							  ) +
+							  (Math.round(
+									(new Date(commitDetails.firstCommitDate) -
+										new Date(pr.created_at)) /
+										(1000 * 60 * 60 * 24)
+							  ) === 0
+									? " day"
+									: " days")
+							: "N/A"
 
-					// Use PR updated_at as the date for consistent ordering
-					const contributionDate = pr.updated_at
-
+					// Use first commit date as the date for consistent ordering with PR timeline
+					const contributionDate =
+						commitDetails.firstCommitDate || pr.updated_at
 					contributions.coAuthoredPrs.push({
 						title: pr.title,
 						url: pr.html_url,
@@ -913,7 +922,23 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 							: "N/A"
 
 						// First commit period (from created to first commit)
-						const firstCommitPeriod = item.firstCommitPeriod || "N/A"
+						// Calculate the period if it's not already stored
+						const firstCommitPeriod =
+							item.firstCommitPeriod ||
+							(item.firstCommitDate && item.createdAt
+								? Math.round(
+										(new Date(item.firstCommitDate) -
+											new Date(item.createdAt)) /
+											(1000 * 60 * 60 * 24)
+								  ) +
+								  (Math.round(
+										(new Date(item.firstCommitDate) -
+											new Date(item.createdAt)) /
+											(1000 * 60 * 60 * 24)
+								  ) === 0
+										? " day"
+										: " days")
+								: "N/A")
 
 						// Status with dates
 						let lastUpdateContent = ""
