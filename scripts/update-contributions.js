@@ -437,10 +437,6 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			const yearEndDate = new Date(yearEnd)
 
 			if (prDate >= yearStartDate && prDate < yearEndDate) {
-				if (uniqueReviewedPrs.has(pr.html_url)) {
-					continue
-				}
-
 				// --- 5. MergedAt Logic (Define before commit check) ---
 				let mergedAt = null
 				let mergePeriod = "Open"
@@ -467,14 +463,16 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
 				// **--- 6. Check Co-Authored PRs ---**
 				// owner, repoName, and prNumber are now guaranteed to be defined here.
+				// Check for commits regardless of whether it's a reviewed PR or not
 				const commitDetails = await getFirstCommitDetails(
-					owner, // DEFINED by 'let owner = null' and assigned inside try/catch
-					repoName, // DEFINED by 'let repoName = null' and assigned inside try/catch
+					owner,
+					repoName,
 					prNumber,
 					GITHUB_USERNAME,
 					commitCache
 				)
 
+				// Process co-authored PR details regardless of review status
 				if (commitDetails) {
 					// Calculate first commit period
 					// Add a defensive check to ensure both dates exist and are valid
@@ -512,6 +510,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 				}
 
 				// --- 7. Reviewed PRs Logic ---
+				// Process review information independent of commit status
 				const myFirstReviewDate = await getPrMyFirstReviewDate(
 					owner,
 					repoName,
@@ -519,28 +518,30 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 					GITHUB_USERNAME
 				)
 
-				let myFirstReviewPeriod = "N/A"
+				// Add to reviewedPrs if there's a review, regardless of commit status
 				if (myFirstReviewDate) {
-					myFirstReviewPeriod =
+					let myFirstReviewPeriod =
 						Math.round(
 							(new Date(myFirstReviewDate) - new Date(pr.created_at)) /
 								(1000 * 60 * 60 * 24)
 						) + " days"
-				}
 
-				contributions.reviewedPrs.push({
-					title: pr.title,
-					url: pr.html_url,
-					repo: `${owner}/${repoName}`,
-					date: pr.updated_at,
-					createdAt: pr.created_at,
-					mergedAt,
-					mergePeriod,
-					myFirstReviewDate,
-					myFirstReviewPeriod,
-					state: pr.state,
-				})
-				uniqueReviewedPrs.add(pr.html_url)
+					if (!uniqueReviewedPrs.has(pr.html_url)) {
+						contributions.reviewedPrs.push({
+							title: pr.title,
+							url: pr.html_url,
+							repo: `${owner}/${repoName}`,
+							date: pr.updated_at,
+							createdAt: pr.created_at,
+							mergedAt,
+							mergePeriod,
+							myFirstReviewDate,
+							myFirstReviewPeriod,
+							state: pr.state,
+						})
+						uniqueReviewedPrs.add(pr.html_url)
+					}
+				}
 			}
 		}
 
