@@ -22,7 +22,7 @@ const README_PATH = path.join(BASE_DIR, "README.md")
  * @param {Set<string>} prCache A set of PR URLs that have already been processed to avoid redundant work.
  * @returns {Promise<{contributions: object, prCache: Set<string>}>} An object containing the fetched contributions and the updated cache.
  */
-async function fetchContributions(startYear, prCache) {
+async function fetchContributions(startYear, prCache, persistentCommitCache) {
 	// Ensure the GitHub token is available from the environment variables.
 	const token = process.env.GITHUB_TOKEN
 	if (!token) {
@@ -44,6 +44,7 @@ async function fetchContributions(startYear, prCache) {
 		issues: [],
 		reviewedPrs: [],
 		collaborations: [],
+		coAuthoredPrs: [],
 	}
 
 	const seenUrls = {
@@ -51,8 +52,14 @@ async function fetchContributions(startYear, prCache) {
 		issues: new Set(),
 		reviewedPrs: new Set(),
 		collaborations: new Set(),
+		coAuthoredPrs: new Set(),
 	}
 
+	// Use the persistent commit cache if provided, otherwise start with an empty Map
+	const commitCache =
+		persistentCommitCache instanceof Map
+			? new Map(persistentCommitCache)
+			: new Map()
 	const currentYear = new Date().getFullYear()
 
 	/**
@@ -165,6 +172,125 @@ async function fetchContributions(startYear, prCache) {
 		}
 	}
 
+	/**
+	 * Fetches the date of the user's first commit on a given PR.
+	 * @param {string} owner The repository owner.
+	 * @param {string} repo The repository name.
+	 * @param {number} prNumber The pull request number.
+	 * @param {string} username The username to check for.
+	 * @returns {Promise<{firstCommitDate: string, commitCount: number}|null>} Details of the first commit, or null if none.
+	 */
+	async function getFirstCommitDetails(
+		owner,
+		repo,
+		prNumber,
+		username,
+		commitCache
+	) {
+		const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}` // Use a consistent key
+
+		// 1. CHECK CACHE
+		if (commitCache.has(prUrlKey)) {
+			return commitCache.get(prUrlKey)
+		}
+
+		let result = null // Initialize result to be cached
+
+		try {
+			// Paginate through commits for the PR (some PRs may have >100 commits).
+			let page = 1
+			let allCommits = []
+			while (true) {
+				const resp = await axiosInstance.get(
+					`${prUrlKey}/commits?per_page=100&page=${page}`
+				)
+				allCommits.push(...resp.data)
+
+				const linkHeader = resp.headers.link
+				if (linkHeader && linkHeader.includes('rel="next"')) {
+					page++
+					// small delay to be polite to API
+					await new Promise((r) => setTimeout(r, 200))
+				} else {
+					break
+				}
+			}
+
+			let commitCount = 0
+			let earliestCommitDate = null
+
+			// Helper to determine whether a commit should be attributed to the username
+			function isCommitByUser(c) {
+				try {
+					// 1) GitHub-linked author
+					if (c.author && c.author.login === username) return true
+
+					// 2) Commit author email may include the username (e.g. username@users.noreply.github.com)
+					if (
+						c.commit &&
+						c.commit.author &&
+						c.commit.author.email &&
+						c.commit.author.email.toLowerCase().includes(username.toLowerCase())
+					)
+						return true
+
+					// 3) Commit author name could include username (less reliable but useful)
+					if (
+						c.commit &&
+						c.commit.author &&
+						c.commit.author.name &&
+						c.commit.author.name.toLowerCase().includes(username.toLowerCase())
+					)
+						return true
+
+					// 4) Co-authored-by trailer in the commit message may include the username in the email
+					if (
+						c.commit &&
+						c.commit.message &&
+						/Co-authored-by:/i.test(c.commit.message) &&
+						c.commit.message.toLowerCase().includes(username.toLowerCase())
+					)
+						return true
+				} catch (e) {
+					return false
+				}
+				return false
+			}
+
+			// Filter commits that match the user by any of the heuristics above
+			const userCommits = allCommits.filter(isCommitByUser)
+
+			if (userCommits.length > 0) {
+				commitCount = userCommits.length
+				// Sort chronologically to find the earliest date
+				userCommits.sort(
+					(a, b) =>
+						new Date(a.commit.author.date) - new Date(b.commit.author.date)
+				)
+				earliestCommitDate = userCommits[0].commit.author.date
+
+				result = {
+					firstCommitDate: earliestCommitDate,
+					commitCount: commitCount,
+				}
+			}
+		} catch (err) {
+			if (
+				err.response &&
+				(err.response.status === 403 || err.response.status === 404)
+			) {
+				// Treat API error/not found as null result for caching
+				result = null
+			} else {
+				throw err
+			}
+		}
+
+		// 2. WRITE CACHE & RETURN
+		commitCache.set(prUrlKey, result)
+		return result
+	}
+
 	// Loop through each year from the start year to the current year.
 	for (let year = startYear; year <= currentYear; year++) {
 		console.log(`Fetching contributions for year: ${year}...`)
@@ -268,34 +394,44 @@ async function fetchContributions(startYear, prCache) {
 		const uniqueReviewedPrs = new Set()
 
 		for (const pr of combinedResults) {
-			// --- Check if repository is private ---
+			// 1. Initial Checks (Skip Private, Bot, Deduplicate)
 			if (pr.private) {
 				console.log(`Skipping private repository PR: ${pr.html_url}`)
 				prCache.add(pr.html_url)
 				continue // Skip to the next PR
 			}
 
-			// Skip any PRs created by a bot.
 			if (pr.user && pr.user.type === "Bot") {
-				// Store the bot-authored PR in the cache to avoid future fetching.
 				prCache.add(pr.html_url)
 				continue
 			}
 
-			// --- Skip PRs that belong to the user's own repositories ---
+			// --- 2. Variable Declaration (MUST be 'let' and inside the loop for correct scoping) ---
+			let owner = null
+			let repoName = null
+			const prNumber = pr.number // pr.number is reliably available
+
+			// --- 3. Repository URL Parsing and Owner Check ---
 			try {
-				const ownerCheckParts = new URL(pr.repository_url).pathname.split("/")
-				const possibleOwner = ownerCheckParts[ownerCheckParts.length - 2]
-				if (possibleOwner === GITHUB_USERNAME) {
-					// Add to cache so we don't reprocess this URL in future runs
+				const repoParts = new URL(pr.repository_url).pathname.split("/")
+				owner = repoParts[repoParts.length - 2]
+				repoName = repoParts[repoParts.length - 1]
+
+				// Skip PRs that belong to the user's own repositories.
+				if (owner === GITHUB_USERNAME) {
 					prCache.add(pr.html_url)
 					continue
 				}
 			} catch (e) {
-				// If parsing fails for some reason, fall back to processing the PR normally.
-				// We don't want to crash the whole run for a malformed repository_url.
+				// If URL parsing fails, we must skip the PR since we can't make API calls.
+				console.warn(
+					`Skipping PR due to repository URL parsing failure: ${pr.html_url}`
+				)
+				prCache.add(pr.html_url)
+				continue // Skip to the next PR
 			}
 
+			// --- 4. Date Check (The rest of the logic MUST be inside this check) ---
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
@@ -304,17 +440,12 @@ async function fetchContributions(startYear, prCache) {
 				if (uniqueReviewedPrs.has(pr.html_url)) {
 					continue
 				}
-				const repoParts = new URL(pr.repository_url).pathname.split("/")
-				const owner = repoParts[repoParts.length - 2]
-				const repoName = repoParts[repoParts.length - 1]
-				const prNumber = pr.number
 
+				// --- 5. MergedAt Logic (Define before commit check) ---
 				let mergedAt = null
 				let mergePeriod = "Open"
 
 				// Check if the PR is merged and fetch the merged_at date.
-				// The search API's PR object often doesn't contain a merged_at date.
-				// This is the most efficient way to get it without making an extra API call for every PR.
 				if (pr.pull_request && pr.pull_request.merged_at) {
 					mergedAt = pr.pull_request.merged_at
 					mergePeriod =
@@ -331,10 +462,56 @@ async function fetchContributions(startYear, prCache) {
 								(1000 * 60 * 60 * 24)
 						) + " days"
 				} else if (pr.state === "closed") {
-					// If the PR is closed but not merged, we can't calculate a merge period.
 					mergePeriod = "Closed"
 				}
 
+				// **--- 6. Check Co-Authored PRs ---**
+				// owner, repoName, and prNumber are now guaranteed to be defined here.
+				const commitDetails = await getFirstCommitDetails(
+					owner, // DEFINED by 'let owner = null' and assigned inside try/catch
+					repoName, // DEFINED by 'let repoName = null' and assigned inside try/catch
+					prNumber,
+					GITHUB_USERNAME,
+					commitCache
+				)
+
+				if (commitDetails) {
+					// Calculate first commit period
+					// Add a defensive check to ensure both dates exist and are valid
+					const firstCommitPeriod =
+						commitDetails.firstCommitDate && pr.created_at
+							? Math.round(
+									(new Date(commitDetails.firstCommitDate) -
+										new Date(pr.created_at)) /
+										(1000 * 60 * 60 * 24)
+							  ) +
+							  (Math.round(
+									(new Date(commitDetails.firstCommitDate) -
+										new Date(pr.created_at)) /
+										(1000 * 60 * 60 * 24)
+							  ) === 0
+									? " day"
+									: " days")
+							: "N/A"
+
+					// Use first commit date as the date for consistent ordering with PR timeline
+					const contributionDate =
+						commitDetails.firstCommitDate || pr.updated_at
+					contributions.coAuthoredPrs.push({
+						title: pr.title,
+						url: pr.html_url,
+						repo: `${owner}/${repoName}`,
+						date: contributionDate,
+						createdAt: pr.created_at,
+						firstCommitDate: commitDetails.firstCommitDate,
+						firstCommitPeriod: firstCommitPeriod,
+						commitCount: commitDetails.commitCount,
+						mergedAt: mergedAt,
+						state: pr.state,
+					})
+				}
+
+				// --- 7. Reviewed PRs Logic ---
 				const myFirstReviewDate = await getPrMyFirstReviewDate(
 					owner,
 					repoName,
@@ -378,16 +555,18 @@ async function fetchContributions(startYear, prCache) {
 		const allCollaborations = [...collaborationsPrs, ...collaborationsIssues]
 
 		for (const item of allCollaborations) {
-			// Skip collaborations that have already been reviewed or seen.
+			// --- 1. Variable Extraction ---
+			const repoParts = new URL(item.repository_url).pathname.split("/")
+			const owner = repoParts[repoParts.length - 2]
+			const repoName = repoParts[repoParts.length - 1]
+
+			// Skip collaborations that have already been reviewed or seen, or are in your own repos.
 			if (
 				seenUrls.collaborations.has(item.html_url) ||
 				uniqueReviewedPrs.has(item.html_url)
 			) {
 				continue
 			}
-			const repoParts = new URL(item.repository_url).pathname.split("/")
-			const owner = repoParts[repoParts.length - 2]
-			const repoName = repoParts[repoParts.length - 1]
 
 			// Skip collaborations that are in the user's own repositories.
 			if (owner === GITHUB_USERNAME) {
@@ -395,7 +574,44 @@ async function fetchContributions(startYear, prCache) {
 				continue
 			}
 
-			// --- Fetch first comment date ---
+			// --- 2. Check for commits on PRs (Co-Authored PRs) ---
+			if (item.pull_request) {
+				// Only PRs have 'commits' endpoint
+				const commitDetails = await getFirstCommitDetails(
+					owner,
+					repoName,
+					item.number,
+					GITHUB_USERNAME,
+					commitCache
+				)
+
+				if (commitDetails) {
+					// If my commits exist, add it to the new category. Use the
+					// first commit date for grouping, falling back to the PR's
+					// updated_at when necessary.
+					let mergedAt = null
+					if (item.pull_request && item.pull_request.merged_at) {
+						mergedAt = item.pull_request.merged_at
+					}
+
+					const contributionDate =
+						commitDetails.firstCommitDate || item.updated_at
+
+					contributions.coAuthoredPrs.push({
+						title: item.title,
+						url: item.html_url,
+						repo: `${owner}/${repoName}`,
+						date: contributionDate,
+						createdAt: item.created_at,
+						firstCommitDate: commitDetails.firstCommitDate,
+						commitCount: commitDetails.commitCount,
+						mergedAt: mergedAt,
+						state: item.state,
+					})
+				}
+			}
+
+			// --- 3. Collaborations Logic (Fetch date BEFORE use) ---
 			const firstCommentDate = await getFirstCommentDate(
 				item.comments_url,
 				GITHUB_USERNAME
@@ -405,7 +621,7 @@ async function fetchContributions(startYear, prCache) {
 				title: item.title,
 				url: item.html_url,
 				repo: `${owner}/${repoName}`,
-				date: firstCommentDate, // Keeping this for the date grouping logic
+				date: firstCommentDate,
 				createdAt: item.created_at,
 				firstCommentedAt: firstCommentDate,
 			})
@@ -413,7 +629,7 @@ async function fetchContributions(startYear, prCache) {
 		}
 	}
 
-	return { contributions, prCache }
+	return { contributions, prCache, commitCache }
 }
 
 /**
@@ -439,12 +655,19 @@ function groupContributionsByQuarter(contributions) {
 
 			// Initialize the quarter group if it doesn't exist.
 			if (!grouped[key]) {
+				// Ensure the ordering matches the desired presentation:
+				// 1. Merged PRs, 2. Issues, 3. Reviewed PRs, 4. Co-Authored PRs, 5. Collaborations
 				grouped[key] = {
 					pullRequests: [],
 					issues: [],
 					reviewedPrs: [],
+					coAuthoredPrs: [],
 					collaborations: [],
 				}
+			}
+			// Defensive: ensure the target array exists on the grouped object
+			if (!grouped[key][type]) {
+				grouped[key][type] = []
 			}
 			// Push the item into the correct quarterly group.
 			grouped[key][type].push(item)
@@ -486,6 +709,7 @@ async function writeMarkdownFiles(groupedContributions) {
 			...data.pullRequests,
 			...data.issues,
 			...data.reviewedPrs,
+			...data.coAuthoredPrs,
 			...data.collaborations,
 		]
 		const uniqueRepos = new Set(allItems.map((item) => item.repo))
@@ -515,6 +739,7 @@ async function writeMarkdownFiles(groupedContributions) {
 | Merged PRs | ${data.pullRequests.length} |
 | Issues | ${data.issues.length} |
 | Reviewed PRs | ${data.reviewedPrs.length} |
+| Co-Authored PRs | ${data.coAuthoredPrs.length} |
 | Collaborations | ${data.collaborations.length} |
 
 ### Top 3 Repositories
@@ -572,7 +797,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"Created At",
 					"My First Review",
 					"My First Review Period",
-					"Last Update / State",
+					"Last Update / Status",
 				],
 				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "14%"],
 				keys: [
@@ -581,6 +806,27 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					"createdAt",
 					"myFirstReviewDate",
 					"myFirstReviewPeriod",
+					"date",
+				],
+			},
+			coAuthoredPrs: {
+				title: "Co-Authored PRs",
+				headers: [
+					"No.",
+					"Project Name",
+					"Title",
+					"Created At",
+					"My First Commit",
+					"My First Commit Period",
+					"Last Update / Status",
+				],
+				widths: ["5%", "15%", "25%", "10%", "12%", "13%", "20%"],
+				keys: [
+					"repo",
+					"title",
+					"createdAt",
+					"firstCommitDate",
+					"firstCommitPeriod",
 					"date",
 				],
 			},
@@ -667,6 +913,55 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
 						tableContent += `      <td>${lastUpdateContent}</td>\n`
+					} else if (section === "coAuthoredPrs") {
+						const createdAt = new Date(item.createdAt)
+							.toISOString()
+							.split("T")[0]
+						const firstCommitAt = item.firstCommitDate
+							? new Date(item.firstCommitDate).toISOString().split("T")[0]
+							: "N/A"
+
+						// First commit period (from created to first commit)
+						// Calculate the period if it's not already stored
+						const firstCommitPeriod =
+							item.firstCommitPeriod ||
+							(item.firstCommitDate && item.createdAt
+								? Math.round(
+										(new Date(item.firstCommitDate) -
+											new Date(item.createdAt)) /
+											(1000 * 60 * 60 * 24)
+								  ) +
+								  (Math.round(
+										(new Date(item.firstCommitDate) -
+											new Date(item.createdAt)) /
+											(1000 * 60 * 60 * 24)
+								  ) === 0
+										? " day"
+										: " days")
+								: "N/A")
+
+						// Status with dates
+						let lastUpdateContent = ""
+						const lastUpdateDate = new Date(item.date)
+							.toISOString()
+							.split("T")[0]
+
+						if (item.mergedAt) {
+							const mergedAtDate = new Date(item.mergedAt)
+								.toISOString()
+								.split("T")[0]
+							lastUpdateContent = `${mergedAtDate}<br><strong>MERGED</strong>`
+						} else if (item.state === "closed") {
+							lastUpdateContent = `${lastUpdateDate}<br><strong>CLOSED</strong>`
+						} else {
+							const stateUpper = item.state ? item.state.toUpperCase() : "N/A"
+							lastUpdateContent = `${lastUpdateDate}<br><strong>${stateUpper}</strong>`
+						}
+
+						tableContent += `      <td>${createdAt}</td>\n`
+						tableContent += `      <td>${firstCommitAt}</td>\n`
+						tableContent += `      <td>${firstCommitPeriod}</td>\n`
+						tableContent += `      <td>${lastUpdateContent}</td>\n`
 					} else if (section === "collaborations") {
 						const createdAt = new Date(item.createdAt)
 							.toISOString()
@@ -698,7 +993,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 }
 
 /**
- * Calculates aggregate totals from all contribution data and writes the 
+ * Calculates aggregate totals from all contribution data and writes the
  * contributions/README.md file.
  * @param {object} finalContributions The object with all contributions, grouped by type.
  */
@@ -710,15 +1005,27 @@ async function createStatsReadme(finalContributions) {
 	const issueCount = finalContributions.issues.length
 	const reviewedPrCount = finalContributions.reviewedPrs.length
 	const collaborationCount = finalContributions.collaborations.length
+	// coAuthoredPrs may not exist in older data; handle defensively
+	const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
+		? finalContributions.coAuthoredPrs.length
+		: 0
 
 	const grandTotal =
-		prCount + issueCount + reviewedPrCount + collaborationCount
+		prCount +
+		issueCount +
+		reviewedPrCount +
+		collaborationCount +
+		coAuthoredPrCount
 
 	// 2. Calculate Unique Repositories
+	// Compose allItems in display order: Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, Collaborations
 	const allItems = [
 		...finalContributions.pullRequests,
 		...finalContributions.issues,
 		...finalContributions.reviewedPrs,
+		...(Array.isArray(finalContributions.coAuthoredPrs)
+			? finalContributions.coAuthoredPrs
+			: []),
 		...finalContributions.collaborations,
 	]
 	const uniqueRepos = new Set(allItems.map((item) => item.repo))
@@ -733,7 +1040,7 @@ async function createStatsReadme(finalContributions) {
 
 This folder contains automatically generated reports of my external open-source contributions, organized by calendar quarter.
 
-These reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, and general Collaborations**.
+These reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations**.
 
 ---
 
@@ -749,6 +1056,7 @@ Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a d
 | **Merged PRs** | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories. | **Review Period** (Time from creation to merge) |
 | **Issues** | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories. | **Closing Period** (Time from creation to close) |
 | **Reviewed PRs** | **(Collapsible Section)** Detailed list of Pull Requests **reviewed or merged by me** on external repositories. | **My First Review Period** (Time from PR creation to my first review) |
+| **Co-Authored PRs** | **(Collapsible Section)** Pull Requests where I contributed commits (including co-authored commits) to other people's PRs. | **My First Commit Period** (Time from PR creation to my first commit) |
 | **Collaborations** | **(Collapsible Section)** Detailed list of open Issues or PRs where I have **commented** to participate in discussion. | **First Commented At** (The date of my initial comment) |
 
 ---
@@ -763,8 +1071,9 @@ This is a summary of all contributions fetched since the initial tracking year (
 | :--- | :--- |
 | **All-Time Contributions** | 🚀 **${grandTotal}** |
 | Merged PRs | ${prCount} |
-| Reviewed PRs | ${reviewedPrCount} |
 | Issues | ${issueCount} |
+| Reviewed PRs | ${reviewedPrCount} |
+| Co-Authored PRs | ${coAuthoredPrCount} |
 | Collaborations | ${collaborationCount} |
 
 ### Repository Summary
@@ -806,6 +1115,25 @@ async function main() {
 		// If the file doesn't exist, we'll start with an empty cache.
 		if (e.code !== "ENOENT") {
 			console.error("Failed to load PR cache:", e)
+		}
+	}
+
+	// Load persistent commit cache (if present) so we don't re-query PR commits repeatedly
+	const commitCacheFile = path.join(dataDir, "commit-cache.json")
+	let commitCacheFromDisk = new Map()
+	try {
+		const commitCacheData = await fs.readFile(commitCacheFile, "utf8")
+		const parsed = JSON.parse(commitCacheData)
+		// parsed expected to be an object mapping prUrlKey -> { firstCommitDate, commitCount } or null
+		for (const [k, v] of Object.entries(parsed)) {
+			commitCacheFromDisk.set(k, v)
+		}
+		console.log("Loaded commit cache from file.")
+	} catch (e) {
+		if (e.code !== "ENOENT") {
+			console.error("Failed to load commit cache:", e)
+		} else {
+			console.log("No persistent commit cache found, starting fresh.")
 		}
 	}
 
@@ -873,8 +1201,15 @@ async function main() {
 		console.log(`Fetching contributions from year: ${fetchStartYear}`)
 
 		// Fetch new contributions and update the cache.
-		const { contributions: newContributions, prCache: updatedPrCache } =
-			await fetchContributions(fetchStartYear, prCache)
+		// Merge the persistent commit cache into an in-memory Map and pass it into the fetcher
+		const mergedCommitCache = new Map()
+		for (const [k, v] of commitCacheFromDisk) mergedCommitCache.set(k, v)
+
+		const {
+			contributions: newContributions,
+			prCache: updatedPrCache,
+			commitCache: usedCommitCache,
+		} = await fetchContributions(fetchStartYear, prCache, mergedCommitCache)
 
 		// Second pass: merge new contributions, updating status for existing ones.
 		const allSources = [newContributions]
@@ -897,20 +1232,45 @@ async function main() {
 		}
 
 		// Rebuild collections with correct categorization based on latest status
+		// Ensure finalContributions keys are in the desired order for output
 		let finalContributions = {
 			pullRequests: [],
 			issues: [],
 			reviewedPrs: [],
+			coAuthoredPrs: [],
 			collaborations: [],
 		}
 
 		for (const [_, status] of urlToLatestStatus) {
+			// Defensive: if a status type wasn't previously known (e.g. coAuthoredPrs), create the array
+			if (!finalContributions[status.type]) {
+				finalContributions[status.type] = []
+			}
 			finalContributions[status.type].push(status.item)
 		}
 
 		// Sort each category by date
 		for (const type of Object.keys(finalContributions)) {
 			finalContributions[type].sort(
+				(a, b) => new Date(b.date) - new Date(a.date)
+			)
+		}
+
+		// Ensure coAuthoredPrs from the newly fetched contributions are included.
+		// The merge logic above only keeps a single "latest" status per URL which
+		// can cause co-authored entries (which use the first commit date) to be
+		// suppressed if an existing status has a later date (e.g. review updated_at).
+		// To guarantee the new "Co-Authored PRs" category appears, append any
+		// newly discovered coAuthoredPrs into the finalContributions.coAuthoredPrs
+		// array (deduplicating by URL) so they show up in the quarterly reports.
+		if (newContributions && Array.isArray(newContributions.coAuthoredPrs)) {
+			finalContributions.coAuthoredPrs = finalContributions.coAuthoredPrs || []
+			for (const item of newContributions.coAuthoredPrs) {
+				if (!finalContributions.coAuthoredPrs.find((i) => i.url === item.url)) {
+					finalContributions.coAuthoredPrs.push(item)
+				}
+			}
+			finalContributions.coAuthoredPrs.sort(
 				(a, b) => new Date(b.date) - new Date(a.date)
 			)
 		}
@@ -931,13 +1291,25 @@ async function main() {
 		await writeMarkdownFiles(grouped)
 		await createStatsReadme(finalContributions)
 
-		// Save the updated cache to a file for future runs.
+		// Save the updated PR cache to a file for future runs.
 		await fs.writeFile(
 			cacheFile,
 			JSON.stringify(Array.from(updatedPrCache)),
 			"utf8"
 		)
 		console.log("Updated PR cache saved to file.")
+
+		// Persist the commit cache to disk so future runs reuse it and save API calls.
+		try {
+			const obj = {}
+			for (const [k, v] of usedCommitCache || mergedCommitCache) {
+				obj[k] = v
+			}
+			await fs.writeFile(commitCacheFile, JSON.stringify(obj, null, 2), "utf8")
+			console.log("Persisted commit cache to file.")
+		} catch (e) {
+			console.error("Failed to persist commit cache:", e)
+		}
 
 		console.log("Contributions update completed successfully.")
 	} catch (e) {
