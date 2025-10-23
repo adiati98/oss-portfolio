@@ -22,9 +22,13 @@ The core logic is designed to track and categorize activity **outside of the own
     - **Merged PRs:** PRs in other projects that were authored by the user that were successfully merged.
     - **Issues:** Bugs and feature requests reported by the user in other projects.
     - **Reviewed PRs:** PRs from others where the user provided a review, merge, or close action.
+    - **Co-authored PRs:** PRs where the user was not the primary author, but contributed one or more commits (including those marked via the `Co-authored-by:` trailer).
     - **Collaborations:** Issues or PRs where the user participated by commenting for discussion, without directly reviewing.
 3.  **Data Processing & Reporting:** It deduplicates all items, resolves the latest status for contributions, and groups the final results into detailed, **quarterly Markdown reports**. Each report includes statistics like the total contribution count and the top-contributed repositories.
-4.  **Caching:** A secure cache of processed PR URLs is maintained to dramatically speed up future runs and avoid repeatedly fetching contributions from private repositories or bot accounts.
+4.  **Caching:**
+
+    - `pr-cache.json`: A secure cache of **processed PR URLs** is maintained to dramatically speed up future runs. This cache is used to quickly identify and skip PRs that have already been processed, or those that are known to be non-contributions (e.g., from private repositories or bot accounts), preventing repeated top-level fetches.
+    - `commit-cache.json`: A secure cache of the **processed first commit date and total commit count** on a PR. Since fetching all commits for a PR can be resource-intensive, this cache ensures the script avoids repeatedly fetching and processing potentially hundreds of individual commits to determine co-authorship.
 
 ### The Automation: GitHub Action Workflow
 

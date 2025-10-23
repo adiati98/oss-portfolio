@@ -431,13 +431,13 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 				continue // Skip to the next PR
 			}
 
-			// --- 4. Date Check (The rest of the logic MUST be inside this check) ---
+			// --- 4. Date Check ---
 			const prDate = new Date(pr.updated_at)
 			const yearStartDate = new Date(yearStart)
 			const yearEndDate = new Date(yearEnd)
 
 			if (prDate >= yearStartDate && prDate < yearEndDate) {
-				// --- 5. MergedAt Logic (Define before commit check) ---
+				// --- 5. MergedAt Logic ---
 				let mergedAt = null
 				let mergePeriod = "Open"
 
@@ -462,7 +462,6 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 				}
 
 				// **--- 6. Check Co-Authored PRs ---**
-				// owner, repoName, and prNumber are now guaranteed to be defined here.
 				// Check for commits regardless of whether it's a reviewed PR or not
 				const commitDetails = await getFirstCommitDetails(
 					owner,
@@ -656,8 +655,6 @@ function groupContributionsByQuarter(contributions) {
 
 			// Initialize the quarter group if it doesn't exist.
 			if (!grouped[key]) {
-				// Ensure the ordering matches the desired presentation:
-				// 1. Merged PRs, 2. Issues, 3. Reviewed PRs, 4. Co-Authored PRs, 5. Collaborations
 				grouped[key] = {
 					pullRequests: [],
 					issues: [],
@@ -1019,7 +1016,6 @@ async function createStatsReadme(finalContributions) {
 		coAuthoredPrCount
 
 	// 2. Calculate Unique Repositories
-	// Compose allItems in display order: Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, Collaborations
 	const allItems = [
 		...finalContributions.pullRequests,
 		...finalContributions.issues,
@@ -1233,7 +1229,6 @@ async function main() {
 		}
 
 		// Rebuild collections with correct categorization based on latest status
-		// Ensure finalContributions keys are in the desired order for output
 		let finalContributions = {
 			pullRequests: [],
 			issues: [],
