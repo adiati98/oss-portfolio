@@ -7,7 +7,7 @@ const axios = require("axios")
 // --- Configuration Variables ---
 // Change these values to match your GitHub profile and history.
 const GITHUB_USERNAME = "adiati98" //Change this to your GitHub username
-const SINCE_YEAR = 2019 //Change this to the first year of your contribution
+const SINCE_YEAR = 2024 //Change this to the first year of your contribution
 const BASE_URL = "https://api.github.com"
 
 // --- Configuration to generate README in the contributions folder ---
