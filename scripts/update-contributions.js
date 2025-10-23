@@ -1135,26 +1135,14 @@ async function main() {
 	}
 
 	try {
-		const urlToLatestStatus = new Map()
+		let allContributions = {}
 
 		// Try to load the full contributions data from a JSON file.
 		try {
 			const data = await fs.readFile(dataFile, "utf8")
-			const allContributions = JSON.parse(data)
+			allContributions = JSON.parse(data)
 			console.log("Loaded existing contributions data.")
 
-			// First pass: collect all URLs and their latest status from the existing file
-			for (const type of Object.keys(allContributions)) {
-				for (const item of allContributions[type]) {
-					const status = {
-						type,
-						date: new Date(item.date),
-						item,
-					}
-					urlToLatestStatus.set(item.url, status)
-				}
-			}
-			console.log("Indexed existing contributions for status updates.")
 		} catch (e) {
 			if (e.code !== "ENOENT") {
 				console.error("Failed to load contributions data:", e)
@@ -1168,29 +1156,36 @@ async function main() {
 		const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null
 		const today = new Date()
 
-		let fetchStartYear
+		let fetchStartYear =
+			typeof SINCE_YEAR !== "undefined" ? SINCE_YEAR : today.getFullYear() - 1 // Default to last year if SINCE_YEAR is not available
+
 		if (!lastUpdate) {
-			fetchStartYear = SINCE_YEAR
+			fetchStartYear =
+				typeof SINCE_YEAR !== "undefined" ? SINCE_YEAR : fetchStartYear
 			console.log("First run - fetching all contributions")
 		} else {
+			const lastUpdateYear = lastUpdate.getFullYear()
+			const lastUpdateMonth = lastUpdate.getMonth()
+			const currentYear = today.getFullYear()
+			const currentMonth = today.getMonth()
+
 			const sameMonth =
-				lastUpdate.getMonth() === today.getMonth() &&
-				lastUpdate.getFullYear() === today.getFullYear()
+				lastUpdateMonth === currentMonth && lastUpdateYear === currentYear
+			// Check if last update was exactly the previous month
 			const previousMonth =
-				(lastUpdate.getMonth() === today.getMonth() - 1 &&
-					today.getFullYear() === lastUpdate.getFullYear()) ||
-				(lastUpdate.getMonth() === 11 &&
-					today.getMonth() === 0 &&
-					today.getFullYear() === lastUpdate.getFullYear() + 1)
+				lastUpdateMonth === (currentMonth - 1 + 12) % 12 &&
+				(lastUpdateYear === currentYear ||
+					(lastUpdateYear === currentYear - 1 && currentMonth === 0))
 
 			if (sameMonth) {
-				fetchStartYear = today.getFullYear()
+				fetchStartYear = currentYear
 				console.log("Recent update - fetching only current year")
 			} else if (previousMonth) {
-				fetchStartYear = today.getFullYear() - 1
+				fetchStartYear = currentYear - 1
 				console.log("Last month update - fetching last two years")
 			} else {
-				fetchStartYear = SINCE_YEAR
+				fetchStartYear =
+					typeof SINCE_YEAR !== "undefined" ? SINCE_YEAR : fetchStartYear
 				console.log("Older update - fetching all years")
 			}
 		}
@@ -1217,18 +1212,7 @@ async function main() {
 			collaborations: [],
 		}
 
-		// Helper function to add items to their respective arrays with deduplication
-		const addToCategory = (item, type, seenUrls = new Set()) => {
-			if (!seenUrls.has(item.url)) {
-				if (!finalContributions[type]) {
-					finalContributions[type] = []
-				}
-				finalContributions[type].push(item)
-				seenUrls.add(item.url)
-			}
-		}
-
-		// Keep track of URLs for each category separately
+		// Keep track of URLs for each category separately for in-memory deduplication
 		const categorySeenUrls = {
 			pullRequests: new Set(),
 			issues: new Set(),
@@ -1237,43 +1221,57 @@ async function main() {
 			collaborations: new Set(),
 		}
 
-		// First, add all existing contributions
-		for (const [_, status] of urlToLatestStatus) {
-			addToCategory(status.item, status.type, categorySeenUrls[status.type])
+		// Helper to add/update an item in its correct final category,
+		// respecting the independence of categories.
+		const addOrUpdateItem = (item, type) => {
+			// Only proceed if the type is one we track
+			if (!finalContributions[type]) return
+
+			// Check if the item already exists in this specific category array
+			const existingIndex = finalContributions[type].findIndex(
+				(i) => i.url === item.url
+			)
+
+			if (existingIndex !== -1) {
+				// If it exists, update the existing entry (e.g., status changed on re-fetch)
+				finalContributions[type][existingIndex] = item
+			} else {
+				// If it's a new URL for this category, add it and mark as seen
+				finalContributions[type].push(item)
+				categorySeenUrls[type].add(item.url)
+			}
 		}
 
-		// Then, add all new contributions, preserving each type independently
-		const allSources = [newContributions]
-		for (const source of allSources) {
-			for (const type of Object.keys(source)) {
-				for (const item of source[type]) {
-					addToCategory(item, type, categorySeenUrls[type])
+		// --- 1. Load Existing Contributions (Preserve all categories) ---
+		console.log("Preserving existing contributions by category.")
+
+		for (const type of Object.keys(finalContributions)) {
+			if (Array.isArray(allContributions[type])) {
+				for (const item of allContributions[type]) {
+					// We only add existing items here; updates will happen from newContributions later.
+					if (!categorySeenUrls[type].has(item.url)) {
+						finalContributions[type].push(item)
+						categorySeenUrls[type].add(item.url)
+					}
 				}
 			}
 		}
 
-		// Sort each category by date
+		// --- 2. Add/Update Newly Fetched Contributions ---
+		console.log("Merging newly fetched contributions.")
+
+		for (const type of Object.keys(newContributions)) {
+			if (Array.isArray(newContributions[type])) {
+				for (const item of newContributions[type]) {
+					// New items must be added or updated, ensuring the latest data is used.
+					addOrUpdateItem(item, type)
+				}
+			}
+		}
+
+		// --- 3. Sort each category by date (The original sort logic remains) ---
 		for (const type of Object.keys(finalContributions)) {
 			finalContributions[type].sort(
-				(a, b) => new Date(b.date) - new Date(a.date)
-			)
-		}
-
-		// Ensure coAuthoredPrs from the newly fetched contributions are included.
-		// The merge logic above only keeps a single "latest" status per URL which
-		// can cause co-authored entries (which use the first commit date) to be
-		// suppressed if an existing status has a later date (e.g. review updated_at).
-		// To guarantee the new "Co-Authored PRs" category appears, append any
-		// newly discovered coAuthoredPrs into the finalContributions.coAuthoredPrs
-		// array (deduplicating by URL) so they show up in the quarterly reports.
-		if (newContributions && Array.isArray(newContributions.coAuthoredPrs)) {
-			finalContributions.coAuthoredPrs = finalContributions.coAuthoredPrs || []
-			for (const item of newContributions.coAuthoredPrs) {
-				if (!finalContributions.coAuthoredPrs.find((i) => i.url === item.url)) {
-					finalContributions.coAuthoredPrs.push(item)
-				}
-			}
-			finalContributions.coAuthoredPrs.sort(
 				(a, b) => new Date(b.date) - new Date(a.date)
 			)
 		}
