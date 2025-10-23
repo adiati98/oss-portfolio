@@ -2,14 +2,10 @@ name: Update Contributions
 
 on:
   schedule:
-    # 🛠️ Hourly test run at the 15-minute mark of every hour
-    - cron: '15 * * * *' 
-    
-    # ❌ Temporarily remove or comment out the monthly/daily schedules for testing:
-    # # Monthly full sync at 00:01 UTC on the 1st of the month
-    # - cron: '1 0 1 * *' 
-    # # Daily update at 01:00 UTC
-    # - cron: '0 1 * * *'
+    # Monthly full sync at 00:01 UTC on the 1st of the month
+    - cron: '1 0 1 * *'
+    # Daily update at 01:00 UTC
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
