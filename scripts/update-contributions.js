@@ -1208,27 +1208,7 @@ async function main() {
 			commitCache: usedCommitCache,
 		} = await fetchContributions(fetchStartYear, prCache, mergedCommitCache)
 
-		// Second pass: merge new contributions, updating status for existing ones.
-		const allSources = [newContributions]
-		for (const source of allSources) {
-			for (const type of Object.keys(source)) {
-				for (const item of source[type]) {
-					const existing = urlToLatestStatus.get(item.url)
-					const newItemDate = new Date(item.date)
-
-					// Only update the existing item if the newly fetched item is more recent.
-					if (!existing || newItemDate > existing.date) {
-						urlToLatestStatus.set(item.url, {
-							type,
-							date: newItemDate,
-							item,
-						})
-					}
-				}
-			}
-		}
-
-		// Rebuild collections with correct categorization based on latest status
+		// Second pass: merge new contributions and existing ones, preserving all contribution types
 		let finalContributions = {
 			pullRequests: [],
 			issues: [],
@@ -1237,12 +1217,39 @@ async function main() {
 			collaborations: [],
 		}
 
-		for (const [_, status] of urlToLatestStatus) {
-			// Defensive: if a status type wasn't previously known (e.g. coAuthoredPrs), create the array
-			if (!finalContributions[status.type]) {
-				finalContributions[status.type] = []
+		// Helper function to add items to their respective arrays with deduplication
+		const addToCategory = (item, type, seenUrls = new Set()) => {
+			if (!seenUrls.has(item.url)) {
+				if (!finalContributions[type]) {
+					finalContributions[type] = []
+				}
+				finalContributions[type].push(item)
+				seenUrls.add(item.url)
 			}
-			finalContributions[status.type].push(status.item)
+		}
+
+		// Keep track of URLs for each category separately
+		const categorySeenUrls = {
+			pullRequests: new Set(),
+			issues: new Set(),
+			reviewedPrs: new Set(),
+			coAuthoredPrs: new Set(),
+			collaborations: new Set(),
+		}
+
+		// First, add all existing contributions
+		for (const [_, status] of urlToLatestStatus) {
+			addToCategory(status.item, status.type, categorySeenUrls[status.type])
+		}
+
+		// Then, add all new contributions, preserving each type independently
+		const allSources = [newContributions]
+		for (const source of allSources) {
+			for (const type of Object.keys(source)) {
+				for (const item of source[type]) {
+					addToCategory(item, type, categorySeenUrls[type])
+				}
+			}
 		}
 
 		// Sort each category by date
