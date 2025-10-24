@@ -4,6 +4,13 @@ const path = require("path")
 // Import configuration
 const { BASE_DIR } = require("./config")
 
+// Import new formatters
+const {
+  formatDate,
+  calculatePeriodInDays,
+  getPrStatusContent,
+} = require("./contribution-formatters")
+
 /**
  * Generates and writes a separate Markdown file for each quarter's contributions.
  * @param {object} groupedContributions An object where keys are "YYYY-QX" and values are the contributions for that quarter.
@@ -194,108 +201,60 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`
 					tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`
 
 					if (section === "pullRequests") {
-						const createdAt = new Date(item.createdAt)
-							.toISOString()
-							.split("T")[0]
-						const mergedAt = item.mergedAt
-							? new Date(item.mergedAt).toISOString().split("T")[0]
-							: "N/A"
-						const reviewPeriod = item.mergedAt
-							? `${item.reviewPeriod} days`
-							: "N/A"
+						const createdAt = formatDate(item.createdAt)
+						const mergedAt = formatDate(item.mergedAt)
+						// Use stored period or recalculate if missing/stale
+						const reviewPeriod = calculatePeriodInDays(
+							item.createdAt,
+							item.mergedAt
+						)
+
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${mergedAt}</td>\n`
 						tableContent += `      <td>${reviewPeriod}</td>\n`
 					} else if (section === "issues") {
-						const createdAt = new Date(item.date).toISOString().split("T")[0]
-						const closedAt = item.closedAt
-							? new Date(item.closedAt).toISOString().split("T")[0]
-							: "N/A"
+						const createdAt = formatDate(item.date)
+						const closedAt = formatDate(item.closedAt)
+						// Use stored period, checking if it's "Open" or needs calculation
+						const closingPeriod = calculatePeriodInDays(
+							item.date,
+							item.closedAt,
+							item.state
+						)
+
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${closedAt}</td>\n`
-						tableContent += `      <td>${
-							item.closingPeriod === "Open"
-								? "Open"
-								: `${item.closingPeriod} days`
-						}</td>\n`
+						tableContent += `      <td>${closingPeriod}</td>\n`
 					} else if (section === "reviewedPrs") {
-						const createdAt = new Date(item.createdAt)
-							.toISOString()
-							.split("T")[0]
-
-						const lastUpdateDate = new Date(item.date)
-							.toISOString()
-							.split("T")[0]
-
-						const rawPrState = item.state ? item.state.toUpperCase() : "N/A"
-						const displayState = item.mergedAt ? "MERGED" : rawPrState
-						const lastUpdateContent = `${lastUpdateDate}<br><strong>${displayState}</strong>`
-
-						const myFirstReviewAt = item.myFirstReviewDate
-							? new Date(item.myFirstReviewDate).toISOString().split("T")[0]
-							: "N/A"
-						const myFirstReviewPeriod = item.myFirstReviewPeriod || "N/A"
+						const createdAt = formatDate(item.createdAt)
+						const myFirstReviewAt = formatDate(item.myFirstReviewDate)
+						const myFirstReviewPeriod = calculatePeriodInDays(
+							item.createdAt,
+							item.myFirstReviewDate
+						)
+						const lastUpdateContent = getPrStatusContent(item)
 
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewAt}</td>\n`
 						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
 						tableContent += `      <td>${lastUpdateContent}</td>\n`
 					} else if (section === "coAuthoredPrs") {
-						const createdAt = new Date(item.createdAt)
-							.toISOString()
-							.split("T")[0]
-						const firstCommitAt = item.firstCommitDate
-							? new Date(item.firstCommitDate).toISOString().split("T")[0]
-							: "N/A"
-
-						// First commit period (from created to first commit)
-						// Calculate the period if it's not already stored
-						const firstCommitPeriod =
-							item.firstCommitPeriod ||
-							(item.firstCommitDate && item.createdAt
-								? Math.round(
-										(new Date(item.firstCommitDate) -
-											new Date(item.createdAt)) /
-											(1000 * 60 * 60 * 24)
-								  ) +
-								  (Math.round(
-										(new Date(item.firstCommitDate) -
-											new Date(item.createdAt)) /
-											(1000 * 60 * 60 * 24)
-								  ) === 0
-										? " day"
-										: " days")
-								: "N/A")
-
-						// Status with dates
-						let lastUpdateContent = ""
-						const lastUpdateDate = new Date(item.date)
-							.toISOString()
-							.split("T")[0]
-
-						if (item.mergedAt) {
-							const mergedAtDate = new Date(item.mergedAt)
-								.toISOString()
-								.split("T")[0]
-							lastUpdateContent = `${mergedAtDate}<br><strong>MERGED</strong>`
-						} else if (item.state === "closed") {
-							lastUpdateContent = `${lastUpdateDate}<br><strong>CLOSED</strong>`
-						} else {
-							const stateUpper = item.state ? item.state.toUpperCase() : "N/A"
-							lastUpdateContent = `${lastUpdateDate}<br><strong>${stateUpper}</strong>`
-						}
+						const createdAt = formatDate(item.createdAt)
+						const firstCommitAt = formatDate(item.firstCommitDate)
+						const firstCommitPeriod = calculatePeriodInDays(
+							item.createdAt,
+							item.firstCommitDate
+						)
+						const lastUpdateContent = getPrStatusContent(item)
 
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${firstCommitAt}</td>\n`
 						tableContent += `      <td>${firstCommitPeriod}</td>\n`
 						tableContent += `      <td>${lastUpdateContent}</td>\n`
 					} else if (section === "collaborations") {
-						const createdAt = new Date(item.createdAt)
-							.toISOString()
-							.split("T")[0]
-						const commentedAt = item.firstCommentedAt
-							? new Date(item.firstCommentedAt).toISOString().split("T")[0]
-							: "N/A"
+						const createdAt = formatDate(item.createdAt)
+						const commentedAt = formatDate(item.firstCommentedAt)
+
 						tableContent += `      <td>${createdAt}</td>\n`
 						tableContent += `      <td>${commentedAt}</td>\n`
 					}
