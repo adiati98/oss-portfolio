@@ -7,47 +7,8 @@ const { SINCE_YEAR, BASE_DIR, README_PATH } = require("./config")
 // Import core fetching logic
 const { fetchContributions } = require("./github-api-fetchers")
 
-/**
- * Groups the fetched contributions by calendar quarter.
- * @param {object} contributions The object containing all contribution data.
- * @returns {object} A new object with contributions grouped by 'YYYY-Qq' keys.
- */
-function groupContributionsByQuarter(contributions) {
-	const grouped = {}
-	// Iterate over each contribution type (pullRequests, issues, etc.).
-	for (const [type, items] of Object.entries(contributions)) {
-		// Iterate over each item within the type.
-		for (const item of items) {
-			const dateStr = item.date
-			if (!dateStr) continue
-
-			const dateObj = new Date(dateStr)
-			const year = dateObj.getFullYear()
-			const month = dateObj.getMonth() + 1
-			// Calculate the quarter (1-4).
-			const quarter = `Q${Math.floor((month - 1) / 3) + 1}`
-			const key = `${year}-${quarter}`
-
-			// Initialize the quarter group if it doesn't exist.
-			if (!grouped[key]) {
-				grouped[key] = {
-					pullRequests: [],
-					issues: [],
-					reviewedPrs: [],
-					coAuthoredPrs: [],
-					collaborations: [],
-				}
-			}
-			// Defensive: ensure the target array exists on the grouped object
-			if (!grouped[key][type]) {
-				grouped[key][type] = []
-			}
-			// Push the item into the correct quarterly group.
-			grouped[key][type].push(item)
-		}
-	}
-	return grouped
-}
+// Import grouping
+const { groupContributionsByQuarter } = require("./contributions-groupers")
 
 /**
  * Writes the grouped contribution data to Markdown files, one for each quarter.
