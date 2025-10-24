@@ -7,14 +7,12 @@ const { SINCE_YEAR } = require("./config")
 // Import core fetching logic
 const { fetchContributions } = require("./github-api-fetchers")
 
-// Import grouping
+// Import grouping logic
 const { groupContributionsByQuarter } = require("./contributions-groupers")
 
-// Import markdown logic
-const {
-	writeMarkdownFiles,
-	createStatsReadme,
-} = require("./markdown-generator")
+// Import markdown generation logic
+const { writeMarkdownFiles } = require("./quarterly-reports-generator")
+const { createStatsReadme } = require("./contributions-readme-generator")
 
 async function main() {
 	// Define the data directory path.
@@ -212,10 +210,16 @@ async function main() {
 		)
 		console.log("Updated contributions data saved to file.")
 
+		// === Quarterly grouping and Markdown generator functions ===
+		// 1. Group data
 		const grouped = groupContributionsByQuarter(finalContributions)
+
+		// 2. Generate quarterly reports
 		await writeMarkdownFiles(grouped)
+
+		// 3. Generate aggregate README
 		await createStatsReadme(finalContributions)
-		
+
 		// Save the updated PR cache to a file for future runs.
 		await fs.writeFile(
 			cacheFile,
