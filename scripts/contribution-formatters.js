@@ -2,7 +2,7 @@
  * Utility functions for formatting dates, calculating periods, and generating status strings.
  */
 
-// Function to format a date string into YYYY-MM-DD
+// Formats a full date string (e.g., "2024-10-24T12:00:00Z") into YYYY-MM-DD.
 function formatDate(dateString) {
 	if (!dateString) return "N/A"
 	try {
@@ -60,7 +60,6 @@ function getPrStatusContent(item) {
 	}
 
 	const rawPrState = item.state ? item.state.toUpperCase() : "N/A"
-	// For non-merged PRs, use the date of the last update/closure
 	return `${lastUpdateDate}<br><strong>${rawPrState}</strong>`
 }
 

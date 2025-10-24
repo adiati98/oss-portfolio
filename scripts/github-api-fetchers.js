@@ -47,6 +47,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 	}
 
 	// Use the persistent commit cache if provided, otherwise start with an empty Map
+	// This allows the cache to be updated and returned for persistence across runs
 	const commitCache =
 		persistentCommitCache instanceof Map
 			? new Map(persistentCommitCache)
@@ -178,7 +179,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 		username,
 		commitCache
 	) {
-		const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}` // Use a consistent key
+		const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}` // Use a consistent key for caching
 
 		// 1. CHECK CACHE
 		if (commitCache.has(prUrlKey)) {
@@ -213,7 +214,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			// Helper to determine whether a commit should be attributed to the username
 			function isCommitByUser(c) {
 				try {
-					// 1) GitHub-linked author
+					// 1) GitHub-linked author (most reliable)
 					if (c.author && c.author.login === username) return true
 
 					// 2) Commit author email may include the username (e.g. username@users.noreply.github.com)
@@ -243,6 +244,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 					)
 						return true
 				} catch (e) {
+					// Ignore errors and default to false if commit object structure is unexpected
 					return false
 				}
 				return false
@@ -289,13 +291,13 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 		const yearStart = `${year}-01-01T00:00:00Z`
 		const yearEnd = `${year + 1}-01-01T00:00:00Z`
 
-		// --- Fetch Pull Requests authored by the user and merged in the given year ---
+		// --- Fetch PRs authored by the user and merged in the given year ---
 		const prs = await getAllPages(
 			`is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
 		)
 
 		for (const pr of prs) {
-			// 1. Check if the PR is already in the long-term cache.
+			// 1. Check if the PR is already in the long-term cache (`prCache`).
 			if (prCache.has(pr.html_url)) {
 				continue // If it's cached, skip to the next PR.
 			}
@@ -305,17 +307,17 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
 
-			// 2. Check if the PR is from your own repo.
+			// 2. Check if the PR is from your own repo (self-PRs are typically excluded).
 			if (owner === GITHUB_USERNAME) {
-				// Log and add to the cache. We don't want to list these.
+				// Log and add to the persistent cache to skip it next time.
 				prCache.add(pr.html_url)
 				continue
 			}
 
-			// 3. For an external PR, add it to the cache and log it.
+			// 3. For an external PR, add it to the persistent cache to prevent re-processing in subsequent runs.
 			prCache.add(pr.html_url)
 
-			// 4. Check the temporary, in-run cache to avoid processing the same PR twice within this run.
+			// 4. Check the temporary, in-run cache (`seenUrls`) to avoid processing the same PR twice within this run.
 			if (seenUrls.pullRequests.has(pr.html_url)) {
 				continue
 			}
@@ -441,7 +443,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 								(1000 * 60 * 60 * 24)
 						) + " days"
 				} else if (pr.state === "closed" && pr.merged_at) {
-					// Fallback if the search result itself has the merged_at property.
+					// Fallback if the search result itself has the merged_at property (for merged PRs).
 					mergedAt = pr.merged_at
 					mergePeriod =
 						Math.round(
@@ -452,8 +454,9 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 					mergePeriod = "Closed"
 				}
 
-				// **--- 6. Check Co-Authored PRs ---**
-				// Check for commits regardless of whether it's a reviewed PR or not
+				// --- 6. Check Co-Authored PRs ---
+				// Check for commits regardless of whether it's a reviewed PR or not. This detects PRs
+				// where the user contributed code but wasn't the author/primary reviewer, and adds them to a separate category.
 				const commitDetails = await getFirstCommitDetails(
 					owner,
 					repoName,
@@ -551,7 +554,8 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			const owner = repoParts[repoParts.length - 2]
 			const repoName = repoParts[repoParts.length - 1]
 
-			// Skip collaborations that have already been reviewed or seen, or are in your own repos.
+			// Skip collaborations that have already been reviewed (covered by uniqueReviewedPrs)
+			// or already processed in this loop (covered by seenUrls.collaborations) or are in your own repos.
 			if (
 				seenUrls.collaborations.has(item.html_url) ||
 				uniqueReviewedPrs.has(item.html_url)
@@ -566,6 +570,8 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			}
 
 			// --- 2. Check for commits on PRs (Co-Authored PRs) ---
+			// This is a re-check for co-authored commits on *all* collaborations (PRs only),
+			// ensuring that co-authored PRs that weren't reviewed are still caught.
 			if (item.pull_request) {
 				// Only PRs have 'commits' endpoint
 				const commitDetails = await getFirstCommitDetails(
@@ -588,6 +594,9 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 					const contributionDate =
 						commitDetails.firstCommitDate || item.updated_at
 
+					// Note: If an item is co-authored, it is added to coAuthoredPrs here.
+					// It will also be added to 'collaborations' below if a comment exists,
+					// resulting in an intentional overlap in categories for combined code/comment contributions.
 					contributions.coAuthoredPrs.push({
 						title: item.title,
 						url: item.html_url,
@@ -602,7 +611,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 				}
 			}
 
-			// --- 3. Collaborations Logic (Fetch date BEFORE use) ---
+			// --- 3. Collaborations Logic (Tracks first *comment* on issues/PRs not covered by reviews) ---
 			const firstCommentDate = await getFirstCommentDate(
 				item.comments_url,
 				GITHUB_USERNAME

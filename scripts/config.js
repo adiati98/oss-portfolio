@@ -1,7 +1,7 @@
-// --- Configuration Variables ---
-// Change these values to match your GitHub profile and history.
-const GITHUB_USERNAME = "adiati98" //Change this to your GitHub username
-const SINCE_YEAR = 2019 //Change this to the first year of your contribution
+// --- Core Configuration Variables ---
+// Change GITHUB_USERNAME and SINCE_YEAR to set the starting year for your contribution history.
+const GITHUB_USERNAME = "adiati98"
+const SINCE_YEAR = 2019
 const BASE_URL = "https://api.github.com"
 
 // --- Configuration to generate README in the contributions folder ---
