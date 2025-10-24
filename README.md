@@ -14,6 +14,17 @@ This project is powered by a **Node.js script** and a **GitHub Actions workflow*
 
 ### The Brain: The Automation Script
 
+The project's automation logic is highly modular, separating concerns into six specialized files:
+
+| File | Responsibility | 
+| ----- | ----- | 
+| **`config.js`** | Holds all core configuration, including `GITHUB_USERNAME`, `SINCE_YEAR`, and output paths. | 
+| **`github-api-fetchers.js`** | Handles all external communication with the GitHub REST API (v3) to fetch raw contribution data. | 
+| **`contributions-groupers.js`** | Contains the logic for filtering, deduplicating, and assigning fetched items to the correct quarterly buckets. | 
+| **`contribution-formatters.js`** | Manages the data formatting for display, including date formatting (`YYYY-MM-DD`), period calculation (`"X days"`), and status string generation. | 
+| **`quarterly-reports-generator.js`** | Creates the detailed Markdown files for each quarter (e.g., `2024/Q1-2024.md`). | 
+| **`contributions-readme-generator.js`** | Generates the `README.md` file in the `contributions` folder, providing high-level statistics and summaries. |
+
 The core logic is designed to track and categorize activity **outside of the owner's own repositories**. The script performs the following key functions:
 
 1.  **Smart Syncing:** The script checks the date of the last successful run. If the data is current, it performs a fast **incremental update**, only fetching new activity from the last year or so. If the data is old (e.g., on a monthly schedule), it performs a **full sync** to ensure no contribution is missed.
@@ -73,15 +84,15 @@ rm -rf contributions
 
 ### 2. Update Configuration
 
-Open the main script file (`scripts/update-contributions.js`) and edit the following lines to match your desired data:
+Open the configuration file (`scripts/config.js`) and edit the following lines to match your desired data:
 
 ```javascript
-// scripts/update-contributions.js
+// scripts/config.js
 
 // Change this to your GitHub handle
 const GITHUB_USERNAME = "adiati98" 
 // Change this to the earliest year you want to track
-const SINCE_YEAR = 2019 
+const SINCE_YEAR = 2019
 // ...
 ```
 
