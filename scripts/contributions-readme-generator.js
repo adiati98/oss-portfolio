@@ -62,12 +62,12 @@ Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a d
 | Section | Description | Key Metric Tracked |
 | :--- | :--- | :--- |
 | **Quarterly Statistics** | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter. | Total Count, Unique Repositories |
-| **Contribution Breakdown** | A table listing the count of contributions for each of the four core categories within that quarter. | Category Counts |
+| **Contribution Breakdown** | A table listing the count of contributions for each of the five core categories within that quarter. | Category Counts |
 | **Top 3 Repositories** | The top three projects where contributions were made in that quarter, ranked by total count. | Contribution Frequency |
 | **Merged PRs** | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories. | **Review Period** (Time from creation to merge) |
 | **Issues** | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories. | **Closing Period** (Time from creation to close) |
 | **Reviewed PRs** | **(Collapsible Section)** Detailed list of Pull Requests **reviewed or merged by me** on external repositories. | **My First Review Period** (Time from PR creation to my first review) |
-| **Co-Authored PRs** | **(Collapsible Section)** Pull Requests where I contributed commits (including co-authored commits) to other people's PRs. | **My First Commit Period** (Time from PR creation to my first commit) |
+| **Co-Authored PRs** | **(Collapsible Section)** Pull Requests where **I contributed commits (including co-authored commits)** to other contributor's PRs. | **My First Commit Period** (Time from PR creation to my first commit) |
 | **Collaborations** | **(Collapsible Section)** Detailed list of open Issues or PRs where I have **commented** to participate in discussion. | **First Commented At** (The date of my initial comment) |
 
 ---
