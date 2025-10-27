@@ -6,6 +6,8 @@ My goal in creating this log is to maintain a detailed and organized record of m
 
 The content in this repository is generated automatically using a GitHub Action. I plan to add more details and functions in the future.
 
+If you're interested to learn about the motivation and development process for this project, see my full write-up: [How I Built a Curated, Automated Open Source Portfolio](https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0)
+
 ---
 
 ## 💡 How It Works
