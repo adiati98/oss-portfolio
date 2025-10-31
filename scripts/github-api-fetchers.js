@@ -211,40 +211,56 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 			let commitCount = 0
 			let earliestCommitDate = null
 
-			// Helper to determine whether a commit should be attributed to the username
+			// Helper to determine whether a commit should be attributed to the username.
 			function isCommitByUser(c) {
 				try {
-					// 1) GitHub-linked author (most reliable)
+					// 1. Check for explicit GitHub login match (most reliable).
 					if (c.author && c.author.login === username) return true
 
-					// 2) Commit author email may include the username (e.g. username@users.noreply.github.com)
+					// Safely extract and normalize the commit author's email.
+					const authorEmail = c.commit?.author?.email?.toLowerCase()
+					// Skip if email metadata is missing.
+					if (!authorEmail) return false
+
+					const lowerUsername = username.toLowerCase()
+
+					// --- Email Attribution Checks ---
+
+					// 2. Check for standard GitHub noreply format (ID+username@users.noreply.github.com).
+					// This catches local commits made using the user's private GitHub email.
 					if (
-						c.commit &&
-						c.commit.author &&
-						c.commit.author.email &&
-						c.commit.author.email.toLowerCase().includes(username.toLowerCase())
+						authorEmail.endsWith("@users.noreply.github.com") &&
+						authorEmail.includes(`+${lowerUsername}@`)
+					) {
+						return true
+					}
+
+					// 3. Check for legacy GitHub noreply format (username@users.noreply.github.com).
+					if (authorEmail === `${lowerUsername}@users.noreply.github.com`) {
+						return true
+					}
+
+					// 4. Fallback: Check if the commit email contains the username.
+					if (authorEmail.includes(lowerUsername)) {
+						return true
+					}
+
+					// 5. Fallback: Check if the commit author name contains the username (less reliable).
+					if (
+						c.commit?.author?.name &&
+						c.commit.author.name.toLowerCase().includes(lowerUsername)
 					)
 						return true
 
-					// 3) Commit author name could include username (less reliable but useful)
+					// 6. Check for Co-authored-by trailer in the commit message.
 					if (
-						c.commit &&
-						c.commit.author &&
-						c.commit.author.name &&
-						c.commit.author.name.toLowerCase().includes(username.toLowerCase())
-					)
-						return true
-
-					// 4) Co-authored-by trailer in the commit message may include the username in the email
-					if (
-						c.commit &&
-						c.commit.message &&
+						c.commit?.message &&
 						/Co-authored-by:/i.test(c.commit.message) &&
-						c.commit.message.toLowerCase().includes(username.toLowerCase())
+						c.commit.message.toLowerCase().includes(lowerUsername)
 					)
 						return true
 				} catch (e) {
-					// Ignore errors and default to false if commit object structure is unexpected
+					// Ignore unexpected errors (e.g., malformed commit object) and default to false.
 					return false
 				}
 				return false
