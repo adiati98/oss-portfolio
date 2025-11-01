@@ -49,9 +49,7 @@ async function createStatsReadme(finalContributions) {
 	// 4. Build Markdown Content
 	let markdownContent = `# 📈 My Open Source Contributions Report
 
-This folder contains automatically generated reports of my external open-source contributions, organized by calendar quarter.
-
-These reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations**.
+Organized by calendar quarter, these reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations**.
 
 ---
 

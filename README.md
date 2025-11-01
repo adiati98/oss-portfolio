@@ -16,10 +16,11 @@ This project is powered by a **Node.js script** and a **GitHub Actions workflow*
 
 ### The Brain: The Automation Script
 
-The project's automation logic is highly modular, separating concerns into six specialized files:
+The project's automation logic is highly modular, separating concerns into seven specialized files:
 
 | File | Responsibility | 
-| ----- | ----- | 
+| ----- | ----- |
+| **`main.js`** | The primary entry point that loads configurations and coordinates the execution flow of the entire automation script. |
 | **`config.js`** | Holds all core configuration, including `GITHUB_USERNAME`, `SINCE_YEAR`, and output paths. | 
 | **`github-api-fetchers.js`** | Handles all external communication with the GitHub REST API (v3) to fetch raw contribution data. | 
 | **`contributions-groupers.js`** | Contains the logic for filtering, deduplicating, and assigning fetched items to the correct quarterly buckets. | 
