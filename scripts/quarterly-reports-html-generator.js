@@ -130,70 +130,63 @@ async function writeHtmlFiles(groupedContributions) {
         <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
     </header>
 
-    <!-- STATS SECTION -->
+<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
     <section class="mb-8">
         <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
-        
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            <div class="bg-indigo-50 p-4 rounded-xl shadow-md">
-                <p class="text-3xl font-bold text-indigo-700">${totalContributions}</p>
-                <p class="text-sm text-gray-600">Total Contrib.</p>
+
+        <!-- Total Contributions & Total Repositories (Two Big Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                <p class="text-5xl font-extrabold">${totalContributions}</p>
+                <p class="text-lg mt-2 font-medium">Total Contributions</p>
             </div>
-            <div class="bg-indigo-50 p-4 rounded-xl shadow-md">
-                <p class="text-3xl font-bold text-indigo-700">${totalRepos}</p>
-                <p class="text-sm text-gray-600">Total Repos</p>
-            </div>
-            <div class="bg-indigo-50 p-4 rounded-xl shadow-md">
-                <p class="text-3xl font-bold text-indigo-700">${data.pullRequests.length}</p>
-                <p class="text-sm text-gray-600">Merged PRs</p>
-            </div>
-            <div class="bg-indigo-50 p-4 rounded-xl shadow-md">
-                <p class="text-3xl font-bold text-indigo-700">${data.reviewedPrs.length}</p>
-                <p class="text-sm text-gray-600">Reviewed PRs</p>
+            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+                <p class="text-5xl font-extrabold">${totalRepos}</p>
+                <p class="text-lg mt-2 font-medium">Total Repositories</p>
             </div>
         </div>
     </section>
 
-    <hr class="my-8 border-gray-200">
-
-    <!-- REPOSITORY BREAKDOWN & CONTRIBUTION BREAKDOWN -->
-    <section class="space-y-6">
-        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
-            <summary class="text-xl font-bold text-indigo-600">
-                <span class="inline-block">⭐ Repository Activity & Breakdown</span>
-            </summary>
-            
-            <div class="p-4 bg-gray-50 rounded-lg space-y-4">
-                <h3 class="text-lg font-semibold text-gray-700">Top 3 Repositories</h3>
-                <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-                    ${top3Repos}
-                </ol>
-
-                <h3 class="text-lg font-semibold text-gray-700 pt-4 border-t border-gray-200">Contribution Type Breakdown</h3>
-                <div class="grid grid-cols-2 gap-3 text-sm text-gray-700">
-                    <div class="flex justify-between items-center p-2 bg-white rounded-lg shadow-sm">
-                        <span>Merged PRs:</span>
-                        <span class="font-bold text-indigo-600">${data.pullRequests.length}</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-white rounded-lg shadow-sm">
-                        <span>Reviewed PRs:</span>
-                        <span class="font-bold text-indigo-600">${data.reviewedPrs.length}</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-white rounded-lg shadow-sm">
-                        <span>Issues Filed:</span>
-                        <span class="font-bold text-indigo-600">${data.issues.length}</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-white rounded-lg shadow-sm">
-                        <span>Co-Authored PRs:</span>
-                        <span class="font-bold text-indigo-600">${data.coAuthoredPrs.length}</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-white rounded-lg shadow-sm">
-                        <span>Collaborations (Comments):</span>
-                        <span class="font-bold text-indigo-600">${data.collaborations.length}</span>
-                    </div>
-                </div>
+    <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+    <section class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+            <!-- Merged PRs -->
+            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <span class="text-2xl font-bold text-indigo-700">${data.pullRequests.length}</span>
+                <span class="text-xs text-gray-500 mt-1">Merged PRs</span>
             </div>
-        </details>
+            <!-- Reviewed PRs -->
+            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <span class="text-2xl font-bold text-indigo-700">${data.reviewedPrs.length}</span>
+                <span class="text-xs text-gray-500 mt-1">Reviewed PRs</span>
+            </div>
+            <!-- Issues Filed -->
+            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <span class="text-2xl font-bold text-indigo-700">${data.issues.length}</span>
+                <span class="text-xs text-gray-500 mt-1">Issues Filed</span>
+            </div>
+            <!-- Co-Authored PRs -->
+            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <span class="text-2xl font-bold text-indigo-700">${data.coAuthoredPrs.length}</span>
+                <span class="text-xs text-gray-500 mt-1">Co-Authored PRs</span>
+            </div>
+            <!-- Collaborations -->
+            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+                <span class="text-2xl font-bold text-indigo-700">${data.collaborations.length}</span>
+                <span class="text-xs text-gray-500 mt-1">Collaborations</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. TOP 3 REPOSITORIES SECTION -->
+    <section class="mb-8">
+        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+                ${top3Repos}
+            </ol>
+        </div>
     </section>
 
     <hr class="my-8 border-gray-200">
