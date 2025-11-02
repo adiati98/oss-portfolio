@@ -315,9 +315,9 @@ async function writeHtmlFiles(groupedContributions) {
 				let counter = 1
 				// Iterate over each contribution item to build table rows
 				for (const item of items) {
-					tableContent += `    <tr>\n`
+          const rowBg = counter % 2 === 1 ? "bg-white" : "bg-gray-50"
+					tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`
 					tableContent += `      <td>${counter++}.</td>\n`
-					// Repo Name: styled with font-mono text-xs bg-gray-100 p-1 rounded
 					tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`
 					// Title: styled as a link
 					tableContent += `      <td><a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a></td>\n`
