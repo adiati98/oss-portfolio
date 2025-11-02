@@ -16,14 +16,16 @@ const {
  * @param {object} groupedContributions An object where keys are "YYYY-QX" and values are the contributions for that quarter.
  */
 async function writeMarkdownFiles(groupedContributions) {
+	const markdownBaseDir = path.join(BASE_DIR, "markdown-generated")
+
 	// Create the base contributions directory if it's doesn't exist.
-	await fs.mkdir(BASE_DIR, { recursive: true })
+	await fs.mkdir(markdownBaseDir, { recursive: true })
 
 	// Iterate over each quarter's worth of data.
 	for (const [key, data] of Object.entries(groupedContributions)) {
 		const [year, quarter] = key.split("-")
 		// Create the year-specific subdirectory (e.g., 'contributions/2023')
-		const yearDir = path.join(BASE_DIR, year)
+		const yearDir = path.join(markdownBaseDir, year)
 		await fs.mkdir(yearDir, { recursive: true })
 
 		const filePath = path.join(yearDir, `${quarter}-${year}.md`)
