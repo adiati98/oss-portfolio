@@ -14,6 +14,12 @@ const { groupContributionsByQuarter } = require("./contributions-groupers")
 const { writeMarkdownFiles } = require("./quarterly-reports-generator")
 const { createStatsReadme } = require("./contributions-readme-generator")
 
+// Import html generation logic
+const { writeHtmlFiles } = require("./quarterly-reports-html-generator")
+const {
+	createStatsHtmlReadme,
+} = require("./contributions-readme-html-generator")
+
 async function main() {
 	// Define the data directory path.
 	const dataDir = "data"
@@ -212,15 +218,21 @@ async function main() {
 		)
 		console.log("Updated contributions data saved to file.")
 
-		// --- Quarterly grouping and Markdown generator functions ---
+		// --- Quarterly grouping, and Markdown and HTML generator functions ---
 		// 1. Group data by quarter
 		const grouped = groupContributionsByQuarter(finalContributions)
 
-		// 2. Generate quarterly reports
+		// 2. Generate quarterly reports (Markdown)
 		await writeMarkdownFiles(grouped)
 
-		// 3. Generate aggregate README
+		// 3. Generate quarterly reports (HTML)
+		const quarterlyHtmlLinks = await writeHtmlFiles(grouped)
+
+		// 4. Generate aggregate README (Markdown)
 		await createStatsReadme(finalContributions)
+
+		// 5. Generate aggregate README (index.html)
+		await createStatsHtmlReadme(finalContributions, quarterlyHtmlLinks)
 
 		// Save the updated PR cache to a file for future runs.
 		await fs.writeFile(
