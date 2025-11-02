@@ -98,7 +98,8 @@ async function writeHtmlFiles(groupedContributions) {
         summary {
             cursor: pointer;
             outline: none;
-            padding: 0.5rem 0;
+            margin: 0.5em 0;
+            padding: 0.5em 0;
             color: #1f2937;
         }
         .report-table th, .report-table td {
@@ -110,12 +111,12 @@ async function writeHtmlFiles(groupedContributions) {
             white-space: nowrap;
         }
         .report-table th {
-            background-color: #f3f4f6;
+            background-color: #EEF2FF;
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 0.05em;
-            color: #4b5563;
+            color: #4338CA;
         }
         .report-table tbody tr:last-child td {
             border-bottom: none;
