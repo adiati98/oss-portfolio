@@ -14,6 +14,9 @@ const {
 // Import navbar
 const { navHtml } = require("./navbar")
 
+// Tell the browser to go up one directory (..) to find index.html
+const navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
+
 /**
  * Generates and writes a separate HTML file for each quarter's contributions.
  * Files will be stored in a 'html-generated' subfolder within BASE_DIR.
@@ -94,6 +97,7 @@ async function writeHtmlFiles(groupedContributions) {
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+				@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f7f9fb;
@@ -127,7 +131,7 @@ async function writeHtmlFiles(groupedContributions) {
     </style>
 </head>
 <body>
-${navHtml}
+${navHtmlForReports}
 		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
     		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
         		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">${quarter} ${year}</h1>

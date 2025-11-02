@@ -2,7 +2,7 @@ const fs = require("fs/promises")
 const path = require("path")
 
 // Import configuration (SINCE_YEAR is needed for reporting)
-const { BASE_DIR, SINCE_YEAR } = require("./config")
+const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
 
 // Import navbar
 const { navHtml } = require("./navbar")
@@ -252,10 +252,15 @@ ${navHtml}
     <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
         <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
-                <span class="text-5xl">📈</span> My Open Source Contributions Report
+                <span class="text-5xl">📈</span> Open Source Contributions Report
             </h1>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
-                Organized by calendar quarter, these reports track my <strong>external open-source involvement</strong>, aggregating key community activities across <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+                Organized by calendar quarter, these reports track
+                        <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
+                            ${GITHUB_USERNAME}
+                        </a>'s external open-source involvement, aggregating key community activities across 
+                        <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+                        Use the navigation below to browse reports by year and quarter.
             </p>
         </header>
 
