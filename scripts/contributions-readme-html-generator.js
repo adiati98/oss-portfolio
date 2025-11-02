@@ -258,9 +258,8 @@ ${navHtml}
                 Organized by calendar quarter, these reports track
                         <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
                             ${GITHUB_USERNAME}
-                        </a>'s external open-source involvement, aggregating key community activities across 
+                        </a>'s external open source involvement, aggregating key community activities across 
                         <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
-                        Use the navigation below to browse reports by year and quarter.
             </p>
         </header>
 
