@@ -4,39 +4,11 @@ const path = require("path")
 // Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR } = require("./config")
 
+// Import navbar
+const { navHtml } = require("./navbar")
+
 const HTML_OUTPUT_DIR_NAME = "html-generated"
 const HTML_README_FILENAME = "index.html"
-
-const GITHUB_REPO_URL = "https://github.com/adiati98/oss-portfolio"
-
-// SVG for GitHub icon
-const GITHUB_ICON_SVG = `
-<svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
-    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
-</svg>`
-
-// Navbar
-const navHtml = `
-<nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg h-16">
-    <div class="mx-auto max-w-7xl h-full flex items-center justify-between px-4 sm:px-8">
-        <!-- Left Side: Title -->
-        <div class="flex items-center space-x-4">
-            <div class="text-md font-extrabold tracking-wider uppercase">
-                Open Source Portfolio
-            </div>
-        </div>
-        
-        <!-- Right Side: GitHub Icon Link -->
-        <div>
-            <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
-               class="p-2 transition duration-150 hover:text-gray-200 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#4338CA]" 
-               title="View Repository">
-                ${GITHUB_ICON_SVG}
-            </a>
-        </div>
-    </div>
-</nav>
-`
 
 /**
  * Calculates aggregate totals from all contribution data and writes the
@@ -276,14 +248,13 @@ async function createStatsHtmlReadme(
     </style>
 </head>
 <body>
-		${navHtml}
-
+${navHtml}
     <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
-        <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">
+        <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
+            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
                 <span class="text-5xl">📈</span> My Open Source Contributions Report
             </h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10">
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
                 Organized by calendar quarter, these reports track my <strong>external open-source involvement</strong>, aggregating key community activities across <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
             </p>
         </header>

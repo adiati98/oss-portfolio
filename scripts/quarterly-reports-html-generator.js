@@ -11,6 +11,9 @@ const {
 	getPrStatusContent,
 } = require("./contribution-formatters")
 
+// Import navbar
+const { navHtml } = require("./navbar")
+
 /**
  * Generates and writes a separate HTML file for each quarter's contributions.
  * Files will be stored in a 'html-generated' subfolder within BASE_DIR.
@@ -123,77 +126,77 @@ async function writeHtmlFiles(groupedContributions) {
         }
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body>
+${navHtml}
+		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
+    		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
+        		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">${quarter} ${year}</h1>
+        		<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+    		</header>
 
-<div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-6 md:p-10">
-    <header class="text-center mb-8 pb-4 border-b-2 border-indigo-100">
-        <h1 class="text-4xl font-extrabold text-indigo-700">${quarter} ${year}</h1>
-        <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-    </header>
+		<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
+    		<section class="mb-8">
+        		<h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
 
-<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
-    <section class="mb-8">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
+        		<!-- Total Contributions & Total Repositories (Two Big Cards) -->
+        		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+           		 <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              		  <p class="text-4xl font-extrabold">${totalContributions}</p>
+              		  <p class="text-lg mt-2 font-medium">Total Contributions</p>
+            		</div>
+            		<div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              		  <p class="text-4xl font-extrabold">${totalRepos}</p>
+               		 <p class="text-lg mt-2 font-medium">Total Repositories</p>
+            		</div>
+        		</div>
+    		</section>
 
-        <!-- Total Contributions & Total Repositories (Two Big Cards) -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <p class="text-5xl font-extrabold">${totalContributions}</p>
-                <p class="text-lg mt-2 font-medium">Total Contributions</p>
-            </div>
-            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <p class="text-5xl font-extrabold">${totalRepos}</p>
-                <p class="text-lg mt-2 font-medium">Total Repositories</p>
-            </div>
-        </div>
-    </section>
+    		<!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+    		<section class="mb-8">
+       		 <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+       		 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+        		    <!-- Merged PRs -->
+         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+         		       <span class="text-2xl font-bold text-indigo-700">${data.pullRequests.length}</span>
+          		      <span class="text-md text-gray-500 mt-1">Merged PRs</span>
+          		  </div>
+          		  <!-- Reviewed PRs -->
+         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+           		     <span class="text-2xl font-bold text-indigo-700">${data.reviewedPrs.length}</span>
+            		    <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
+           		 </div>
+           		 <!-- Issues -->
+           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+           		     	<span class="text-2xl font-bold text-indigo-700">${data.issues.length}</span>
+            		    <span class="text-md text-gray-500 mt-1">Issues</span>
+           		 </div>
+          		  <!-- Co-Authored PRs -->
+          		  <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+             		   	<span class="text-2xl font-bold text-indigo-700">${data.coAuthoredPrs.length}</span>
+              		  <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
+            		</div>
+            		<!-- Collaborations -->
+            		<div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
+             		   <span class="text-2xl font-bold text-indigo-700">${data.collaborations.length}</span>
+              		  <span class="text-md text-gray-500 mt-1">Collaborations</span>
+          		  </div>
+        		</div>
+    		</section>
 
-    <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
-    <section class="mb-8">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-            <!-- Merged PRs -->
-            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                <span class="text-2xl font-bold text-indigo-700">${data.pullRequests.length}</span>
-                <span class="text-xs text-gray-500 mt-1">Merged PRs</span>
-            </div>
-            <!-- Reviewed PRs -->
-            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                <span class="text-2xl font-bold text-indigo-700">${data.reviewedPrs.length}</span>
-                <span class="text-xs text-gray-500 mt-1">Reviewed PRs</span>
-            </div>
-            <!-- Issues Filed -->
-            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                <span class="text-2xl font-bold text-indigo-700">${data.issues.length}</span>
-                <span class="text-xs text-gray-500 mt-1">Issues Filed</span>
-            </div>
-            <!-- Co-Authored PRs -->
-            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                <span class="text-2xl font-bold text-indigo-700">${data.coAuthoredPrs.length}</span>
-                <span class="text-xs text-gray-500 mt-1">Co-Authored PRs</span>
-            </div>
-            <!-- Collaborations -->
-            <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-                <span class="text-2xl font-bold text-indigo-700">${data.collaborations.length}</span>
-                <span class="text-xs text-gray-500 mt-1">Collaborations</span>
-            </div>
-        </div>
-    </section>
+    		<!-- 3. TOP 3 REPOSITORIES SECTION -->
+    		<section class="mb-8">
+      		  <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+      		  <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+            		<ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+          		      ${top3Repos}
+            		</ol>
+        		</div>
+    		</section>
 
-    <!-- 3. TOP 3 REPOSITORIES SECTION -->
-    <section class="mb-8">
-        <h3 class="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-                ${top3Repos}
-            </ol>
-        </div>
-    </section>
-
-    <hr class="my-8 border-gray-200">
+    		<hr class="my-8 border-gray-200">
     
-    <section class="space-y-6">
-`
+    		<section class="space-y-6">
+		`
 
 		// Configuration for each table section
 		const sections = {
@@ -284,7 +287,7 @@ async function writeHtmlFiles(groupedContributions) {
 			// Only keep 'pullRequests' open by default to match the template
 			const openAttribute = section === "pullRequests" ? "open" : ""
 
-			// Use the HTML <details> tag with Tailwind styles for a collapsible section
+			// Use the HTML <details> tag with Tailwind styles for a 		collapsible section
 			htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`
 			htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`
 
@@ -390,7 +393,7 @@ async function writeHtmlFiles(groupedContributions) {
 
 				tableContent += `  </tbody>\n`
 				tableContent += ` </table>\n`
-				tableContent += `</div>\n` // Closing overflow-x: auto div
+				tableContent += `</div>\n`
 
 				htmlContent += tableContent
 			}
@@ -400,9 +403,9 @@ async function writeHtmlFiles(groupedContributions) {
 
 		// Closing tags
 		htmlContent += `
-    </section>
-</div>
-</body>
+    				</section>
+				</div>
+		</body>
 </html>
 `
 
