@@ -155,28 +155,75 @@ async function createStatsHtmlReadme(
 	}
 
 	// 4. Generate Quarterly Links HTML
-	// Reverse and sort links to put newest quarter first (e.g., Q4-2024, Q3-2024, ...)
-	const sortedLinks = quarterlyFileLinks.sort().reverse()
+	const sortedLinks = quarterlyFileLinks
+		// Filter out any undefined/null entries or objects missing the 'path' for safety
+		.filter((link) => link && typeof link.path === "string")
+		.sort((a, b) => {
+			// Sort by path string in reverse order (b before a) to show newer quarters first
+			if (a.path < b.path) return 1
+			if (a.path > b.path) return -1
+			return 0
+		})
 	let linkHtml = ""
 
+	// Helper object to group links by year: { '2024': [...links], '2023': [...links] }
+	const linksByYear = {}
+
 	if (sortedLinks.length > 0) {
-		for (const relativePath of sortedLinks) {
-			// Example path: '2024/Q1-2024.html'
+		for (const link of sortedLinks) {
+			const relativePath = link.path
+			const totalContributions = link.total
+
+			// Extract year (e.g., from '2024/Q1-2024.html' -> '2024')
+			const parts = path.dirname(relativePath).split(path.sep)
+			const year = parts[parts.length - 1]
+
 			const filename = path.basename(relativePath, ".html") // Q1-2024
-			const [quarter, year] = filename.split("-") // Q1, 2024
+			const [quarter] = filename.split("-") // Q1
+			const quarterText = quarter.replace("Q", "Quarter ") // Quarter 1
 
-			const linkText = `${quarter.replace("Q", "Quarter ")}, ${year}`
+			if (!linksByYear[year]) {
+				linksByYear[year] = []
+			}
 
+			linksByYear[year].push({
+				relativePath,
+				quarterText,
+				totalContributions,
+			})
+		}
+
+		// Iterate through the years (newest year first)
+		const sortedYears = Object.keys(linksByYear).sort().reverse()
+
+		for (const year of sortedYears) {
+			// Start a new year section with a dedicated heading
 			linkHtml += `
-            <li class="bg-indigo-50 hover:bg-indigo-100 transition duration-150 rounded-lg shadow-sm">
-                <a href="./${relativePath}" class="p-4 block font-semibold text-indigo-700 hover:text-indigo-800">
-                    ${linkText}
-                </a>
-            </li>
+            <h3 class="text-2xl font-bold text-gray-700 col-span-full mt-8 mb-4 border-b border-gray-200 pb-2">📅 ${year} Reports</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 report-list col-span-full">
+            `
+
+			// Add the quarterly cards for this year
+			for (const link of linksByYear[year]) {
+				linkHtml += `
+                <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden">
+                    <a href="./${link.relativePath}" class="block p-4">
+                        <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
+                        <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
+                        <p class="text-xs text-gray-500">Total Contributions</p>
+                    </a>
+                </div>
+                `
+			}
+
+			// Close the quarterly list/grid for this year
+			linkHtml += `
+            </div>
             `
 		}
 	} else {
-		linkHtml = `<li class="p-4 text-gray-500 italic col-span-full">No quarterly reports have been generated yet.</li>`
+		// Fallback for no reports generated
+		linkHtml = `<p class="p-4 text-gray-500 italic col-span-full">No quarterly reports have been generated yet.</p>`
 	}
 
 	// 5. Build HTML Content
@@ -326,7 +373,7 @@ async function createStatsHtmlReadme(
         </section>
 
         <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-500 text-sm">
-            Made with 💙 by <a href="https://github.com/adiati98" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold">Ayu Adiati</a>. Data tracked since ${SINCE_YEAR}.
+            Made with 💙 by <a href="https://github.com/adiati98" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold">Ayu Adiati</a>
         </footer>
     </div>
 </body>

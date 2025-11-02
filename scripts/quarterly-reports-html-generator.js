@@ -316,7 +316,7 @@ async function writeHtmlFiles(groupedContributions) {
 				let counter = 1
 				// Iterate over each contribution item to build table rows
 				for (const item of items) {
-          const rowBg = counter % 2 === 1 ? "bg-white" : "bg-gray-50"
+					const rowBg = counter % 2 === 1 ? "bg-white" : "bg-gray-50"
 					tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`
 					tableContent += `      <td>${counter++}.</td>\n`
 					tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`
@@ -410,8 +410,11 @@ async function writeHtmlFiles(groupedContributions) {
 		await fs.writeFile(filePath, htmlContent, "utf8")
 		console.log(`Written file: ${filePath}`)
 
-		// Add the relative path to the list to be returned
-		quarterlyFileLinks.push(relativePath)
+		// Add the relative path and total contributions to the list to be returned
+		quarterlyFileLinks.push({
+			path: relativePath,
+			total: totalContributions,
+		})
 	}
 
 	return quarterlyFileLinks
