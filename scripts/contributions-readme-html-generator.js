@@ -220,39 +220,47 @@ async function createStatsHtmlReadme(
 
             <!-- Overall Counts Grid -->
             <h3 class="text-2xl font-semibold text-gray-700 mb-4">Overall Contributions</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                 <!-- Grand Total Card -->
-                <div class="bg-indigo-600 text-white col-span-2 md:col-span-3 lg:col-span-2 p-6 rounded-xl shadow-xl transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
-                    <p class="text-sm font-medium opacity-80">All-Time Contributions</p>
-                    <p class="text-5xl font-extrabold mt-1">🚀 ${grandTotal}</p>
+                <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl flex flex-col justify-center transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                    <p class="text-lg font-medium opacity-80 mb-2">All-Time Contributions</p>
+                    <p class="text-6xl font-extrabold mt-1">🚀 ${grandTotal}</p>
                 </div>
 
-                ${renderStatsCard(
-									"Merged PRs",
-									prCount,
-									"bg-blue-100 text-blue-800"
-								)}
-                ${renderStatsCard(
-									"Issues",
-									issueCount,
-									"bg-yellow-100 text-yellow-800"
-								)}
-                ${renderStatsCard(
-									"Reviewed PRs",
-									reviewedPrCount,
-									"bg-green-100 text-green-800"
-								)}
-                ${renderStatsCard(
-									"Co-Authored PRs",
-									coAuthoredPrCount,
-									"bg-purple-100 text-purple-800"
-								)}
-                ${renderStatsCard(
-									"Collaborations",
-									collaborationCount,
-									"bg-pink-100 text-pink-800"
-								)}
-            </div>
+								<div class="col-span-1 md:col-span-2 flex flex-col gap-6">
+
+										<div class="grid grid-cols-2 gap-6">
+                				${renderStatsCard(
+													"Merged PRs",
+													prCount,
+													"bg-blue-100 text-blue-800"
+												)}
+                				${renderStatsCard(
+													"Issues",
+													issueCount,
+													"bg-yellow-100 text-yellow-800"
+												)}
+										</div>
+
+										<div class="grid grid-cols-3 gap-6">
+                				${renderStatsCard(
+													"Reviewed PRs",
+													reviewedPrCount,
+													"bg-green-100 text-green-800"
+												)}
+                				${renderStatsCard(
+													"Co-Authored PRs",
+													coAuthoredPrCount,
+													"bg-purple-100 text-purple-800"
+												)}
+                				${renderStatsCard(
+													"Collaborations",
+													collaborationCount,
+													"bg-pink-100 text-pink-800"
+												)}
+										</div>
+            		</div>
+						</div>
             
             <!-- Repository Summary Grid -->
             <h3 class="text-2xl font-semibold text-gray-700 mt-10 mb-4 pt-4 border-t border-gray-200">Repository Summary</h3>
