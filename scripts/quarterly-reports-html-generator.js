@@ -1,18 +1,19 @@
-const fs = require("fs/promises")
-const path = require("path")
+const fs = require('fs/promises');
+const path = require('path');
+const prettier = require('prettier');
 
 // Import configuration
-const { BASE_DIR } = require("./config")
+const { BASE_DIR } = require('./config');
 
 // Import new formatters (Assuming these functions are defined elsewhere and handle date formatting and period calculation)
 const {
-	formatDate,
-	calculatePeriodInDays,
-	getPrStatusContent,
-} = require("./contribution-formatters")
+  formatDate,
+  calculatePeriodInDays,
+  getPrStatusContent,
+} = require('./contribution-formatters');
 
 // Import navbar
-const { navHtml } = require("./navbar")
+const { navHtml } = require('./navbar');
 
 // Tell the browser to go up one directory (..) to find index.html
 const navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
@@ -24,71 +25,68 @@ const navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
  * @returns {Array<string>} List of relative file paths generated (e.g., ['2023/Q4-2023.html']).
  */
 async function writeHtmlFiles(groupedContributions) {
-	// Define the new base directory path: 'contributions/html-generated'
-	const htmlBaseDir = path.join(BASE_DIR, "html-generated")
-	const quarterlyFileLinks = []
+  // Define the new base directory path: 'contributions/html-generated'
+  const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
+  const quarterlyFileLinks = [];
 
-	// Create the new base directory if it doesn't exist.
-	await fs.mkdir(htmlBaseDir, { recursive: true })
+  // Create the new base directory if it doesn't exist.
+  await fs.mkdir(htmlBaseDir, { recursive: true });
 
-	// Iterate over each quarter's worth of data.
-	for (const [key, data] of Object.entries(groupedContributions)) {
-		const [year, quarter] = key.split("-")
+  // Iterate over each quarter's worth of data.
+  for (const [key, data] of Object.entries(groupedContributions)) {
+    const [year, quarter] = key.split('-');
 
-		// Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
-		const yearDir = path.join(htmlBaseDir, year)
-		await fs.mkdir(yearDir, { recursive: true })
+    // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
+    const yearDir = path.join(htmlBaseDir, year);
+    await fs.mkdir(yearDir, { recursive: true });
 
-		const filename = `${quarter}-${year}.html`
-		// This path is relative to the 'html-generated' directory, needed for the main index file links
-		const relativePath = path.join(year, filename)
+    const filename = `${quarter}-${year}.html`;
+    // This path is relative to the 'html-generated' directory, needed for the main index file links
+    const relativePath = path.join(year, filename);
 
-		// Set the file path and extension (absolute path for writing)
-		const filePath = path.join(yearDir, filename)
+    // Set the file path and extension (absolute path for writing)
+    const filePath = path.join(yearDir, filename);
 
-		// Calculate the total number of contributions for the quarter.
-		const totalContributions = Object.values(data).reduce(
-			(sum, arr) => sum + arr.length,
-			0
-		)
+    // Calculate the total number of contributions for the quarter.
+    const totalContributions = Object.values(data).reduce((sum, arr) => sum + arr.length, 0);
 
-		// Skip writing the file if there are no contributions for this quarter.
-		if (totalContributions === 0) {
-			console.log(`Skipping empty quarter: ${key}`)
-			continue
-		}
+    // Skip writing the file if there are no contributions for this quarter.
+    if (totalContributions === 0) {
+      console.log(`Skipping empty quarter: ${key}`);
+      continue;
+    }
 
-		// --- Calculate additional statistics ---
-		const allItems = [
-			...data.pullRequests,
-			...data.issues,
-			...data.reviewedPrs,
-			...data.coAuthoredPrs,
-			...data.collaborations,
-		]
-		const uniqueRepos = new Set(allItems.map((item) => item.repo))
-		const totalRepos = uniqueRepos.size
+    // --- Calculate additional statistics ---
+    const allItems = [
+      ...data.pullRequests,
+      ...data.issues,
+      ...data.reviewedPrs,
+      ...data.coAuthoredPrs,
+      ...data.collaborations,
+    ];
+    const uniqueRepos = new Set(allItems.map((item) => item.repo));
+    const totalRepos = uniqueRepos.size;
 
-		// Count contributions per repository
-		const repoCounts = allItems.reduce((acc, item) => {
-			acc[item.repo] = (acc[item.repo] || 0) + 1
-			return acc
-		}, {})
+    // Count contributions per repository
+    const repoCounts = allItems.reduce((acc, item) => {
+      acc[item.repo] = (acc[item.repo] || 0) + 1;
+      return acc;
+    }, {});
 
-		// Determine and limit to the top 3 most active repositories
-		const sortedRepos = Object.entries(repoCounts).sort(([, a], [, b]) => b - a)
-		const top3Repos = sortedRepos
-			.slice(0, 3)
-			.map(
-				(item) => `
+    // Determine and limit to the top 3 most active repositories
+    const sortedRepos = Object.entries(repoCounts).sort(([, a], [, b]) => b - a);
+    const top3Repos = sortedRepos
+      .slice(0, 3)
+      .map(
+        (item) => `
              <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
           `
-			)
-			.join("")
+      )
+      .join('');
 
-		// --- Start building the HTML content with the new Tailwind boilerplate and styles ---
-		// NOTE: Removed leading whitespace from the start of this template literal content to fix linter issues.
-		let htmlContent = `<!DOCTYPE html>
+    // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
+    // NOTE: Removed leading whitespace from the start of this template literal content to fix linter issues.
+    let htmlContent = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -199,7 +197,7 @@ ${navHtmlForReports}
     		<hr class="my-8 border-gray-200">
     
     		<section class="space-y-6">
-		`
+		`;
 
     // Configuration for each table section
     const sections = {
@@ -256,148 +254,143 @@ ${navHtmlForReports}
       },
     };
 
-		// Loop through each contribution type to create a collapsible section.
-		for (const [section, sectionInfo] of Object.entries(sections)) {
-			const items = data[section]
-			// Only keep 'pullRequests' open by default to match the template
-			const openAttribute = section === "pullRequests" ? "open" : ""
+    // Loop through each contribution type to create a collapsible section.
+    for (const [section, sectionInfo] of Object.entries(sections)) {
+      const items = data[section];
+      // Only keep 'pullRequests' open by default to match the template
+      const openAttribute = section === 'pullRequests' ? 'open' : '';
 
-			// Use the HTML <details> tag with Tailwind styles for a 		collapsible section
-			htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`
-			htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`
+      // Use the HTML <details> tag with Tailwind styles for a 		collapsible section
+      htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
+      htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`;
 
-			// The span no longer has 'mb-4' which helps reduce gap
-			htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
-				sectionInfo.title
-			} (${items ? items.length : 0})</span>\n`
-			htmlContent += ` </summary>\n`
+      // The span no longer has 'mb-4' which helps reduce gap
+      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
+        sectionInfo.title
+      } (${items ? items.length : 0})</span>\n`;
+      htmlContent += ` </summary>\n`;
 
-			if (!items || items.length === 0) {
-				// Removed 'mt-1' for zero gap after summary
-				htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`
-			} else {
-				// Removed 'mt-1' for zero gap after summary
-				let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`
-				// Use the custom report-table class for styling
-				tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`
-				tableContent += `  <thead>\n`
-				tableContent += `    <tr>\n`
+      if (!items || items.length === 0) {
+        // Removed 'mt-1' for zero gap after summary
+        htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
+      } else {
+        // Removed 'mt-1' for zero gap after summary
+        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
+        // Use the custom report-table class for styling
+        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
+        tableContent += `  <thead>\n`;
+        tableContent += `    <tr>\n`;
 
-				// Generate table headers with specified width styles
-				for (let i = 0; i < sectionInfo.headers.length; i++) {
-					tableContent += `      <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`
-				}
-				tableContent += `    </tr>\n`
-				tableContent += `  </thead>\n`
-				tableContent += `  <tbody class="divide-y divide-gray-100">\n`
+        // Generate table headers with specified width styles
+        for (let i = 0; i < sectionInfo.headers.length; i++) {
+          tableContent += `      <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`;
+        }
+        tableContent += `    </tr>\n`;
+        tableContent += `  </thead>\n`;
+        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
 
-				let counter = 1
-				// Iterate over each contribution item to build table rows
-				for (const item of items) {
-					const rowBg = counter % 2 === 1 ? "bg-white" : "bg-gray-50"
-					tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`
-					tableContent += `      <td>${counter++}.</td>\n`
-					tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`
-					// Title: styled as a link
-					tableContent += `      <td><a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a></td>\n`
+        let counter = 1;
+        // Iterate over each contribution item to build table rows
+        for (const item of items) {
+          const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
+          tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`;
+          tableContent += `      <td>${counter++}.</td>\n`;
+          tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`;
+          // Title: styled as a link
+          tableContent += `      <td><a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a></td>\n`;
 
-					// Logic for Merged PRs table structure
-					if (section === "pullRequests") {
-						const createdAt = formatDate(item.createdAt)
-						const mergedAt = formatDate(item.mergedAt)
-						const reviewPeriod = calculatePeriodInDays(
-							item.createdAt,
-							item.mergedAt
-						)
+          // Logic for Merged PRs table structure
+          if (section === 'pullRequests') {
+            const createdAt = formatDate(item.createdAt);
+            const mergedAt = formatDate(item.mergedAt);
+            const reviewPeriod = calculatePeriodInDays(item.createdAt, item.mergedAt);
 
-						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${mergedAt}</td>\n`
-						tableContent += `      <td>${reviewPeriod}</td>\n`
-						// Logic for Issues table structure
-					} else if (section === "issues") {
-						const createdAt = formatDate(item.date)
-						const closedAt = formatDate(item.closedAt)
-						const closingPeriod = calculatePeriodInDays(
-							item.date,
-							item.closedAt,
-							item.state
-						)
+            tableContent += `      <td>${createdAt}</td>\n`;
+            tableContent += `      <td>${mergedAt}</td>\n`;
+            tableContent += `      <td>${reviewPeriod}</td>\n`;
+            // Logic for Issues table structure
+          } else if (section === 'issues') {
+            const createdAt = formatDate(item.date);
+            const closedAt = formatDate(item.closedAt);
+            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, item.state);
 
-						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${closedAt}</td>\n`
-						tableContent += `      <td>${closingPeriod}</td>\n`
-						// Logic for Reviewed PRs table structure
-					} else if (section === "reviewedPrs") {
-						const createdAt = formatDate(item.createdAt)
-						const myFirstReviewAt = formatDate(item.myFirstReviewDate)
-						const myFirstReviewPeriod = calculatePeriodInDays(
-							item.createdAt,
-							item.myFirstReviewDate
-						)
-						const lastUpdateContent = getPrStatusContent(item) // Should return a styled span (e.g., green/red badge)
+            tableContent += `      <td>${createdAt}</td>\n`;
+            tableContent += `      <td>${closedAt}</td>\n`;
+            tableContent += `      <td>${closingPeriod}</td>\n`;
+            // Logic for Reviewed PRs table structure
+          } else if (section === 'reviewedPrs') {
+            const createdAt = formatDate(item.createdAt);
+            const myFirstReviewAt = formatDate(item.myFirstReviewDate);
+            const myFirstReviewPeriod = calculatePeriodInDays(
+              item.createdAt,
+              item.myFirstReviewDate
+            );
+            const lastUpdateContent = getPrStatusContent(item); // Should return a styled span (e.g., green/red badge)
 
-						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${myFirstReviewAt}</td>\n`
-						tableContent += `      <td>${myFirstReviewPeriod}</td>\n`
-						tableContent += `      <td>${lastUpdateContent}</td>\n`
-						// Logic for Co-Authored PRs table structure
-					} else if (section === "coAuthoredPrs") {
-						const createdAt = formatDate(item.createdAt)
-						const firstCommitAt = formatDate(item.firstCommitDate)
-						const firstCommitPeriod = calculatePeriodInDays(
-							item.createdAt,
-							item.firstCommitDate
-						)
-						const lastUpdateContent = getPrStatusContent(item)
+            tableContent += `      <td>${createdAt}</td>\n`;
+            tableContent += `      <td>${myFirstReviewAt}</td>\n`;
+            tableContent += `      <td>${myFirstReviewPeriod}</td>\n`;
+            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            // Logic for Co-Authored PRs table structure
+          } else if (section === 'coAuthoredPrs') {
+            const createdAt = formatDate(item.createdAt);
+            const firstCommitAt = formatDate(item.firstCommitDate);
+            const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
+            const lastUpdateContent = getPrStatusContent(item);
 
-						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${firstCommitAt}</td>\n`
-						tableContent += `      <td>${firstCommitPeriod}</td>\n`
-						tableContent += `      <td>${lastUpdateContent}</td>\n`
-						// Logic for Collaborations table structure
-					} else if (section === "collaborations") {
-						const createdAt = formatDate(item.createdAt)
-						const commentedAt = formatDate(item.firstCommentedAt)
+            tableContent += `      <td>${createdAt}</td>\n`;
+            tableContent += `      <td>${firstCommitAt}</td>\n`;
+            tableContent += `      <td>${firstCommitPeriod}</td>\n`;
+            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            // Logic for Collaborations table structure
+          } else if (section === 'collaborations') {
+            const createdAt = formatDate(item.createdAt);
+            const commentedAt = formatDate(item.firstCommentedAt);
 
-						tableContent += `      <td>${createdAt}</td>\n`
-						tableContent += `      <td>${commentedAt}</td>\n`
-					}
+            tableContent += `      <td>${createdAt}</td>\n`;
+            tableContent += `      <td>${commentedAt}</td>\n`;
+          }
 
-					tableContent += `    </tr>\n`
-				}
+          tableContent += `    </tr>\n`;
+        }
 
-				tableContent += `  </tbody>\n`
-				tableContent += ` </table>\n`
-				tableContent += `</div>\n`
+        tableContent += `  </tbody>\n`;
+        tableContent += ` </table>\n`;
+        tableContent += `</div>\n`;
 
-				htmlContent += tableContent
-			}
+        htmlContent += tableContent;
+      }
 
-			htmlContent += `</details>\n\n`
-		}
+      htmlContent += `</details>\n\n`;
+    }
 
-		// Closing tags
-		htmlContent += `
+    // Closing tags
+    htmlContent += `
     				</section>
 				</div>
 		</body>
 </html>
-`
+`;
 
-		// Write the final HTML content to the file.
-		await fs.writeFile(filePath, htmlContent, "utf8")
-		console.log(`Written file: ${filePath}`)
+    // Format the content before writing
+    const formattedContent = await prettier.format(htmlContent, {
+      parser: 'html', // Ensure Prettier formats it as HTML
+    });
 
-		// Add the relative path and total contributions to the list to be returned
-		quarterlyFileLinks.push({
-			path: relativePath,
-			total: totalContributions,
-		})
-	}
+    // Write the final HTML content to the file.
+    await fs.writeFile(filePath, formattedContent, 'utf8');
+    console.log(`Written file: ${filePath}`);
 
-	return quarterlyFileLinks
+    // Add the relative path and total contributions to the list to be returned
+    quarterlyFileLinks.push({
+      path: relativePath,
+      total: totalContributions,
+    });
+  }
+
+  return quarterlyFileLinks;
 }
 
 module.exports = {
-	writeHtmlFiles,
-}
+  writeHtmlFiles,
+};
