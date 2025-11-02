@@ -202,88 +202,60 @@ ${navHtmlForReports}
     		<section class="space-y-6">
 		`
 
-		// Configuration for each table section
-		const sections = {
-			pullRequests: {
-				title: "Merged PRs",
-				icon: "🚀",
-				headers: [
-					"No.",
-					"Project",
-					"Title",
-					"Created",
-					"Merged",
-					"Review Period",
-				],
-				widths: ["5%", "20%", "30%", "15%", "15%", "15%"],
-				keys: ["repo", "title", "date", "mergedAt", "reviewPeriod"],
-			},
-			issues: {
-				title: "Issues",
-				icon: "🐞",
-				headers: [
-					"No.",
-					"Project",
-					"Title",
-					"Created",
-					"Closed",
-					"Closing Period",
-				],
-				widths: ["5%", "25%", "35%", "15%", "15%", "10%"],
-				keys: ["repo", "title", "date", "closedAt", "closingPeriod"],
-			},
-			reviewedPrs: {
-				title: "Reviewed PRs",
-				icon: "👀",
-				headers: [
-					"No.",
-					"Project",
-					"Title",
-					"Created At",
-					"First Review",
-					"Review Period",
-					"Status",
-				],
-				widths: ["5%", "20%", "28%", "10%", "15%", "10%", "12%"],
-				keys: [
-					"repo",
-					"title",
-					"createdAt",
-					"myFirstReviewDate",
-					"myFirstReviewPeriod",
-					"date",
-				],
-			},
-			coAuthoredPrs: {
-				title: "Co-Authored PRs",
-				icon: "🤝",
-				headers: [
-					"No.",
-					"Project",
-					"Title",
-					"Created At",
-					"First Commit",
-					"Commit Period",
-					"Status",
-				],
-				widths: ["5%", "15%", "25%", "10%", "12%", "13%", "20%"],
-				keys: [
-					"repo",
-					"title",
-					"createdAt",
-					"firstCommitDate",
-					"firstCommitPeriod",
-					"date",
-				],
-			},
-			collaborations: {
-				title: "Collaborations",
-				icon: "💬",
-				headers: ["No.", "Project", "Title", "Created At", "Commented At"],
-				widths: ["5%", "30%", "35%", "15%", "15%"],
-				keys: ["repo", "title", "createdAt", "date"],
-			},
-		}
+    // Configuration for each table section
+    const sections = {
+      pullRequests: {
+        title: 'Merged PRs',
+        icon: '🚀',
+        headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
+        widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
+        keys: ['repo', 'title', 'date', 'mergedAt', 'reviewPeriod'],
+      },
+      issues: {
+        title: 'Issues',
+        icon: '🐞',
+        headers: ['No.', 'Project', 'Title', 'Created', 'Closed', 'Closing Period'],
+        widths: ['5%', '25%', '35%', '15%', '15%', '10%'],
+        keys: ['repo', 'title', 'date', 'closedAt', 'closingPeriod'],
+      },
+      reviewedPrs: {
+        title: 'Reviewed PRs',
+        icon: '👀',
+        headers: [
+          'No.',
+          'Project',
+          'Title',
+          'Created At',
+          'First Review',
+          'Review Period',
+          'Last Update / Status',
+        ],
+        widths: ['5%', '20%', '28%', '10%', '15%', '10%', '12%'],
+        keys: ['repo', 'title', 'createdAt', 'myFirstReviewDate', 'myFirstReviewPeriod', 'date'],
+      },
+      coAuthoredPrs: {
+        title: 'Co-Authored PRs',
+        icon: '🤝',
+        headers: [
+          'No.',
+          'Project',
+          'Title',
+          'Created At',
+          'First Commit',
+          'Commit Period',
+          'Last Update / Status',
+        ],
+        widths: ['5%', '15%', '25%', '10%', '12%', '13%', '20%'],
+        keys: ['repo', 'title', 'createdAt', 'firstCommitDate', 'firstCommitPeriod', 'date'],
+      },
+      collaborations: {
+        title: 'Collaborations',
+        icon: '💬',
+        headers: ['No.', 'Project', 'Title', 'Created At', 'Commented At'],
+        widths: ['5%', '30%', '35%', '15%', '15%'],
+        keys: ['repo', 'title', 'createdAt', 'date'],
+      },
+    };
 
 		// Loop through each contribution type to create a collapsible section.
 		for (const [section, sectionInfo] of Object.entries(sections)) {
