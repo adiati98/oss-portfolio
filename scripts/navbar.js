@@ -27,7 +27,7 @@ const navHtml = dedent`
                 <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
                 <div class="hidden sm:flex items-center space-x-4">
                     <!-- Quarterly Reports Link (Desktop) -->
-                    <a href="#" class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700">
+                    <a href="reports.html" class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700">
                         Quarterly Reports
                     </a>
 
