@@ -46,16 +46,17 @@ const GITHUB_ICON_SVG = GITHUB_ICON_SVG_RAW.replace(/\n\s*/g, '');
 // Navbar HTML
 const navHtml = dedent`
     <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg h-16">
-        <div class="mx-auto max-w-7xl h-full flex items-center justify-between px-4 sm:px-8">
+        <div class="mx-auto max-w-7xl h-full flex items-center justify-between">
             <!-- Left Side: Title -->
             <div class="flex items-center space-x-4">
-                <a href="./" class="text-md font-extrabold tracking-wider uppercase">
-                		Open Source Portfolio
+                <a href="./" class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md">
+                		<span class="sm:hidden">OSS Portfolio</span>
+                		<span class="hidden sm:inline">Open Source Portfolio</span>
             		</a>
             </div>
             
             <!-- Right Side: GitHub Icon Link -->
-            <div>
+            <div class="px-4 sm:px-8">
                 <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
                    class="p-2 transition duration-150 hover:text-gray-200 text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#4338CA]" 
                    title="View Repository">
