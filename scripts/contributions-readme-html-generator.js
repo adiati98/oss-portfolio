@@ -18,10 +18,9 @@ const HTML_README_FILENAME = 'index.html';
  * Calculates aggregate totals from all contribution data and writes the
  * all-time contributions HTML report file.
  * @param {object} finalContributions The object with all contributions, grouped by type.
- * @param {Array<string>} quarterlyFileLinks List of relative paths (e.g., ['2023/Q4-2023.html', ...])
  * to the generated quarterly files, provided by the quarterly generator.
  */
-async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []) {
+async function createStatsHtmlReadme(finalContributions = []) {
   const htmlBaseDir = path.join(BASE_DIR, HTML_OUTPUT_DIR_NAME);
   const HTML_OUTPUT_PATH = path.join(htmlBaseDir, HTML_README_FILENAME);
 
@@ -65,158 +64,6 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
 		</div>
 		`;
   };
-
-  // Define the report structure data
-  const reportStructure = [
-    {
-      section: 'Quarterly Statistics',
-      description:
-        'A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter.',
-      metric: 'Total Count, Unique Repositories',
-    },
-    {
-      section: 'Contribution Breakdown',
-      description:
-        'A table listing the count of contributions for each of the five core categories within that quarter.',
-      metric: 'Category Counts',
-    },
-    {
-      section: 'Top 3 Repositories',
-      description:
-        'The top three projects where contributions were made in that quarter, ranked by total count.',
-      metric: 'Contribution Frequency',
-    },
-    {
-      section: 'Merged PRs',
-      description:
-        'Detailed list of Pull Requests **authored by me** and merged into external repositories.',
-      metric: '**Review Period** (Time from creation to merge)',
-    },
-    {
-      section: 'Issues',
-      description: 'Detailed list of Issues **authored by me** on external repositories.',
-      metric: '**Closing Period** (Time from creation to close)',
-    },
-    {
-      section: 'Reviewed PRs',
-      description:
-        'Detailed list of Pull Requests **reviewed or merged by me** on external repositories.',
-      metric: '**My First Review Period** (Time from PR creation to my first review)',
-    },
-    {
-      section: 'Co-Authored PRs',
-      description:
-        "Pull Requests where **I contributed commits (including co-authored commits)** to other contributor's PRs.",
-      metric: '**My First Commit Period** (Time from PR creation to my first commit)',
-    },
-    {
-      section: 'Collaborations',
-      description:
-        'Detailed list of open Issues or PRs where I have **commented** to participate in discussion.',
-      metric: '**First Commented At** (The date of my initial comment)',
-    },
-  ];
-
-  // Helper function to render table rows
-  const renderStructureTableRows = () => {
-    return reportStructure
-      .map((item, index) => {
-        // Convert Markdown formatting to HTML
-        const safeDescription = item.description
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/`/g, '<code>');
-        const safeMetric = item.metric.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-        const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-
-        return dedent`
-            <tr class="${rowBg} border-b hover:bg-indigo-50 transition duration-150">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
-                ${item.section}
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-700">
-                ${safeDescription}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${safeMetric}
-              </td>
-            </tr>
-          `;
-      })
-      .join('');
-  };
-
-  // 4. Generate Quarterly Links HTML
-  const sortedLinks = quarterlyFileLinks
-    // Filter out any undefined/null entries or objects missing the 'path' for safety
-    .filter((link) => link && typeof link.path === 'string')
-    .sort((a, b) => {
-      // Sort by path string in reverse order (b before a) to show newer quarters first
-      if (a.path < b.path) return 1;
-      if (a.path > b.path) return -1;
-      return 0;
-    });
-  let linkHtml = '';
-
-  // Helper object to group links by year: { '2024': [...links], '2023': [...links] }
-  const linksByYear = {};
-
-  if (sortedLinks.length > 0) {
-    for (const link of sortedLinks) {
-      const relativePath = link.path;
-      const totalContributions = link.total;
-
-      // Extract year (e.g., from '2024/Q1-2024.html' -> '2024')
-      const parts = path.dirname(relativePath).split(path.sep);
-      const year = parts[parts.length - 1];
-
-      const filename = path.basename(relativePath, '.html'); // Q1-2024
-      const [quarter] = filename.split('-'); // Q1
-      const quarterText = quarter.replace('Q', 'Quarter '); // Quarter 1
-
-      if (!linksByYear[year]) {
-        linksByYear[year] = [];
-      }
-
-      linksByYear[year].push({
-        relativePath,
-        quarterText,
-        totalContributions,
-      });
-    }
-
-    // Iterate through the years (newest year first)
-    const sortedYears = Object.keys(linksByYear).sort().reverse();
-
-    for (const year of sortedYears) {
-      // Start a new year section with a dedicated heading
-      linkHtml += dedent`
-            <h3 class="text-2xl font-bold text-gray-700 col-span-full mt-8 mb-4 border-b border-gray-200 pb-2">📅 ${year} Reports</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 report-list col-span-full">
-            `;
-
-      // Add the quarterly cards for this year
-      for (const link of linksByYear[year]) {
-        linkHtml += dedent`
-                <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden">
-                    <a href="./${link.relativePath}" class="block p-4">
-                        <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
-                        <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
-                        <p class="text-xs text-gray-500">Total Contributions</p>
-                    </a>
-                </div>
-                `;
-      }
-
-      // Close the quarterly list/grid for this year
-      linkHtml += dedent`
-            </div>
-            `;
-    }
-  } else {
-    // Fallback for no reports generated
-    linkHtml = `<p class="p-4 text-gray-500 italic col-span-full">No quarterly reports have been generated yet.</p>`;
-  }
 
   // 5. Build HTML Content
   const htmlContent = dedent`
@@ -309,51 +156,6 @@ ${navHtml}
                   'text-4xl'
                 )}
             </div>
-        </section>
-
-        <!-- Report Structure Section (Now a Table) -->
-        <section class="mb-14">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-                Report Structure Breakdown
-            </h2>
-            <p class="text-gray-600 mb-8">
-                Each quarterly report file (<code class="bg-gray-200 p-1 rounded font-mono">Qx-YYYY.html</code> inside the year folders) provides a detailed log and summary for that period:
-            </p>
-            
-            <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-indigo-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
-                                Section
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/2">
-                                Content Description
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
-                                Key Metric / Insight
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        ${renderStructureTableRows()}
-                    </tbody>
-                </table>
-            </div>
-
-        </section>
-
-        <!-- Quarterly Report Links Section (NEW) -->
-        <section class="mt-14 pt-8 border-t border-gray-300">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-                Quarterly Reports (Detail Pages)
-            </h2>
-            <p class="text-gray-600 mb-6">
-                Click on any quarter below to view the detailed tables and statistics for that period.
-            </p>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 report-list">
-                ${linkHtml}
-            </ul>
         </section>
 
         <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-500 text-sm">
