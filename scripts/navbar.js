@@ -33,7 +33,9 @@ function dedent(callSite, ...substitutions) {
   return dedentedText.trim();
 }
 
-const GITHUB_REPO_URL = 'https://github.com/adiati98/oss-portfolio';
+const { GITHUB_USERNAME } = require('./config');
+
+const GITHUB_REPO_URL = `https://github.com/${GITHUB_USERNAME}/oss-portfolio`;
 
 // SVG for GitHub icon - now contains only the path data to allow dynamic sizing in navHtml.
 const GITHUB_ICON_PATH_DATA = dedent`
