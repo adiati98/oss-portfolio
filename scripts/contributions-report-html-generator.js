@@ -151,11 +151,20 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     // Iterate through the years (newest year first)
     const sortedYears = Object.keys(linksByYear).sort().reverse();
 
+    let openAttribute = 'open';
+
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += `
-            <h3 class="text-2xl font-bold text-gray-700 col-span-full mt-8 mb-4 border-b border-gray-200 pb-2">📅 ${year} Reports</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 report-list col-span-full">
+            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl shadow-lg bg-gray-50">
+                <summary class="text-2xl font-bold 
+				        text-gray-700 p-4 sm:p-6 cursor-pointer 
+				        hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
+                    <span class="mr-3">📅</span> ${year} Reports
+                </summary>
+                <div class="grid grid-cols-1 
+                sm:grid-cols-2 lg:grid-cols-4 gap-4 
+                report-list p-4 sm:p-6 border-t border-gray-200">
             `;
 
       // Add the quarterly cards for this year
@@ -173,8 +182,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
       // Close the quarterly list/grid for this year
       linkHtml += `
-            </div>
+                </div>
+            </details>
             `;
+
+      openAttribute = '';
     }
   } else {
     // Fallback for no reports generated
@@ -222,7 +234,7 @@ ${navHtml}
                 Report Structure Breakdown
             </h2>
             <p class="text-gray-600 mb-8">
-                Each quarterly report file (<code class="bg-gray-200 p-1 rounded font-mono">Qx-YYYY.html</code> inside the year folders) provides a detailed log and summary for that period:
+                Each quarterly report provides a detailed log and summary for that period:
             </p>
             
             <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
@@ -253,7 +265,7 @@ ${navHtml}
                 Quarterly Reports (Detail Pages)
             </h2>
             <p class="text-gray-600 mb-6">
-                Click on any quarter below to view the detailed tables and statistics for that period.
+                Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
             </p>
             <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 report-list">
                 ${linkHtml}
