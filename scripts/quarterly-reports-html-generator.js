@@ -8,7 +8,7 @@ const { dedent } = require('./dedent');
 // Import configuration
 const { BASE_DIR } = require('./config');
 
-// Import new formatters (Assuming these functions are defined elsewhere and handle date formatting and period calculation)
+// Import formatters
 const {
   formatDate,
   calculatePeriodInDays,
@@ -17,9 +17,6 @@ const {
 
 // Import navbar
 const { navHtml } = require('./navbar');
-
-// Import dedent
-const { dedent } = require('./dedent');
 
 // Tell the browser to go up one directory (..) to find index.html and reports.html
 let navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
@@ -42,7 +39,7 @@ async function writeHtmlFiles(groupedContributions) {
         year,
         quarterPrefix,
         fullQuarterName,
-        data, // Keep the original data accessible
+        data,
         totalContributions: Object.values(data).reduce((sum, arr) => sum + arr.length, 0),
       };
     })
@@ -72,7 +69,6 @@ async function writeHtmlFiles(groupedContributions) {
     // --- Previous Button Logic ---
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
-      // Using placeholder for dedent for brevity, replace with actual dedent if needed
       previousButton = dedent`
                 <a href="${prevPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -116,11 +112,11 @@ async function writeHtmlFiles(groupedContributions) {
         `;
   }
 
-  // Define the new base directory path: 'contributions/html-generated'
+  // Define the base directory path: 'contributions/html-generated'
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const quarterlyFileLinks = [];
 
-  // Create the new base directory if it doesn't exist.
+  // Create a new base directory if it doesn't exist.
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
   // Iterate over the prepared allReports array using the index
@@ -352,21 +348,17 @@ ${navHtmlForReports}
       // Only keep 'pullRequests' open by default to match the template
       const openAttribute = section === 'pullRequests' ? 'open' : '';
 
-      // Use the HTML <details> tag with Tailwind styles for a 		collapsible section
+      // Use the HTML <details> tag with Tailwind styles for a collapsible section
       htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`;
-
-      // The span no longer has 'mb-4' which helps reduce gap
       htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
         sectionInfo.title
       } (${items ? items.length : 0})</span>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
-        // Removed 'mt-1' for zero gap after summary
         htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
-        // Removed 'mt-1' for zero gap after summary
         let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
         // Use the custom report-table class for styling
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
@@ -417,7 +409,7 @@ ${navHtmlForReports}
               item.createdAt,
               item.myFirstReviewDate
             );
-            const lastUpdateContent = getPrStatusContent(item); // Should return a styled span (e.g., green/red badge)
+            const lastUpdateContent = getPrStatusContent(item);
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;

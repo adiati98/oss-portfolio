@@ -55,19 +55,8 @@ async function createStatsHtmlReadme(finalContributions = []) {
   const currentYear = new Date().getFullYear();
   const yearsTracked = currentYear - SINCE_YEAR + 1;
 
-  // NOTE: renderStatsCard is no longer strictly necessary since the cards
-  // were simplified, but is left for safety if other files still use it.
-  const renderStatsCard = (title, count, bgColor, countSize = 'text-3xl') => {
-    return dedent`
-		<div class="p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl ${bgColor}">
-		  <p class="text-sm font-medium opacity-80">${title}</p>
-		  <p class="${countSize} font-bold mt-1">${count}</p>
-		</div>
-		`;
-  };
-
-  // 5. Build HTML Content
-  const htmlContent = dedent`
+  // 4. Build HTML Content
+  const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
