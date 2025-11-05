@@ -5,8 +5,9 @@ const prettier = require('prettier');
 // Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
 
-// Import navbar
+// Import navbar and footer
 const { navHtml } = require('./navbar');
+const { createFooterHtml } = require('./footer');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';
@@ -24,6 +25,9 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
   // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
+
+  // Generate the footer HTML 
+  const footerHtml = createFooterHtml();
 
   // Define the report structure data
   const reportStructure = [
@@ -255,10 +259,7 @@ ${navHtml}
                 ${linkHtml}
             </ul>
         </section>
-
-        <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-500 text-sm">
-            Made with 💙 by <a href="https://github.com/adiati98" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold">Ayu Adiati</a>
-        </footer>
+        ${footerHtml}
     </div>
 </body>
 </html>

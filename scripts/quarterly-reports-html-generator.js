@@ -15,8 +15,9 @@ const {
   getPrStatusContent,
 } = require('./contribution-formatters');
 
-// Import navbar
+// Import navbar and footer
 const { navHtml } = require('./navbar');
+const { createFooterHtml } = require('./footer');
 
 // 1. Update the link from root (./) to relative root (../index.html)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
@@ -124,6 +125,9 @@ async function writeHtmlFiles(groupedContributions) {
   for (let index = 0; index < allReports.length; index++) {
     const report = allReports[index]; // Destructure the properties needed for file naming and statistics
     const { key, year, quarterPrefix: quarter, data, totalContributions, fullQuarterName } = report;
+
+    // Generate the dynamic footer
+    const footerHtml = createFooterHtml();
 
     // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
     const yearDir = path.join(htmlBaseDir, year);
@@ -456,6 +460,7 @@ ${navHtmlForReports}
             </section>
 `;
     htmlContent += navButton;
+    htmlContent += footerHtml;
 
     htmlContent += `
         </div>
