@@ -47,6 +47,9 @@ jobs:
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Format generated files
+        run: npm run format
         
       - name: Commit and push changes
         run: |
