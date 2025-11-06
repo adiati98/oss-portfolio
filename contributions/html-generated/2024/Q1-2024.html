@@ -1,0 +1,4173 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Q1 2024 Contributions Report</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/%3E%3C/svg%3E"
+    />
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fb;
+      }
+      summary {
+        cursor: pointer;
+        outline: none;
+        margin: 0.5em 0;
+        padding: 0.5em 0;
+        color: #1f2937;
+      }
+      .report-table th,
+      .report-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .report-table th {
+        background-color: #eef2ff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #4338ca;
+      }
+      .report-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg">
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <!-- Left Side: Title -->
+        <div class="flex items-center space-x-4">
+          <a
+            href="../index.html"
+            class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md"
+          >
+            <span class="sm:hidden">OSS Portfolio</span>
+            <span class="hidden sm:inline">Open Source Portfolio</span>
+          </a>
+        </div>
+
+        <!-- Right Side Container (Desktop Links & Mobile Toggle) -->
+        <div class="flex items-center">
+          <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
+          <div class="hidden sm:flex items-center space-x-4">
+            <!-- Quarterly Reports Link (Desktop) -->
+            <a
+              href="reports.html"
+              class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700"
+            >
+              Quarterly Reports
+            </a>
+
+            <!-- GitHub Icon Link (Desktop) -->
+            <a
+              href="https://github.com/adiati98/oss-portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 transition duration-150 hover:text-gray-200 text-white"
+              title="View Repository"
+            >
+              <!-- Desktop Size: w-7 h-7 -->
+              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Hamburger Button (Mobile Only) -->
+          <button
+            id="menu-button"
+            class="sm:hidden p-2 rounded-md hover:bg-indigo-700 transition duration-150"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <!-- Menu Open Icon (Hamburger) -->
+            <svg
+              id="menu-open-icon"
+              class="w-6 h-6 block"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"
+              />
+            </svg>
+            <!-- Menu Close Icon (X) -->
+            <svg
+              id="menu-close-icon"
+              class="w-6 h-6 hidden"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Panel (Hidden by default, shown by JS) -->
+      <div
+        id="mobile-menu"
+        class="hidden sm:hidden absolute top-16 left-0 right-0 bg-[#342D93] shadow-lg p-4"
+      >
+        <!-- Quarterly Reports Link -->
+        <div class="mb-4">
+          <a href="#" class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]"
+            >Quarterly Reports</a
+          >
+        </div>
+
+        <!-- GitHub Icon - Mobile (Left Side Bottom) -->
+        <div class="mt-3 pt-3 border-t border-indigo-700">
+          <a
+            href="https://github.com/adiati98/oss-portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            title="View Repository"
+          >
+            <!-- Mobile Size: w-6 h-6, ml-3 aligns with the start of 'Quarterly Reports' text -->
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- JavaScript for Mobile Menu Toggle -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
+
+          if (button && menu) {
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+              // Toggle ARIA attributes
+              button.setAttribute('aria-expanded', String(!isExpanded));
+
+              // Toggle visibility of the menu (Tailwind's 'hidden' class)
+              menu.classList.toggle('hidden');
+
+              // Toggle icons (Hamburger <-> X)
+              openIcon.classList.toggle('hidden');
+              closeIcon.classList.toggle('hidden');
+            });
+          }
+        });
+      </script>
+    </nav>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg">
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <!-- Left Side: Title -->
+        <div class="flex items-center space-x-4">
+          <a href="./" class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md">
+            <span class="sm:hidden">OSS Portfolio</span>
+            <span class="hidden sm:inline">Open Source Portfolio</span>
+          </a>
+        </div>
+
+        <!-- Right Side Container (Desktop Links & Mobile Toggle) -->
+        <div class="flex items-center">
+          <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
+          <div class="hidden sm:flex items-center space-x-4">
+            <!-- Quarterly Reports Link (Desktop) -->
+            <a
+              href="../reports.html"
+              class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700"
+            >
+              Quarterly Reports
+            </a>
+
+            <!-- GitHub Icon Link (Desktop) -->
+            <a
+              href="https://github.com/adiati98/oss-portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 transition duration-150 hover:text-gray-200 text-white"
+              title="View Repository"
+            >
+              <!-- Desktop Size: w-7 h-7 -->
+              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Hamburger Button (Mobile Only) -->
+          <button
+            id="menu-button"
+            class="sm:hidden p-2 rounded-md hover:bg-indigo-700 transition duration-150"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <!-- Menu Open Icon (Hamburger) -->
+            <svg
+              id="menu-open-icon"
+              class="w-6 h-6 block"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"
+              />
+            </svg>
+            <!-- Menu Close Icon (X) -->
+            <svg
+              id="menu-close-icon"
+              class="w-6 h-6 hidden"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Panel (Hidden by default, shown by JS) -->
+      <div
+        id="mobile-menu"
+        class="hidden sm:hidden absolute top-16 left-0 right-0 bg-[#342D93] shadow-lg p-4"
+      >
+        <!-- Quarterly Reports Link -->
+        <div class="mb-4">
+          <a href="#" class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]"
+            >Quarterly Reports</a
+          >
+        </div>
+
+        <!-- GitHub Icon - Mobile (Left Side Bottom) -->
+        <div class="mt-3 pt-3 border-t border-indigo-700">
+          <a
+            href="https://github.com/adiati98/oss-portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            title="View Repository"
+          >
+            <!-- Mobile Size: w-6 h-6, ml-3 aligns with the start of 'Quarterly Reports' text -->
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- JavaScript for Mobile Menu Toggle -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
+
+          if (button && menu) {
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+              // Toggle ARIA attributes
+              button.setAttribute('aria-expanded', String(!isExpanded));
+
+              // Toggle visibility of the menu (Tailwind's 'hidden' class)
+              menu.classList.toggle('hidden');
+
+              // Toggle icons (Hamburger <-> X)
+              openIcon.classList.toggle('hidden');
+              closeIcon.classList.toggle('hidden');
+            });
+          }
+        });
+      </script>
+    </nav>
+    <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
+      <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">Q1 2024</h1>
+        <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+      </header>
+
+      <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
+      <section class="mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">
+          📊 Quarterly Statistics
+        </h2>
+
+        <!-- Total Contributions & Total Repositories (Two Big Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div
+            class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+          >
+            <p class="text-4xl font-extrabold">193</p>
+            <p class="text-lg mt-2 font-medium">Total Contributions</p>
+          </div>
+          <div
+            class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+          >
+            <p class="text-4xl font-extrabold">15</p>
+            <p class="text-lg mt-2 font-medium">Total Repositories</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+      <section class="mb-8">
+        <h3
+          class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3"
+        >
+          Contribution Breakdown
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+          <!-- Merged PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">43</span>
+            <span class="text-md text-gray-500 mt-1">Merged PRs</span>
+          </div>
+          <!-- Reviewed PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">41</span>
+            <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
+          </div>
+          <!-- Issues -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">62</span>
+            <span class="text-md text-gray-500 mt-1">Issues</span>
+          </div>
+          <!-- Co-Authored PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">19</span>
+            <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
+          </div>
+          <!-- Collaborations -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">28</span>
+            <span class="text-md text-gray-500 mt-1">Collaborations</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. TOP 3 REPOSITORIES SECTION -->
+      <section class="mb-8">
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">
+          Top 3 Repositories
+        </h3>
+        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+          <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+            <li class="pl-2">
+              <a
+                href="https://github.com/OpenSource-Communities/intro"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >OpenSource-Communities/intro</a
+              >
+              (36 contributions)
+            </li>
+            <li class="pl-2">
+              <a
+                href="https://github.com/open-sauced/maintainer-intro-course"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >open-sauced/maintainer-intro-course</a
+              >
+              (34 contributions)
+            </li>
+            <li class="pl-2">
+              <a
+                href="https://github.com/open-sauced/docs"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >open-sauced/docs</a
+              >
+              (31 contributions)
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <hr class="my-8 border-gray-200" />
+
+      <section class="space-y-6">
+        <details open class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🚀 Merged PRs (43)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 20%">Project</th>
+                  <th style="width: 30%">Title</th>
+                  <th style="width: 15%">Created</th>
+                  <th style="width: 15%">Merged</th>
+                  <th style="width: 15%">Review Period</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/244"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: issue template to add contributors to guestbook</a
+                    >
+                  </td>
+                  <td>2024-03-26</td>
+                  <td>2024-03-26</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/.github</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/.github/pull/53"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: bug issue template</a
+                    >
+                  </td>
+                  <td>2024-03-24</td>
+                  <td>2024-03-24</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/341"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Update facilitators docs</a
+                    >
+                  </td>
+                  <td>2024-03-21</td>
+                  <td>2024-03-21</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/328"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update content in `facilitators-docs.md` (previously `leader-docs.md`)</a
+                    >
+                  </td>
+                  <td>2023-10-24</td>
+                  <td>2024-03-20</td>
+                  <td>148 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1137"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add March 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-03-06</td>
+                  <td>2024-03-20</td>
+                  <td>14 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/237"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: syntax format in CODEOWNERS</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-19</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/134"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: update the "Types of Contributions" chapter</a
+                    >
+                  </td>
+                  <td>2024-03-14</td>
+                  <td>2024-03-19</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/137"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: format syntax in CODEOWNERS</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/pull/75"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: syntax format in CODEOWNERS</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/59"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add info about non-existing license in the "Open Source Software
+                      License" section</a
+                    >
+                  </td>
+                  <td>2024-02-18</td>
+                  <td>2024-03-11</td>
+                  <td>22 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/64"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: update "Setting Up Your Team" chapter to reflect new namings</a
+                    >
+                  </td>
+                  <td>2024-03-06</td>
+                  <td>2024-03-11</td>
+                  <td>5 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/66"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: update "Identify New Talents with OpenSauced" section to reflect new
+                      release</a
+                    >
+                  </td>
+                  <td>2024-03-10</td>
+                  <td>2024-03-11</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/62"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: syntax in codeowners file</a
+                    >
+                  </td>
+                  <td>2024-03-05</td>
+                  <td>2024-03-06</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/262"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: format and wording adjustments in workspaces, contributors and repo
+                      insights sections
+                    </a>
+                  </td>
+                  <td>2024-02-28</td>
+                  <td>2024-03-05</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1133"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add March 2024 challenge to the website</a
+                    >
+                  </td>
+                  <td>2024-02-25</td>
+                  <td>2024-02-28</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1128"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add February 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-02-08</td>
+                  <td>2024-02-27</td>
+                  <td>19 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/39"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add "Issues and Pull Request Templates" subsection</a
+                    >
+                  </td>
+                  <td>2024-01-28</td>
+                  <td>2024-02-20</td>
+                  <td>23 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/55"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: shorten long titles to fit the sidebar</a
+                    >
+                  </td>
+                  <td>2024-02-11</td>
+                  <td>2024-02-17</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/43"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Adjust GitHub-related Words</a
+                    >
+                  </td>
+                  <td>2024-02-02</td>
+                  <td>2024-02-16</td>
+                  <td>14 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/56"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add the link to "OpenSauced's Community Maintainer Guidelines"</a
+                    >
+                  </td>
+                  <td>2024-02-13</td>
+                  <td>2024-02-16</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/76"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: format codeowners</a
+                    >
+                  </td>
+                  <td>2024-02-15</td>
+                  <td>2024-02-15</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/66"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: add asterisk before username in CODEOWNERS file</a
+                    >
+                  </td>
+                  <td>2024-02-04</td>
+                  <td>2024-02-15</td>
+                  <td>11 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/52"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add gif and png to Maintainer Power Ups chapter</a
+                    >
+                  </td>
+                  <td>2024-02-06</td>
+                  <td>2024-02-06</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/247"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: failed build from "OpenSauced Maintainers Guides"</a
+                    >
+                  </td>
+                  <td>2024-02-05</td>
+                  <td>2024-02-05</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/246"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Revert "fix: items array in OpenSauced Maintainers Guides sidebar"</a
+                    >
+                  </td>
+                  <td>2024-02-05</td>
+                  <td>2024-02-05</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/245"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: items array in OpenSauced Maintainers Guides sidebar</a
+                    >
+                  </td>
+                  <td>2024-02-03</td>
+                  <td>2024-02-03</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/244"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Revert "docs: add Community Maintainers Guidelines"</a
+                    >
+                  </td>
+                  <td>2024-02-03</td>
+                  <td>2024-02-03</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/41"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Wording in "Code Owners" subsection</a
+                    >
+                  </td>
+                  <td>2024-02-01</td>
+                  <td>2024-02-03</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>29.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/243"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add Community Maintainers Guidelines</a
+                    >
+                  </td>
+                  <td>2024-02-02</td>
+                  <td>2024-02-02</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>30.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1126"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add February 2024 challenge to the website</a
+                    >
+                  </td>
+                  <td>2024-01-30</td>
+                  <td>2024-02-01</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>31.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/32"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add "Building and Nurturing a Welcoming and Supportive Community"
+                      chapter</a
+                    >
+                  </td>
+                  <td>2024-01-17</td>
+                  <td>2024-01-26</td>
+                  <td>8 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>32.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/25"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add "Effective Communication and Collaboration" chapter</a
+                    >
+                  </td>
+                  <td>2024-01-03</td>
+                  <td>2024-01-19</td>
+                  <td>16 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>33.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1110"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fix: Font responsiveness</a
+                    >
+                  </td>
+                  <td>2024-01-07</td>
+                  <td>2024-01-19</td>
+                  <td>12 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>34.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/17"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add "Maintainer Power Ups" section</a
+                    >
+                  </td>
+                  <td>2023-12-24</td>
+                  <td>2024-01-19</td>
+                  <td>26 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>35.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/ai</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/ai/pull/298"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Link to Usage Guide and Update README</a
+                    >
+                  </td>
+                  <td>2023-12-18</td>
+                  <td>2024-01-12</td>
+                  <td>25 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>36.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/ai</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/ai/pull/301"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: add `.gitattributes` file and normalize all the line endings</a
+                    >
+                  </td>
+                  <td>2023-12-20</td>
+                  <td>2024-01-12</td>
+                  <td>23 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>37.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/26"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: change chapter numbers to X and minor wording fix</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-11</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>38.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >petermsouzajr/qa-shadow-report</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/petermsouzajr/qa-shadow-report/pull/41"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add issue templates</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-06</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>39.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/23"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: add `concurrently` package</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-05</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>40.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1107"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add January 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-04</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>41.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1104"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add January 2024 challenge</a
+                    >
+                  </td>
+                  <td>2023-12-26</td>
+                  <td>2024-01-02</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>42.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/21"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fix: Add correct link and command in Getting Started section and update
+                      Translating section in the Contributing Guide</a
+                    >
+                  </td>
+                  <td>2023-12-28</td>
+                  <td>2024-01-02</td>
+                  <td>5 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>43.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/12"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >chore: Update build scripts in `package.json` and code to get URL in
+                      `Party.tsx` as part of the deployment</a
+                    >
+                  </td>
+                  <td>2023-12-31</td>
+                  <td>2024-01-02</td>
+                  <td>2 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🐞 Issues (62)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 25%">Project</th>
+                  <th style="width: 35%">Title</th>
+                  <th style="width: 15%">Created</th>
+                  <th style="width: 15%">Closed</th>
+                  <th style="width: 10%">Closing Period</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/287"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Update "Introduction to Contributing"</a
+                    >
+                  </td>
+                  <td>2024-03-28</td>
+                  <td>2024-04-04</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/149"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add a step to create new branch in the CONTRIBUTING file</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-04-03</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/147"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add image of profile generated on README</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-04-03</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/146"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update the "Getting Started" section</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-04-25</td>
+                  <td>29 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/245"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Incorrect links and term's consistency on the README</a
+                    >
+                  </td>
+                  <td>2024-03-26</td>
+                  <td>2024-04-09</td>
+                  <td>14 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/243"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: issue template for guestbook is not listed</a
+                    >
+                  </td>
+                  <td>2024-03-26</td>
+                  <td>2024-03-26</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/241"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update pull request template</a
+                    >
+                  </td>
+                  <td>2024-03-25</td>
+                  <td>2024-04-21</td>
+                  <td>26 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/145"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update the French translation of "Intro to Open Source" course</a
+                    >
+                  </td>
+                  <td>2024-03-25</td>
+                  <td>2024-04-12</td>
+                  <td>18 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/.github</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/.github/issues/13"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update PR template</a
+                    >
+                  </td>
+                  <td>2024-03-24</td>
+                  <td>2024-04-05</td>
+                  <td>12 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/.github</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/.github/issues/52"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Bug issue template is absence when creating an issue</a
+                    >
+                  </td>
+                  <td>2024-03-24</td>
+                  <td>2024-03-24</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/.github</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/.github/issues/11"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update issue templates</a
+                    >
+                  </td>
+                  <td>2024-03-22</td>
+                  <td>2024-04-01</td>
+                  <td>11 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2993"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Broken link to image on "Welcome to Workspace"</a
+                    >
+                  </td>
+                  <td>2024-03-21</td>
+                  <td>2024-03-21</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/136"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: CODEOWNERS does not automatically add reviewers</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/issues/74"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: CODEOWNERS does not automatically add reviewers</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/236"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: CODEOWNERS does not automatically add reviewers</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-19</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/130"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update "Types of Contributions" chapter</a
+                    >
+                  </td>
+                  <td>2024-03-10</td>
+                  <td>2024-03-19</td>
+                  <td>9 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/65"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update "Building and Nurturing Community" chapter to reflect new
+                      release</a
+                    >
+                  </td>
+                  <td>2024-03-08</td>
+                  <td>2024-03-11</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/129"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Fix links, capitalization and wording adjustment in the "Tools to be
+                      Successful" chapter</a
+                    >
+                  </td>
+                  <td>2024-03-07</td>
+                  <td>2024-03-14</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1136"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add March 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-03-06</td>
+                  <td>2024-03-20</td>
+                  <td>14 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/63"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update "Your Team" chapter to reflect new naming changes</a
+                    >
+                  </td>
+                  <td>2024-03-06</td>
+                  <td>2024-03-11</td>
+                  <td>5 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/61"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: CODEOWNERS does not automatically add reviewers</a
+                    >
+                  </td>
+                  <td>2024-03-05</td>
+                  <td>2024-03-06</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2865"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Updating a workspace doesn't take user to the page</a
+                    >
+                  </td>
+                  <td>2024-03-04</td>
+                  <td>2024-03-12</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2858"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Treemap with long organization and repo names without dash overflows in
+                      the Activity tab of the Contributor Insight Page</a
+                    >
+                  </td>
+                  <td>2024-03-03</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2857"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Adding selected contributors to an existing list from contributors tab
+                      on the repo insights doesn't work
+                    </a>
+                  </td>
+                  <td>2024-03-03</td>
+                  <td>2024-07-11</td>
+                  <td>130 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2846"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Sign in after opening a workspace caused temporary loosing personal
+                      workspace</a
+                    >
+                  </td>
+                  <td>2024-03-01</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2844"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Workspace leads to 404 for logged out users</a
+                    >
+                  </td>
+                  <td>2024-03-01</td>
+                  <td>2024-03-01</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2837"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Logged out user can see repo & contributor insights pages list on the
+                      sidebar from public shared link</a
+                    >
+                  </td>
+                  <td>2024-03-01</td>
+                  <td>2024-03-01</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2834"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Workspace sidebar on small screen doesn't cover the height of the
+                      screen</a
+                    >
+                  </td>
+                  <td>2024-02-29</td>
+                  <td>2024-03-18</td>
+                  <td>18 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>29.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2833"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: The "Update Workspace" button goes to the back and on top of some
+                      elements in small screens
+                    </a>
+                  </td>
+                  <td>2024-02-29</td>
+                  <td>2024-03-05</td>
+                  <td>5 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>30.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2829"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Can't change workspace visibility to private for pro plan users</a
+                    >
+                  </td>
+                  <td>2024-02-29</td>
+                  <td>2024-03-11</td>
+                  <td>11 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>31.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2801"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Upgrade to pro banner is displayed for pro account in Contributor
+                      Insights Page</a
+                    >
+                  </td>
+                  <td>2024-02-28</td>
+                  <td>2024-02-29</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>32.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/261"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Fix format and adjust wording in workspaces page</a
+                    >
+                  </td>
+                  <td>2024-02-27</td>
+                  <td>2024-03-05</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>33.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1132"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Highlight Active Volunteers on the Member Page</a
+                    >
+                  </td>
+                  <td>2024-02-25</td>
+                  <td>2025-07-16</td>
+                  <td>507 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>34.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1131"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add March 2024 Monthly Challenge</a
+                    >
+                  </td>
+                  <td>2024-02-25</td>
+                  <td>2024-02-28</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>35.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/57"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add information about non-existing software license in a project</a
+                    >
+                  </td>
+                  <td>2024-02-18</td>
+                  <td>2024-03-11</td>
+                  <td>22 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>36.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/251"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add information about PR with unassigned issue to the contributing
+                      guidelines</a
+                    >
+                  </td>
+                  <td>2024-02-14</td>
+                  <td>2024-02-16</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>37.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/118"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Fix wording in the "Intro" section</a
+                    >
+                  </td>
+                  <td>2024-02-12</td>
+                  <td>2024-02-13</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>38.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/117"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add Community Translations Section</a
+                    >
+                  </td>
+                  <td>2024-02-11</td>
+                  <td>2024-03-13</td>
+                  <td>31 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>39.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/249"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update "Issues" section in the "Introduction to Contributing"
+                      chapter</a
+                    >
+                  </td>
+                  <td>2024-02-10</td>
+                  <td>2024-03-04</td>
+                  <td>23 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>40.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/54"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Long titles are cut on the sidebar</a
+                    >
+                  </td>
+                  <td>2024-02-09</td>
+                  <td>2024-02-17</td>
+                  <td>9 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>41.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1127"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add February 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-02-08</td>
+                  <td>2024-02-27</td>
+                  <td>19 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>42.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2622"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Can't open tabs on the navbar after open the profile page unless with
+                      hard refresh</a
+                    >
+                  </td>
+                  <td>2024-02-08</td>
+                  <td>2024-02-23</td>
+                  <td>15 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>43.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/issues/65"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: CODEOWNERS does not automatically add reviewers</a
+                    >
+                  </td>
+                  <td>2024-02-04</td>
+                  <td>2024-02-15</td>
+                  <td>11 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>44.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/42"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Final recheck before launch</a
+                    >
+                  </td>
+                  <td>2024-02-02</td>
+                  <td>2024-04-25</td>
+                  <td>83 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>45.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/242"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add OpenSauced Community Maintainers Guidelines</a
+                    >
+                  </td>
+                  <td>2024-02-01</td>
+                  <td>2024-02-03</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>46.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/40"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Fix wording in the "Code Owners" subsection</a
+                    >
+                  </td>
+                  <td>2024-02-01</td>
+                  <td>2024-02-03</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>47.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1125"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add February 2024 Monthly Challenge</a
+                    >
+                  </td>
+                  <td>2024-01-30</td>
+                  <td>2024-02-01</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>48.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/36"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Create consistecy for GitHub-related terms</a
+                    >
+                  </td>
+                  <td>2024-01-22</td>
+                  <td>2024-02-16</td>
+                  <td>25 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>49.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/109"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Create consistency with "open source" term</a
+                    >
+                  </td>
+                  <td>2024-01-18</td>
+                  <td>2024-02-02</td>
+                  <td>15 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>50.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/107"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Adjust heading levels and give space before and after each heading as
+                      Markdown best practice</a
+                    >
+                  </td>
+                  <td>2024-01-15</td>
+                  <td>2024-01-18</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>51.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/30"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Remove "Code Scanning Tools" subsection from "Issues and Pull Request"
+                      section</a
+                    >
+                  </td>
+                  <td>2024-01-15</td>
+                  <td>2024-01-19</td>
+                  <td>4 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>52.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >petermsouzajr/qa-shadow-report</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/petermsouzajr/qa-shadow-report/issues/47"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add "Related Issues" section in the PR template</a
+                    >
+                  </td>
+                  <td>2024-01-06</td>
+                  <td>2024-01-06</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>53.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >petermsouzajr/qa-shadow-report</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/petermsouzajr/qa-shadow-report/issues/42"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add Code of Conduct</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-06</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>54.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/103"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Add steps to create issue and make screenshot of profile on the
+                      README</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-12</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>55.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/209"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Adjust wording in the Contributing Guide</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-07</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>56.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/208"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Remove the "Running the Project Locally" from Contributing Guide</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-07</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>57.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/207"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Remove "Adding a New Section to the Documentation" section</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-05</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>58.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >petermsouzajr/qa-shadow-report</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/petermsouzajr/qa-shadow-report/issues/39"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: GitHub Discussion</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-04</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>59.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >petermsouzajr/qa-shadow-report</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/petermsouzajr/qa-shadow-report/issues/38"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add issue templates</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-06</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>60.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1106"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add January 2024 newsletter to the website</a
+                    >
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-04</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>61.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/206"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Create an issue template to add users as contributors
+                    </a>
+                  </td>
+                  <td>2024-01-04</td>
+                  <td>2024-01-11</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>62.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/issues/22"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Can't run multiple npm scripts after running `npm run dev`</a
+                    >
+                  </td>
+                  <td>2024-01-01</td>
+                  <td>2024-01-05</td>
+                  <td>4 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">👀 Reviewed PRs (41)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 20%">Project</th>
+                  <th style="width: 28%">Title</th>
+                  <th style="width: 10%">Created At</th>
+                  <th style="width: 15%">First Review</th>
+                  <th style="width: 10%">Review Period</th>
+                  <th style="width: 12%">Last Update / Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/141"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Added a note to fill PR form in lesson 05</a
+                    >
+                  </td>
+                  <td>2024-03-24</td>
+                  <td>2024-03-24</td>
+                  <td>0 days</td>
+                  <td>2024-03-25<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/283"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add student guide</a
+                    >
+                  </td>
+                  <td>2024-03-20</td>
+                  <td>2024-03-21</td>
+                  <td>1 day</td>
+                  <td>2024-03-21<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/279"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add section on workspaces to maintainers guide</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-18</td>
+                  <td>0 days</td>
+                  <td>2024-03-20<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/133"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fix: Links, capitalization and wording adjustment in the "Tools to be
+                      Successful" chapter</a
+                    >
+                  </td>
+                  <td>2024-03-13</td>
+                  <td>2024-03-13</td>
+                  <td>0 days</td>
+                  <td>2024-03-14<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/132"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fix: links, capitalization and wording adjustment in the "Tools to be
+                      Successful" chapter</a
+                    >
+                  </td>
+                  <td>2024-03-13</td>
+                  <td>2024-03-13</td>
+                  <td>0 days</td>
+                  <td>2024-03-13<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/131"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Community translations section</a
+                    >
+                  </td>
+                  <td>2024-03-12</td>
+                  <td>2024-03-12</td>
+                  <td>0 days</td>
+                  <td>2024-03-13<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/275"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >chore: Add FAQ about auth</a
+                    >
+                  </td>
+                  <td>2024-03-11</td>
+                  <td>2024-03-11</td>
+                  <td>0 days</td>
+                  <td>2024-03-12<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/273"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >chore: clarify visibility of insight pages</a
+                    >
+                  </td>
+                  <td>2024-03-08</td>
+                  <td>2024-03-08</td>
+                  <td>0 days</td>
+                  <td>2024-03-11<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/272"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: update workspace with more information on team plan</a
+                    >
+                  </td>
+                  <td>2024-03-07</td>
+                  <td>2024-03-08</td>
+                  <td>1 day</td>
+                  <td>2024-03-08<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/128"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >[Docs #127] Remove CodeSee ref on fr translation</a
+                    >
+                  </td>
+                  <td>2024-03-03</td>
+                  <td>2024-03-07</td>
+                  <td>4 days</td>
+                  <td>2024-03-07<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1124"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Replaced old twitter icon with new icon</a
+                    >
+                  </td>
+                  <td>2024-01-30</td>
+                  <td>2024-02-01</td>
+                  <td>2 days</td>
+                  <td>2024-02-06<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/220"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add OluwabukolaU as a contributor.</a
+                    >
+                  </td>
+                  <td>2024-01-28</td>
+                  <td>2024-01-29</td>
+                  <td>1 day</td>
+                  <td>2024-03-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/269"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Issues Section</a
+                    >
+                  </td>
+                  <td>2024-03-03</td>
+                  <td>2024-03-03</td>
+                  <td>0 days</td>
+                  <td>2024-03-04<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/268"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Issues Section</a
+                    >
+                  </td>
+                  <td>2024-03-03</td>
+                  <td>2024-03-03</td>
+                  <td>1 day</td>
+                  <td>2024-03-03<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/126"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >[Feat #112] Add gif in Let's Get Practical subsection</a
+                    >
+                  </td>
+                  <td>2024-02-28</td>
+                  <td>2024-02-29</td>
+                  <td>1 day</td>
+                  <td>2024-03-02<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/232"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @chrisVCH as a contributor</a
+                    >
+                  </td>
+                  <td>2024-02-27</td>
+                  <td>2024-02-28</td>
+                  <td>1 day</td>
+                  <td>2024-02-28<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/125"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >[#122] docs:Delete duplicated text</a
+                    >
+                  </td>
+                  <td>2024-02-26</td>
+                  <td>2024-02-27</td>
+                  <td>0 days</td>
+                  <td>2024-02-27<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/123"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Delete redundant text content</a
+                    >
+                  </td>
+                  <td>2024-02-22</td>
+                  <td>2024-02-26</td>
+                  <td>4 days</td>
+                  <td>2024-02-26<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/124"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Upd feat 120</a
+                    >
+                  </td>
+                  <td>2024-02-23</td>
+                  <td>2024-02-24</td>
+                  <td>1 day</td>
+                  <td>2024-02-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/229"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @pondy007 as a contributor</a
+                    >
+                  </td>
+                  <td>2024-02-23</td>
+                  <td>2024-02-24</td>
+                  <td>1 day</td>
+                  <td>2024-02-24<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/229"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add a Contributors guide</a
+                    >
+                  </td>
+                  <td>2023-12-07</td>
+                  <td>2023-12-11</td>
+                  <td>4 days</td>
+                  <td>2024-02-19<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/119"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fix #118 : Bug: Fix wording in the Intro section</a
+                    >
+                  </td>
+                  <td>2024-02-13</td>
+                  <td>2024-02-13</td>
+                  <td>0 days</td>
+                  <td>2024-02-13<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/339"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Coffee Table Groups updates</a
+                    >
+                  </td>
+                  <td>2024-01-30</td>
+                  <td>2024-01-30</td>
+                  <td>0 days</td>
+                  <td>2024-02-13<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/250"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Fixed Docs: Update "Issues" section in the "Introduction to Contributing"
+                      chapter #249</a
+                    >
+                  </td>
+                  <td>2024-02-11</td>
+                  <td>2024-02-11</td>
+                  <td>0 days</td>
+                  <td>2024-02-11<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/knowledge-hub</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/knowledge-hub/pull/56"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add frontend development overview and useful resources</a
+                    >
+                  </td>
+                  <td>2024-02-05</td>
+                  <td>2024-02-08</td>
+                  <td>4 days</td>
+                  <td>2024-02-09<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/111"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: replace open-source term</a
+                    >
+                  </td>
+                  <td>2024-01-20</td>
+                  <td>2024-01-22</td>
+                  <td>2 days</td>
+                  <td>2024-02-02<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/221"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @nickaldwin as a contributor</a
+                    >
+                  </td>
+                  <td>2024-02-01</td>
+                  <td>2024-02-01</td>
+                  <td>0 days</td>
+                  <td>2024-02-01<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/218"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @Kaz-Smino as a contributor</a
+                    >
+                  </td>
+                  <td>2024-01-24</td>
+                  <td>2024-01-24</td>
+                  <td>0 days</td>
+                  <td>2024-01-24<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>29.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/27"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add new chapter on teams</a
+                    >
+                  </td>
+                  <td>2024-01-07</td>
+                  <td>2024-01-10</td>
+                  <td>4 days</td>
+                  <td>2024-01-19<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>30.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/108"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug #107 - added spaces and adjusted headings</a
+                    >
+                  </td>
+                  <td>2024-01-16</td>
+                  <td>2024-01-17</td>
+                  <td>1 day</td>
+                  <td>2024-01-18<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>31.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/knowledge-hub</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/knowledge-hub/pull/51"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add a resource for React</a
+                    >
+                  </td>
+                  <td>2024-01-11</td>
+                  <td>2024-01-12</td>
+                  <td>1 day</td>
+                  <td>2024-01-17<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>32.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/35"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: adding leave room button</a
+                    >
+                  </td>
+                  <td>2024-01-12</td>
+                  <td>2024-01-14</td>
+                  <td>2 days</td>
+                  <td>2024-01-15<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>33.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/210"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add feature issue template for adding contributors</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-05</td>
+                  <td>0 days</td>
+                  <td>2024-01-11<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>34.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/212"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: remove local project setup from `CONTRIBUTING.md`</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-07</td>
+                  <td>2 days</td>
+                  <td>2024-01-07<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>35.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/214"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @at-the-vr as a contributor</a
+                    >
+                  </td>
+                  <td>2024-01-06</td>
+                  <td>2024-01-07</td>
+                  <td>1 day</td>
+                  <td>2024-01-07<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>36.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/213"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: adjust wording in the contributing guide</a
+                    >
+                  </td>
+                  <td>2024-01-06</td>
+                  <td>2024-01-07</td>
+                  <td>1 day</td>
+                  <td>2024-01-07<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>37.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/pull/25"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update CODEOWNERS</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-05</td>
+                  <td>0 days</td>
+                  <td>2024-01-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>38.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/211"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: remove "adding a new section to the Documentation" from
+                      `CONTRIBUTING.md`</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-05</td>
+                  <td>0 days</td>
+                  <td>2024-01-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>39.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/234"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Adds image and instructions on how to get DevCard page</a
+                    >
+                  </td>
+                  <td>2023-12-27</td>
+                  <td>2023-12-28</td>
+                  <td>1 day</td>
+                  <td>2024-01-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>40.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/202"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: adjust Contributing file</a
+                    >
+                  </td>
+                  <td>2023-12-20</td>
+                  <td>2023-12-21</td>
+                  <td>1 day</td>
+                  <td>2024-01-04<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>41.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/230"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Adds info on adding teammates to the insights page</a
+                    >
+                  </td>
+                  <td>2023-12-08</td>
+                  <td>2023-12-08</td>
+                  <td>0 days</td>
+                  <td>2024-01-04<br /><strong>MERGED</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🤝 Co-Authored PRs (19)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 15%">Project</th>
+                  <th style="width: 25%">Title</th>
+                  <th style="width: 10%">Created At</th>
+                  <th style="width: 12%">First Commit</th>
+                  <th style="width: 13%">Commit Period</th>
+                  <th style="width: 20%">Last Update / Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/141"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Added a note to fill PR form in lesson 05</a
+                    >
+                  </td>
+                  <td>2024-03-24</td>
+                  <td>2024-03-24</td>
+                  <td>0 days</td>
+                  <td>2024-03-25<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/283"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add student guide</a
+                    >
+                  </td>
+                  <td>2024-03-20</td>
+                  <td>2024-03-21</td>
+                  <td>1 day</td>
+                  <td>2024-03-21<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/279"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add section on workspaces to maintainers guide</a
+                    >
+                  </td>
+                  <td>2024-03-18</td>
+                  <td>2024-03-20</td>
+                  <td>2 days</td>
+                  <td>2024-03-20<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/pull/73"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add a pizza trivia (pizza patatine)</a
+                    >
+                  </td>
+                  <td>2024-03-11</td>
+                  <td>2024-03-17</td>
+                  <td>6 days</td>
+                  <td>2024-03-25<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/68"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: metrics chapter</a
+                    >
+                  </td>
+                  <td>2024-03-14</td>
+                  <td>2024-03-14</td>
+                  <td>0 days</td>
+                  <td>2024-04-04<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/131"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Community translations section</a
+                    >
+                  </td>
+                  <td>2024-03-12</td>
+                  <td>2024-03-12</td>
+                  <td>0 days</td>
+                  <td>2024-03-13<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/273"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >chore: clarify visibility of insight pages</a
+                    >
+                  </td>
+                  <td>2024-03-08</td>
+                  <td>2024-03-08</td>
+                  <td>0 days</td>
+                  <td>2024-03-11<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/220"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add OluwabukolaU as a contributor.</a
+                    >
+                  </td>
+                  <td>2024-01-28</td>
+                  <td>2024-03-05</td>
+                  <td>37 days</td>
+                  <td>2024-03-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/126"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >[Feat #112] Add gif in Let's Get Practical subsection</a
+                    >
+                  </td>
+                  <td>2024-02-28</td>
+                  <td>2024-03-02</td>
+                  <td>3 days</td>
+                  <td>2024-03-02<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/258"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add information on the graphs in the List page</a
+                    >
+                  </td>
+                  <td>2024-02-23</td>
+                  <td>2024-03-01</td>
+                  <td>7 days</td>
+                  <td>2024-03-01<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/124"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Upd feat 120</a
+                    >
+                  </td>
+                  <td>2024-02-23</td>
+                  <td>2024-02-26</td>
+                  <td>3 days</td>
+                  <td>2024-02-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/35"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add new chapter on practical application</a
+                    >
+                  </td>
+                  <td>2024-01-19</td>
+                  <td>2024-02-21</td>
+                  <td>33 days</td>
+                  <td>2024-04-03<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/252"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add information about PR with unassigned issue to the contributing
+                      guidelines</a
+                    >
+                  </td>
+                  <td>2024-02-15</td>
+                  <td>2024-02-16</td>
+                  <td>1 day</td>
+                  <td>2024-02-16<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/knowledge-hub</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/knowledge-hub/pull/56"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add frontend development overview and useful resources</a
+                    >
+                  </td>
+                  <td>2024-02-05</td>
+                  <td>2024-02-09</td>
+                  <td>4 days</td>
+                  <td>2024-02-09<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/44"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: adding code quality chapter</a
+                    >
+                  </td>
+                  <td>2024-02-03</td>
+                  <td>2024-02-09</td>
+                  <td>6 days</td>
+                  <td>2024-02-16<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/knowledge-hub</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/knowledge-hub/pull/51"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add a resource for React</a
+                    >
+                  </td>
+                  <td>2024-01-11</td>
+                  <td>2024-01-15</td>
+                  <td>4 days</td>
+                  <td>2024-01-17<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/27"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add new chapter on teams</a
+                    >
+                  </td>
+                  <td>2024-01-07</td>
+                  <td>2024-01-12</td>
+                  <td>5 days</td>
+                  <td>2024-01-19<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/210"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add feature issue template for adding contributors</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-05</td>
+                  <td>0 days</td>
+                  <td>2024-01-11<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/202"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: adjust Contributing file</a
+                    >
+                  </td>
+                  <td>2023-12-20</td>
+                  <td>2024-01-04</td>
+                  <td>15 days</td>
+                  <td>2024-01-04<br /><strong>MERGED</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">💬 Collaborations (28)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 30%">Project</th>
+                  <th style="width: 35%">Title</th>
+                  <th style="width: 15%">Created At</th>
+                  <th style="width: 15%">Commented At</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/151"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Issue 149 resolved.
+                    </a>
+                  </td>
+                  <td>2024-03-29</td>
+                  <td>2024-03-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/270"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: change screenshot in "Activity" subsection
+                    </a>
+                  </td>
+                  <td>2024-03-04</td>
+                  <td>2024-03-28</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/286"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: changed screenshot in activity subsection</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-03-28</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/148"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: update (#146)</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-03-27</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/246"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Incorrect links and term's on the README #245</a
+                    >
+                  </td>
+                  <td>2024-03-27</td>
+                  <td>2024-03-27</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/240"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @alberto-rj as a contributor</a
+                    >
+                  </td>
+                  <td>2024-03-25</td>
+                  <td>2024-03-25</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/239"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Make the greeting message more personalized</a
+                    >
+                  </td>
+                  <td>2023-12-16</td>
+                  <td>2024-03-25</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/140"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add reminder for contributors to fill out the whole PR template in
+                      lesson 05.</a
+                    >
+                  </td>
+                  <td>2024-03-21</td>
+                  <td>2024-03-22</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/69"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add a place for ppl to add the projects they've created</a
+                    >
+                  </td>
+                  <td>2024-03-14</td>
+                  <td>2024-03-20</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/135"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Reorganize repo to prepare for Maintainer Course.</a
+                    >
+                  </td>
+                  <td>2024-03-14</td>
+                  <td>2024-03-15</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/278"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Sign up link to create OpenSauced account is not working</a
+                    >
+                  </td>
+                  <td>2024-03-14</td>
+                  <td>2024-03-14</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/pull/2864"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: z-index changes for `Update Workspace` button in settings</a
+                    >
+                  </td>
+                  <td>2024-03-04</td>
+                  <td>2024-03-04</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/pull/2847"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: now the sidebar uses dvh for dynamic resizing of the browser</a
+                    >
+                  </td>
+                  <td>2024-03-01</td>
+                  <td>2024-03-01</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2842"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: not having workspace edit access is confusing</a
+                    >
+                  </td>
+                  <td>2024-03-01</td>
+                  <td>2024-03-01</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/pull/258"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add information on the graphs in the List page</a
+                    >
+                  </td>
+                  <td>2024-02-23</td>
+                  <td>2024-03-01</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/app</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/app/issues/2826"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: workspace `Explore Contributors` design issues</a
+                    >
+                  </td>
+                  <td>2024-02-29</td>
+                  <td>2024-02-29</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/222"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update PULL_REQUEST_TEMPLATE.md</a
+                    >
+                  </td>
+                  <td>2024-02-01</td>
+                  <td>2024-02-01</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/114"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Making changes to directions in Let's Get Practical section</a
+                    >
+                  </td>
+                  <td>2024-01-26</td>
+                  <td>2024-01-27</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/38"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Maintainer's Guide to "Your Team" chapter</a
+                    >
+                  </td>
+                  <td>2024-01-25</td>
+                  <td>2024-01-25</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/37"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Mention Issue Forms and PR Templates</a
+                    >
+                  </td>
+                  <td>2024-01-22</td>
+                  <td>2024-01-23</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/landing-page</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/landing-page/pull/164"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: make "we are more than... green squares" slogan accessible</a
+                    >
+                  </td>
+                  <td>2023-09-17</td>
+                  <td>2024-01-22</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >shesharpnl/.github</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/shesharpnl/.github/pull/7"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add greetings file</a
+                    >
+                  </td>
+                  <td>2023-10-02</td>
+                  <td>2024-01-18</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/issues/24"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >chore: add rest of team to the CODEOWNERS file</a
+                    >
+                  </td>
+                  <td>2024-01-05</td>
+                  <td>2024-01-14</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/issues/10"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Types of documentation</a
+                    >
+                  </td>
+                  <td>2023-12-15</td>
+                  <td>2024-01-14</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >nickytonline/astro-partykit-starter</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/nickytonline/astro-partykit-starter/issues/40"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: add Vitest to the project</a
+                    >
+                  </td>
+                  <td>2024-01-14</td>
+                  <td>2024-01-14</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/issues/71"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add Community Translations Section</a
+                    >
+                  </td>
+                  <td>2023-10-10</td>
+                  <td>2024-01-11</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/203"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: more adjustments to the PR template</a
+                    >
+                  </td>
+                  <td>2023-12-21</td>
+                  <td>2024-01-03</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >open-sauced/maintainer-intro-course</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/maintainer-intro-course/pull/16"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: adding section for effective communication</a
+                    >
+                  </td>
+                  <td>2023-12-20</td>
+                  <td>2024-01-03</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+    </div>
+  </body>
+</html>
