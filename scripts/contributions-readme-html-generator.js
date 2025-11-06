@@ -2,6 +2,9 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
+// Import the dedent utility
+const { dedent } = require('./dedent');
+
 // Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
 
@@ -55,7 +58,7 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
 
   // Helper function for rendering the statistics cards (Overall Counts)
   const renderStatsCard = (title, count, bgColor, countSize = 'text-3xl') => {
-    return `
+    return dedent`
 		<div class="p-6 rounded-xl shadow-lg transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl ${bgColor}">
 		  <p class="text-sm font-medium opacity-80">${title}</p>
 		  <p class="${countSize} font-bold mt-1">${count}</p>
@@ -126,7 +129,7 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
 
         const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
 
-        return `
+        return dedent`
             <tr class="${rowBg} border-b hover:bg-indigo-50 transition duration-150">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
                 ${item.section}
@@ -187,14 +190,14 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
 
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
-      linkHtml += `
+      linkHtml += dedent`
             <h3 class="text-2xl font-bold text-gray-700 col-span-full mt-8 mb-4 border-b border-gray-200 pb-2">📅 ${year} Reports</h3>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 report-list col-span-full">
             `;
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
-        linkHtml += `
+        linkHtml += dedent`
                 <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden">
                     <a href="./${link.relativePath}" class="block p-4">
                         <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
@@ -206,7 +209,7 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
       }
 
       // Close the quarterly list/grid for this year
-      linkHtml += `
+      linkHtml += dedent`
             </div>
             `;
     }
@@ -216,7 +219,7 @@ async function createStatsHtmlReadme(finalContributions, quarterlyFileLinks = []
   }
 
   // 5. Build HTML Content
-  const htmlContent = `
+  const htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
 <head>

@@ -2,6 +2,9 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
+// Import the dedent utility
+const { dedent } = require('./dedent');
+
 // Import configuration
 const { BASE_DIR } = require('./config');
 
@@ -78,15 +81,15 @@ async function writeHtmlFiles(groupedContributions) {
     const top3Repos = sortedRepos
       .slice(0, 3)
       .map(
-        (item) => `
+        (item) => dedent`
              <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
           `
       )
       .join('');
 
     // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
-    // NOTE: Removed leading whitespace from the start of this template literal content to fix linter issues.
-    let htmlContent = `<!DOCTYPE html>
+    let htmlContent = dedent`
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -365,7 +368,7 @@ ${navHtmlForReports}
     }
 
     // Closing tags
-    htmlContent += `
+    htmlContent += dedent`
     				</section>
 				</div>
 		</body>
