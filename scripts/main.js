@@ -16,7 +16,7 @@ const { createStatsReadme } = require('./contributions-readme-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('./quarterly-reports-html-generator');
-const { createStatsHtmlReadme } = require('./contributions-readme-html-generator');
+const { createStatsHtmlReadme } = require('./contributions-index-html-generator');
 const { createHtmlReports } = require('./contributions-report-html-generator');
 
 async function main() {
