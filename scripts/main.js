@@ -16,7 +16,8 @@ const { createStatsReadme } = require('./contributions-readme-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('./quarterly-reports-html-generator');
-const { createStatsHtmlReadme } = require('./contributions-readme-html-generator');
+const { createStatsHtmlReadme } = require('./contributions-index-html-generator');
+const { createHtmlReports } = require('./contributions-report-html-generator');
 
 async function main() {
   // Define the data directory path.
@@ -216,7 +217,10 @@ async function main() {
     await createStatsReadme(finalContributions);
 
     // 5. Generate aggregate README (index.html)
-    await createStatsHtmlReadme(finalContributions, quarterlyHtmlLinks);
+    await createStatsHtmlReadme(finalContributions);
+
+    // 6. Generate reports page (HTML)
+    await createHtmlReports(quarterlyHtmlLinks);
 
     // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');
