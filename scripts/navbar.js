@@ -1,4 +1,4 @@
-const dedent = require('./dedent');
+const { dedent } = require('./dedent');
 const { GITHUB_USERNAME } = require('./config');
 
 const GITHUB_REPO_URL = `https://github.com/${GITHUB_USERNAME}/oss-portfolio`;
