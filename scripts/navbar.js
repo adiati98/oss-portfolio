@@ -59,7 +59,7 @@ const navHtml = dedent`
             
             <!-- Quarterly Reports Link -->
             <div class="mb-4">
-                <a href="#" class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]">Quarterly Reports</a>
+                <a href="reports.html" class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]">Quarterly Reports</a>
             </div>
             
             <!-- GitHub Icon - Mobile (Left Side Bottom) -->

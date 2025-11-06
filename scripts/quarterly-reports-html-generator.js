@@ -8,7 +8,7 @@ const { dedent } = require('./dedent');
 // Import configuration
 const { BASE_DIR } = require('./config');
 
-// Import new formatters (Assuming these functions are defined elsewhere and handle date formatting and period calculation)
+// Import formatters
 const {
   formatDate,
   calculatePeriodInDays,
@@ -19,8 +19,8 @@ const {
 const { navHtml } = require('./navbar');
 
 // Tell the browser to go up one directory (..) to find index.html and reports.html
-const navHtmlForMain = navHtml.replace('href="./"', 'href="../index.html"');
-const navHtmlForQuarterlyReports = navHtml.replace('href="reports.html"', 'href="../reports.html"');
+let navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
+navHtmlForReports = navHtmlForReports.replace('href="reports.html"', 'href="../reports.html"');
 
 /**
  * Generates and writes a separate HTML file for each quarter's contributions.
@@ -29,16 +29,100 @@ const navHtmlForQuarterlyReports = navHtml.replace('href="reports.html"', 'href=
  * @returns {Array<string>} List of relative file paths generated (e.g., ['2023/Q4-2023.html']).
  */
 async function writeHtmlFiles(groupedContributions) {
-  // Define the new base directory path: 'contributions/html-generated'
+  const allReports = Object.entries(groupedContributions)
+    .map(([key, data]) => {
+      const [year, quarterPrefix] = key.split('-');
+      const fullQuarterName = `${quarterPrefix} ${year}`;
+
+      return {
+        key,
+        year,
+        quarterPrefix,
+        fullQuarterName,
+        data,
+        totalContributions: Object.values(data).reduce((sum, arr) => sum + arr.length, 0),
+      };
+    })
+    // Sort reports chronologically for correct Next/Previous order
+    .sort((a, b) => a.key.localeCompare(b.key));
+
+  /**
+   * Generates the HTML for the Next/Previous navigation buttons.
+   * @param {number} index - The index of the current report being processed in the allReports array.
+   * @returns {string} The HTML for the navigation bar.
+   */
+  function generateReportNavButton(index) {
+    const reports = allReports; // Reference the prepared array
+    const previousReport = index > 0 ? reports[index - 1] : null;
+    const nextReport = index < reports.length - 1 ? reports[index + 1] : null;
+
+    let previousButton = '';
+    let nextButton = '';
+
+    // Helper function to build the relative path: ../YEAR/QX-YYYY.html
+    const getReportPath = (report) => {
+      const fileName = `${report.quarterPrefix}-${report.year}.html`;
+      // Path is relative from the report file: ../YEAR/QX-YYYY.html
+      return `../${report.year}/${fileName}`;
+    };
+
+    // --- Previous Button Logic ---
+    if (previousReport) {
+      const prevPath = getReportPath(previousReport);
+      previousButton = dedent`
+                <a href="${prevPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span>Previous Report</span>
+                </a>
+            `;
+    } else {
+      // Disabled style for the oldest report
+      previousButton = dedent`
+                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    <span>First Report</span>
+                </span>
+            `;
+    }
+
+    // --- Next Button Logic ---
+    if (nextReport) {
+      const nextPath = getReportPath(nextReport);
+      nextButton = dedent`
+                <a href="${nextPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
+                    <span>Next Report</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </a>
+            `;
+    } else {
+      // Disabled style for the most recent report
+      nextButton = `
+                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
+                    <span>Most Recent</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </span>
+            `;
+    }
+
+    return dedent`
+            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center px-4 sm:px-6 lg:px-8">
+                ${previousButton}
+                ${nextButton}
+            </div>
+        `;
+  }
+
+  // Define the base directory path: 'contributions/html-generated'
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const quarterlyFileLinks = [];
 
-  // Create the new base directory if it doesn't exist.
+  // Create a new base directory if it doesn't exist.
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  // Iterate over each quarter's worth of data.
-  for (const [key, data] of Object.entries(groupedContributions)) {
-    const [year, quarter] = key.split('-');
+  // Iterate over the prepared allReports array using the index
+  for (let index = 0; index < allReports.length; index++) {
+    const report = allReports[index]; // Destructure the properties needed for file naming and statistics
+    const { key, year, quarterPrefix: quarter, data, totalContributions, fullQuarterName } = report;
 
     // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
     const yearDir = path.join(htmlBaseDir, year);
@@ -50,9 +134,6 @@ async function writeHtmlFiles(groupedContributions) {
 
     // Set the file path and extension (absolute path for writing)
     const filePath = path.join(yearDir, filename);
-
-    // Calculate the total number of contributions for the quarter.
-    const totalContributions = Object.values(data).reduce((sum, arr) => sum + arr.length, 0);
 
     // Skip writing the file if there are no contributions for this quarter.
     if (totalContributions === 0) {
@@ -135,8 +216,7 @@ async function writeHtmlFiles(groupedContributions) {
     </style>
 </head>
 <body>
-${navHtmlForMain}
-${navHtmlForQuarterlyReports}
+${navHtmlForReports}
 		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
     		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
         		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">${quarter} ${year}</h1>
@@ -268,21 +348,17 @@ ${navHtmlForQuarterlyReports}
       // Only keep 'pullRequests' open by default to match the template
       const openAttribute = section === 'pullRequests' ? 'open' : '';
 
-      // Use the HTML <details> tag with Tailwind styles for a 		collapsible section
+      // Use the HTML <details> tag with Tailwind styles for a collapsible section
       htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`;
-
-      // The span no longer has 'mb-4' which helps reduce gap
       htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
         sectionInfo.title
       } (${items ? items.length : 0})</span>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
-        // Removed 'mt-1' for zero gap after summary
         htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
-        // Removed 'mt-1' for zero gap after summary
         let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
         // Use the custom report-table class for styling
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
@@ -333,7 +409,7 @@ ${navHtmlForQuarterlyReports}
               item.createdAt,
               item.myFirstReviewDate
             );
-            const lastUpdateContent = getPrStatusContent(item); // Should return a styled span (e.g., green/red badge)
+            const lastUpdateContent = getPrStatusContent(item);
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
@@ -372,11 +448,17 @@ ${navHtmlForQuarterlyReports}
       htmlContent += `</details>\n\n`;
     }
 
-    // Closing tags
+    const navButton = generateReportNavButton(index);
+
+    // Close the last main <section> tag
     htmlContent += dedent`
-    				</section>
-				</div>
-		</body>
+            </section>
+`;
+    htmlContent += navButton;
+
+    htmlContent += `
+        </div>
+    </body>
 </html>
 `;
 
