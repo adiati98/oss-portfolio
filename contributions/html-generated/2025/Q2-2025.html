@@ -1,0 +1,2915 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Q2 2025 Contributions Report</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/%3E%3C/svg%3E"
+    />
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f7f9fb;
+      }
+      summary {
+        cursor: pointer;
+        outline: none;
+        margin: 0.5em 0;
+        padding: 0.5em 0;
+        color: #1f2937;
+      }
+      .report-table th,
+      .report-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid #e5e7eb;
+        text-align: left;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .report-table th {
+        background-color: #eef2ff;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #4338ca;
+      }
+      .report-table tbody tr:last-child td {
+        border-bottom: none;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg">
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <!-- Left Side: Title -->
+        <div class="flex items-center space-x-4">
+          <a
+            href="../index.html"
+            class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md"
+          >
+            <span class="sm:hidden">OSS Portfolio</span>
+            <span class="hidden sm:inline">Open Source Portfolio</span>
+          </a>
+        </div>
+
+        <!-- Right Side Container (Desktop Links & Mobile Toggle) -->
+        <div class="flex items-center">
+          <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
+          <div class="hidden sm:flex items-center space-x-4">
+            <!-- Quarterly Reports Link (Desktop) -->
+            <a
+              href="../reports.html"
+              class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700"
+            >
+              Quarterly Reports
+            </a>
+
+            <!-- GitHub Icon Link (Desktop) -->
+            <a
+              href="https://github.com/adiati98/oss-portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="p-2 transition duration-150 hover:text-gray-200 text-white"
+              title="View Repository"
+            >
+              <!-- Desktop Size: w-7 h-7 -->
+              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Hamburger Button (Mobile Only) -->
+          <button
+            id="menu-button"
+            class="sm:hidden p-2 rounded-md hover:bg-indigo-700 transition duration-150"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <!-- Menu Open Icon (Hamburger) -->
+            <svg
+              id="menu-open-icon"
+              class="w-6 h-6 block"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"
+              />
+            </svg>
+            <!-- Menu Close Icon (X) -->
+            <svg
+              id="menu-close-icon"
+              class="w-6 h-6 hidden"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu Panel (Hidden by default, shown by JS) -->
+      <div
+        id="mobile-menu"
+        class="hidden sm:hidden absolute top-16 left-0 right-0 bg-[#342D93] shadow-lg p-4"
+      >
+        <!-- Quarterly Reports Link -->
+        <div class="mb-4">
+          <a
+            href="reports.html"
+            class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]"
+            >Quarterly Reports</a
+          >
+        </div>
+
+        <!-- GitHub Icon - Mobile (Left Side Bottom) -->
+        <div class="mt-3 pt-3 border-t border-indigo-700">
+          <a
+            href="https://github.com/adiati98/oss-portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            title="View Repository"
+          >
+            <!-- Mobile Size: w-6 h-6, ml-3 aligns with the start of 'Quarterly Reports' text -->
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- JavaScript for Mobile Menu Toggle -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
+
+          if (button && menu) {
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+              // Toggle ARIA attributes
+              button.setAttribute('aria-expanded', String(!isExpanded));
+
+              // Toggle visibility of the menu (Tailwind's 'hidden' class)
+              menu.classList.toggle('hidden');
+
+              // Toggle icons (Hamburger <-> X)
+              openIcon.classList.toggle('hidden');
+              closeIcon.classList.toggle('hidden');
+            });
+          }
+        });
+      </script>
+    </nav>
+    <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
+      <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">Q2 2025</h1>
+        <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+      </header>
+
+      <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
+      <section class="mb-8">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">
+          📊 Quarterly Statistics
+        </h2>
+
+        <!-- Total Contributions & Total Repositories (Two Big Cards) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div
+            class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+          >
+            <p class="text-4xl font-extrabold">127</p>
+            <p class="text-lg mt-2 font-medium">Total Contributions</p>
+          </div>
+          <div
+            class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+          >
+            <p class="text-4xl font-extrabold">9</p>
+            <p class="text-lg mt-2 font-medium">Total Repositories</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+      <section class="mb-8">
+        <h3
+          class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3"
+        >
+          Contribution Breakdown
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+          <!-- Merged PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">14</span>
+            <span class="text-md text-gray-500 mt-1">Merged PRs</span>
+          </div>
+          <!-- Reviewed PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">39</span>
+            <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
+          </div>
+          <!-- Issues -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">29</span>
+            <span class="text-md text-gray-500 mt-1">Issues</span>
+          </div>
+          <!-- Co-Authored PRs -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">22</span>
+            <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
+          </div>
+          <!-- Collaborations -->
+          <div
+            class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition"
+          >
+            <span class="text-2xl font-bold text-indigo-700">23</span>
+            <span class="text-md text-gray-500 mt-1">Collaborations</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. TOP 3 REPOSITORIES SECTION -->
+      <section class="mb-8">
+        <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">
+          Top 3 Repositories
+        </h3>
+        <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+          <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+            <li class="pl-2">
+              <a
+                href="https://github.com/OpenSource-Communities/guestbook"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >OpenSource-Communities/guestbook</a
+              >
+              (61 contributions)
+            </li>
+            <li class="pl-2">
+              <a
+                href="https://github.com/mautic/mautic-community-handbook"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >mautic/mautic-community-handbook</a
+              >
+              (22 contributions)
+            </li>
+            <li class="pl-2">
+              <a
+                href="https://github.com/github/maintainermonth"
+                target="_blank"
+                class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                >github/maintainermonth</a
+              >
+              (17 contributions)
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <hr class="my-8 border-gray-200" />
+
+      <section class="space-y-6">
+        <details open class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🚀 Merged PRs (14)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 20%">Project</th>
+                  <th style="width: 30%">Title</th>
+                  <th style="width: 15%">Created</th>
+                  <th style="width: 15%">Merged</th>
+                  <th style="width: 15%">Review Period</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/309"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove Mautic features from Vale</a
+                    >
+                  </td>
+                  <td>2025-06-26</td>
+                  <td>2025-06-26</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/507"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Update README and Maintainers Page</a
+                    >
+                  </td>
+                  <td>2025-06-23</td>
+                  <td>2025-06-23</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/user-documentation</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/user-documentation/pull/402"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove update command from 6.0 docs</a
+                    >
+                  </td>
+                  <td>2025-06-10</td>
+                  <td>2025-06-16</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/user-documentation</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/user-documentation/pull/401"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove update command from 5.2 docs</a
+                    >
+                  </td>
+                  <td>2025-06-10</td>
+                  <td>2025-06-16</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/user-documentation</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/user-documentation/pull/400"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove update command from 5.x docs</a
+                    >
+                  </td>
+                  <td>2025-06-10</td>
+                  <td>2025-06-16</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/user-documentation</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/user-documentation/pull/403"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove update command from 4.x docs</a
+                    >
+                  </td>
+                  <td>2025-06-10</td>
+                  <td>2025-06-16</td>
+                  <td>6 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/504"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Update root's README</a
+                    >
+                  </td>
+                  <td>2025-06-03</td>
+                  <td>2025-06-05</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/486"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Update the docs for "New Year, New Goal" challenge</a
+                    >
+                  </td>
+                  <td>2025-02-11</td>
+                  <td>2025-06-04</td>
+                  <td>113 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1348"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add "Summer 2025 Bi-Month Challenge: Get Job Ready" to the website</a
+                    >
+                  </td>
+                  <td>2025-05-28</td>
+                  <td>2025-06-01</td>
+                  <td>4 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1343"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add May 2025 Challenge to the Website</a
+                    >
+                  </td>
+                  <td>2025-04-28</td>
+                  <td>2025-04-30</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/pull/300"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Change header's background color</a
+                    >
+                  </td>
+                  <td>2025-04-23</td>
+                  <td>2025-04-23</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/pull/277"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Change event labels' background color</a
+                    >
+                  </td>
+                  <td>2025-04-21</td>
+                  <td>2025-04-22</td>
+                  <td>1 day</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/pull/258"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Blog title for Chrissy Codes</a
+                    >
+                  </td>
+                  <td>2025-04-18</td>
+                  <td>2025-04-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/pull/255"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: Typo for the word "Maintainer"</a
+                    >
+                  </td>
+                  <td>2025-04-17</td>
+                  <td>2025-04-17</td>
+                  <td>0 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🐞 Issues (29)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 25%">Project</th>
+                  <th style="width: 35%">Title</th>
+                  <th style="width: 15%">Created</th>
+                  <th style="width: 15%">Closed</th>
+                  <th style="width: 10%">Closing Period</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/308"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove Mautic features from Vale</a
+                    >
+                  </td>
+                  <td>2025-06-26</td>
+                  <td>2025-06-26</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/user-documentation</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/user-documentation/issues/399"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Remove harmful command</a
+                    >
+                  </td>
+                  <td>2025-06-10</td>
+                  <td>2025-06-16</td>
+                  <td>7 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/506"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Move Maintainers section from README to Maintainers page</a
+                    >
+                  </td>
+                  <td>2025-06-08</td>
+                  <td>2025-06-23</td>
+                  <td>15 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/505"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update docs' README</a
+                    >
+                  </td>
+                  <td>2025-06-03</td>
+                  <td>2025-06-23</td>
+                  <td>20 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/503"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update root's README</a
+                    >
+                  </td>
+                  <td>2025-06-02</td>
+                  <td>2025-06-05</td>
+                  <td>3 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1353"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Resources to the Job Hunt Page -- Do Not Close This Issue!</a
+                    >
+                  </td>
+                  <td>2025-05-31</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1351"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Job Hunt to the Developer Resources</a
+                    >
+                  </td>
+                  <td>2025-05-30</td>
+                  <td>2025-07-25</td>
+                  <td>56 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1347"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add June-July 2025 challenge to the website</a
+                    >
+                  </td>
+                  <td>2025-05-28</td>
+                  <td>2025-06-01</td>
+                  <td>4 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/issues/114"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update docs</a
+                    >
+                  </td>
+                  <td>2025-05-20</td>
+                  <td>2025-10-02</td>
+                  <td>135 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/755"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Docs: Update docs</a
+                    >
+                  </td>
+                  <td>2025-05-20</td>
+                  <td>2025-09-04</td>
+                  <td>107 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/300"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add `toctree` for the "Developer" section</a
+                    >
+                  </td>
+                  <td>2025-05-05</td>
+                  <td>2025-07-29</td>
+                  <td>85 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/735"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @aerg04 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-29</td>
+                  <td>2025-04-29</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1342"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add May 2025 Challenge to the Website</a
+                    >
+                  </td>
+                  <td>2025-04-28</td>
+                  <td>2025-04-30</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/274"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Event labels background color don't pass contrast checker for
+                      accessibility</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>2025-04-22</td>
+                  <td>2 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/273"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Background color for podcast label doesn't pass color contrast for
+                      accessibility</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>2025-04-20</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/272"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Issues with `yarn` on Windows 11</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/270"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add CODEOWNERS file</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>2025-04-24</td>
+                  <td>4 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/265"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Inline buttons are causing white space on mobile screen</a
+                    >
+                  </td>
+                  <td>2025-04-18</td>
+                  <td>2025-04-29</td>
+                  <td>10 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/259"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Text and button overlap with image on mobile screens
+                    </a>
+                  </td>
+                  <td>2025-04-18</td>
+                  <td>N/A</td>
+                  <td>N/A</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/257"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Incorrect title in the library</a
+                    >
+                  </td>
+                  <td>2025-04-18</td>
+                  <td>2025-04-18</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/256"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Typo for the word "Maintainer"</a
+                    >
+                  </td>
+                  <td>2025-04-17</td>
+                  <td>2025-04-17</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/289"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Community reviews" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/288"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Developer documentation" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/287"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Pull requests" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/286"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Bugs" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/285"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Local environment setup" to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/284"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Code" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-07-31</td>
+                  <td>106 days</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/283"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Developer - https://contribute.mautic.org/contributing-to-mautic/developer</a
+                    >
+                  </td>
+                  <td>2025-04-16</td>
+                  <td>2025-04-16</td>
+                  <td>0 days</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>29.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/issues/282"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Developer" section in the "Contributing to Mautic" section to RST</a
+                    >
+                  </td>
+                  <td>2025-04-14</td>
+                  <td>2025-07-31</td>
+                  <td>108 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">👀 Reviewed PRs (39)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 20%">Project</th>
+                  <th style="width: 28%">Title</th>
+                  <th style="width: 10%">Created At</th>
+                  <th style="width: 15%">First Review</th>
+                  <th style="width: 10%">Review Period</th>
+                  <th style="width: 12%">Last Update / Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/786"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add @acskii as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-29</td>
+                  <td>2025-06-30</td>
+                  <td>1 day</td>
+                  <td>2025-06-30<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/306"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Python path to VCS settings in devcontainer.json</a
+                    >
+                  </td>
+                  <td>2025-06-20</td>
+                  <td>2025-06-20</td>
+                  <td>0 days</td>
+                  <td>2025-06-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/307"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Small heading nesting fix</a
+                    >
+                  </td>
+                  <td>2025-06-26</td>
+                  <td>2025-06-26</td>
+                  <td>0 days</td>
+                  <td>2025-06-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/303"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update governance model: Product-specific governance</a
+                    >
+                  </td>
+                  <td>2025-05-14</td>
+                  <td>2025-06-04</td>
+                  <td>21 days</td>
+                  <td>2025-06-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/305"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add support for GitHub Codespaces</a
+                    >
+                  </td>
+                  <td>2025-06-17</td>
+                  <td>2025-06-19</td>
+                  <td>2 days</td>
+                  <td>2025-06-19<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/784"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @Akintademuyiwa24 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-13</td>
+                  <td>2025-06-17</td>
+                  <td>3 days</td>
+                  <td>2025-06-17<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/777"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: update @sujanthapa01 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-06</td>
+                  <td>2025-06-09</td>
+                  <td>3 days</td>
+                  <td>2025-06-12<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/782"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @mathncode-sid as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-09</td>
+                  <td>2025-06-09</td>
+                  <td>0 days</td>
+                  <td>2025-06-11<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/779"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @darlopvil as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-07</td>
+                  <td>2025-06-09</td>
+                  <td>2 days</td>
+                  <td>2025-06-09<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/pull/327"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: improve CONTRIBUTING.md</a
+                    >
+                  </td>
+                  <td>2025-05-06</td>
+                  <td>2025-05-07</td>
+                  <td>1 day</td>
+                  <td>2025-06-06<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/502"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >501 docs update the coffee tables documentation</a
+                    >
+                  </td>
+                  <td>2025-06-01</td>
+                  <td>2025-06-02</td>
+                  <td>2 days</td>
+                  <td>2025-06-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/736"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add Akhilesh1310 to Contributors Section</a
+                    >
+                  </td>
+                  <td>2025-05-01</td>
+                  <td>2025-05-02</td>
+                  <td>1 day</td>
+                  <td>2025-06-02<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/732"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @edwinkuruvila as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-21</td>
+                  <td>2025-04-28</td>
+                  <td>7 days</td>
+                  <td>2025-06-02<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/724"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add ghostdeveloper404 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-11</td>
+                  <td>2025-04-12</td>
+                  <td>1 day</td>
+                  <td>2025-05-29<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/722"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add <@Justin-WebDev> as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-08</td>
+                  <td>2025-04-09</td>
+                  <td>1 day</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/719"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @JingjieGao as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-07</td>
+                  <td>2025-04-09</td>
+                  <td>3 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/717"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @matheus0214 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-06</td>
+                  <td>2025-04-09</td>
+                  <td>3 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/761"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @TomasDarquier as a contributor</a
+                    >
+                  </td>
+                  <td>2025-05-28</td>
+                  <td>2025-05-29</td>
+                  <td>1 day</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/758"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @topSimpa as a contributor</a
+                    >
+                  </td>
+                  <td>2025-05-21</td>
+                  <td>2025-05-21</td>
+                  <td>0 days</td>
+                  <td>2025-05-21<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/752"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add @drazerd as a contributor</a
+                    >
+                  </td>
+                  <td>2025-05-17</td>
+                  <td>2025-05-19</td>
+                  <td>2 days</td>
+                  <td>2025-05-19<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/738"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add porteristhechampion as a contributor</a
+                    >
+                  </td>
+                  <td>2025-05-05</td>
+                  <td>2025-05-16</td>
+                  <td>11 days</td>
+                  <td>2025-05-16<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/pull/108"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add BBQ Chicken Pizza</a
+                    >
+                  </td>
+                  <td>2024-09-03</td>
+                  <td>2024-09-06</td>
+                  <td>3 days</td>
+                  <td>2025-05-10<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/728"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @QUxPTA as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-15</td>
+                  <td>2025-04-28</td>
+                  <td>13 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>24.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/730"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add sademban as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>2025-04-28</td>
+                  <td>8 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>25.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/pizza-verse</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/pizza-verse/pull/112"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add new pizza recipe</a
+                    >
+                  </td>
+                  <td>2025-04-15</td>
+                  <td>2025-04-29</td>
+                  <td>14 days</td>
+                  <td>2025-04-29<br /><strong>OPEN</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>26.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/703"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @aerg04 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-08</td>
+                  <td>2025-03-11</td>
+                  <td>3 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>27.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/715"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @TanishqV5 as contributor</a
+                    >
+                  </td>
+                  <td>2025-04-01</td>
+                  <td>2025-04-03</td>
+                  <td>2 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>28.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/702"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @voaidesr as a contributor
+                    </a>
+                  </td>
+                  <td>2025-03-08</td>
+                  <td>2025-03-11</td>
+                  <td>3 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>29.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/692"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @vivienogoun as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-25</td>
+                  <td>2025-02-26</td>
+                  <td>1 day</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>30.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/672"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @Muzammil-cyber as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-13</td>
+                  <td>2025-02-13</td>
+                  <td>0 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>31.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/658"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @doraemon2200 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-31</td>
+                  <td>2025-02-05</td>
+                  <td>5 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>32.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/633"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @madevanni as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-13</td>
+                  <td>2025-01-20</td>
+                  <td>7 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>33.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/631"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @Lmdingi as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-11</td>
+                  <td>2025-01-20</td>
+                  <td>9 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>34.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/726"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add <@Alz3bi> as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-13</td>
+                  <td>2025-04-28</td>
+                  <td>15 days</td>
+                  <td>2025-04-28<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>35.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/491"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Replace references to old newsletter link with new link</a
+                    >
+                  </td>
+                  <td>2025-03-22</td>
+                  <td>2025-03-25</td>
+                  <td>3 days</td>
+                  <td>2025-04-20<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>36.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/720"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @samuelard7 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-08</td>
+                  <td>2025-04-09</td>
+                  <td>1 day</td>
+                  <td>2025-04-09<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>37.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/708"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @samuelard7 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-19</td>
+                  <td>2025-03-21</td>
+                  <td>3 days</td>
+                  <td>2025-04-08<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>38.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/712"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @ValLee4 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-29</td>
+                  <td>2025-04-03</td>
+                  <td>4 days</td>
+                  <td>2025-04-03<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>39.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/intro</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/intro/pull/256"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >fix: typo and grammatical issue</a
+                    >
+                  </td>
+                  <td>2025-03-29</td>
+                  <td>2025-04-03</td>
+                  <td>5 days</td>
+                  <td>2025-04-03<br /><strong>MERGED</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">🤝 Co-Authored PRs (22)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 15%">Project</th>
+                  <th style="width: 25%">Title</th>
+                  <th style="width: 10%">Created At</th>
+                  <th style="width: 12%">First Commit</th>
+                  <th style="width: 13%">Commit Period</th>
+                  <th style="width: 20%">Last Update / Status</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/306"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add Python path to VCS settings in devcontainer.json</a
+                    >
+                  </td>
+                  <td>2025-06-20</td>
+                  <td>2025-06-26</td>
+                  <td>6 days</td>
+                  <td>2025-06-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/281"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add community portal</a
+                    >
+                  </td>
+                  <td>2025-04-02</td>
+                  <td>2025-06-26</td>
+                  <td>85 days</td>
+                  <td>2025-08-01<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/278"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >added on-boarding section</a
+                    >
+                  </td>
+                  <td>2025-03-24</td>
+                  <td>2025-06-26</td>
+                  <td>94 days</td>
+                  <td>2025-08-01<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/274"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert code governance page to rst</a
+                    >
+                  </td>
+                  <td>2025-03-10</td>
+                  <td>2025-06-26</td>
+                  <td>108 days</td>
+                  <td>2025-08-01<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/381"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Mithandros-promoting-integrations - porting due to main branch
+                      restrictions</a
+                    >
+                  </td>
+                  <td>2025-09-02</td>
+                  <td>2025-06-17</td>
+                  <td>0 days</td>
+                  <td>2025-09-03<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/258"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Convert "Promoting integrations" section to RST & fix format in "Recognizing
+                      contributors, sponsors, and partners" and "RFP process" sections
+                    </a>
+                  </td>
+                  <td>2025-01-27</td>
+                  <td>2025-06-17</td>
+                  <td>141 days</td>
+                  <td>2025-06-17<br /><strong>CLOSED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >mautic/mautic-community-handbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/mautic/mautic-community-handbook/pull/303"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update governance model: Product-specific governance</a
+                    >
+                  </td>
+                  <td>2025-05-14</td>
+                  <td>2025-06-04</td>
+                  <td>21 days</td>
+                  <td>2025-06-26<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/VC-Community-Docs</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/502"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >501 docs update the coffee tables documentation</a
+                    >
+                  </td>
+                  <td>2025-06-01</td>
+                  <td>2025-06-04</td>
+                  <td>3 days</td>
+                  <td>2025-06-05<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/732"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @edwinkuruvila as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-21</td>
+                  <td>2025-06-02</td>
+                  <td>42 days</td>
+                  <td>2025-06-02<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/722"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add <@Justin-WebDev> as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-08</td>
+                  <td>2025-05-29</td>
+                  <td>51 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/719"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @JingjieGao as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-07</td>
+                  <td>2025-05-29</td>
+                  <td>53 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/717"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @matheus0214 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-06</td>
+                  <td>2025-05-29</td>
+                  <td>53 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/747"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add frustateduser as a contributor</a
+                    >
+                  </td>
+                  <td>2025-05-13</td>
+                  <td>2025-05-29</td>
+                  <td>17 days</td>
+                  <td>2025-05-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/703"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @aerg04 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-08</td>
+                  <td>2025-04-29</td>
+                  <td>51 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/715"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @TanishqV5 as contributor</a
+                    >
+                  </td>
+                  <td>2025-04-01</td>
+                  <td>2025-04-29</td>
+                  <td>28 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/702"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @voaidesr as a contributor
+                    </a>
+                  </td>
+                  <td>2025-03-08</td>
+                  <td>2025-04-29</td>
+                  <td>52 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/692"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @vivienogoun as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-25</td>
+                  <td>2025-04-29</td>
+                  <td>63 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/672"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @Muzammil-cyber as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-13</td>
+                  <td>2025-04-29</td>
+                  <td>75 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/658"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @doraemon2200 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-31</td>
+                  <td>2025-04-29</td>
+                  <td>88 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/633"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @madevanni as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-13</td>
+                  <td>2025-04-29</td>
+                  <td>106 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/631"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: Add @Lmdingi as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-11</td>
+                  <td>2025-04-29</td>
+                  <td>107 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/728"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: add @QUxPTA as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-15</td>
+                  <td>2025-04-29</td>
+                  <td>14 days</td>
+                  <td>2025-04-29<br /><strong>MERGED</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+
+        <details class="border border-gray-200 rounded-xl p-4 shadow-sm">
+          <summary class="text-xl font-bold text-indigo-600">
+            <span class="inline-block">💬 Collaborations (23)</span>
+          </summary>
+          <div class="overflow-x-auto rounded-lg border border-gray-100">
+            <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+              <thead>
+                <tr>
+                  <th style="width: 5%">No.</th>
+                  <th style="width: 30%">Project</th>
+                  <th style="width: 35%">Title</th>
+                  <th style="width: 15%">Created At</th>
+                  <th style="width: 15%">Commented At</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>1.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1356"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Broken link: /podcast/0204-debra-kaye</a
+                    >
+                  </td>
+                  <td>2025-06-05</td>
+                  <td>2025-06-09</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>2.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/776"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: update @sujanthapa01 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-06</td>
+                  <td>2025-06-06</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>3.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/774"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >docs: Add @Ufidtech as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-04</td>
+                  <td>2025-06-05</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>4.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/pull/772"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >feat: add @Ufidtech as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-04</td>
+                  <td>2025-06-04</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>5.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/767"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @Ufidtech as a contributor</a
+                    >
+                  </td>
+                  <td>2025-06-04</td>
+                  <td>2025-06-04</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>6.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/734"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @mayurk224 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-25</td>
+                  <td>2025-06-02</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>7.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/733"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >ADD @RiadGuerni as a contributor</a
+                    >
+                  </td>
+                  <td>2025-04-24</td>
+                  <td>2025-06-02</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>8.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/723"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature:Add ghostdeveloper404 as a contributor.</a
+                    >
+                  </td>
+                  <td>2025-04-11</td>
+                  <td>2025-06-02</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>9.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/709"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @arvidtorbjoernsen as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-19</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>10.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/707"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @samuelard7 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-03-19</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>11.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/706"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @Ke-vin-S as a contributor.</a
+                    >
+                  </td>
+                  <td>2025-03-12</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>12.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/679"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @tejasbargujepatil as a contributor.</a
+                    >
+                  </td>
+                  <td>2025-02-18</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>13.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/664"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @timothyjgrant11 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-05</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>14.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/663"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @karthik4222 as a contributor</a
+                    >
+                  </td>
+                  <td>2025-02-04</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>15.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/656"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @DenisaHaka as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-30</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>16.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/647"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add @ItsAurelai as a contributor</a
+                    >
+                  </td>
+                  <td>2025-01-22</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>17.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >OpenSource-Communities/guestbook</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/OpenSource-Communities/guestbook/issues/634"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Feature: Add aleena-jaison</a
+                    >
+                  </td>
+                  <td>2025-01-14</td>
+                  <td>2025-04-29</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>18.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >Virtual-Coffee/virtualcoffee.io</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1339"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Link to new VC Community Docs site</a
+                    >
+                  </td>
+                  <td>2025-04-20</td>
+                  <td>2025-04-20</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>19.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/269"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Add additional social icons</a
+                    >
+                  </td>
+                  <td>2025-04-19</td>
+                  <td>2025-04-19</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>20.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/262"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Header has no contrast!</a
+                    >
+                  </td>
+                  <td>2025-04-18</td>
+                  <td>2025-04-18</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>21.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/246"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Discussion/Improvement: How can we improve the library of resources?</a
+                    >
+                  </td>
+                  <td>2025-04-17</td>
+                  <td>2025-04-18</td>
+                </tr>
+                <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                  <td>22.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                      >github/maintainermonth</span
+                    >
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/github/maintainermonth/issues/247"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Update contributing guide</a
+                    >
+                  </td>
+                  <td>2025-04-17</td>
+                  <td>2025-04-17</td>
+                </tr>
+                <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                  <td>23.</td>
+                  <td>
+                    <span class="font-mono text-xs bg-gray-100 p-1 rounded">open-sauced/docs</span>
+                  </td>
+                  <td>
+                    <a
+                      href="https://github.com/open-sauced/docs/issues/443"
+                      target="_blank"
+                      class="text-blue-600 hover:text-blue-800 hover:underline"
+                      >Bug: Sign-up instructions in documentation are outdated</a
+                    >
+                  </td>
+                  <td>2025-04-11</td>
+                  <td>2025-04-12</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </details>
+      </section>
+      <div
+        class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center px-4 sm:px-6 lg:px-8"
+      >
+        <a
+          href="../2025/Q1-2025.html"
+          class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2"
+        >
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            ></path>
+          </svg>
+          <span>Previous Report</span>
+        </a>
+        <a
+          href="../2025/Q3-2025.html"
+          class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2"
+        >
+          <span>Next Report</span>
+          <svg
+            class="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14 5l7 7m0 0l-7 7m7-7H3"
+            ></path>
+          </svg>
+        </a>
+      </div>
+             
+    </div>
+       
+  </body>
+</html>
