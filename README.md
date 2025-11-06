@@ -1,6 +1,6 @@
 # Curated Open Source Portfolio
 
-This repository serves as a portfolio of my open source contributions. You can check out the contributions log in the [contributions folder](./contributions) to see my work.
+This repository serves as a portfolio of my open source contributions. You can check out the contributions log in the [`contributions/markdown-generated` folder](./contributions/markdown-generated/) to see my work.
 
 My goal in creating this log is to maintain a detailed and organized record of my work, containing pull requests (PRs), bug reports, and general collaborations. It's a way for me to track my journey and share my contributions with the community.
 
@@ -16,42 +16,42 @@ This project is powered by a **Node.js script** and a **GitHub Actions workflow*
 
 ### The Brain: The Automation Script
 
-The project's automation logic is highly modular, separating concerns into seven specialized files:
+The project's script files are structured around a clear pipeline: fetching data, processing it, and then generating the output files.
 
-| File | Responsibility | 
-| ----- | ----- |
-| **`main.js`** | The primary entry point that loads configurations and coordinates the execution flow of the entire automation script. |
-| **`config.js`** | Holds all core configuration, including `GITHUB_USERNAME`, `SINCE_YEAR`, and output paths. | 
-| **`github-api-fetchers.js`** | Handles all external communication with the GitHub REST API (v3) to fetch raw contribution data. | 
-| **`contributions-groupers.js`** | Contains the logic for filtering, deduplicating, and assigning fetched items to the correct quarterly buckets. | 
-| **`contribution-formatters.js`** | Manages the data formatting for display, including date formatting (`YYYY-MM-DD`), period calculation (`"X days"`), and status string generation. | 
-| **`quarterly-reports-generator.js`** | Creates the detailed Markdown files for each quarter (e.g., `2024/Q1-2024.md`). | 
-| **`contributions-readme-generator.js`** | Generates the `README.md` file in the `contributions` folder, providing high-level statistics and summaries. |
+#### 1. Data Fetching & Processing
 
-The core logic is designed to track and categorize activity **outside of the owner's own repositories**. The script performs the following key functions:
+This initial stage handles all external communication and data preparation:
 
-1.  **Smart Syncing:** The script checks the date of the last successful run. If the data is current, it performs a fast **incremental update**, only fetching new activity from the last year or so. If the data is old (e.g., on a monthly schedule), it performs a **full sync** to ensure no contribution is missed.
-2.  **Comprehensive Data Retrieval:** It uses the GitHub API to search for and collect four distinct types of community activity:
-    
-    - **Merged PRs:** PRs in other projects that were authored by the user that were successfully merged.
-    - **Issues:** Bugs and feature requests reported by the user in other projects.
-    - **Reviewed PRs:** PRs from others where the user provided a review, merge, or close action.
-    - **Co-authored PRs:** PRs where the user was not the primary author, but contributed one or more commits (including those marked via the `Co-authored-by:` trailer).
-    - **Collaborations:** Issues or PRs where the user participated by commenting for discussion, without directly reviewing.
-3.  **Data Processing & Reporting:** It deduplicates all items, resolves the latest status for contributions, and groups the final results into detailed, **quarterly Markdown reports**. Each report includes statistics like the total contribution count and the top-contributed repositories.
-4.  **Caching:**
+- It uses the **GitHub REST API (v3)** to search for and collect five distinct types of community activity: **Merged PRs, Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
 
-    - `pr-cache.json`: A secure cache of **processed PR URLs** is maintained to dramatically speed up future runs. This cache is used to quickly identify and skip PRs that have already been processed, or those that are known to be non-contributions (e.g., from private repositories or bot accounts), preventing repeated top-level fetches.
-    - `commit-cache.json`: A secure cache of the **processed first commit date and total commit count** on a PR. Since fetching all commits for a PR can be resource-intensive, this cache ensures the script avoids repeatedly fetching and processing potentially hundreds of individual commits to determine co-authorship.
+- **Smart Syncing:** The script performs either a fast incremental update (fetching only new activity) or a full sync to ensure no contribution is missed.
+
+- **Data Processing:** It deduplicates all items, resolves the latest status for contributions, and groups the final results into detailed, quarterly buckets.
+
+- **Caching:** Two caches (`pr-cache.json` and `commit-cache.json`) are maintained to dramatically speed up future runs by skipping already processed pull request data and co-author commit history.
+
+#### 2. Output Generation (Markdown & HTML)
+
+After processing, the script generates the reports in two formats to maximize usability:
+
+- **Markdown Reports (Output to `contributions/markdown-generated`):**
+  - **Quarterly Reports:** Detailed Markdown files are created for each quarter (e.g., `2024/Q1-2024.md`), including statistics like total contribution count and top-contributed repositories.
+
+  - **Contributions README:** A summary `README.md` is generated for high-level statistics and easy viewing on GitHub.
+
+- **HTML Reports (Output to `contributions/html-generated`):**
+  - The same data is now used to generate styled HTML files for both quarterly reports and the summary view.
+
+  - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), [GitHub Pages](https://docs.github.com/en/pages), or any host of your choice. This allows for a more visual and navigable portfolio experience.
 
 ### The Automation: GitHub Action Workflow
 
 The workflow file in the `.github/workflows` folder defines the two primary automation schedules:
 
-| Event | Schedule | Sync Type | Purpose |
-| :--- | :--- | :--- | :--- |
-| **Monthly Sync** | The 1st of every month | **Full Sync** | Guarantees all data since the initial start year is periodically verified and up-to-date. The run *removes* the old cache to force a fresh fetch. |
-| **Daily Update** | Once every day | **Incremental** | Provides a fast, light update to capture any activity from the last 24 hours, ensuring the portfolio is always current. |
+| Event            | Schedule               | Sync Type       | Purpose                                                                                                                                           |
+| :--------------- | :--------------------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Monthly Sync** | The 1st of every month | **Full Sync**   | Guarantees all data since the initial start year is periodically verified and up-to-date. The run _removes_ the old cache to force a fresh fetch. |
+| **Daily Update** | Once every day         | **Incremental** | Provides a fast, light update to capture any activity from the last 24 hours, ensuring the portfolio is always current.                           |
 
 The workflow handles checking out the code, running the Node.js script with the necessary **`GITHUB_TOKEN`** secret, and then automatically committing the newly generated or updated Markdown and JSON files back to the repository.
 
@@ -93,7 +93,7 @@ Open the configuration file (`scripts/config.js`) and edit the following lines t
 // scripts/config.js
 
 // Change this to your GitHub handle
-const GITHUB_USERNAME = "adiati98" 
+const GITHUB_USERNAME = "adiati98"
 // Change this to the earliest year you want to track
 const SINCE_YEAR = 2019
 // ...
@@ -104,11 +104,8 @@ const SINCE_YEAR = 2019
 To test the script or generate files on your local machine, you'll need a Personal access token (PAT) with read access to public repositories.
 
 1. **Get a Personal access token (PAT)**
-
    - Go to your GitHub and click your avatar on the top right.
-   
    - Navigate to **Settings > Developer settings > Personal access tokens > Tokens (classic)**.
-   
    - Generate a new token. This token only needs the `public_repo` scope.
 
 2. **Create `.env` file**
@@ -133,7 +130,6 @@ To test the script or generate files on your local machine, you'll need a Person
 For automated runs in a forked repository, you must first explicitly enable GitHub Actions because they are disabled by default for security.
 
 1. **Enable Workflows:**
-
    - Navigate to the "Actions" tab in your forked repository.
 
    - You will see a banner or message stating that workflows are disabled.
@@ -141,7 +137,6 @@ For automated runs in a forked repository, you must first explicitly enable GitH
    - Click the button or link to "I understand my workflows, go ahead and enable them." This enables the scheduled runs.
 
 2. **Run the Action Manually:**
-
    - With workflows enabled, the `Update Contributions` workflow will be active.
 
    - Select the workflow and click "Run workflow" (using the manual trigger) to execute the first full run immediately.
@@ -149,3 +144,15 @@ For automated runs in a forked repository, you must first explicitly enable GitH
    You can read the [GitHub official docs to run a workflow manually](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
 The workflow uses the repository's built-in `GITHUB_TOKEN` for authentication. Once the manual run is complete, the daily and monthly schedules will take over automatically. If you need to test something, you can always run the script locally or run the workflow manually.
+
+## 🌐 Publishing the Static Website
+
+The HTML files generated by the script are ready to be served as a static website.
+
+- All static HTML reports are generated inside the `contributions/html-generated` directory.
+
+- The main portfolio landing page is located at `contributions/html-generated/index.html`.
+
+To publish your site on a static host, you need to configure the hosting service to use `contributions/html-generated` as the publish or base directory.
+
+Please read your host's official documentation to learn how to configure and deploy the site.

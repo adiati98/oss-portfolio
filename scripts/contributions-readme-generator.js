@@ -1,8 +1,11 @@
-const fs = require("fs/promises")
-const path = require("path")
+const fs = require('fs/promises');
+const path = require('path');
 
 // Import configuration
-const { BASE_DIR, README_PATH, SINCE_YEAR } = require("./config")
+const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
+
+const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
+const MARKDOWN_README_FILENAME = 'README.md';
 
 /**
  * Calculates aggregate totals from all contribution data and writes the
@@ -10,46 +13,43 @@ const { BASE_DIR, README_PATH, SINCE_YEAR } = require("./config")
  * @param {object} finalContributions The object with all contributions, grouped by type.
  */
 async function createStatsReadme(finalContributions) {
-	await fs.mkdir(BASE_DIR, { recursive: true })
+  const markdownBaseDir = path.join(BASE_DIR, MARKDOWN_OUTPUT_DIR_NAME);
+  const MARKDOWN_OUTPUT_PATH = path.join(markdownBaseDir, MARKDOWN_README_FILENAME);
 
-	// 1. Calculate Totals
-	const prCount = finalContributions.pullRequests.length
-	const issueCount = finalContributions.issues.length
-	const reviewedPrCount = finalContributions.reviewedPrs.length
-	const collaborationCount = finalContributions.collaborations.length
-	// coAuthoredPrs may not exist in older data; handle defensively
-	const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
-		? finalContributions.coAuthoredPrs.length
-		: 0
+  await fs.mkdir(markdownBaseDir, { recursive: true });
 
-	const grandTotal =
-		prCount +
-		issueCount +
-		reviewedPrCount +
-		collaborationCount +
-		coAuthoredPrCount
+  // 1. Calculate Totals
+  const prCount = finalContributions.pullRequests.length;
+  const issueCount = finalContributions.issues.length;
+  const reviewedPrCount = finalContributions.reviewedPrs.length;
+  const collaborationCount = finalContributions.collaborations.length;
+  // coAuthoredPrs may not exist in older data; handle defensively
+  const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
+    ? finalContributions.coAuthoredPrs.length
+    : 0;
 
-	// 2. Calculate Unique Repositories
-	const allItems = [
-		...finalContributions.pullRequests,
-		...finalContributions.issues,
-		...finalContributions.reviewedPrs,
-		...(Array.isArray(finalContributions.coAuthoredPrs)
-			? finalContributions.coAuthoredPrs
-			: []),
-		...finalContributions.collaborations,
-	]
-	const uniqueRepos = new Set(allItems.map((item) => item.repo))
-	const totalUniqueRepos = uniqueRepos.size
+  const grandTotal =
+    prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
 
-	// 3. Calculate Years Tracked
-	const currentYear = new Date().getFullYear()
-	const yearsTracked = currentYear - SINCE_YEAR + 1
+  // 2. Calculate Unique Repositories
+  const allItems = [
+    ...finalContributions.pullRequests,
+    ...finalContributions.issues,
+    ...finalContributions.reviewedPrs,
+    ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
+    ...finalContributions.collaborations,
+  ];
+  const uniqueRepos = new Set(allItems.map((item) => item.repo));
+  const totalUniqueRepos = uniqueRepos.size;
 
-	// 4. Build Markdown Content
-	let markdownContent = `# 📈 My Open Source Contributions Report
+  // 3. Calculate Years Tracked
+  const currentYear = new Date().getFullYear();
+  const yearsTracked = currentYear - SINCE_YEAR + 1;
 
-Organized by calendar quarter, these reports track my **external open-source involvement**, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations**.
+  // 4. Build Markdown Content
+  let markdownContent = `# 📈 Open Source Contributions Report
+
+Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement, aggregating key community activities across **Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations**.
 
 ---
 
@@ -91,13 +91,13 @@ This is a summary of all contributions fetched since the initial tracking year (
 | :--- | :--- |
 | **Unique Repositories** | ${totalUniqueRepos} |
 | **Years Tracked** | ${yearsTracked} |
-`
+`;
 
-	// 5. Write the file
-	await fs.writeFile(README_PATH, markdownContent, "utf8")
-	console.log(`Written aggregate README: ${README_PATH}`)
+  // 5. Write the file
+  await fs.writeFile(MARKDOWN_OUTPUT_PATH, markdownContent, 'utf8');
+  console.log(`Written aggregate README: ${MARKDOWN_OUTPUT_PATH}`);
 }
 
 module.exports = {
-	createStatsReadme,
-}
+  createStatsReadme,
+};

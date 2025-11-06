@@ -54,7 +54,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
           # Add the generated files to the staging area
-          git add contributions/ data/
+          git add contributions/markdown-generated/ contributions/html-generated/ data/
           
           # Check if there are any changes to commit
           if ! git diff --staged --quiet; then
