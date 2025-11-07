@@ -162,16 +162,14 @@ async function createHtmlReports(quarterlyFileLinks = []) {
                 hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
-                <div class="flex flex-col sm:flex-row 
-                gap-6 
-                report-list p-6 pb-12 sm:justify-between">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                 `;
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
         // Updated card width to sm:w-[23.5%] and added flex-shrink-0 for uniform sizing
         linkHtml += `
-                <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden w-full sm:w-[23.5%] flex-shrink-0">
+                <div class="bg-white border border-indigo-200 hover:bg-cyan-50 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
                     <a href="./${link.relativePath}" class="block p-4">
                         <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
                         <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
