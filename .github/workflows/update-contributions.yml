@@ -52,6 +52,7 @@ jobs:
         run: npm run format
         
       - name: Commit and push changes
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -81,9 +82,10 @@ jobs:
         # Check the output from the previous step
         if: steps.commit.outputs.pushed == 'true'
         run: |
+          set -x
           echo "Content updated. Triggering Netlify deployment via Build Hook..."
-          # The curl command hits the Netlify API endpoint
-          curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
+          # Use the correct shell variable reference
+          curl -v -X POST -d {} ${NETLIFY_BUILD_HOOK}
         env:
           # Reference the Build Hook URL secret
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}    
