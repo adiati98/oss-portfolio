@@ -174,6 +174,12 @@ async function writeHtmlFiles(groupedContributions) {
       )
       .join('');
 
+    const prCount = data.pullRequests?.length || '0';
+    const reviewedPrCount = data.reviewedPrs?.length || '0';
+    const issueCount = data.issues?.length || '0';
+    const coAuthoredPrCount = data.coAuthoredPrs?.length || '0';
+    const collaborationCount = data.collaborations?.length || '0';
+
     // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
     let htmlContent = dedent`
 <!DOCTYPE html>
@@ -250,28 +256,28 @@ ${navHtmlForReports}
        		 <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
        		 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
         		    <!-- Merged PRs -->
-         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-         		       <span class="text-2xl font-bold text-indigo-700">${data.pullRequests.length}</span>
+         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+         		       <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
           		      <span class="text-md text-gray-500 mt-1">Merged PRs</span>
           		  </div>
           		  <!-- Reviewed PRs -->
-         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-           		     <span class="text-2xl font-bold text-indigo-700">${data.reviewedPrs.length}</span>
+         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+           		     <span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
             		    <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
            		 </div>
            		 <!-- Issues -->
-           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-           		     	<span class="text-2xl font-bold text-indigo-700">${data.issues.length}</span>
+           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+           		     	<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
             		    <span class="text-md text-gray-500 mt-1">Issues</span>
            		 </div>
           		  <!-- Co-Authored PRs -->
-          		  <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-             		   	<span class="text-2xl font-bold text-indigo-700">${data.coAuthoredPrs.length}</span>
+          		  <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+             		   	<span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
               		  <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
             		</div>
             		<!-- Collaborations -->
-            		<div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition">
-             		   <span class="text-2xl font-bold text-indigo-700">${data.collaborations.length}</span>
+            		<div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+             		   <span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
               		  <span class="text-md text-gray-500 mt-1">Collaborations</span>
           		  </div>
         		</div>

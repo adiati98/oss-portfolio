@@ -85,39 +85,28 @@ ${navHtml}
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
                 Open Source Portfolio
             </h1>
-            <p class="text-2xl font-bold text-gray-700 mb-2">
-                <span class="text-4xl">📈</span> All-Time Contributions Report
-            </p>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
-                Organized by calendar quarter, these reports track
+                Presenting open source portfolio for 
                 <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
                     ${GITHUB_USERNAME}
-                </a>'s external open source involvement, aggregating key community activities across 
-                <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+                </a>. It aggregates all-time contribution activities, including 
+                <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong> across various repositories.
             </p>
         </header>
 
         <section class="mb-14">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-                All-Time Aggregate Summary
-            </h2>
-            <p class="text-gray-600 mb-8">
-                This is a summary of all contributions fetched since the initial tracking year (<strong>${SINCE_YEAR}</strong>), providing a quick overview of the portfolio's scale.
-            </p>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-                
-                <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl flex flex-col justify-center gap-4 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
-                    <p class="text-2xl font-bold opacity-100">All-Time Contributions</p>
-                    <p class="text-6xl font-extrabold">🚀 ${grandTotal}</p>
-                    <p class="text-lg font-medium opacity-100 text-center">
-                        Across <strong>${totalUniqueRepos}</strong> repositories since <strong>${SINCE_YEAR}</strong>.
+                <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl h-full flex flex-col justify-center text-center gap-6 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
+                    <p class="text-3xl font-bold opacity-100 py-2 px-1">🚀 All-Time Contributions</p>
+                    <p class="text-6xl font-extrabold pb-2">${grandTotal}</p>
+                    <p class="text-lg font-medium opacity-100">
+                        Across <strong class="text-xl">${totalUniqueRepos}</strong> repositories since <strong class="text-xl">${SINCE_YEAR}</strong>
                     </p>
                 </div>
 
-                <div class="col-span-1 md:col-span-2 flex flex-col gap-0 border-t border-gray-100"> 
-                    <div class="grid grid-cols-1 text-gray-700">
-                        <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-3">
+                <div class="col-span-1 md:col-span-2 flex flex-col gap-0 md:h-full"> 
+                    <div class="flex flex-col h-full justify-between text-gray-700 border-t border-gray-100">
+                        <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-3 rounded-t-xl">
                             <span class="text-xl font-medium">Merged PRs</span>
                             <span class="text-3xl font-extrabold text-indigo-700">${prCount}</span>
                         </div>
@@ -137,7 +126,7 @@ ${navHtml}
                             <span class="text-3xl font-extrabold text-indigo-700">${coAuthoredPrCount}</span>
                         </div>
 
-                        <div class="flex justify-between items-center bg-indigo-50 px-4 py-3">
+                        <div class="flex justify-between items-center bg-indigo-50 px-4 py-3 rounded-b-xl">
                             <span class="text-xl font-medium">Collaborations</span>
                             <span class="text-3xl font-extrabold text-indigo-700">${collaborationCount}</span>
                         </div>
