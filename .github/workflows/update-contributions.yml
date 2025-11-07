@@ -68,6 +68,22 @@ jobs:
                 git commit -m "docs: Daily contributions update [skip ci]"
             fi
             git push
+            # Signal that a push occurred
+            echo "pushed=true" >> $GITHUB_OUTPUT 
           else
             echo "No changes to commit"
+            # Signal no push occurred
+            echo "pushed=false" >> $GITHUB_OUTPUT
           fi
+
+      # Triggers the Netlify build only if new content was committed and pushed
+      - name: Trigger Netlify Deployment
+        # Check the output from the previous step
+        if: steps.commit.outputs.pushed == 'true'
+        run: |
+          echo "Content updated. Triggering Netlify deployment via Build Hook..."
+          # The curl command hits the Netlify API endpoint
+          curl -X POST -d {} ${{ secrets.NETLIFY_BUILD_HOOK }}
+        env:
+          # Reference the Build Hook URL secret
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}    
