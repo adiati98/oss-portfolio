@@ -18,9 +18,10 @@ const {
 // Import navbar
 const { navHtml } = require('./navbar');
 
-// Tell the browser to go up one directory (..) to find index.html and reports.html
-let navHtmlForReports = navHtml.replace('href="./"', 'href="../index.html"');
-navHtmlForReports = navHtmlForReports.replace('href="reports.html"', 'href="../reports.html"');
+// 1. Update the link from root (./) to relative root (../index.html)
+let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
+// 2. Update all instances of 'reports.html' to the relative path '../reports.html'
+navHtmlForReports = navHtmlForReports.replace(/href="reports\.html"/g, 'href="../reports.html"');
 
 /**
  * Generates and writes a separate HTML file for each quarter's contributions.
