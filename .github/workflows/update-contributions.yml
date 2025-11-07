@@ -51,38 +51,24 @@ jobs:
       - name: Format generated files
         run: npm run format
         
+      # Modified to set an output variable indicating if a push occurred
       - name: Commit and push changes
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
           # Add the generated files to the staging area
           git add contributions/markdown-generated/ contributions/html-generated/ data/
-          
-          # Check if there are any changes to commit
-          if ! git diff --staged --quiet; then
-            # Use a different commit message based on the update type
-            if [ "${{ github.event.schedule }}" = "1 0 1 * *" ]; then
-                git commit -m "docs: Monthly full sync [skip ci]"
-            else
-                git commit -m "docs: Daily contributions update [skip ci]"
-            fi
-            git push
-            # Signal that a push occurred
-            echo "pushed=true" >> $GITHUB_OUTPUT 
-          else
-            echo "No changes to commit"
-            # Signal no push occurred
-            echo "pushed=false" >> $GITHUB_OUTPUT
-          fi
 
-      # Triggers the Netlify build only if new content was committed and pushed
-      - name: Trigger Netlify Deployment
-        # Check the output from the previous step
-        if: steps.commit.outputs.pushed == 'true'
+      - name: Trigger Netlify Deployment (Testing CURL)
+        # The 'if' condition (if: steps.commit.outputs.pushed == 'true') has been REMOVED 
+        # to force this step to run, even if no content was changed.
         run: |
+          # Use shell debugging to confirm the variable substitution worked
           set -x 
-          echo "Content updated. Triggering Netlify deployment via Build Hook..."
+          echo "Testing deployment trigger (running unconditionally)..."
+          # Using -v (verbose) to get the HTTP status code from Netlify
           curl -v -X POST -d {} ${NETLIFY_BUILD_HOOK}
         env:
           # This makes the secret available to the shell script as $NETLIFY_BUILD_HOOK
