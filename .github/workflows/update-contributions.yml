@@ -82,10 +82,8 @@ jobs:
         # Check the output from the previous step
         if: steps.commit.outputs.pushed == 'true'
         run: |
-          set -x
           echo "Content updated. Triggering Netlify deployment via Build Hook..."
-          # Use the correct shell variable reference
-          curl -v -X POST -d {} ${NETLIFY_BUILD_HOOK}
+          curl -s -X POST -d {} ${NETLIFY_BUILD_HOOK} -o /dev/null
         env:
           # Reference the Build Hook URL secret
           NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}    
