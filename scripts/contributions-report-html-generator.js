@@ -245,7 +245,7 @@ ${navHtml}
     <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
         <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
-                <span class="text-5xl">📈</span> Quarterly Reports
+                Quarterly Reports
             </h1>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
                 Organized by calendar quarter, these reports track
