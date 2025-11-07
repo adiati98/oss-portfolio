@@ -26,7 +26,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  // Generate the footer HTML 
+  // Generate the footer HTML
   const footerHtml = createFooterHtml();
 
   // Define the report structure data
@@ -156,21 +156,22 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += `
-            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl shadow-lg bg-gray-50">
+            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl shadow-lg transition duration-300">
                 <summary class="text-2xl font-bold 
-				        text-gray-700 p-4 sm:p-6 cursor-pointer 
-				        hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
+                text-gray-700 p-4 sm:p-6 cursor-pointer 
+                hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
-                <div class="grid grid-cols-1 
-                sm:grid-cols-2 lg:grid-cols-4 gap-4 
-                report-list p-4 sm:p-6 border-t border-gray-200">
-            `;
+                <div class="flex flex-col sm:flex-row 
+                gap-6 
+                report-list p-6 pb-12 sm:justify-between">
+                `;
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
+        // Updated card width to sm:w-[23.5%] and added flex-shrink-0 for uniform sizing
         linkHtml += `
-                <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden">
+                <div class="bg-white border border-indigo-200 hover:bg-indigo-50 transition duration-150 rounded-lg shadow-md overflow-hidden w-full sm:w-[23.5%] flex-shrink-0">
                     <a href="./${link.relativePath}" class="block p-4">
                         <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
                         <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
@@ -208,8 +209,37 @@ async function createHtmlReports(quarterlyFileLinks = []) {
         body {
             font-family: 'Inter', sans-serif;
         }
-        .report-list { list-style: none; padding: 0; }
+        /* FIX: Removing padding: 0 to allow Tailwind utility classes to work */
+        .report-list { 
+            list-style: none; 
+        } 
         .report-list a { text-decoration: none; }
+        
+        /* --- Dynamic Styling for Collapsible Year (is-open) --- */
+        details summary {
+            cursor: pointer;
+            outline: none;
+            color: #1f2937;
+            transition: background-color 0.15s ease-in-out;
+        }
+
+        /* FIX 1: Apply indigo background to the entire details element when open */
+        details.is-open {
+            background-color: #EEF2FF; /* Light indigo background */
+        }
+        details.is-open summary {
+            background-color: #EEF2FF; /* Matches the details background */
+            border-radius: 0.5rem 0.5rem 0 0; 
+            color: #4338CA; 
+        }
+        details:not(.is-open) {
+            background-color: #f9fafb; /* Light gray background when closed */
+        }
+        details:not(.is-open) summary {
+            border-bottom: none;
+            border-radius: 0.5rem; 
+        }
+        /* --- END Dynamic Styling --- */
     </style>
 </head>
 <body>
@@ -221,19 +251,18 @@ ${navHtml}
             </h1>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
                 Organized by calendar quarter, these reports track
-                        <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
-                            ${GITHUB_USERNAME}
-                        </a>'s external open source involvement, aggregating key community activities across 
-                        <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+                <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
+                    ${GITHUB_USERNAME}
+                </a>'s external open source involvement, aggregating key community activities across 
+                <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
             </p>
         </header>
 
-        <!-- Report Structure Section (Now a Table) -->
         <section class="mb-14">
             <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
                 Report Structure Breakdown
             </h2>
-            <p class="text-gray-600 mb-8">
+            <p class="text-lg text-gray-600 mb-8">
                 Each quarterly report provides a detailed log and summary for that period:
             </p>
             
@@ -259,20 +288,44 @@ ${navHtml}
             </div>
         </section>
 
-        <!-- Quarterly Report Links Section (NEW) -->
         <section class="mt-14 pt-8 border-t border-gray-300">
             <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
                 Quarterly Reports (Detail Pages)
             </h2>
-            <p class="text-gray-600 mb-6">
+            <p class="text-lg text-gray-600 mb-6">
                 Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
             </p>
-            <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 report-list">
+            <div class="grid grid-cols-1 report-list">
                 ${linkHtml}
-            </ul>
+            </div>
         </section>
         ${footerHtml}
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('details').forEach(details => {
+                // Initial state check for the default 'open' attribute
+                if (details.open) {
+                    details.classList.add('is-open');
+                } else {
+                    // Apply a background to closed elements for visual separation
+                    details.classList.add('bg-gray-50'); 
+                }
+
+                // Listener for the 'toggle' event (triggered on open/close)
+                details.addEventListener('toggle', () => {
+                    if (details.open) {
+                        details.classList.add('is-open');
+                        details.classList.remove('bg-gray-50'); // Remove closed background
+                    } else {
+                        details.classList.remove('is-open');
+                        details.classList.add('bg-gray-50'); // Re-apply closed background
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 `;
