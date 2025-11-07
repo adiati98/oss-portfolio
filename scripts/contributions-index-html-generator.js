@@ -8,8 +8,9 @@ const { dedent } = require('./dedent');
 // Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
 
-// Import navbar
+// Import navbar and footer
 const { navHtml } = require('./navbar');
+const { createFooterHtml } = require('./footer');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'index.html';
@@ -55,7 +56,10 @@ async function createStatsHtmlReadme(finalContributions = []) {
   const currentYear = new Date().getFullYear();
   const yearsTracked = currentYear - SINCE_YEAR + 1;
 
-  // 4. Build HTML Content
+  // 4. Generate the footer
+  const footerHtml = createFooterHtml();
+
+  // 5. Build HTML Content
   const htmlContent = `
 <!DOCTYPE html>
 <html lang="en">
@@ -147,21 +151,18 @@ ${navHtml}
                 </a>
             </p>
         </section>
-
-        <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-500 text-sm">
-            Made with 💙 by <a href="https://github.com/adiati98" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold">Ayu Adiati</a>
-        </footer>
+        ${footerHtml}
     </div>
 </body>
 </html>
 `;
 
-  // 5. Format the content
+  // 6. Format the content
   const formattedContent = await prettier.format(htmlContent, {
     parser: 'html', // Ensure Prettier formats it as HTML
   });
 
-  // 6. Write the formatted file
+  // 7. Write the formatted file
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
   console.log(`Written aggregate HTML report: ${HTML_OUTPUT_PATH}`);
 }
