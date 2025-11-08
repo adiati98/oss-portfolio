@@ -19,6 +19,9 @@ const {
 const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
+// Import left and right arrow svgs
+const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG } = require('./constants');
+
 // 1. Update the link from root (./) to relative root (../index.html)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
 // 2. Update all instances of 'reports.html' to the relative path '../reports.html'
@@ -61,6 +64,9 @@ async function writeHtmlFiles(groupedContributions) {
     let previousButton = '';
     let nextButton = '';
 
+    const leftArrowSvg = LEFT_ARROW_SVG;
+    const rightArrowSvg = RIGHT_ARROW_SVG;
+
     // Helper function to build the relative path: ../YEAR/QX-YYYY.html
     const getReportPath = (report) => {
       const fileName = `${report.quarterPrefix}-${report.year}.html`;
@@ -72,42 +78,43 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-                <a href="${prevPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span>Previous Report</span>
+                <a href="${prevPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
+                    ${leftArrowSvg}
+                    <span>Previous</span>
                 </a>
             `;
     } else {
-      // Disabled style for the oldest report
-      previousButton = dedent`
-                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span>First Report</span>
-                </span>
-            `;
+      // Remove previous button
+      previousButton = '<div class="w-36 h-12"></div>';
     }
 
     // --- Next Button Logic ---
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-                <a href="${nextPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
-                    <span>Next Report</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                <a href="${nextPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
+                    <span>Next</span>
+                    ${rightArrowSvg}
                 </a>
             `;
     } else {
       // Disabled style for the most recent report
       nextButton = `
-                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
+                <span class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-md cursor-not-allowed">
                     <span>Most Recent</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </span>
             `;
     }
 
+    if (!previousReport) {
+      placeholder = '<div class="w-36 h-12"></div>';
+    } else {
+      placeholder = '';
+    }
+
     return dedent`
-            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center px-4 sm:px-6 lg:px-8">
+            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center gap-4">
                 ${previousButton}
                 ${nextButton}
             </div>
@@ -230,7 +237,7 @@ async function writeHtmlFiles(groupedContributions) {
 ${navHtmlForReports}
 		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
     		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
-        		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2">${quarter} ${year}</h1>
+        		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
         		<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
     		</header>
 

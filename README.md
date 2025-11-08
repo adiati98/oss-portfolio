@@ -93,9 +93,9 @@ Open the configuration file (`scripts/config.js`) and edit the following lines t
 // scripts/config.js
 
 // Change this to your GitHub handle
-const GITHUB_USERNAME = "adiati98"
+const GITHUB_USERNAME = 'adiati98';
 // Change this to the earliest year you want to track
-const SINCE_YEAR = 2019
+const SINCE_YEAR = 2019;
 // ...
 ```
 
