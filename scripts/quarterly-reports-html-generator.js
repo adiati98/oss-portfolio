@@ -19,6 +19,9 @@ const {
 const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
+// Import left and right arrow svgs
+const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG } = require('./constants');
+
 // 1. Update the link from root (./) to relative root (../index.html)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
 // 2. Update all instances of 'reports.html' to the relative path '../reports.html'
@@ -61,6 +64,9 @@ async function writeHtmlFiles(groupedContributions) {
     let previousButton = '';
     let nextButton = '';
 
+    const leftArrowSvg = LEFT_ARROW_SVG;
+    const rightArrowSvg = RIGHT_ARROW_SVG;
+
     // Helper function to build the relative path: ../YEAR/QX-YYYY.html
     const getReportPath = (report) => {
       const fileName = `${report.quarterPrefix}-${report.year}.html`;
@@ -73,7 +79,7 @@ async function writeHtmlFiles(groupedContributions) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
                 <a href="${prevPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    ${leftArrowSvg}
                     <span>Previous</span>
                 </a>
             `;
@@ -88,7 +94,7 @@ async function writeHtmlFiles(groupedContributions) {
       nextButton = dedent`
                 <a href="${nextPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
                     <span>Next</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    ${rightArrowSvg}
                 </a>
             `;
     } else {

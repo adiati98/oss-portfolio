@@ -12,8 +12,13 @@ const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
 const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
+// Import right arrow svg
+const { RIGHT_ARROW_SVG } = require('./constants');
+
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'index.html';
+
+const rightArrowSvg = RIGHT_ARROW_SVG;
 
 /**
  * Calculates aggregate totals from all contribution data and writes the
@@ -135,8 +140,11 @@ ${navHtml}
             </div>
             
             <p class="text-center mt-12">
-                <a href="reports.html" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
-                    View Detailed Quarterly Reports →
+                <a href="reports.html" class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                    <span class="pr-2">
+                        View Detailed Quarterly Reports
+                    </span>
+                    ${rightArrowSvg}
                 </a>
             </p>
         </section>
