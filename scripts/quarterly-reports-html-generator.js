@@ -72,15 +72,15 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-                <a href="${prevPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
+                <a href="${prevPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    <span>Previous Report</span>
+                    <span>Previous</span>
                 </a>
             `;
     } else {
       // Disabled style for the oldest report
       previousButton = dedent`
-                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
+                <span class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     <span>First Report</span>
                 </span>
@@ -91,15 +91,15 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-                <a href="${nextPath}" class="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 flex items-center space-x-2">
-                    <span>Next Report</span>
+                <a href="${nextPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
+                    <span>Next</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </a>
             `;
     } else {
       // Disabled style for the most recent report
       nextButton = `
-                <span class="px-6 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-inner cursor-not-allowed flex items-center space-x-2">
+                <span class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
                     <span>Most Recent</span>
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                 </span>
@@ -107,7 +107,7 @@ async function writeHtmlFiles(groupedContributions) {
     }
 
     return dedent`
-            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center px-4 sm:px-6 lg:px-8">
+            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center gap-4">
                 ${previousButton}
                 ${nextButton}
             </div>
