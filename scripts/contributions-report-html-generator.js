@@ -82,6 +82,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
   // Helper function to render table rows
   const renderStructureTableRows = () => {
+    const totalRows = reportStructure.length;
     return reportStructure
       .map((item, index) => {
         // Convert Markdown formatting to HTML
@@ -92,8 +93,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
         const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
 
+        // Remove 'border-b' on the last row to eliminate the bottom border
+        const borderClass = index === totalRows - 1 ? '' : 'border-b';
+
         return `
-            <tr class="${rowBg} border-b hover:bg-indigo-50 transition duration-150">
+            <tr class="${rowBg} ${borderClass} hover:bg-indigo-50 transition duration-150">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
                 ${item.section}
               </td>
@@ -167,9 +171,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
-        // Updated card width to sm:w-[23.5%] and added flex-shrink-0 for uniform sizing
         linkHtml += `
-                <div class="bg-white border border-indigo-200 hover:bg-cyan-50 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
+                <div class="bg-white border border-gray-200 hover:border-indigo-600 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
                     <a href="./${link.relativePath}" class="block p-4">
                         <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
                         <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
@@ -221,7 +224,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
             transition: background-color 0.15s ease-in-out;
         }
 
-        /* FIX 1: Apply indigo background to the entire details element when open */
+        /* Apply indigo background to the entire details element when open */
         details.is-open {
             background-color: #EEF2FF; /* Light indigo background */
         }

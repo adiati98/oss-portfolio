@@ -74,51 +74,50 @@ async function writeHtmlFiles(groupedContributions) {
       return `../${report.year}/${fileName}`;
     };
 
-    // --- Previous Button Logic ---
+    // --- Consolidated Classes for Button Look ---
+    const baseClasses =
+      'w-52 h-20 p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
+
+    const hoverClasses = 'hover:border-indigo-600';
+
+    // --- Previous Button Logic (Two Lines) ---
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-                <a href="${prevPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
-                    ${leftArrowSvg}
-                    <span>Previous</span>
-                </a>
-            `;
+          <a href="${prevPath}" class="${baseClasses} bg-white ${hoverClasses} text-left">
+            <span class="text-xs font-medium text-gray-500">Previous</span>
+            <span class="flex items-center space-x-1 text-indigo-700 font-bold text-lg text-wrap break-all">
+              ${leftArrowSvg}
+              <span>${previousReport.fullQuarterName}</span>
+            </span>
+          </a>
+        `;
     } else {
-      // Remove previous button
-      previousButton = '<div class="w-36 h-12"></div>';
+      previousButton = '<div class="w-52 h-20"></div>';
     }
 
     // --- Next Button Logic ---
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-                <a href="${nextPath}" class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-indigo-600 text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
-                    <span>Next</span>
-                    ${rightArrowSvg}
-                </a>
-            `;
+          <a href="${nextPath}" class="${baseClasses} bg-white ${hoverClasses} text-right">
+            <span class="text-xs font-medium text-gray-500">Next</span>
+            <span class="flex items-center space-x-1 justify-end text-indigo-700 font-bold text-lg text-wrap break-all">
+              <span>${nextReport.fullQuarterName}</span>
+              ${rightArrowSvg}
+            </span>
+          </a>
+        `;
     } else {
-      // Disabled style for the most recent report
-      nextButton = `
-                <span class="w-36 h-12 flex justify-center items-center space-x-2 px-4 py-2 bg-gray-300 text-gray-500 font-semibold rounded-lg shadow-md cursor-not-allowed">
-                    <span>Most Recent</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                </span>
-            `;
-    }
-
-    if (!previousReport) {
-      placeholder = '<div class="w-36 h-12"></div>';
-    } else {
-      placeholder = '';
+      nextButton = '<div class="w-52 h-20"></div>';
     }
 
     return dedent`
-            <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center gap-4">
-                ${previousButton}
-                ${nextButton}
-            </div>
-        `;
+        <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center gap-4">
+          ${previousButton}
+          ${nextButton}
+        </div>
+      `;
   }
 
   // Define the base directory path: 'contributions/html-generated'
