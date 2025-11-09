@@ -132,8 +132,8 @@ async function writeHtmlFiles(groupedContributions) {
     const report = allReports[index]; // Destructure the properties needed for file naming and statistics
     const { key, year, quarterPrefix: quarter, data, totalContributions, fullQuarterName } = report;
 
-    // Generate the dynamic footer
-    const footerHtml = createFooterHtml();
+    // Generate the dynamic footer and trim any leading/trailing whitespace
+    const footerHtml = createFooterHtml().trim();
 
     // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
     const yearDir = path.join(htmlBaseDir, year);
@@ -200,9 +200,16 @@ async function writeHtmlFiles(groupedContributions) {
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
 				@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
         }
         summary {
             cursor: pointer;
@@ -234,11 +241,12 @@ async function writeHtmlFiles(groupedContributions) {
 </head>
 <body>
 ${navHtmlForReports}
-		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
-    		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
-        		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
-        		<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-    		</header>
+		<main class="grow mx-auto max-w-7xl w-full">
+      <div class="p-6 sm:p-10 min-h-full">
+    		<header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
+        	<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
+        	<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+    	</header>
 
 		<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
     		<section class="mb-8">
@@ -470,15 +478,16 @@ ${navHtmlForReports}
     // Close the last main <section> tag
     htmlContent += dedent`
             </section>
-`;
-    htmlContent += navButton;
-    htmlContent += footerHtml;
-
-    htmlContent += `
-        </div>
+            ${navButton}
+            </div>
+        </main>
+${footerHtml}
     </body>
 </html>
 `;
+
+    // Sanitize content: replace NBSPs and trim trailing spaces/newlines to avoid extra spaces after footer
+    htmlContent = htmlContent.replace(/\u00A0/g, ' ').replace(/[ \t]+$/gm, '');
 
     // Format the content before writing
     const formattedContent = await prettier.format(htmlContent, {
