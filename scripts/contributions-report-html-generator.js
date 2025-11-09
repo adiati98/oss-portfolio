@@ -171,7 +171,6 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
-        // Updated card width to sm:w-[23.5%] and added flex-shrink-0 for uniform sizing
         linkHtml += `
                 <div class="bg-white border border-gray-200 hover:border-indigo-600 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
                     <a href="./${link.relativePath}" class="block p-4">
@@ -225,7 +224,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
             transition: background-color 0.15s ease-in-out;
         }
 
-        /* FIX 1: Apply indigo background to the entire details element when open */
+        /* Apply indigo background to the entire details element when open */
         details.is-open {
             background-color: #EEF2FF; /* Light indigo background */
         }

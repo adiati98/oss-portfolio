@@ -75,10 +75,9 @@ async function writeHtmlFiles(groupedContributions) {
     };
 
     // --- Consolidated Classes for Button Look ---
-    // Fixed size, white background, light indigo border, smooth transition
     const baseClasses =
       'w-52 h-20 p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
-    // Hover effect targets ONLY the border to darken it
+
     const hoverClasses = 'hover:border-indigo-600';
 
     // --- Previous Button Logic (Two Lines) ---
@@ -94,11 +93,10 @@ async function writeHtmlFiles(groupedContributions) {
           </a>
         `;
     } else {
-      // Placeholder for alignment (Updated to w-52 h-20)
       previousButton = '<div class="w-52 h-20"></div>';
     }
 
-    // --- Next Button Logic (Two Lines) ---
+    // --- Next Button Logic ---
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
@@ -111,7 +109,6 @@ async function writeHtmlFiles(groupedContributions) {
           </a>
         `;
     } else {
-      // Placeholder for alignment (Updated to w-52 h-20)
       nextButton = '<div class="w-52 h-20"></div>';
     }
 
