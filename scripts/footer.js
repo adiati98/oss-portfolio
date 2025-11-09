@@ -19,7 +19,7 @@ function createFooterHtml() {
 
   // New: Use a simpler inline structure
   return dedent`
-    <footer class="mt-16 pt-8 border-t border-gray-300 text-center text-gray-600 text-sm">
+    <footer class="mt-16 py-8 border-t border-gray-300 text-center text-gray-600 text-sm">
       <div class="mb-1">
         &copy; ${SINCE_YEAR}-${currentYear} 
         <a href="https://github.com/${GITHUB_USERNAME}" 

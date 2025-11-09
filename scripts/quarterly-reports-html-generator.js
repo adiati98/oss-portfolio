@@ -75,8 +75,9 @@ async function writeHtmlFiles(groupedContributions) {
     };
 
     // --- Consolidated Classes for Button Look ---
+    // Keep buttons side by side but adjust text size for small screens
     const baseClasses =
-      'w-52 h-20 p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
+      'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
 
     const hoverClasses = 'hover:border-indigo-600';
 
@@ -85,10 +86,10 @@ async function writeHtmlFiles(groupedContributions) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
           <a href="${prevPath}" class="${baseClasses} bg-white ${hoverClasses} text-left">
-            <span class="text-xs font-medium text-gray-500">Previous</span>
-            <span class="flex items-center space-x-1 text-indigo-700 font-bold text-lg text-wrap break-all">
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
+            <span class="flex items-center space-x-1 text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal">
               ${leftArrowSvg}
-              <span>${previousReport.fullQuarterName}</span>
+              <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
             </span>
           </a>
         `;
@@ -101,9 +102,9 @@ async function writeHtmlFiles(groupedContributions) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
           <a href="${nextPath}" class="${baseClasses} bg-white ${hoverClasses} text-right">
-            <span class="text-xs font-medium text-gray-500">Next</span>
-            <span class="flex items-center space-x-1 justify-end text-indigo-700 font-bold text-lg text-wrap break-all">
-              <span>${nextReport.fullQuarterName}</span>
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
+            <span class="flex items-center space-x-1 justify-end text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal">
+              <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
               ${rightArrowSvg}
             </span>
           </a>
@@ -113,9 +114,11 @@ async function writeHtmlFiles(groupedContributions) {
     }
 
     return dedent`
-        <div class="mt-12 mb-8 mx-auto max-w-7xl flex justify-between items-center gap-4">
-          ${previousButton}
-          ${nextButton}
+        <div class="mt-12 mb-8 w-full flex justify-between items-center gap-2 sm:gap-4 px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
+          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center">
+            ${previousButton}
+            ${nextButton}
+          </div>
         </div>
       `;
   }
@@ -132,8 +135,8 @@ async function writeHtmlFiles(groupedContributions) {
     const report = allReports[index]; // Destructure the properties needed for file naming and statistics
     const { key, year, quarterPrefix: quarter, data, totalContributions, fullQuarterName } = report;
 
-    // Generate the dynamic footer
-    const footerHtml = createFooterHtml();
+    // Generate the dynamic footer and trim any leading/trailing whitespace
+    const footerHtml = createFooterHtml().trim();
 
     // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
     const yearDir = path.join(htmlBaseDir, year);
@@ -200,9 +203,16 @@ async function writeHtmlFiles(groupedContributions) {
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
 				@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
         }
         summary {
             cursor: pointer;
@@ -234,11 +244,13 @@ async function writeHtmlFiles(groupedContributions) {
 </head>
 <body>
 ${navHtmlForReports}
-		<div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
-    		<header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
-        		<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
-        		<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-    		</header>
+		<main class="grow w-full">
+      <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+        <div class="max-w-[120ch] mx-auto">
+    		  <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
+        	  <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
+        	  <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+    	  </header>
 
 		<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
     		<section class="mb-8">
@@ -467,18 +479,18 @@ ${navHtmlForReports}
 
     const navButton = generateReportNavButton(index);
 
-    // Close the last main <section> tag
+    // Close the last main <section> tag and max-width container
     htmlContent += dedent`
-            </section>
-`;
-    htmlContent += navButton;
-    htmlContent += footerHtml;
-
-    htmlContent += `
-        </div>
-    </body>
+            </section>
+            ${navButton}
+          </div>
+        </div>
+      </main>
+${footerHtml}
+    </body>
 </html>
-`;
+`; // Sanitize content: replace NBSPs and trim trailing spaces/newlines to avoid extra spaces after footer
+    htmlContent = htmlContent.replace(/\u00A0/g, ' ').replace(/[ \t]+$/gm, '');
 
     // Format the content before writing
     const formattedContent = await prettier.format(htmlContent, {

@@ -160,7 +160,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += `
-            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl shadow-lg transition duration-300">
+            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl transition duration-300">
                 <summary class="text-2xl font-bold 
                 text-gray-700 p-4 sm:p-6 cursor-pointer 
                 hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
@@ -207,10 +207,17 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         body {
             font-family: 'Inter', sans-serif;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
         }
-        /* FIX: Removing padding: 0 to allow Tailwind utility classes to work */
         .report-list { 
             list-style: none; 
         } 
@@ -245,7 +252,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 </head>
 <body>
 ${navHtml}
-    <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
+  <main class="grow mx-auto max-w-7xl w-full px-4 sm:px-0 mt-16 mb-16">
+    <div class="p-6 sm:p-10">
         <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
                 Quarterly Reports
@@ -300,7 +308,6 @@ ${navHtml}
                 ${linkHtml}
             </div>
         </section>
-        ${footerHtml}
     </div>
 
     <script>
@@ -327,7 +334,9 @@ ${navHtml}
             });
         });
     </script>
-</body>
+    </main>
+    ${footerHtml}
+  </body>
 </html>
 `;
 

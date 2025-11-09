@@ -76,8 +76,16 @@ async function createStatsHtmlReadme(finalContributions = []) {
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
         body {
             font-family: 'Inter', sans-serif;
+            min-height: 100vh; 
+            display: flex;
+            flex-direction: column;
         }
         .report-list { list-style: none; padding: 0; }
         .report-list a { text-decoration: none; }
@@ -85,7 +93,8 @@ async function createStatsHtmlReadme(finalContributions = []) {
 </head>
 <body>
 ${navHtml}
-    <div class="mx-auto max-w-7xl bg-white p-6 sm:p-10 rounded-xl shadow-2xl mt-16">
+  <main class="grow mx-auto max-w-7xl w-full px-4 sm:px-0 mt-16 mb-16">
+    <div class="p-6 sm:p-10">
         <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
                 Open Source Portfolio
@@ -99,7 +108,7 @@ ${navHtml}
             </p>
         </header>
 
-        <section class="mb-14">
+        <section>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                 <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl h-full flex flex-col justify-center text-center gap-6 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
                     <p class="text-3xl font-bold opacity-100 py-2 px-1">🚀 All-Time Contributions</p>
@@ -148,9 +157,10 @@ ${navHtml}
                 </a>
             </p>
         </section>
-        ${footerHtml}
     </div>
-</body>
+    </main>
+    ${footerHtml}
+  </body>
 </html>
 `;
 
