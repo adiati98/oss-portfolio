@@ -82,6 +82,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
   // Helper function to render table rows
   const renderStructureTableRows = () => {
+    const totalRows = reportStructure.length;
     return reportStructure
       .map((item, index) => {
         // Convert Markdown formatting to HTML
@@ -92,8 +93,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
         const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
 
+        // Remove 'border-b' on the last row to eliminate the bottom border
+        const borderClass = index === totalRows - 1 ? '' : 'border-b';
+
         return `
-            <tr class="${rowBg} border-b hover:bg-indigo-50 transition duration-150">
+            <tr class="${rowBg} ${borderClass} hover:bg-indigo-50 transition duration-150">
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
                 ${item.section}
               </td>
