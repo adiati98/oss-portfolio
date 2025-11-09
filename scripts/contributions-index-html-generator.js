@@ -140,7 +140,7 @@ ${navHtml}
             </div>
             
             <p class="text-center mt-12">
-                <a href="reports.html" class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border border-indigo-400 text-indigo-700 font-semibold rounded-lg shadow-md hover:border-indigo-600 transition duration-200">
+                <a href="reports.html" class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border border-gray-200 text-indigo-700 font-semibold rounded-lg shadow-md hover:border-indigo-800 transition duration-200">
                     <span class="pr-2">
                         View Detailed Quarterly Reports
                     </span>
