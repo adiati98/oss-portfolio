@@ -79,7 +79,7 @@ async function writeHtmlFiles(groupedContributions) {
     const baseClasses =
       'w-52 h-20 p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
     // Hover effect targets ONLY the border to darken it
-    const hoverClasses = 'hover:border-indigo-800';
+    const hoverClasses = 'hover:border-indigo-600';
 
     // --- Previous Button Logic (Two Lines) ---
     if (previousReport) {

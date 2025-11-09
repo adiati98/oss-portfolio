@@ -169,7 +169,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       for (const link of linksByYear[year]) {
         // Updated card width to sm:w-[23.5%] and added flex-shrink-0 for uniform sizing
         linkHtml += `
-                <div class="bg-white border border-gray-200 hover:border-indigo-800 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
+                <div class="bg-white border border-gray-200 hover:border-indigo-600 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
                     <a href="./${link.relativePath}" class="block p-4">
                         <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
                         <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
