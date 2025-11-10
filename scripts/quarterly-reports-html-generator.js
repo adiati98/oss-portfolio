@@ -408,9 +408,25 @@ ${navHtmlForReports}
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
           tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
-          tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`;
+          const repoSpanHtml = dedent`
+            <span
+              class="font-mono text-xs bg-gray-100 p-1 rounded"
+            >
+              ${item.repo}
+            </span>
+          `;
+          tableContent += `      <td>${repoSpanHtml}</td>\n`;
           // Title: styled as a link
-          tableContent += `      <td><a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a></td>\n`;
+          const linkHtml = dedent`
+            <a
+              href='${item.url}'
+              target='_blank'
+              class="text-blue-600 hover:text-blue-800 hover:underline"
+            >
+               ${item.title}
+            </a>
+          `;
+          tableContent += `      <td>${linkHtml}</td>\n`;
 
           // Logic for Merged PRs table structure
           if (section === 'pullRequests') {
