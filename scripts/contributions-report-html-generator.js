@@ -200,55 +200,55 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quarterly Reports</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/%3E%3C/svg%3E">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh; 
-            display: flex;
-            flex-direction: column;
-        }
-        .report-list { 
-            list-style: none; 
-        } 
-        .report-list a { text-decoration: none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quarterly Reports</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/%3E%3C/svg%3E">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh; 
+      display: flex;
+      flex-direction: column;
+    }
+    .report-list { 
+      list-style: none; 
+    } 
+    .report-list a { text-decoration: none; }
         
-        /* --- Dynamic Styling for Collapsible Year (is-open) --- */
-        details summary {
-            cursor: pointer;
-            outline: none;
-            color: #1f2937;
-            transition: background-color 0.15s ease-in-out;
-        }
+    /* --- Dynamic Styling for Collapsible Year (is-open) --- */
+    details summary {
+      cursor: pointer;
+      outline: none;
+      color: #1f2937;
+      transition: background-color 0.15s ease-in-out;
+    }
 
-        /* Apply indigo background to the entire details element when open */
-        details.is-open {
-            background-color: #EEF2FF; /* Light indigo background */
-        }
-        details.is-open summary {
-            background-color: #EEF2FF; /* Matches the details background */
-            border-radius: 0.5rem 0.5rem 0 0; 
-            color: #4338CA; 
-        }
-        details:not(.is-open) {
-            background-color: #f9fafb; /* Light gray background when closed */
-        }
-        details:not(.is-open) summary {
-            border-bottom: none;
-            border-radius: 0.5rem; 
-        }
-        /* --- END Dynamic Styling --- */
-    </style>
+    /* Apply indigo background to the entire details element when open */
+    details.is-open {
+      background-color: #EEF2FF; /* Light indigo background */
+    }
+    details.is-open summary {
+      background-color: #EEF2FF; /* Matches the details background */
+      border-radius: 0.5rem 0.5rem 0 0; 
+      color: #4338CA; 
+    }
+    details:not(.is-open) {
+      background-color: #f9fafb; /* Light gray background when closed */
+    }
+    details:not(.is-open) summary {
+      border-bottom: none;
+      border-radius: 0.5rem; 
+    }
+    /* --- END Dynamic Styling --- */
+  </style>
 </head>
 <body>
 ${navHtml}
@@ -313,26 +313,26 @@ ${navHtml}
 
       <script>
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('details').forEach(details => {
-                // Initial state check for the default 'open' attribute
-                if (details.open) {
-                    details.classList.add('is-open');
-                } else {
-                    // Apply a background to closed elements for visual separation
-                    details.classList.add('bg-gray-50'); 
-                }
+          document.querySelectorAll('details').forEach(details => {
+            // Initial state check for the default 'open' attribute
+            if (details.open) {
+              details.classList.add('is-open');
+            } else {
+              // Apply a background to closed elements for visual separation
+              details.classList.add('bg-gray-50'); 
+            }
 
-                // Listener for the 'toggle' event (triggered on open/close)
-                details.addEventListener('toggle', () => {
-                    if (details.open) {
-                        details.classList.add('is-open');
-                        details.classList.remove('bg-gray-50'); // Remove closed background
-                    } else {
-                        details.classList.remove('is-open');
-                        details.classList.add('bg-gray-50'); // Re-apply closed background
-                    }
-                });
+            // Listener for the 'toggle' event (triggered on open/close)
+            details.addEventListener('toggle', () => {
+              if (details.open) {
+                details.classList.add('is-open');
+                details.classList.remove('bg-gray-50'); // Remove closed background
+              } else {
+                details.classList.remove('is-open');
+                details.classList.add('bg-gray-50'); // Re-apply closed background
+              }
             });
+          });
         });
       </script>
     </div>
