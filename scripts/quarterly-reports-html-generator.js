@@ -19,8 +19,8 @@ const {
 const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
-// Import left and right arrow svgs
-const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG } = require('./constants');
+// Import svgs
+const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED } = require('./constants');
 
 // 1. Update the link from root (./) to relative root (../index.html)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
@@ -114,8 +114,8 @@ async function writeHtmlFiles(groupedContributions) {
     }
 
     return dedent`
-        <div class="mt-12 mb-8 w-full flex justify-between items-center gap-2 sm:gap-4 px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
-          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center">
+        <div class="mt-12 mb-8 w-full flex justify-center">
+          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
             ${previousButton}
             ${nextButton}
           </div>
@@ -198,7 +198,7 @@ async function writeHtmlFiles(groupedContributions) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>${quarter} ${year} Contributions Report</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/%3E%3Cpath fill='%234338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
@@ -408,9 +408,25 @@ ${navHtmlForReports}
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
           tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
-          tableContent += `      <td><span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span></td>\n`;
+          const repoSpanHtml = dedent`
+            <span
+              class="font-mono text-xs bg-gray-100 p-1 rounded"
+            >
+              ${item.repo}
+            </span>
+          `;
+          tableContent += `      <td>${repoSpanHtml}</td>\n`;
           // Title: styled as a link
-          tableContent += `      <td><a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a></td>\n`;
+          const linkHtml = dedent`
+            <a
+              href='${item.url}'
+              target='_blank'
+              class="text-blue-600 hover:text-blue-800 hover:underline"
+            >
+               ${item.title}
+            </a>
+          `;
+          tableContent += `      <td>${linkHtml}</td>\n`;
 
           // Logic for Merged PRs table structure
           if (section === 'pullRequests') {
