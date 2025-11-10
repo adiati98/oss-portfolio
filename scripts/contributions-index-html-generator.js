@@ -111,7 +111,7 @@ ${navHtml}
         <section>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl h-full flex flex-col justify-center text-center gap-6 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
-              <p class="text-3xl font-bold opacity-100 py-2 px-1">🚀 All-Time Contributions</p>
+              <p class="text-2xl lg:text-3xl font-bold opacity-100 py-2">🚀 All-Time Contributions</p>
               <p class="text-6xl font-extrabold pb-2">${grandTotal}</p>
               <p class="text-lg font-medium opacity-100">
                 Across <strong class="text-xl">${totalUniqueRepos}</strong> repositories since <strong class="text-xl">${SINCE_YEAR}</strong>
@@ -119,28 +119,28 @@ ${navHtml}
           	</div>
 
             <div class="col-span-1 md:col-span-2 flex flex-col gap-0 md:h-full"> 
-              <div class="flex flex-col h-full justify-between text-gray-700 border-t border-gray-100">
-                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-3 rounded-t-xl">
+              <div class="flex flex-col h-full text-gray-700">
+                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4 rounded-t-xl">
                   <span class="text-xl font-medium">Merged PRs</span>
                   <span class="text-3xl font-extrabold text-indigo-700">${prCount}</span>
                 </div>
 
-                <div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-3">
+                <div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
                   <span class="text-xl font-medium">Issues</span>
                   <span class="text-3xl font-extrabold text-indigo-700">${issueCount}</span>
                 </div>
 
-                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-3">
+                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4">
                   <span class="text-xl font-medium">Reviewed PRs</span>
                   <span class="text-3xl font-extrabold text-indigo-700">${reviewedPrCount}</span>
               	</div>
 
-              	<div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-3">
+              	<div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
                 	<span class="text-xl font-medium">Co-Authored PRs</span>
                 	<span class="text-3xl font-extrabold text-indigo-700">${coAuthoredPrCount}</span>
               	</div>
 
-              	<div class="flex justify-between items-center bg-indigo-50 px-4 py-3 rounded-b-xl">
+              	<div class="flex justify-between items-center bg-indigo-50 px-4 py-4 rounded-b-xl">
                 	<span class="text-xl font-medium">Collaborations</span>
                 	<span class="text-3xl font-extrabold text-indigo-700">${collaborationCount}</span>
               	</div>
