@@ -252,65 +252,66 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 </head>
 <body>
 ${navHtml}
-  <main class="grow mx-auto max-w-7xl w-full px-4 sm:px-0 mt-16 mb-16">
-    <div class="p-6 sm:p-10">
-        <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
-                Quarterly Reports
-            </h1>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
-                Organized by calendar quarter, these reports track
-                <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
-                    ${GITHUB_USERNAME}
-                </a>'s external open source involvement, aggregating key community activities across 
-                <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
-            </p>
+  <main class="grow w-full">
+    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="max-w-[120ch] mx-auto">
+        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
+          <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
+              Quarterly Reports
+          </h1>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
+            Organized by calendar quarter, these reports track
+            <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
+                ${GITHUB_USERNAME}
+            </a>'s external open source involvement, aggregating key community activities across 
+            <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+          </p>
         </header>
 
         <section class="mb-14">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-                Report Structure Breakdown
-            </h2>
-            <p class="text-lg text-gray-600 mb-8">
-                Each quarterly report provides a detailed log and summary for that period:
-            </p>
+          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+            Report Structure Breakdown
+          </h2>
+          <p class="text-lg text-gray-600 mb-8">
+            Each quarterly report provides a detailed log and summary for that period:
+          </p>
             
-            <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-indigo-50">
-                        <tr>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
-                                Section
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/2">
-                                Content Description
-                            </th>
-                            <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
-                                Key Metric / Insight
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        ${renderStructureTableRows()}
-                    </tbody>
-                </table>
-            </div>
+          <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-indigo-50">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
+                    Section
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/2">
+                    Content Description
+                  </th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
+                    Key Metric / Insight
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                  ${renderStructureTableRows()}
+              </tbody>
+              </table>
+          </div>
         </section>
 
         <section class="mt-14 pt-8 border-t border-gray-300">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-                Quarterly Reports (Detail Pages)
-            </h2>
-            <p class="text-lg text-gray-600 mb-6">
-                Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
-            </p>
-            <div class="grid grid-cols-1 report-list">
-                ${linkHtml}
-            </div>
+          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+            Quarterly Reports (Detail Pages)
+          </h2>
+          <p class="text-lg text-gray-600 mb-6">
+            Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
+          </p>
+          <div class="grid grid-cols-1 report-list">
+            ${linkHtml}
+          </div>
         </section>
-    </div>
+      </div>
 
-    <script>
+      <script>
         document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('details').forEach(details => {
                 // Initial state check for the default 'open' attribute
@@ -333,10 +334,11 @@ ${navHtml}
                 });
             });
         });
-    </script>
-    </main>
-    ${footerHtml}
-  </body>
+      </script>
+    </div>
+  </main>
+  ${footerHtml}
+</body>
 </html>
 `;
 

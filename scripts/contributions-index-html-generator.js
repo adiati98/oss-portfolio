@@ -93,9 +93,10 @@ async function createStatsHtmlReadme(finalContributions = []) {
 </head>
 <body>
 ${navHtml}
-  <main class="grow mx-auto max-w-7xl w-full px-4 sm:px-0 mt-16 mb-16">
-    <div class="p-6 sm:p-10">
-        <header class="text-center mb-12 pb-4 border-b-2 border-indigo-100">
+  <main class="grow w-full">
+    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="max-w-[120ch] mx-auto">
+        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
                 Open Source Portfolio
             </h1>
@@ -157,10 +158,11 @@ ${navHtml}
                 </a>
             </p>
         </section>
+      </div>
     </div>
-    </main>
-    ${footerHtml}
-  </body>
+  </main>
+  ${footerHtml}
+</body>
 </html>
 `;
 
