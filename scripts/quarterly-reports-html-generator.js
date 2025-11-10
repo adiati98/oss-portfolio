@@ -114,8 +114,8 @@ async function writeHtmlFiles(groupedContributions) {
     }
 
     return dedent`
-        <div class="mt-12 mb-8 w-full flex justify-between items-center gap-2 sm:gap-4 px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
-          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center">
+        <div class="mt-12 mb-8 w-full flex justify-center">
+          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
             ${previousButton}
             ${nextButton}
           </div>
