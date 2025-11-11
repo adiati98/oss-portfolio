@@ -336,27 +336,27 @@ ${navHtmlForReports}
         		<!-- Merged PRs -->
          		<a href="#${sections.pullRequests.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
          		  <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
-          		<span class="text-md text-gray-500 mt-1">Merged PRs</span>
+          		<span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
           	</a>
             <!-- Issues -->
            	<a href="#${sections.issues.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
            		<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
-            	<span class="text-md text-gray-500 mt-1">Issues</span>
+            	<span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
            	</a>
           	<!-- Reviewed PRs -->
          		<a href="#${sections.reviewedPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
            		<span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
-            	<span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
+            	<span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
            	</a>
           	<!-- Co-Authored PRs -->
           	<a href="#${sections.coAuthoredPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
              	<span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
-              <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
             </a>
             <!-- Collaborations -->
             <a href="#${sections.collaborations.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
              	<span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
-              <span class="text-md text-gray-500 mt-1">Collaborations</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
           	</a>
         	</div>
     		</section>
