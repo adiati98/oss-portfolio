@@ -121,28 +121,28 @@ ${navHtml}
             <div class="col-span-1 md:col-span-2 flex flex-col gap-0 md:h-full"> 
               <div class="flex flex-col h-full text-gray-700">
                 <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4 rounded-t-xl">
-                  <span class="text-xl font-medium">Merged PRs</span>
-                  <span class="text-3xl font-extrabold text-indigo-700">${prCount}</span>
+                  <span class="text-md sm:text-lg font-medium">Merged PRs</span>
+                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${prCount}</span>
                 </div>
 
                 <div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
-                  <span class="text-xl font-medium">Issues</span>
-                  <span class="text-3xl font-extrabold text-indigo-700">${issueCount}</span>
+                  <span class="text-md sm:text-lg font-medium">Issues</span>
+                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${issueCount}</span>
                 </div>
 
                 <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4">
-                  <span class="text-xl font-medium">Reviewed PRs</span>
-                  <span class="text-3xl font-extrabold text-indigo-700">${reviewedPrCount}</span>
+                  <span class="text-md sm:text-lg font-medium">Reviewed PRs</span>
+                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${reviewedPrCount}</span>
               	</div>
 
               	<div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
-                	<span class="text-xl font-medium">Co-Authored PRs</span>
-                	<span class="text-3xl font-extrabold text-indigo-700">${coAuthoredPrCount}</span>
+                	<span class="text-md sm:text-lg font-medium">Co-Authored PRs</span>
+                	<span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${coAuthoredPrCount}</span>
               	</div>
 
               	<div class="flex justify-between items-center bg-indigo-50 px-4 py-4 rounded-b-xl">
-                	<span class="text-xl font-medium">Collaborations</span>
-                	<span class="text-3xl font-extrabold text-indigo-700">${collaborationCount}</span>
+                	<span class="text-md sm:text-lg font-medium">Collaborations</span>
+                	<span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${collaborationCount}</span>
               	</div>
             	</div>
           	</div>
