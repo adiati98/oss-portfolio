@@ -278,15 +278,15 @@ ${navHtmlForReports}
          		       <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
           		      <span class="text-md text-gray-500 mt-1">Merged PRs</span>
           		  </div>
+                <!-- Issues -->
+           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
+           		     	<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
+            		    <span class="text-md text-gray-500 mt-1">Issues</span>
+           		 </div>
           		  <!-- Reviewed PRs -->
          		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
            		     <span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
             		    <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
-           		 </div>
-           		 <!-- Issues -->
-           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-           		     	<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
-            		    <span class="text-md text-gray-500 mt-1">Issues</span>
            		 </div>
           		  <!-- Co-Authored PRs -->
           		  <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
