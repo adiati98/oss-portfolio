@@ -189,138 +189,12 @@ async function writeHtmlFiles(groupedContributions) {
     const coAuthoredPrCount = data.coAuthoredPrs?.length || '0';
     const collaborationCount = data.collaborations?.length || '0';
 
-    // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
-    let htmlContent = dedent`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>${quarter} ${year} Contributions Report</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-				@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh; 
-            display: flex;
-            flex-direction: column;
-        }
-        summary {
-            cursor: pointer;
-            outline: none;
-            margin: 0.5em 0;
-            padding: 0.5em 0;
-            color: #1f2937;
-        }
-        .report-table th, .report-table td {
-            padding: 10px 12px;
-            border-bottom: 1px solid #e5e7eb;
-            text-align: left;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        .report-table th {
-            background-color: #EEF2FF;
-            font-weight: 600;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            letter-spacing: 0.05em;
-            color: #4338CA;
-        }
-        .report-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-    </style>
-</head>
-<body>
-${navHtmlForReports}
-		<main class="grow w-full">
-      <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
-        <div class="max-w-[120ch] mx-auto">
-    		  <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-        	  <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
-        	  <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-    	  </header>
-
-		<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
-    		<section class="mb-8">
-        		<h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
-
-        		<!-- Total Contributions & Total Repositories (Two Big Cards) -->
-        		<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-           		 <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              		  <p class="text-4xl font-extrabold">${totalContributions}</p>
-              		  <p class="text-lg mt-2 font-medium">Total Contributions</p>
-            		</div>
-            		<div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              		  <p class="text-4xl font-extrabold">${totalRepos}</p>
-               		 <p class="text-lg mt-2 font-medium">Total Repositories</p>
-            		</div>
-        		</div>
-    		</section>
-
-    		<!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
-    		<section class="mb-8">
-       		 <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-       		 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-        		    <!-- Merged PRs -->
-         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-         		       <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
-          		      <span class="text-md text-gray-500 mt-1">Merged PRs</span>
-          		  </div>
-                <!-- Issues -->
-           		 <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-           		     	<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
-            		    <span class="text-md text-gray-500 mt-1">Issues</span>
-           		 </div>
-          		  <!-- Reviewed PRs -->
-         		   <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-           		     <span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
-            		    <span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
-           		 </div>
-          		  <!-- Co-Authored PRs -->
-          		  <div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-             		   	<span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
-              		  <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
-            		</div>
-            		<!-- Collaborations -->
-            		<div class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition text-center">
-             		   <span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
-              		  <span class="text-md text-gray-500 mt-1">Collaborations</span>
-          		  </div>
-        		</div>
-    		</section>
-
-    		<!-- 3. TOP 3 REPOSITORIES SECTION -->
-    		<section class="mb-8">
-      		  <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-      		  <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-            		<ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-          		      ${top3Repos}
-            		</ol>
-        		</div>
-    		</section>
-
-    		<hr class="my-8 border-gray-200">
-    
-    		<section class="space-y-6">
-		`;
-
     // Configuration for each table section
     const sections = {
       pullRequests: {
         title: 'Merged PRs',
         icon: '🚀',
+        id: 'merged-prs',
         headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
         widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
         keys: ['repo', 'title', 'date', 'mergedAt', 'reviewPeriod'],
@@ -328,6 +202,7 @@ ${navHtmlForReports}
       issues: {
         title: 'Issues',
         icon: '🐞',
+        id: 'issues',
         headers: ['No.', 'Project', 'Title', 'Created', 'Closed', 'Closing Period'],
         widths: ['5%', '25%', '35%', '15%', '15%', '10%'],
         keys: ['repo', 'title', 'date', 'closedAt', 'closingPeriod'],
@@ -335,6 +210,7 @@ ${navHtmlForReports}
       reviewedPrs: {
         title: 'Reviewed PRs',
         icon: '👀',
+        id: 'reviewed-prs',
         headers: [
           'No.',
           'Project',
@@ -350,6 +226,7 @@ ${navHtmlForReports}
       coAuthoredPrs: {
         title: 'Co-Authored PRs',
         icon: '🤝',
+        id: 'co-authored-prs',
         headers: [
           'No.',
           'Project',
@@ -365,20 +242,147 @@ ${navHtmlForReports}
       collaborations: {
         title: 'Collaborations',
         icon: '💬',
+        id: 'collaborations',
         headers: ['No.', 'Project', 'Title', 'Created At', 'Commented At'],
         widths: ['5%', '30%', '35%', '15%', '15%'],
         keys: ['repo', 'title', 'createdAt', 'date'],
       },
     };
 
+    // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
+    let htmlContent = dedent`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <title>${quarter} ${year} Contributions Report</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+    body {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh; 
+      display: flex;
+      flex-direction: column;
+    }
+    summary {
+      cursor: pointer;
+      outline: none;
+      margin: 0.5em 0;
+      padding: 0.5em 0;
+      color: #1f2937;
+    }
+    .report-table th, .report-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .report-table th {
+      background-color: #EEF2FF;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: #4338CA;
+    }
+    .report-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+${navHtmlForReports}
+	<main class="grow w-full">
+    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="max-w-[120ch] mx-auto">
+    		<header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
+        	<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
+        	<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+    		</header>
+
+				<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
+    		<section class="mb-8">
+        	<h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
+
+        	<!-- Total Contributions & Total Repositories (Two Big Cards) -->
+        	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+           	<div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <p class="text-4xl font-extrabold">${totalContributions}</p>
+              <p class="text-lg mt-2 font-medium">Total Contributions</p>
+            </div>
+            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <p class="text-4xl font-extrabold">${totalRepos}</p>
+              <p class="text-lg mt-2 font-medium">Total Repositories</p>
+            </div>
+        	</div>
+    		</section>
+
+    		<!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+    		<section class="mb-8">
+       		<h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+       		<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+        		<!-- Merged PRs -->
+         		<a href="#${sections.pullRequests.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+         		  <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
+          		<span class="text-md text-gray-500 mt-1">Merged PRs</span>
+          	</a>
+            <!-- Issues -->
+           	<a href="#${sections.issues.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+           		<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
+            	<span class="text-md text-gray-500 mt-1">Issues</span>
+           	</a>
+          	<!-- Reviewed PRs -->
+         		<a href="#${sections.reviewedPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+           		<span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
+            	<span class="text-md text-gray-500 mt-1">Reviewed PRs</span>
+           	</a>
+          	<!-- Co-Authored PRs -->
+          	<a href="#${sections.coAuthoredPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+             	<span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
+              <span class="text-md text-gray-500 mt-1">Co-Authored PRs</span>
+            </a>
+            <!-- Collaborations -->
+            <a href="#${sections.collaborations.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+             	<span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
+              <span class="text-md text-gray-500 mt-1">Collaborations</span>
+          	</a>
+        	</div>
+    		</section>
+
+    		<!-- 3. TOP 3 REPOSITORIES SECTION -->
+    		<section class="mb-8">
+      		<h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+      		<div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+          		${top3Repos}
+            </ol>
+        	</div>
+    		</section>
+
+    		<hr class="my-8 border-gray-200">
+    
+    		<section class="space-y-6">
+		`;
+
     // Loop through each contribution type to create a collapsible section.
     for (const [section, sectionInfo] of Object.entries(sections)) {
       const items = data[section];
-      // Only keep 'pullRequests' open by default to match the template
-      const openAttribute = section === 'pullRequests' ? 'open' : '';
+      const openAttribute = '';
 
       // Use the HTML <details> tag with Tailwind styles for a collapsible section
-      htmlContent += `<details ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
+      htmlContent += `<details id="${sectionInfo.id}" ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`;
       htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
         sectionInfo.title
@@ -421,7 +425,8 @@ ${navHtmlForReports}
             <a
               href='${item.url}'
               target='_blank'
-              class="text-blue-600 hover:text-blue-800 hover:underline"
+              class="text-blue-600 hover:text-blue-800 
+							hover:underline"
             >
                ${item.title}
             </a>
@@ -502,6 +507,41 @@ ${navHtmlForReports}
           </div>
         </div>
       </main>
+    <script>
+  		// Function to handle opening the correct section on load/hash change
+  		function openSectionFromHash() {
+    		const hash = window.location.hash;
+    		if (hash) {
+      		// Find the corresponding details element (the ID includes the '#')
+      		const targetDetails = document.querySelector(hash);
+      		if (targetDetails && targetDetails.tagName === 'DETAILS') {
+        		// Close all other details elements first for a cleaner view
+        		document.querySelectorAll('details').forEach(detail => {
+          		detail.open = false;
+        		});
+
+        		// Open the target details element
+        		targetDetails.open = true;
+
+        		// Scroll to the opened section (using a small delay to ensure it's fully rendered open)
+        		setTimeout(() => {
+          		targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        		}, 100);
+      		}
+    		} else {
+      		// Default behavior: open the first section ('merged-prs') if no hash is present
+      		const defaultDetails = document.getElementById('merged-prs');
+      		if (defaultDetails) {
+        		defaultDetails.open = true;
+      		}
+    		}
+  		}
+
+  		// Execute on page load
+  		window.addEventListener('DOMContentLoaded', openSectionFromHash);
+  		// Also handle if the hash changes in the same page (though not strictly needed for this link structure)
+  		window.addEventListener('hashchange', openSectionFromHash);
+		</script>
 ${footerHtml}
     </body>
 </html>
