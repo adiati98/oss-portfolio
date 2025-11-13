@@ -116,6 +116,15 @@ async function main() {
 
     console.log(`Fetching contributions from year: ${fetchStartYear}`);
 
+    // If there is no existing contributions data (first run / full fetch), clear
+    // the persistent PR cache so authored PRs are re-processed and repopulated.
+    if (!lastUpdate) {
+      prCache = new Set();
+      console.log(
+        'No existing contributions file — clearing persistent PR cache for a full fetch.'
+      );
+    }
+
     // Merge the persistent commit cache into an in-memory Map and pass it into the fetcher
     const mergedCommitCache = new Map();
     for (const [k, v] of commitCacheFromDisk) mergedCommitCache.set(k, v);
@@ -159,12 +168,23 @@ async function main() {
 
           const higherTier = new Set(['reviewedPrs', 'coAuthoredPrs']);
           const currentIsHigher = higherTier.has(type);
-          const allExistingAreHigher = Array.from(seen).every((c) => higherTier.has(c));
 
-          if (currentIsHigher && allExistingAreHigher) {
+          // Allow higher-tier categories to be loaded even if the URL already
+          // exists in `pullRequests` or `issues`. Only prevent loading
+          // `collaborations` when a higher-tier category already exists.
+          if (currentIsHigher) {
             finalContributions[type].push(item);
             seen.add(type);
             globalLoadedBy.set(url, seen);
+          } else {
+            // Non-higher types (e.g., collaborations) should only be added
+            // when there are no existing higher-tier categories for the URL.
+            const hasHigher = Array.from(seen).some((c) => higherTier.has(c));
+            if (!hasHigher) {
+              finalContributions[type].push(item);
+              seen.add(type);
+              globalLoadedBy.set(url, seen);
+            }
           }
         }
       }
@@ -197,20 +217,21 @@ async function main() {
           const higherTier = new Set(['reviewedPrs', 'coAuthoredPrs']);
           const currentIsHigher = higherTier.has(type);
           const existingInHigher = Array.from(seen).filter((c) => higherTier.has(c));
-          const existingInLower = Array.from(seen).filter((c) => !higherTier.has(c));
 
+          // When promoting an item to a higher tier, only remove it from
+          // `collaborations` (the true lower tier). Do NOT remove it from
+          // `pullRequests` or `issues` so merged/authored PRs remain present.
           if (currentIsHigher) {
-            if (existingInLower.length > 0) {
-              for (const lowerCat of existingInLower) {
-                const idx = finalContributions[lowerCat].findIndex((i) => i.url === url);
-                if (idx !== -1) {
-                  finalContributions[lowerCat].splice(idx, 1);
-                }
+            const lowerToRemove = ['collaborations'];
+            for (const lowerCat of lowerToRemove) {
+              const idx = finalContributions[lowerCat].findIndex((i) => i.url === url);
+              if (idx !== -1) {
+                finalContributions[lowerCat].splice(idx, 1);
               }
             }
 
             finalContributions[type].push(item);
-            seen.delete('collaborations');
+            // Preserve any existing higher-tier flags and add the current one.
             if (existingInHigher.length > 0) {
               for (const higherCat of existingInHigher) {
                 seen.add(higherCat);
@@ -219,6 +240,8 @@ async function main() {
             seen.add(type);
             globalLoadedBy.set(url, seen);
           } else {
+            // Non-higher types (like collaborations) should only be added if
+            // there is no existing higher-tier representation for the URL.
             if (existingInHigher.length === 0) {
               finalContributions[type].push(item);
               seen.add(type);
