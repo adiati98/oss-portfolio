@@ -158,12 +158,35 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
    * @param {string} username The username to check for.
    * @returns {Promise<{firstCommitDate: string, commitCount: number}|null>} Details of the first commit, or null if none.
    */
-  async function getFirstCommitDetails(owner, repo, prNumber, username, commitCache) {
+  // Now accepts optional `prUpdatedAt` so cached results are re-used only when
+  // the PR has not been updated since the cached check. This prevents stale
+  // "no commits found" results from persisting after new commits are pushed.
+  async function getFirstCommitDetails(
+    owner,
+    repo,
+    prNumber,
+    username,
+    commitCache,
+    prUpdatedAt = null
+  ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`; // Use a consistent key for caching
 
     // 1. CHECK CACHE
     if (commitCache.has(prUrlKey)) {
-      return commitCache.get(prUrlKey);
+      const cached = commitCache.get(prUrlKey);
+      // Use cached only when it has a recorded prUpdatedAt that matches the
+      // current PR updated time. This ensures we re-check commits when the PR
+      // has changed (e.g. new commits were pushed).
+      if (
+        cached &&
+        typeof cached === 'object' &&
+        cached.prUpdatedAt &&
+        prUpdatedAt &&
+        cached.prUpdatedAt === prUpdatedAt
+      ) {
+        return cached;
+      }
+      // Otherwise fall through and re-fetch commits.
     }
 
     let result = null; // Initialize result to be cached
@@ -253,6 +276,16 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         result = {
           firstCommitDate: earliestCommitDate,
           commitCount: commitCount,
+          prUpdatedAt,
+        };
+      } else {
+        // If no commits were found, cache an explicit object so we can still
+        // record the PR's updated timestamp and re-check later if the PR
+        // changes.
+        result = {
+          firstCommitDate: null,
+          commitCount: 0,
+          prUpdatedAt,
         };
       }
     } catch (err) {
@@ -439,11 +472,12 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           repoName,
           prNumber,
           GITHUB_USERNAME,
-          commitCache
+          commitCache,
+          pr.updated_at
         );
 
-        // Process co-authored PR details regardless of review status
-        if (commitDetails) {
+        // Process co-authored PR details only if a first commit was found
+        if (commitDetails && commitDetails.firstCommitDate) {
           // Calculate first commit period
           // Add a defensive check to ensure both dates exist and are valid
           const firstCommitPeriod =
@@ -549,10 +583,11 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           repoName,
           item.number,
           GITHUB_USERNAME,
-          commitCache
+          commitCache,
+          item.updated_at
         );
 
-        if (commitDetails) {
+        if (commitDetails && commitDetails.firstCommitDate) {
           // If my commits exist, add it to the new category. Use the
           // first commit date for grouping, falling back to the PR's
           // updated_at when necessary.
