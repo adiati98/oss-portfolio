@@ -37,49 +37,57 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     {
       section: 'Quarterly Statistics',
       description:
-        'A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter.',
-      metric: 'Total Count, Unique Repositories',
+        'A high-level summary showing the total contributions and repositories involved in during the quarter.',
+      metricTitle: 'Total Count, Unique Repositories',
+      metricDescription: 'Aggregated totals for the 90-day period',
     },
     {
       section: 'Contribution Breakdown',
       description:
         'A table listing the count of contributions for each of the five core categories within that quarter.',
-      metric: 'Category Counts',
+      metricTitle: 'Category Counts',
+      metricDescription: 'Snapshot of all contribution types',
     },
     {
       section: 'Top 3 Repositories',
       description:
         'The top three projects where contributions were made in that quarter, ranked by total count.',
-      metric: 'Contribution Frequency',
+      metricTitle: 'Contribution Frequency',
+      metricDescription: 'Count per repository, ranked highest first',
     },
     {
       section: 'Merged PRs',
       description:
-        'Detailed list of Pull Requests **authored by me** and merged into external repositories.',
-      metric: '**Review Period** (Time from creation to merge)',
+        'Detailed list of Pull Requests authored by user and merged into external repositories.',
+      metricTitle: 'Review Period',
+      metricDescription: 'Time from creation to merge',
     },
     {
       section: 'Issues',
-      description: 'Detailed list of Issues **authored by me** on external repositories.',
-      metric: '**Closing Period** (Time from creation to close)',
+      description: 'Detailed list of Issues authored by user on external repositories.',
+      metricTitle: 'Closing Period',
+      metricDescription: 'Time from creation to close',
     },
     {
       section: 'Reviewed PRs',
       description:
-        'Detailed list of Pull Requests **reviewed or merged by me** on external repositories.',
-      metric: '**My First Review Period** (Time from PR creation to my first review)',
+        'Detailed list of Pull Requests reviewed or merged by user on external repositories.',
+      metricTitle: "User's First Review Period",
+      metricDescription: "Time from PR creation to user's first review",
     },
     {
       section: 'Co-Authored PRs',
       description:
-        "Pull Requests where **I contributed commits (including co-authored commits)** to other contributor's PRs.",
-      metric: '**My First Commit Period** (Time from PR creation to my first commit)',
+        "Pull Requests where user contributed commits (including co-authored commits) to other contributor's PRs.",
+      metricTitle: "User's First Commit Period",
+      metricDescription: "Time from PR creation to user's first commit",
     },
     {
       section: 'Collaborations',
       description:
-        'Detailed list of open Issues or PRs where I have **commented** to participate in discussion.',
-      metric: '**First Commented At** (The date of my initial comment)',
+        'Detailed list of open Issues or PRs where user has commented to participate in discussion.',
+      metricTitle: "User's First Comment",
+      metricDescription: "The date of user's initial comment",
     },
   ];
 
@@ -88,11 +96,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     const totalRows = reportStructure.length;
     return reportStructure
       .map((item, index) => {
-        // Convert Markdown formatting to HTML
-        const safeDescription = item.description
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/`/g, '<code>');
-        const safeMetric = item.metric.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const safeDescription = item.description;
+        const safeMetricTitle = item.metricTitle;
 
         const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
 
@@ -107,8 +112,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
               <td class="px-6 py-4 text-sm text-gray-700">
                 ${safeDescription}
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${safeMetric}
+              <td class="px-6 py-4 text-sm text-gray-700">
+                <span>${safeMetricTitle}</span>
+                <span class="block text-xs italic text-gray-500">
+                  ${item.metricDescription}
+                </span>
               </td>
             </tr>
           `;
@@ -272,11 +280,11 @@ ${navHtml}
         </header>
 
         <section class="mb-14">
-          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
             Report Structure Breakdown
           </h2>
-          <p class="text-lg text-gray-600 mb-8">
-            Each quarterly report provides a detailed log and summary for that period:
+          <p class="text-lg text-gray-600 mb-12">
+            Each quarterly report provides a detailed log and summary for that period.
           </p>
             
           <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
@@ -301,11 +309,11 @@ ${navHtml}
           </div>
         </section>
 
-        <section class="mt-14 pt-8 border-t border-gray-300">
-          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+        <section class="mt-14 pt-8">
+          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
             Quarterly Reports (Detail Pages)
           </h2>
-          <p class="text-lg text-gray-600 mb-6">
+          <p class="text-lg text-gray-600 mb-12">
             Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
           </p>
           <div class="grid grid-cols-1 report-list">
