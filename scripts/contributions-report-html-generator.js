@@ -37,7 +37,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     {
       section: 'Quarterly Statistics',
       description:
-        'A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter.',
+        'A high-level summary showing the total contributions and repositories involved in during the quarter.',
       metricTitle: 'Total Count, Unique Repositories',
       metricDescription: 'Aggregated totals for the 90-day period',
     },
@@ -59,35 +59,35 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       section: 'Merged PRs',
       description:
         'Detailed list of Pull Requests authored by user and merged into external repositories.',
-      metricTitle: '**Review Period**',
+      metricTitle: 'Review Period',
       metricDescription: 'Time from creation to merge',
     },
     {
       section: 'Issues',
       description: 'Detailed list of Issues authored by user on external repositories.',
-      metricTitle: '**Closing Period**',
+      metricTitle: 'Closing Period',
       metricDescription: 'Time from creation to close',
     },
     {
       section: 'Reviewed PRs',
       description:
         'Detailed list of Pull Requests reviewed or merged by user on external repositories.',
-      metricTitle: '**My First Review Period**',
-      metricDescription: "Time from PR creation to user's first review",
+      metricTitle: 'User\'s First Review Period',
+      metricDescription: 'Time from PR creation to user\'s first review',
     },
     {
       section: 'Co-Authored PRs',
       description:
         "Pull Requests where user contributed commits (including co-authored commits) to other contributor's PRs.",
-      metricTitle: '**My First Commit Period**',
-      metricDescription: "Time from PR creation to user's first commit",
+      metricTitle: 'User\'s First Commit Period',
+      metricDescription: 'Time from PR creation to user\'s first commit',
     },
     {
       section: 'Collaborations',
       description:
         'Detailed list of open Issues or PRs where user has commented to participate in discussion.',
-      metricTitle: '**First Commented At**',
-      metricDescription: "The date of user's initial comment",
+      metricTitle: 'User\'s First Comment',
+      metricDescription: 'The date of user\'s initial comment',
     },
   ];
 
@@ -114,9 +114,9 @@ async function createHtmlReports(quarterlyFileLinks = []) {
               <td class="px-6 py-4 text-sm text-gray-700">
                 ${safeDescription}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-500">
+              <td class="px-6 py-4 text-sm text-gray-700">
                 <span>${safeMetricTitle}</span>
-                <span class="block text-xs italic text-gray-400">
+                <span class="block text-xs italic text-gray-500">
                   ${item.metricDescription}
                 </span>
               </td>
