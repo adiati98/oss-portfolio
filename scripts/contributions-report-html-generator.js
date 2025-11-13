@@ -72,22 +72,22 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       section: 'Reviewed PRs',
       description:
         'Detailed list of Pull Requests reviewed or merged by user on external repositories.',
-      metricTitle: 'User\'s First Review Period',
-      metricDescription: 'Time from PR creation to user\'s first review',
+      metricTitle: "User's First Review Period",
+      metricDescription: "Time from PR creation to user's first review",
     },
     {
       section: 'Co-Authored PRs',
       description:
         "Pull Requests where user contributed commits (including co-authored commits) to other contributor's PRs.",
-      metricTitle: 'User\'s First Commit Period',
-      metricDescription: 'Time from PR creation to user\'s first commit',
+      metricTitle: "User's First Commit Period",
+      metricDescription: "Time from PR creation to user's first commit",
     },
     {
       section: 'Collaborations',
       description:
         'Detailed list of open Issues or PRs where user has commented to participate in discussion.',
-      metricTitle: 'User\'s First Comment',
-      metricDescription: 'The date of user\'s initial comment',
+      metricTitle: "User's First Comment",
+      metricDescription: "The date of user's initial comment",
     },
   ];
 
@@ -96,10 +96,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     const totalRows = reportStructure.length;
     return reportStructure
       .map((item, index) => {
-        const safeDescription = item.description
-          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-          .replace(/`/g, '<code>');
-        const safeMetricTitle = item.metricTitle.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const safeDescription = item.description;
+        const safeMetricTitle = item.metricTitle;
 
         const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
 
