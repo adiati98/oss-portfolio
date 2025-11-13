@@ -280,11 +280,11 @@ ${navHtml}
         </header>
 
         <section class="mb-14">
-          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
             Report Structure Breakdown
           </h2>
-          <p class="text-lg text-gray-600 mb-8">
-            Each quarterly report provides a detailed log and summary for that period:
+          <p class="text-lg text-gray-600 mb-12">
+            Each quarterly report provides a detailed log and summary for that period.
           </p>
             
           <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
@@ -309,11 +309,11 @@ ${navHtml}
           </div>
         </section>
 
-        <section class="mt-14 pt-8 border-t border-gray-300">
-          <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+        <section class="mt-14 pt-8">
+          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
             Quarterly Reports (Detail Pages)
           </h2>
-          <p class="text-lg text-gray-600 mb-6">
+          <p class="text-lg text-gray-600 mb-12">
             Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
           </p>
           <div class="grid grid-cols-1 report-list">
