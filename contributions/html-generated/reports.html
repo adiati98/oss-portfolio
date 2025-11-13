@@ -215,11 +215,9 @@
           </header>
 
           <section class="mb-14">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
-              Report Structure Breakdown
-            </h2>
-            <p class="text-lg text-gray-600 mb-8">
-              Each quarterly report provides a detailed log and summary for that period:
+            <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">Report Structure Breakdown</h2>
+            <p class="text-lg text-gray-600 mb-12">
+              Each quarterly report provides a detailed log and summary for that period.
             </p>
 
             <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
@@ -252,12 +250,14 @@
                       Quarterly Statistics
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      A high-level summary showing the
-                      <strong>Total Contributions</strong> and
-                      <strong>Total Repositories</strong> involved in during the quarter.
+                      A high-level summary showing the total contributions and repositories involved
+                      in during the quarter.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      Total Count, Unique Repositories
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>Total Count, Unique Repositories</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Aggregated totals for the 90-day period
+                      </span>
                     </td>
                   </tr>
 
@@ -269,8 +269,11 @@
                       A table listing the count of contributions for each of the five core
                       categories within that quarter.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      Category Counts
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>Category Counts</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Snapshot of all contribution types
+                      </span>
                     </td>
                   </tr>
 
@@ -282,8 +285,11 @@
                       The top three projects where contributions were made in that quarter, ranked
                       by total count.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      Contribution Frequency
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>Contribution Frequency</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Count per repository, ranked highest first
+                      </span>
                     </td>
                   </tr>
 
@@ -292,11 +298,14 @@
                       Merged PRs
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      Detailed list of Pull Requests
-                      <strong>authored by me</strong> and merged into external repositories.
+                      Detailed list of Pull Requests authored by user and merged into external
+                      repositories.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <strong>Review Period</strong> (Time from creation to merge)
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>Review Period</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Time from creation to merge
+                      </span>
                     </td>
                   </tr>
 
@@ -305,11 +314,13 @@
                       Issues
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      Detailed list of Issues <strong>authored by me</strong> on external
-                      repositories.
+                      Detailed list of Issues authored by user on external repositories.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <strong>Closing Period</strong> (Time from creation to close)
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>Closing Period</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Time from creation to close
+                      </span>
                     </td>
                   </tr>
 
@@ -318,12 +329,14 @@
                       Reviewed PRs
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      Detailed list of Pull Requests
-                      <strong>reviewed or merged by me</strong> on external repositories.
+                      Detailed list of Pull Requests reviewed or merged by user on external
+                      repositories.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <strong>My First Review Period</strong> (Time from PR creation to my first
-                      review)
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>User's First Review Period</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Time from PR creation to user's first review
+                      </span>
                     </td>
                   </tr>
 
@@ -332,13 +345,14 @@
                       Co-Authored PRs
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      Pull Requests where
-                      <strong>I contributed commits (including co-authored commits)</strong>
+                      Pull Requests where user contributed commits (including co-authored commits)
                       to other contributor's PRs.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <strong>My First Commit Period</strong> (Time from PR creation to my first
-                      commit)
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>User's First Commit Period</span>
+                      <span class="block text-xs italic text-gray-500">
+                        Time from PR creation to user's first commit
+                      </span>
                     </td>
                   </tr>
 
@@ -347,11 +361,14 @@
                       Collaborations
                     </td>
                     <td class="px-6 py-4 text-sm text-gray-700">
-                      Detailed list of open Issues or PRs where I have
-                      <strong>commented</strong> to participate in discussion.
+                      Detailed list of open Issues or PRs where user has commented to participate in
+                      discussion.
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <strong>First Commented At</strong> (The date of my initial comment)
+                    <td class="px-6 py-4 text-sm text-gray-700">
+                      <span>User's First Comment</span>
+                      <span class="block text-xs italic text-gray-500">
+                        The date of user's initial comment
+                      </span>
                     </td>
                   </tr>
                 </tbody>
@@ -359,11 +376,11 @@
             </div>
           </section>
 
-          <section class="mt-14 pt-8 border-t border-gray-300">
-            <h2 class="text-3xl font-bold text-gray-800 border-b-2 border-indigo-500 pb-3 mb-8">
+          <section class="mt-14 pt-8">
+            <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
               Quarterly Reports (Detail Pages)
             </h2>
-            <p class="text-lg text-gray-600 mb-6">
+            <p class="text-lg text-gray-600 mb-12">
               Expand the yearly sections below and click on any quarter to view the detailed tables
               and statistics for that period.
             </p>
@@ -383,7 +400,7 @@
                   >
                     <a href="./2025/Q4-2025.html" class="block p-4">
                       <p class="text-sm font-semibold text-indigo-700">Quarter 4</p>
-                      <p class="text-3xl font-extrabold text-gray-800 mt-1">157</p>
+                      <p class="text-3xl font-extrabold text-gray-800 mt-1">159</p>
                       <p class="text-xs text-gray-500">Total Contributions</p>
                     </a>
                   </div>
