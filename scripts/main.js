@@ -85,7 +85,7 @@ async function main() {
     const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null;
     const today = new Date();
 
-    let fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : today.getFullYear() - 1; // Default to last year if SINCE_YEAR is not available
+    let fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : today.getFullYear() - 1;
 
     if (!lastUpdate) {
       fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : fetchStartYear;
@@ -97,7 +97,6 @@ async function main() {
       const currentMonth = today.getMonth();
 
       const sameMonth = lastUpdateMonth === currentMonth && lastUpdateYear === currentYear;
-      // Check if last update was exactly the previous month
       const previousMonth =
         lastUpdateMonth === (currentMonth - 1 + 12) % 12 &&
         (lastUpdateYear === currentYear ||
@@ -128,7 +127,7 @@ async function main() {
       commitCache: usedCommitCache,
     } = await fetchContributions(fetchStartYear, prCache, mergedCommitCache);
 
-    // Second pass: merge new contributions and existing ones, preserving and updating contribution types
+    // Second pass: merge new contributions and existing ones, enforcing category hierarchy
     let finalContributions = {
       pullRequests: [],
       issues: [],
@@ -137,57 +136,95 @@ async function main() {
       collaborations: [],
     };
 
-    // Keep track of URLs for each category separately for in-memory deduplication
-    const categorySeenUrls = {
-      pullRequests: new Set(),
-      issues: new Set(),
-      reviewedPrs: new Set(),
-      coAuthoredPrs: new Set(),
-      collaborations: new Set(),
-    };
+    // --- 1. Load Existing Contributions (Preserve categories with category hierarchy) ---
+    console.log(
+      'Preserving existing contributions by category (enforcing hierarchy: reviewedPrs/coAuthoredPrs > collaborations).'
+    );
 
-    // Helper to add/update an item in its correct final category,
-    // respecting the independence of categories (e.g., a PR can also be a reviewed PR).
-    const addOrUpdateItem = (item, type) => {
-      // Only proceed if the type is one we track
-      if (!finalContributions[type]) return;
+    const globalLoadedBy = new Map(); // url -> Set of categories
 
-      // Check if the item already exists in this specific category array
-      const existingIndex = finalContributions[type].findIndex((i) => i.url === item.url);
-
-      if (existingIndex !== -1) {
-        // If it exists, update the existing entry (e.g., status changed on re-fetch)
-        finalContributions[type][existingIndex] = item;
-      } else {
-        // If it's a new URL for this category, add it and mark as seen
-        finalContributions[type].push(item);
-        categorySeenUrls[type].add(item.url);
-      }
-    };
-
-    // --- 1. Load Existing Contributions (Preserve all categories) ---
-    console.log('Preserving existing contributions by category.');
-
-    for (const type of Object.keys(finalContributions)) {
+    // Load existing data from disk and allow duplication only for reviewedPrs + coAuthoredPrs combo
+    const categoryOrder = Object.keys(finalContributions);
+    for (const type of categoryOrder) {
       if (Array.isArray(allContributions[type])) {
         for (const item of allContributions[type]) {
-          // Add existing items that haven't been seen yet. Updates will happen from newContributions later.
-          if (!categorySeenUrls[type].has(item.url)) {
+          const url = item.url;
+          const seen = globalLoadedBy.get(url);
+
+          if (!seen) {
             finalContributions[type].push(item);
-            categorySeenUrls[type].add(item.url);
+            globalLoadedBy.set(url, new Set([type]));
+            continue;
+          }
+
+          const higherTier = new Set(['reviewedPrs', 'coAuthoredPrs']);
+          const currentIsHigher = higherTier.has(type);
+          const allExistingAreHigher = Array.from(seen).every((c) => higherTier.has(c));
+
+          if (currentIsHigher && allExistingAreHigher) {
+            finalContributions[type].push(item);
+            seen.add(type);
+            globalLoadedBy.set(url, seen);
           }
         }
       }
     }
 
-    // --- 2. Add/Update Newly Fetched Contributions ---
-    console.log('Merging newly fetched contributions.');
+    // --- 2. Add/Update Newly Fetched Contributions (with hierarchy enforcement) ---
+    console.log('Merging newly fetched contributions (enforcing category hierarchy).');
 
     for (const type of Object.keys(newContributions)) {
       if (Array.isArray(newContributions[type])) {
         for (const item of newContributions[type]) {
-          // New items must be added or update existing ones, ensuring the latest data is used.
-          addOrUpdateItem(item, type);
+          const url = item.url;
+
+          const existingIndex = finalContributions[type].findIndex((i) => i.url === url);
+          if (existingIndex !== -1) {
+            finalContributions[type][existingIndex] = item;
+            const s = globalLoadedBy.get(url) || new Set();
+            s.add(type);
+            globalLoadedBy.set(url, s);
+            continue;
+          }
+
+          const seen = globalLoadedBy.get(url);
+          if (!seen) {
+            finalContributions[type].push(item);
+            globalLoadedBy.set(url, new Set([type]));
+            continue;
+          }
+
+          const higherTier = new Set(['reviewedPrs', 'coAuthoredPrs']);
+          const currentIsHigher = higherTier.has(type);
+          const existingInHigher = Array.from(seen).filter((c) => higherTier.has(c));
+          const existingInLower = Array.from(seen).filter((c) => !higherTier.has(c));
+
+          if (currentIsHigher) {
+            if (existingInLower.length > 0) {
+              for (const lowerCat of existingInLower) {
+                const idx = finalContributions[lowerCat].findIndex((i) => i.url === url);
+                if (idx !== -1) {
+                  finalContributions[lowerCat].splice(idx, 1);
+                }
+              }
+            }
+
+            finalContributions[type].push(item);
+            seen.delete('collaborations');
+            if (existingInHigher.length > 0) {
+              for (const higherCat of existingInHigher) {
+                seen.add(higherCat);
+              }
+            }
+            seen.add(type);
+            globalLoadedBy.set(url, seen);
+          } else {
+            if (existingInHigher.length === 0) {
+              finalContributions[type].push(item);
+              seen.add(type);
+              globalLoadedBy.set(url, seen);
+            }
+          }
         }
       }
     }
@@ -229,7 +266,6 @@ async function main() {
     // Persist the commit cache to disk so future runs reuse it and save API calls.
     try {
       const obj = {};
-      // Convert Map to object for saving to disk.
       for (const [k, v] of usedCommitCache || mergedCommitCache) {
         obj[k] = v;
       }
@@ -241,10 +277,9 @@ async function main() {
 
     console.log('Contributions update completed successfully.');
   } catch (e) {
-    // Handle any top-level errors that occur during the process.
     console.error(`Failed to update contributions: ${e.message}`);
     process.exit(1);
   }
 }
-// Start the main execution.
+
 main();
