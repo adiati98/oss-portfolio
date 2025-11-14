@@ -561,9 +561,8 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       const owner = repoParts[repoParts.length - 2];
       const repoName = repoParts[repoParts.length - 1];
 
-      // Skip collaborations that have already been reviewed (covered by uniqueReviewedPrs)
-      // or already processed in this loop (covered by seenUrls.collaborations) or are in your own repos.
-      if (seenUrls.collaborations.has(item.html_url) || uniqueReviewedPrs.has(item.html_url)) {
+      // Skip if already processed in this loop or in your own repos.
+      if (seenUrls.collaborations.has(item.html_url)) {
         continue;
       }
 
@@ -576,6 +575,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       // --- 2. Check for commits on PRs (Co-Authored PRs) ---
       // This is a re-check for co-authored commits on *all* collaborations (PRs only),
       // ensuring that co-authored PRs that weren't reviewed are still caught.
+      let hasCommits = false;
       if (item.pull_request) {
         // Only PRs have 'commits' endpoint
         const commitDetails = await getFirstCommitDetails(
@@ -588,6 +588,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
+          hasCommits = true;
           // If my commits exist, add it to the new category. Use the
           // first commit date for grouping, falling back to the PR's
           // updated_at when necessary.
@@ -615,17 +616,68 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         }
       }
 
-      // --- 3. Collaborations Logic (Tracks first *comment* on issues/PRs not covered by reviews) ---
-      const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
+      // --- 3. Check for reviews (Reviewed PRs) ---
+      // Check if this item has been reviewed by the user, even if it wasn't caught
+      // in the initial reviewedPrs query (e.g., PRs that were found via collaborations).
+      let hasReview = false;
+      if (item.pull_request && !uniqueReviewedPrs.has(item.html_url)) {
+        const myFirstReviewDate = await getPrMyFirstReviewDate(
+          owner,
+          repoName,
+          item.number,
+          GITHUB_USERNAME
+        );
 
-      contributions.collaborations.push({
-        title: item.title,
-        url: item.html_url,
-        repo: `${owner}/${repoName}`,
-        date: firstCommentDate,
-        createdAt: item.created_at,
-        firstCommentedAt: firstCommentDate,
-      });
+        if (myFirstReviewDate) {
+          hasReview = true;
+          let mergedAt = null;
+          let mergePeriod = 'Open';
+
+          if (item.pull_request && item.pull_request.merged_at) {
+            mergedAt = item.pull_request.merged_at;
+            mergePeriod =
+              Math.round((new Date(mergedAt) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)) +
+              ' days';
+          } else if (item.state === 'closed') {
+            mergePeriod = 'Closed';
+          }
+
+          let myFirstReviewPeriod =
+            Math.round(
+              (new Date(myFirstReviewDate) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)
+            ) + ' days';
+
+          contributions.reviewedPrs.push({
+            title: item.title,
+            url: item.html_url,
+            repo: `${owner}/${repoName}`,
+            date: item.updated_at,
+            createdAt: item.created_at,
+            mergedAt,
+            mergePeriod,
+            myFirstReviewDate,
+            myFirstReviewPeriod,
+            state: item.state,
+          });
+          uniqueReviewedPrs.add(item.html_url);
+        }
+      }
+
+      // --- 4. Collaborations Logic (Tracks first *comment* on issues/PRs not covered by reviews) ---
+      // Only add to collaborations if it doesn't have commits or reviews (those are higher-tier categories)
+      if (!hasCommits && !hasReview) {
+        const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
+
+        contributions.collaborations.push({
+          title: item.title,
+          url: item.html_url,
+          repo: `${owner}/${repoName}`,
+          date: firstCommentDate,
+          createdAt: item.created_at,
+          firstCommentedAt: firstCommentDate,
+        });
+      }
+
       seenUrls.collaborations.add(item.html_url);
     }
   }
