@@ -23,7 +23,7 @@ function formatDate(dateString) {
 function calculatePeriodInDays(startDateString, endDateString, status = null) {
   if (!startDateString || !endDateString) {
     if (status && status.toLowerCase() === 'open') {
-      return 'Open';
+      return '<strong>OPEN</strong>';
     }
     return 'N/A';
   }

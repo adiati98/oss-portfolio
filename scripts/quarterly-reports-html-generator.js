@@ -52,6 +52,61 @@ async function writeHtmlFiles(groupedContributions) {
     .sort((a, b) => a.key.localeCompare(b.key));
 
   /**
+   * Generates an HTML badge string with GitHub-like styling based on the status word.
+   * @param {string} status The status keyword (e.g., 'OPEN', 'MERGED', 'CLOSED', 'N/A').
+   * @returns {string} The HTML for the stylized badge.
+   */
+  function getStatusBadgeHtml(status) {
+    // Ensure status is uppercase and trim whitespace for reliable matching
+    const cleanedStatus = status.toUpperCase().trim();
+
+    let colorClasses = 'bg-gray-100 text-gray-700 font-medium'; // Default N/A
+
+    switch (cleanedStatus) {
+      case 'OPEN':
+        // GitHub green for open issues/PRs
+        colorClasses = 'bg-green-100 text-green-700 font-semibold';
+        break;
+      case 'MERGED':
+        // GitHub purple for merged PRs
+        colorClasses = 'bg-purple-100 text-purple-700 font-semibold';
+        break;
+      case 'CLOSED':
+        // GitHub red for closed issues/PRs
+        colorClasses = 'bg-red-100 text-red-700 font-semibold';
+        break;
+      default:
+        // Use default gray for DRAFT, PENDING, or unknown
+        break;
+    }
+
+    // Use a small rounded badge style
+    return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${colorClasses}">${cleanedStatus}</span>`;
+  }
+
+  /**
+   * Parses the formatter output (e.g., 'YYYY-MM-DD<br><strong>STATUS</strong>')
+   * and replaces the <strong>STATUS</strong> with a colored badge.
+   * @param {string} content The output from getPrStatusContent.
+   * @returns {string} The date followed by the HTML badge.
+   */
+  function formatPrStatusWithBadge(content) {
+    const parts = content.split('<br>');
+    if (parts.length < 2) return content;
+
+    const date = parts[0];
+    const rawStatusTag = parts[1]; // e.g., '<strong>MERGED</strong>'
+
+    // Regex to extract the status word from inside the <strong> tags
+    // This allows us to handle the output from getPrStatusContent which is: YYYY-MM-DD<br><strong>STATUS</strong>
+    const statusMatch = rawStatusTag.match(/<strong>(.*?)<\/strong>/i);
+    const statusWord = statusMatch && statusMatch[1] ? statusMatch[1] : 'N/A';
+
+    const statusBadge = getStatusBadgeHtml(statusWord);
+    return `${date}<br>${statusBadge}`;
+  }
+
+  /**
    * Generates the HTML for the Next/Previous navigation buttons.
    * @param {number} index - The index of the current report being processed in the allReports array.
    * @returns {string} The HTML for the navigation bar.
@@ -178,8 +233,8 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-             <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
-          `
+           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+         `
       )
       .join('');
 
@@ -262,7 +317,7 @@ async function writeHtmlFiles(groupedContributions) {
   <!-- Load Tailwind CSS -->
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
     html, body {
       margin: 0;
       padding: 0;
@@ -304,21 +359,21 @@ async function writeHtmlFiles(groupedContributions) {
 </head>
 <body>
 ${navHtmlForReports}
-	<main class="grow w-full">
+  <main class="grow w-full">
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-    		<header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-        	<h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
-        	<p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-    		</header>
+        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
+          <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
+          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+        </header>
 
-				<!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
-    		<section class="mb-8">
-        	<h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
+        <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
+        <section class="mb-8">
+          <h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
 
-        	<!-- Total Contributions & Total Repositories (Two Big Cards) -->
-        	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-           	<div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+          <!-- Total Contributions & Total Repositories (Two Big Cards) -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
               <p class="text-4xl font-extrabold">${totalContributions}</p>
               <p class="text-lg mt-2 font-medium">Total Contributions</p>
             </div>
@@ -326,55 +381,55 @@ ${navHtmlForReports}
               <p class="text-4xl font-extrabold">${totalRepos}</p>
               <p class="text-lg mt-2 font-medium">Total Repositories</p>
             </div>
-        	</div>
-    		</section>
+          </div>
+        </section>
 
-    		<!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
-    		<section class="mb-8">
-       		<h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-       		<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-        		<!-- Merged PRs -->
-         		<a href="#${sections.pullRequests.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-         		  <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
-          		<span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-          	</a>
+        <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
+        <section class="mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+            <!-- Merged PRs -->
+            <a href="#${sections.pullRequests.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+              <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
+            </a>
             <!-- Issues -->
-           	<a href="#${sections.issues.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-           		<span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
-            	<span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-           	</a>
-          	<!-- Reviewed PRs -->
-         		<a href="#${sections.reviewedPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-           		<span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
-            	<span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-           	</a>
-          	<!-- Co-Authored PRs -->
-          	<a href="#${sections.coAuthoredPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-             	<span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
+            <a href="#${sections.issues.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+              <span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
+            </a>
+            <!-- Reviewed PRs -->
+            <a href="#${sections.reviewedPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+              <span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
+            </a>
+            <!-- Co-Authored PRs -->
+            <a href="#${sections.coAuthoredPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
+              <span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
             </a>
             <!-- Collaborations -->
             <a href="#${sections.collaborations.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-             	<span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
+              <span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-          	</a>
-        	</div>
-    		</section>
+            </a>
+          </div>
+        </section>
 
-    		<!-- 3. TOP 3 REPOSITORIES SECTION -->
-    		<section class="mb-8">
-      		<h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-      		<div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+        <!-- 3. TOP 3 REPOSITORIES SECTION -->
+        <section class="mb-8">
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+          <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
             <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-          		${top3Repos}
+              ${top3Repos}
             </ol>
-        	</div>
-    		</section>
+          </div>
+        </section>
 
-    		<hr class="my-8 border-gray-200">
+        <hr class="my-8 border-gray-200">
     
-    		<section class="space-y-6">
-		`;
+        <section class="space-y-6">
+    `;
 
     // Loop through each contribution type to create a collapsible section.
     for (const [section, sectionInfo] of Object.entries(sections)) {
@@ -400,7 +455,7 @@ ${navHtmlForReports}
 
         // Generate table headers with specified width styles
         for (let i = 0; i < sectionInfo.headers.length; i++) {
-          tableContent += `      <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`;
+          tableContent += `    <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`;
         }
         tableContent += `    </tr>\n`;
         tableContent += `  </thead>\n`;
@@ -419,19 +474,19 @@ ${navHtmlForReports}
               ${item.repo}
             </span>
           `;
-          tableContent += `      <td>${repoSpanHtml}</td>\n`;
+          tableContent += `      <td>${repoSpanHtml}</td>\n`;
           // Title: styled as a link
           const linkHtml = dedent`
-            <a
-              href='${item.url}'
-              target='_blank'
-              class="text-blue-600 hover:text-blue-800 
-							hover:underline"
-            >
-               ${item.title}
-            </a>
-          `;
-          tableContent += `      <td>${linkHtml}</td>\n`;
+            <a
+              href='${item.url}'
+              target='_blank'
+              class="text-blue-600 hover:text-blue-800 
+              hover:underline"
+            >
+              ${item.title}
+            </a>
+          `;
+          tableContent += `      <td>${linkHtml}</td>\n`;
 
           // Logic for Merged PRs table structure
           if (section === 'pullRequests') {
@@ -441,16 +496,24 @@ ${navHtmlForReports}
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${mergedAt}</td>\n`;
+            // The review period is just text (e.g., "10 days"), so no badge is needed here.
             tableContent += `      <td>${reviewPeriod}</td>\n`;
             // Logic for Issues table structure
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
-            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, item.state);
+            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
+
+            let closingPeriodHtml = closingPeriod;
+
+            // Check for the "OPEN" status string we generated in the formatter script
+            if (closingPeriod === '<strong>OPEN</strong>') {
+              closingPeriodHtml = getStatusBadgeHtml('OPEN');
+            }
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${closedAt}</td>\n`;
-            tableContent += `      <td>${closingPeriod}</td>\n`;
+            tableContent += `      <td>${closingPeriodHtml}</td>\n`;
             // Logic for Reviewed PRs table structure
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
@@ -459,23 +522,25 @@ ${navHtmlForReports}
               item.createdAt,
               item.myFirstReviewDate
             );
-            const lastUpdateContent = getPrStatusContent(item);
+            const lastUpdateContent = getPrStatusContent(item); // e.g., "YYYY-MM-DD<br><strong>MERGED</strong>"
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            // Use the new helper to format the status with a badge
+            tableContent += `      <td>${formatPrStatusWithBadge(lastUpdateContent)}</td>\n`;
             // Logic for Co-Authored PRs table structure
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
             const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
-            const lastUpdateContent = getPrStatusContent(item);
+            const lastUpdateContent = getPrStatusContent(item); // e.g., "YYYY-MM-DD<br><strong>OPEN</strong>"
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${firstCommitAt}</td>\n`;
             tableContent += `      <td>${firstCommitPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            // Use the new helper to format the status with a badge
+            tableContent += `      <td>${formatPrStatusWithBadge(lastUpdateContent)}</td>\n`;
             // Logic for Collaborations table structure
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
@@ -502,46 +567,46 @@ ${navHtmlForReports}
 
     // Close the last main <section> tag and max-width container
     htmlContent += dedent`
-            </section>
-            ${navButton}
-          </div>
+          </section>
+          ${navButton}
         </div>
-      </main>
+      </div>
+    </main>
     <script>
-  		// Function to handle opening the correct section on load/hash change
-  		function openSectionFromHash() {
-    		const hash = window.location.hash;
-    		if (hash) {
-      		// Find the corresponding details element (the ID includes the '#')
-      		const targetDetails = document.querySelector(hash);
-      		if (targetDetails && targetDetails.tagName === 'DETAILS') {
-        		// Close all other details elements first for a cleaner view
-        		document.querySelectorAll('details').forEach(detail => {
-          		detail.open = false;
-        		});
+      // Function to handle opening the correct section on load/hash change
+      function openSectionFromHash() {
+        const hash = window.location.hash;
+        if (hash) {
+          // Find the corresponding details element (the ID includes the '#')
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details elements first for a cleaner view
+            document.querySelectorAll('details').forEach(detail => {
+              detail.open = false;
+            });
 
-        		// Open the target details element
-        		targetDetails.open = true;
+            // Open the target details element
+            targetDetails.open = true;
 
-        		// Scroll to the opened section (using a small delay to ensure it's fully rendered open)
-        		setTimeout(() => {
-          		targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        		}, 100);
-      		}
-    		} else {
-      		// Default behavior: open the first section ('merged-prs') if no hash is present
-      		const defaultDetails = document.getElementById('merged-prs');
-      		if (defaultDetails) {
-        		defaultDetails.open = true;
-      		}
-    		}
-  		}
+            // Scroll to the opened section (using a small delay to ensure it's fully rendered open)
+            setTimeout(() => {
+              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }
+        } else {
+          // Default behavior: open the first section ('merged-prs') if no hash is present
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) {
+            defaultDetails.open = true;
+          }
+        }
+      }
 
-  		// Execute on page load
-  		window.addEventListener('DOMContentLoaded', openSectionFromHash);
-  		// Also handle if the hash changes in the same page (though not strictly needed for this link structure)
-  		window.addEventListener('hashchange', openSectionFromHash);
-		</script>
+      // Execute on page load
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
+      window.addEventListener('hashchange', openSectionFromHash);
+    </script>
 ${footerHtml}
     </body>
 </html>
