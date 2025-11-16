@@ -13,7 +13,7 @@ const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
 // Import right arrow and favicon svgs
-const { RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED } = require('./constants');
+const { RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED, COLORS } = require('./constants');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'index.html';

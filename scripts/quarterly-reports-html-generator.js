@@ -1,30 +1,20 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-
-// Import the dedent utility
 const { dedent } = require('./dedent');
-
-// Import configuration
 const { BASE_DIR } = require('./config');
-
-// Import formatters
 const {
   formatDate,
   calculatePeriodInDays,
   getPrStatusContent,
+  getCollaborationStatusContent,
 } = require('./contribution-formatters');
-
-// Import navbar and footer
 const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
+const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED, COLORS } = require('./constants');
 
-// Import svgs
-const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED } = require('./constants');
-
-// 1. Update the link from root (./) to relative root (../index.html)
+// Update navigation links for report pages (relative to subdirectories like /2023/)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
-// 2. Update all instances of 'reports.html' to the relative path '../reports.html'
 navHtmlForReports = navHtmlForReports.replace(/href="reports\.html"/g, 'href="../reports.html"');
 
 /**
@@ -60,20 +50,20 @@ async function writeHtmlFiles(groupedContributions) {
     // Ensure status is uppercase and trim whitespace for reliable matching
     const cleanedStatus = status.toUpperCase().trim();
 
-    let colorClasses = 'bg-gray-100 text-gray-700 font-medium'; // Default N/A
+    let colorClasses = `bg-${COLORS.status.gray.bg} text-${COLORS.status.gray.text} font-medium`; // Default N/A
 
     switch (cleanedStatus) {
       case 'OPEN':
         // GitHub green for open issues/PRs
-        colorClasses = 'bg-green-100 text-green-700 font-semibold';
+        colorClasses = `bg-${COLORS.status.green.bg} text-${COLORS.status.green.text} font-semibold`;
         break;
       case 'MERGED':
         // GitHub purple for merged PRs
-        colorClasses = 'bg-purple-100 text-purple-700 font-semibold';
+        colorClasses = `bg-${COLORS.status.purple.bg} text-${COLORS.status.purple.text} font-semibold`;
         break;
       case 'CLOSED':
         // GitHub red for closed issues/PRs
-        colorClasses = 'bg-red-100 text-red-700 font-semibold';
+        colorClasses = `bg-${COLORS.status.red.bg} text-${COLORS.status.red.text} font-semibold`;
         break;
       default:
         // Use default gray for DRAFT, PENDING, or unknown
@@ -82,6 +72,26 @@ async function writeHtmlFiles(groupedContributions) {
 
     // Use a small rounded badge style
     return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${colorClasses}">${cleanedStatus}</span>`;
+  }
+
+  /**
+   * Helper to build Tailwind classes using color constants.
+   * This helps ensure consistency across the generated HTML.
+   */
+  function buildClasses(classMapping) {
+    const classes = [];
+    for (const [key, colorKey] of Object.entries(classMapping)) {
+      if (colorKey.includes('.')) {
+        // Handle nested color properties like 'primary.700'
+        const [category, shade] = colorKey.split('.');
+        if (COLORS[category]?.[shade]) {
+          classes.push(`${key}-${COLORS[category][shade]}`);
+        }
+      } else {
+        classes.push(`${key}-${colorKey}`);
+      }
+    }
+    return classes.join(' ');
   }
 
   /**
@@ -298,9 +308,16 @@ async function writeHtmlFiles(groupedContributions) {
         title: 'Collaborations',
         icon: '💬',
         id: 'collaborations',
-        headers: ['No.', 'Project', 'Title', 'Created At', 'Commented At'],
-        widths: ['5%', '30%', '35%', '15%', '15%'],
-        keys: ['repo', 'title', 'createdAt', 'date'],
+        headers: [
+          'No.',
+          'Project',
+          'Title',
+          'Created At',
+          'Last Commented At',
+          'Last Update / Status',
+        ],
+        widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
+        keys: ['repo', 'title', 'createdAt', 'date', 'date'],
       },
     };
 
@@ -433,7 +450,18 @@ ${navHtmlForReports}
 
     // Loop through each contribution type to create a collapsible section.
     for (const [section, sectionInfo] of Object.entries(sections)) {
-      const items = data[section];
+      let items = data[section];
+
+      // Sort reviewed and co-authored PRs by their engagement date (ascending order)
+      if (section === 'reviewedPrs' && items && items.length > 0) {
+        items = [...items].sort((a, b) => {
+          return new Date(a.myFirstReviewDate) - new Date(b.myFirstReviewDate);
+        });
+      } else if (section === 'coAuthoredPrs' && items && items.length > 0) {
+        items = [...items].sort((a, b) => {
+          return new Date(a.firstCommitDate) - new Date(b.firstCommitDate);
+        });
+      }
       const openAttribute = '';
 
       // Use the HTML <details> tag with Tailwind styles for a collapsible section
@@ -545,9 +573,12 @@ ${navHtmlForReports}
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
+            const statusContent = getCollaborationStatusContent(item);
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
+            // Use the new helper to format the status with a badge
+            tableContent += `      <td>${formatPrStatusWithBadge(statusContent)}</td>\n`;
           }
 
           tableContent += `    </tr>\n`;

@@ -45,8 +45,125 @@ function encodeSvg(svgString) {
 
 const FAVICON_SVG_ENCODED = encodeSvg(FAVICON_SVG_RAW);
 
+/**
+ * CENTRALIZED COLOR CONFIGURATION
+ * ================================
+ *
+ * This object defines all colors used throughout the generated HTML reports.
+ * To customize colors, update the values below using Tailwind CSS color names.
+ *
+ * Color Properties:
+ * - Primary: Used for headers, accents, and main buttons (default: indigo)
+ * - Gray: Used for neutral elements (backgrounds, borders, text)
+ * - Status: Used for PR/Issue status badges
+ * - Link: Used for hyperlinks
+ * - Background: Page and section backgrounds
+ * - Border: Border colors for various elements
+ * - SectionAccent: Left borders for section headings
+ *
+ * IMPORTANT NOTES:
+ * 1. Hover effects use pure CSS (not Tailwind) to avoid specificity issues
+ * 2. Colors are hardcoded in template literals - changes here affect new generations
+ * 3. For custom color schemes, modify the Tailwind class names below
+ * 4. Always test hover effects after changing colors
+ */
+const COLORS = {
+  // Primary accent color (used for main UI elements)
+  primary: {
+    50: 'indigo-50',
+    100: 'indigo-100',
+    500: 'indigo-500',
+    600: 'indigo-600',
+    700: 'indigo-700',
+  },
+  // Neutral grays
+  gray: {
+    50: 'gray-50',
+    100: 'gray-100',
+    200: 'gray-200',
+    500: 'gray-500',
+    600: 'gray-600',
+    700: 'gray-700',
+    800: 'gray-800',
+  },
+  // Status badge colors (for PR/Issue states)
+  status: {
+    green: {
+      bg: 'green-100',
+      text: 'green-700',
+    },
+    purple: {
+      bg: 'purple-100',
+      text: 'purple-700',
+    },
+    red: {
+      bg: 'red-100',
+      text: 'red-700',
+    },
+    gray: {
+      bg: 'gray-100',
+      text: 'gray-700',
+    },
+  },
+  // Link colors
+  link: {
+    text: 'blue-600',
+    textHover: 'blue-800',
+  },
+  // Background colors
+  background: {
+    white: 'white',
+    altRows: 'gray-50',
+  },
+  // Border colors
+  border: {
+    default: 'border-gray-200',
+    section: 'border-gray-200',
+    bottomAccent: 'border-indigo-100',
+  },
+  // Accent borders for section headings
+  sectionAccent: {
+    green: 'border-green-500',
+    yellow: 'border-yellow-500',
+    indigo: 'border-indigo-500',
+  },
+};
+
+/**
+ * Generates CSS with custom properties for hover effects.
+ * This approach ensures hover effects work correctly without relying on Tailwind's
+ * hover: prefixed classes in template literals, which can have specificity issues.
+ *
+ * Returns: <style> tag with CSS rules for safe hover effects
+ */
+function getHoverStyles() {
+  return `
+    <style>
+      /* CSS Custom Properties for easy customization */
+      :root {
+        --primary-50: rgb(238, 242, 255);
+        --primary-600: rgb(79, 70, 229);
+        --gray-50: rgb(249, 250, 251);
+      }
+      
+      /* Safe hover effect for metric cards */
+      .metric-card-hover:hover {
+        background-color: var(--primary-50);
+        border-color: var(--primary-600);
+      }
+      
+      /* Safe hover effect for table rows */
+      .table-row-hover:hover {
+        background-color: var(--primary-50);
+      }
+    </style>
+  `;
+}
+
 module.exports = {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
+  COLORS,
+  getHoverStyles,
 };

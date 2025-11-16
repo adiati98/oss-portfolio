@@ -1,14 +1,11 @@
 const fs = require('fs/promises');
 const path = require('path');
-
-// Import configuration
 const { BASE_DIR } = require('./config');
-
-// Import new formatters
 const {
   formatDate,
   calculatePeriodInDays,
   getPrStatusContent,
+  getCollaborationStatusContent,
 } = require('./contribution-formatters');
 
 /**
@@ -18,27 +15,21 @@ const {
 async function writeMarkdownFiles(groupedContributions) {
   const markdownBaseDir = path.join(BASE_DIR, 'markdown-generated');
 
-  // Create the base contributions directory if it's doesn't exist.
   await fs.mkdir(markdownBaseDir, { recursive: true });
 
-  // Iterate over each quarter's worth of data.
   for (const [key, data] of Object.entries(groupedContributions)) {
     const [year, quarter] = key.split('-');
-    // Create the year-specific subdirectory (e.g., 'contributions/2023')
     const yearDir = path.join(markdownBaseDir, year);
     await fs.mkdir(yearDir, { recursive: true });
 
     const filePath = path.join(yearDir, `${quarter}-${year}.md`);
-    // Calculate the total number of contributions for the quarter.
     const totalContributions = Object.values(data).reduce((sum, arr) => sum + arr.length, 0);
 
-    // Skip writing the file if there are no contributions for this quarter.
     if (totalContributions === 0) {
       console.log(`Skipping empty quarter: ${key}`);
       continue;
     }
 
-    // --- Calculate additional statistics ---
     const allItems = [
       ...data.pullRequests,
       ...data.issues,
@@ -49,17 +40,14 @@ async function writeMarkdownFiles(groupedContributions) {
     const uniqueRepos = new Set(allItems.map((item) => item.repo));
     const totalRepos = uniqueRepos.size;
 
-    // Count contributions per repository
     const repoCounts = allItems.reduce((acc, item) => {
       acc[item.repo] = (acc[item.repo] || 0) + 1;
       return acc;
     }, {});
 
-    // Determine and limit to the top 3 most active repositories
     const sortedRepos = Object.entries(repoCounts).sort(([, a], [, b]) => b - a);
     const top3Repos = sortedRepos.slice(0, 3);
 
-    // --- Start building the Markdown content with a main header ---
     let markdownContent = `# ${quarter} ${year}\n`;
 
     markdownContent += `
@@ -141,15 +129,33 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
       },
       collaborations: {
         title: 'Collaborations',
-        headers: ['No.', 'Project Name', 'Title', 'Created At', 'Commented At'],
-        widths: ['5%', '30%', '35%', '15%', '15%'],
-        keys: ['repo', 'title', 'createdAt', 'date'],
+        headers: [
+          'No.',
+          'Project Name',
+          'Title',
+          'Created At',
+          'Last Commented At',
+          'Last Update / Status',
+        ],
+        widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
+        keys: ['repo', 'title', 'createdAt', 'date', 'date'],
       },
     };
 
     // Loop through each contribution type to create a collapsible section.
     for (const [section, sectionInfo] of Object.entries(sections)) {
-      const items = data[section];
+      let items = data[section];
+
+      // Sort reviewed and co-authored PRs by their engagement date (ascending order)
+      if (section === 'reviewedPrs' && items && items.length > 0) {
+        items = [...items].sort((a, b) => {
+          return new Date(a.myFirstReviewDate) - new Date(b.myFirstReviewDate);
+        });
+      } else if (section === 'coAuthoredPrs' && items && items.length > 0) {
+        items = [...items].sort((a, b) => {
+          return new Date(a.firstCommitDate) - new Date(b.firstCommitDate);
+        });
+      }
 
       // Use the HTML <details> tag for a collapsible section
       markdownContent += `<details>\n`;
@@ -232,9 +238,11 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
+            const statusContent = getCollaborationStatusContent(item);
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
+            tableContent += `      <td>${statusContent}</td>\n`;
           }
 
           tableContent += `    </tr>\n`;
