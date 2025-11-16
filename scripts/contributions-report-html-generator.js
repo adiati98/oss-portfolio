@@ -10,7 +10,7 @@ const { navHtml } = require('./navbar');
 const { createFooterHtml } = require('./footer');
 
 // Import favicon svg
-const { FAVICON_SVG_ENCODED } = require('./constants');
+const { FAVICON_SVG_ENCODED, COLORS } = require('./constants');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';

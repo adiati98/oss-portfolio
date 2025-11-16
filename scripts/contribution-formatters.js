@@ -2,7 +2,11 @@
  * Utility functions for formatting dates, calculating periods, and generating status strings.
  */
 
-// Formats a full date string (e.g., "2024-10-24T12:00:00Z") into YYYY-MM-DD.
+/**
+ * Formats an ISO 8601 date string to YYYY-MM-DD format.
+ * @param {string} dateString ISO 8601 date string.
+ * @returns {string} Formatted date or "N/A" if parsing fails.
+ */
 function formatDate(dateString) {
   if (!dateString) return 'N/A';
   try {
@@ -14,11 +18,11 @@ function formatDate(dateString) {
 }
 
 /**
- * Calculates the difference between two dates in days.
- * @param {string} startDateString ISO 8601 date string for the start date.
- * @param {string} endDateString ISO 8601 date string for the end date.
- * @param {string | null} status Optional status, e.g., "Open", to return if dates are missing.
- * @returns {string} The period formatted as "X days", "1 day", "Open", or "N/A".
+ * Calculates the number of days between two dates.
+ * @param {string} startDateString ISO 8601 start date.
+ * @param {string} endDateString ISO 8601 end date.
+ * @param {string | null} status Optional fallback status if dates are missing.
+ * @returns {string} Period formatted as "X days" or "1 day", or fallback status/N/A.
  */
 function calculatePeriodInDays(startDateString, endDateString, status = null) {
   if (!startDateString || !endDateString) {
@@ -30,41 +34,51 @@ function calculatePeriodInDays(startDateString, endDateString, status = null) {
 
   const startDate = new Date(startDateString);
   const endDate = new Date(endDateString);
-
-  // Calculate difference in milliseconds
   const diffTime = endDate.getTime() - startDate.getTime();
-
-  // Calculate difference in days (round to nearest whole day)
   const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
-
-  // Ensure result is not negative (safety net)
   const finalDiff = Math.max(0, diffDays);
-
-  // Use 'day' for 1, and 'days' for 0 and > 1 (standard pluralization)
   const unit = finalDiff === 1 ? 'day' : 'days';
 
   return `${finalDiff} ${unit}`;
 }
 
 /**
- * Generates the content string for the 'Last Update / Status' column for PRs.
- * @param {object} item The contribution item (Pull Request).
- * @returns {string} HTML content containing the date and bold status (e.g., "2023-10-24<br><strong>MERGED</strong>").
+ * Generates Last Update / Status content for reviewed and co-authored PRs.
+ * @param {object} item PR item with date, mergedAt, and state fields.
+ * @returns {string} Formatted date with status badge.
  */
 function getPrStatusContent(item) {
   const lastUpdateDate = formatDate(item.date);
 
   if (item.mergedAt) {
-    const mergedAtDate = formatDate(item.mergedAt);
-    return `${mergedAtDate}<br><strong>MERGED</strong>`;
+    return `${formatDate(item.mergedAt)}<br><strong>MERGED</strong>`;
   }
 
-  const rawPrState = item.state ? item.state.toUpperCase() : 'N/A';
-  return `${lastUpdateDate}<br><strong>${rawPrState}</strong>`;
+  const status = item.state ? item.state.toUpperCase() : 'N/A';
+  return `${lastUpdateDate}<br><strong>${status}</strong>`;
+}
+
+/**
+ * Generates Last Update / Status content for collaborations (issues and PRs).
+ * @param {object} item Collaboration item with updatedAt, mergedAt, closedAt, and state fields.
+ * @returns {string} Formatted date with status badge.
+ */
+function getCollaborationStatusContent(item) {
+  const lastUpdateDate = formatDate(item.updatedAt || item.firstCommentedAt || item.date);
+
+  let status = 'OPEN';
+  if (item.mergedAt) {
+    status = 'MERGED';
+  } else if (item.closedAt || item.state === 'closed') {
+    status = 'CLOSED';
+  }
+
+  return `${lastUpdateDate}<br><strong>${status}</strong>`;
 }
 
 module.exports = {
   formatDate,
   calculatePeriodInDays,
   getPrStatusContent,
+  getCollaborationStatusContent,
 };

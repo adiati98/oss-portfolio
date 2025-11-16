@@ -668,6 +668,11 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       if (!hasCommits && !hasReview) {
         const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
 
+        let mergedAt = null;
+        if (item.pull_request && item.pull_request.merged_at) {
+          mergedAt = item.pull_request.merged_at;
+        }
+
         contributions.collaborations.push({
           title: item.title,
           url: item.html_url,
@@ -675,6 +680,10 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           date: firstCommentDate,
           createdAt: item.created_at,
           firstCommentedAt: firstCommentDate,
+          state: item.state,
+          mergedAt: mergedAt,
+          closedAt: item.state === 'closed' ? item.closed_at : null,
+          updatedAt: item.updated_at,
         });
       }
 
