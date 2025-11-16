@@ -313,7 +313,7 @@ async function writeHtmlFiles(groupedContributions) {
           'Project',
           'Title',
           'Created At',
-          'Last Commented At',
+          'First Comment',
           'Last Update / Status',
         ],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
