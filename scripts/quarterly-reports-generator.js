@@ -194,7 +194,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
             // Calculate the time elapsed until closing (or show "Open")
-            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, item.state);
+            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${closedAt}</td>\n`;

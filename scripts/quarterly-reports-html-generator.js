@@ -446,7 +446,7 @@ ${navHtmlForReports}
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
-            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, item.state);
+            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${closedAt}</td>\n`;
