@@ -96,13 +96,13 @@ ${navHtml}
   <main class="grow w-full">
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-          <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
             Open Source Portfolio
           </h1>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
+          <p style="color: ${COLORS.text.secondary};" class="text-lg max-w-3xl mx-auto mt-10 mb-6">
             Presenting open source portfolio for 
-            <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
+            <a href="https://github.com/${GITHUB_USERNAME}" style="color: ${COLORS.primary.rgb};" class="text-xl font-extrabold hover:opacity-80 transition duration-150">
               ${GITHUB_USERNAME}
             </a>. It aggregates all-time contribution activities, including <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong> across various repositories.
           </p>
@@ -110,7 +110,7 @@ ${navHtml}
 
         <section>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            <div class="bg-indigo-600 text-white col-span-1 p-8 rounded-xl shadow-xl h-full flex flex-col justify-center text-center gap-6 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
+            <div style="background-color: ${COLORS.primary.rgb};" class="text-white col-span-1 p-8 rounded-xl shadow-xl h-full flex flex-col justify-center text-center gap-6 transform transition duration-300 hover:scale-[1.02] hover:shadow-2xl">
               <p class="text-2xl lg:text-3xl font-bold opacity-100 py-2">🚀 All-Time Contributions</p>
               <p class="text-6xl font-extrabold pb-2">${grandTotal}</p>
               <p class="text-lg font-medium opacity-100">
@@ -119,37 +119,42 @@ ${navHtml}
           	</div>
 
             <div class="col-span-1 md:col-span-2 flex flex-col gap-0 md:h-full"> 
-              <div class="flex flex-col h-full text-gray-700">
-                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4 rounded-t-xl">
+              <div class="flex flex-col h-full" style="color: ${COLORS.text.primary};">
+                <div style="background-color: ${COLORS.primary[5]}; border-bottom-color: ${COLORS.border.light};" class="flex justify-between items-center border-b px-4 py-4 rounded-t-xl">
                   <span class="text-md sm:text-lg font-medium">Merged PRs</span>
-                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${prCount}</span>
+                  <span style="color: ${COLORS.primary.rgb};" class="text-2xl sm:text-3xl font-extrabold">${prCount}</span>
                 </div>
 
-                <div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
+                <div style="background-color: ${COLORS.background.white}; border-bottom-color: ${COLORS.border.light};" class="flex justify-between items-center border-b px-4 py-4">
                   <span class="text-md sm:text-lg font-medium">Issues</span>
-                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${issueCount}</span>
+                  <span style="color: ${COLORS.primary.rgb};" class="text-2xl sm:text-3xl font-extrabold">${issueCount}</span>
                 </div>
 
-                <div class="flex justify-between items-center bg-indigo-50 border-b border-gray-100 px-4 py-4">
+                <div style="background-color: ${COLORS.primary[5]}; border-bottom-color: ${COLORS.border.light};" class="flex justify-between items-center border-b px-4 py-4">
                   <span class="text-md sm:text-lg font-medium">Reviewed PRs</span>
-                  <span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${reviewedPrCount}</span>
+                  <span style="color: ${COLORS.primary.rgb};" class="text-2xl sm:text-3xl font-extrabold">${reviewedPrCount}</span>
               	</div>
 
-              	<div class="flex justify-between items-center bg-white border-b border-gray-100 px-4 py-4">
+              	<div style="background-color: ${COLORS.background.white}; border-bottom-color: ${COLORS.border.light};" class="flex justify-between items-center border-b px-4 py-4">
                 	<span class="text-md sm:text-lg font-medium">Co-Authored PRs</span>
-                	<span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${coAuthoredPrCount}</span>
+                	<span style="color: ${COLORS.primary.rgb};" class="text-2xl sm:text-3xl font-extrabold">${coAuthoredPrCount}</span>
               	</div>
 
-              	<div class="flex justify-between items-center bg-indigo-50 px-4 py-4 rounded-b-xl">
+              	<div style="background-color: ${COLORS.primary[5]};" class="flex justify-between items-center px-4 py-4 rounded-b-xl">
                 	<span class="text-md sm:text-lg font-medium">Collaborations</span>
-                	<span class="text-2xl sm:text-3xl font-extrabold text-indigo-700">${collaborationCount}</span>
+                	<span style="color: ${COLORS.primary.rgb};" class="text-2xl sm:text-3xl font-extrabold">${collaborationCount}</span>
               	</div>
             	</div>
           	</div>
         	</div>
             
         	<p class="text-center mt-12">
-          	<a href="reports.html" class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border border-gray-200 text-indigo-700 font-semibold rounded-lg shadow-md hover:border-indigo-600 transition duration-200">
+          	<a href="reports.html" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb}; transition: border-color 0.15s ease-in-out;" 
+                   onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" 
+                   onmouseout="this.style.borderColor = '${COLORS.border.light}';"
+                   onkeydown="if(event.key==='Enter'){this.click();}"
+                   tabindex="0" 
+                   class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border font-semibold rounded-lg shadow-md transition duration-200">
             	<span class="pr-2">
               	View Detailed Quarterly Reports
             	</span>

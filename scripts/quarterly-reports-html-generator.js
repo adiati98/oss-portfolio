@@ -43,6 +43,7 @@ async function writeHtmlFiles(groupedContributions) {
 
   /**
    * Generates an HTML badge string with GitHub-like styling based on the status word.
+   * Uses inline styles with RGB colors instead of Tailwind classes.
    * @param {string} status The status keyword (e.g., 'OPEN', 'MERGED', 'CLOSED', 'N/A').
    * @returns {string} The HTML for the stylized badge.
    */
@@ -50,28 +51,37 @@ async function writeHtmlFiles(groupedContributions) {
     // Ensure status is uppercase and trim whitespace for reliable matching
     const cleanedStatus = status.toUpperCase().trim();
 
-    let colorClasses = `bg-${COLORS.status.gray.bg} text-${COLORS.status.gray.text} font-medium`; // Default N/A
+    let bgColor = COLORS.status.gray.bg;
+    let textColor = COLORS.status.gray.text;
+    let fontWeight = 'font-medium';
 
     switch (cleanedStatus) {
       case 'OPEN':
         // GitHub green for open issues/PRs
-        colorClasses = `bg-${COLORS.status.green.bg} text-${COLORS.status.green.text} font-semibold`;
+        bgColor = COLORS.status.green.bg;
+        textColor = COLORS.status.green.text;
+        fontWeight = 'font-semibold';
         break;
       case 'MERGED':
         // GitHub purple for merged PRs
-        colorClasses = `bg-${COLORS.status.purple.bg} text-${COLORS.status.purple.text} font-semibold`;
+        bgColor = COLORS.status.purple.bg;
+        textColor = COLORS.status.purple.text;
+        fontWeight = 'font-semibold';
         break;
       case 'CLOSED':
         // GitHub red for closed issues/PRs
-        colorClasses = `bg-${COLORS.status.red.bg} text-${COLORS.status.red.text} font-semibold`;
+        bgColor = COLORS.status.red.bg;
+        textColor = COLORS.status.red.text;
+        fontWeight = 'font-semibold';
         break;
       default:
         // Use default gray for DRAFT, PENDING, or unknown
         break;
     }
 
-    // Use a small rounded badge style
-    return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${colorClasses}">${cleanedStatus}</span>`;
+    // Use inline styles for colors (RGB) and Tailwind for other styling
+    const style = `background-color: ${bgColor}; color: ${textColor};`;
+    return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${fontWeight}" style="${style}">${cleanedStatus}</span>`;
   }
 
   /**
@@ -144,15 +154,15 @@ async function writeHtmlFiles(groupedContributions) {
     const baseClasses =
       'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
 
-    const hoverClasses = 'hover:border-indigo-600';
+    const hoverClasses = ''; // Hover handled via inline styles below
 
     // --- Previous Button Logic (Two Lines) ---
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-          <a href="${prevPath}" class="${baseClasses} bg-white ${hoverClasses} text-left">
+          <a href="${prevPath}" class="${baseClasses} bg-white ${hoverClasses} text-left" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}'" onmouseout="this.style.borderColor = '${COLORS.border.light}'" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
-            <span class="flex items-center space-x-1 text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal">
+            <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               ${leftArrowSvg}
               <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
             </span>
@@ -166,9 +176,9 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-          <a href="${nextPath}" class="${baseClasses} bg-white ${hoverClasses} text-right">
+          <a href="${nextPath}" class="${baseClasses} bg-white ${hoverClasses} text-right" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}'" onmouseout="this.style.borderColor = '${COLORS.border.light}'" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
-            <span class="flex items-center space-x-1 justify-end text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal">
+            <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
               ${rightArrowSvg}
             </span>
@@ -308,14 +318,7 @@ async function writeHtmlFiles(groupedContributions) {
         title: 'Collaborations',
         icon: '💬',
         id: 'collaborations',
-        headers: [
-          'No.',
-          'Project',
-          'Title',
-          'Created At',
-          'First Comment',
-          'Last Update / Status',
-        ],
+        headers: ['No.', 'Project', 'Title', 'Created At', 'First Comment', 'Last Update / Status'],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
         keys: ['repo', 'title', 'createdAt', 'date', 'date'],
       },
@@ -361,13 +364,11 @@ async function writeHtmlFiles(groupedContributions) {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
-    .report-table th {
-      background-color: #EEF2FF;
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      color: #4338CA;
+    .details-section {
+      background-color: ${COLORS.primary[5]};
+    }
+    .details-section details:open summary {
+      color: ${COLORS.primary.rgb};
     }
     .report-table tbody tr:last-child td {
       border-bottom: none;
@@ -379,22 +380,22 @@ ${navHtmlForReports}
   <main class="grow w-full">
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-          <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">${quarter} ${year}</h1>
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
           <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
         </header>
 
         <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
         <section class="mb-8">
-          <h2 class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3">📊 Quarterly Statistics</h2>
+          <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
 
           <!-- Total Contributions & Total Repositories (Two Big Cards) -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
               <p class="text-4xl font-extrabold">${totalContributions}</p>
               <p class="text-lg mt-2 font-medium">Total Contributions</p>
             </div>
-            <div class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
               <p class="text-4xl font-extrabold">${totalRepos}</p>
               <p class="text-lg mt-2 font-medium">Total Repositories</p>
             </div>
@@ -406,28 +407,28 @@ ${navHtmlForReports}
           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             <!-- Merged PRs -->
-            <a href="#${sections.pullRequests.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-              <span class="text-2xl font-bold text-indigo-700">${prCount}</span>
+            <a href="#${sections.pullRequests.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
             </a>
             <!-- Issues -->
-            <a href="#${sections.issues.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-              <span class="text-2xl font-bold text-indigo-700">${issueCount}</span>
+            <a href="#${sections.issues.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
             </a>
             <!-- Reviewed PRs -->
-            <a href="#${sections.reviewedPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-              <span class="text-2xl font-bold text-indigo-700">${reviewedPrCount}</span>
+            <a href="#${sections.reviewedPrs.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
             </a>
             <!-- Co-Authored PRs -->
-            <a href="#${sections.coAuthoredPrs.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-              <span class="text-2xl font-bold text-indigo-700">${coAuthoredPrCount}</span>
+            <a href="#${sections.coAuthoredPrs.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
             </a>
             <!-- Collaborations -->
-            <a href="#${sections.collaborations.id}" class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center">
-              <span class="text-2xl font-bold text-indigo-700">${collaborationCount}</span>
+            <a href="#${sections.collaborations.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
             </a>
           </div>
@@ -466,7 +467,7 @@ ${navHtmlForReports}
 
       // Use the HTML <details> tag with Tailwind styles for a collapsible section
       htmlContent += `<details id="${sectionInfo.id}" ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
-      htmlContent += ` <summary class="text-xl font-bold text-indigo-600">\n`;
+      htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold">\n`;
       htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
         sectionInfo.title
       } (${items ? items.length : 0})</span>\n`;
@@ -478,12 +479,12 @@ ${navHtmlForReports}
         let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
         // Use the custom report-table class for styling
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
-        tableContent += `  <thead>\n`;
+        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
         tableContent += `    <tr>\n`;
 
         // Generate table headers with specified width styles
         for (let i = 0; i < sectionInfo.headers.length; i++) {
-          tableContent += `    <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`;
+          tableContent += `    <th style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb};'>${sectionInfo.headers[i]}</th>\n`;
         }
         tableContent += `    </tr>\n`;
         tableContent += `  </thead>\n`;
@@ -493,7 +494,8 @@ ${navHtmlForReports}
         // Iterate over each contribution item to build table rows
         for (const item of items) {
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
-          tableContent += `    <tr class="${rowBg} hover:bg-indigo-50 transition duration-150">\n`;
+          const hoverBg = counter % 2 === 1 ? '${COLORS.primary[10]}' : 'rgb(243, 244, 246)';
+          tableContent += `    <tr class="${rowBg}" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" onmouseover="this.style.backgroundColor = '${COLORS.primary[10]}'" onmouseout="this.style.backgroundColor = '${counter % 2 === 1 ? 'rgb(255, 255, 255)' : 'rgb(249, 250, 251)'}'" tabindex="0" role="link" onkeydown="if(event.key==='Enter'){window.location.href='${item.url}';}">\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
           const repoSpanHtml = dedent`
             <span
@@ -637,6 +639,17 @@ ${navHtmlForReports}
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
       window.addEventListener('hashchange', openSectionFromHash);
+
+      // Add hover effects to nav buttons for dynamic color changes
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach(btn => {
+        btn.addEventListener('mouseenter', function() {
+          this.style.borderColor = '${COLORS.primary.rgb}';
+        });
+        btn.addEventListener('mouseleave', function() {
+          this.style.borderColor = '${COLORS.border.light}';
+        });
+      });
     </script>
 ${footerHtml}
     </body>
