@@ -89,6 +89,15 @@ async function createStatsHtmlReadme(finalContributions = []) {
     }
     .report-list { list-style: none; padding: 0; }
     .report-list a { text-decoration: none; }
+    /* Accessible styles for index report links */
+    .index-report-link:hover,
+    .index-report-link:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+    }
+    .index-report-link:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
   </style>
 </head>
 <body>
@@ -150,11 +159,7 @@ ${navHtml}
             
         	<p class="text-center mt-12">
           	<a href="reports.html" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb}; transition: border-color 0.15s ease-in-out;" 
-                   onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" 
-                   onmouseout="this.style.borderColor = '${COLORS.border.light}';"
-                   onkeydown="if(event.key==='Enter'){this.click();}"
-                   tabindex="0" 
-                   class="inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border font-semibold rounded-lg shadow-md transition duration-200">
+                   class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border font-semibold rounded-lg shadow-md transition duration-200">
             	<span class="pr-2">
               	View Detailed Quarterly Reports
             	</span>

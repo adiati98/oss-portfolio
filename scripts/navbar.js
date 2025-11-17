@@ -17,12 +17,7 @@ const navHtml = dedent`
             <!-- Left Side: Title -->
             <div class="flex items-center space-x-4">
                 <a href="./" 
-                   style="border: 2px solid transparent; padding: 0.5rem; border-radius: 0.375rem; transition: all 0.15s ease-in-out; display: inline-block;"
-                   onmouseover="this.style.backgroundColor = '${COLORS.primary[10]}'; this.style.borderColor = '${COLORS.primary.rgb}';"
-                   onmouseout="this.style.backgroundColor = 'transparent'; this.style.borderColor = 'transparent';"
-                   onkeydown="if(event.key==='Enter'){this.click();}"
-                   tabindex="0"
-                   class="text-md font-extrabold tracking-wider uppercase py-1">
+                   class="nav-home-link text-md font-extrabold tracking-wider uppercase py-1">
                     <span class="sm:hidden">OSS Portfolio</span>
                     <span class="hidden sm:inline">Open Source Portfolio</span>
                 </a>
@@ -34,21 +29,13 @@ const navHtml = dedent`
                 <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
                 <div class="hidden sm:flex items-center space-x-4">
                     <!-- Quarterly Reports Link (Desktop) -->
-                    <a href="reports.html" style="background-color: ${COLORS.primary[5]}; border: 1px solid ${COLORS.primary.rgb}; color: white; cursor: pointer; transition: all 0.15s ease-in-out;" 
-                       class="text-sm font-semibold p-2 rounded-md"
-                       onmouseover="this.style.backgroundColor = '${COLORS.primary[10]}'; this.style.color = 'white';"
-                       onmouseout="this.style.backgroundColor = '${COLORS.primary[5]}'; this.style.color = 'white';"
-                       onkeydown="if(event.key==='Enter'){this.click();}"
-                       tabindex="0" role="button">Quarterly Reports
+                    <a href="reports.html" style="background-color: ${COLORS.primary[5]}; border: 1px solid ${COLORS.primary.rgb}; color: white; cursor: pointer;" 
+                       class="nav-desktop-link text-sm font-semibold p-2 rounded-md">Quarterly Reports
                     </a>
 
                     <!-- GitHub Icon Link (Desktop) -->
                     <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
-                        style="border: 2px solid transparent; padding: 0.5rem; border-radius: 0.375rem; transition: all 0.15s ease-in-out; display: flex; align-items: center;"
-                        onmouseover="this.style.backgroundColor = '${COLORS.primary[10]}'; this.style.borderColor = '${COLORS.primary.rgb}';"
-                        onmouseout="this.style.backgroundColor = 'transparent'; this.style.borderColor = 'transparent';"
-                        onkeydown="if(event.key==='Enter'){this.click();}"
-                        tabindex="0"
+                        class="nav-github-link flex align-items"
                         title="View Repository">
                         <!-- Desktop Size: w-7 h-7 -->
                         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">${GITHUB_ICON_PATH}</svg>
@@ -112,20 +99,59 @@ const navHtml = dedent`
                         closeIcon.classList.toggle('hidden');
                     });
                 }
-
-                // Add hover effects to nav buttons for dynamic color changes
-                const navButtons = document.querySelectorAll('.nav-button');
-                navButtons.forEach(btn => {
-                  btn.addEventListener('mouseenter', function() {
-                    this.style.borderColor = '${COLORS.primary.rgb}';
-                  });
-                  btn.addEventListener('mouseleave', function() {
-                    this.style.borderColor = '${COLORS.border.light}';
-                  });
-                });
             });
         </script>
     </nav>
+    <style>
+      /* Accessible navbar link styles */
+      .nav-home-link {
+        border: 2px solid transparent;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        transition: all 0.15s ease-in-out;
+        display: inline-block;
+      }
+      .nav-home-link:hover,
+      .nav-home-link:focus-visible {
+        background-color: ${COLORS.primary[10]};
+        border-color: ${COLORS.primary.rgb};
+      }
+      .nav-home-link:focus-visible {
+        outline: 2px solid ${COLORS.primary.rgb};
+        outline-offset: 2px;
+      }
+      
+      .nav-desktop-link {
+        transition: all 0.15s ease-in-out;
+      }
+      .nav-desktop-link:hover,
+      .nav-desktop-link:focus-visible {
+        background-color: ${COLORS.primary[10]};
+        color: white;
+      }
+      .nav-desktop-link:focus-visible {
+        outline: 2px solid white;
+        outline-offset: 2px;
+      }
+      
+      .nav-github-link {
+        border: 2px solid transparent;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        transition: all 0.15s ease-in-out;
+        display: flex;
+        align-items: center;
+      }
+      .nav-github-link:hover,
+      .nav-github-link:focus-visible {
+        background-color: ${COLORS.primary[10]};
+        border-color: ${COLORS.primary.rgb};
+      }
+      .nav-github-link:focus-visible {
+        outline: 2px solid ${COLORS.primary.rgb};
+        outline-offset: 2px;
+      }
+    </style>
 `;
 
 module.exports = {

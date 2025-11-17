@@ -181,11 +181,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       for (const link of linksByYear[year]) {
         linkHtml += `
                 <a href="./${link.relativePath}" style="border-color: ${COLORS.border.light}; cursor: pointer; transition: border-color 0.15s ease-in-out; background-color: white; text-decoration: none; display: block;" 
-                   onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" 
-                   onmouseout="this.style.borderColor = '${COLORS.border.light}';" 
-                   onkeydown="if(event.key==='Enter'){this.click();}" 
-                   tabindex="0" 
-                   class="bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
+                   class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
                     <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
                     <p style="color: ${COLORS.text.primary};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
                     <p style="color: ${COLORS.text.muted};" class="text-xs">Total Contributions</p>
@@ -241,6 +237,10 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       color: ${COLORS.text.primary};
       transition: background-color 0.15s ease-in-out;
     }
+    summary:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
 
     /* Apply primary background to the entire details element when open */
     details.is-open {
@@ -251,7 +251,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       border-radius: 0.5rem 0.5rem 0 0; 
       color: ${COLORS.primary.rgb}; 
     }
-    details.is-open summary:hover {
+    details.is-open summary:hover,
+    details.is-open summary:focus-visible {
       background-color: ${COLORS.primary[10]}; /* Slightly darker on hover */
     }
     details:not(.is-open) {
@@ -261,8 +262,18 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       border-bottom: none;
       border-radius: 0.5rem; 
     }
-    details:not(.is-open) summary:hover {
+    details:not(.is-open) summary:hover,
+    details:not(.is-open) summary:focus-visible {
       background-color: ${COLORS.primary[5]}; /* Light primary background on hover when closed */
+    }
+    /* Accessible styles for report card links */
+    .report-card-link:hover,
+    .report-card-link:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+    }
+    .report-card-link:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
     }
     /* --- END Dynamic Styling --- */
   </style>

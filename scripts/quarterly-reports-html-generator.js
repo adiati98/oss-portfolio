@@ -160,7 +160,7 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-          <a href="${prevPath}" class="${baseClasses} bg-white ${hoverClasses} text-left" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}'" onmouseout="this.style.borderColor = '${COLORS.border.light}'" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
             <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               ${leftArrowSvg}
@@ -176,7 +176,7 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-          <a href="${nextPath}" class="${baseClasses} bg-white ${hoverClasses} text-right" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}'" onmouseout="this.style.borderColor = '${COLORS.border.light}'" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
             <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
@@ -356,6 +356,10 @@ async function writeHtmlFiles(groupedContributions) {
       padding: 0.5em 0;
       color: #1f2937;
     }
+    summary:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
     .report-table th, .report-table td {
       padding: 10px 12px;
       border-bottom: 1px solid #e5e7eb;
@@ -372,6 +376,35 @@ async function writeHtmlFiles(groupedContributions) {
     }
     .report-table tbody tr:last-child td {
       border-bottom: none;
+    }
+    /* Accessible hover and focus styles for navigation buttons */
+    .nav-report-button:hover,
+    .nav-report-button:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+    }
+    .nav-report-button:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
+    .nav-contribution-button:hover,
+    .nav-contribution-button:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+    }
+    .nav-contribution-button:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
+    /* Table row hover styles */
+    .table-row-hover {
+      background-color: inherit;
+    }
+    .table-row-hover:hover,
+    .table-row-hover:focus-visible {
+      background-color: ${COLORS.primary[10]} !important;
+    }
+    .table-row-hover:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: -2px;
     }
   </style>
 </head>
@@ -407,27 +440,27 @@ ${navHtmlForReports}
           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             <!-- Merged PRs -->
-            <a href="#${sections.pullRequests.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
             </a>
             <!-- Issues -->
-            <a href="#${sections.issues.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
             </a>
             <!-- Reviewed PRs -->
-            <a href="#${sections.reviewedPrs.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
             </a>
             <!-- Co-Authored PRs -->
-            <a href="#${sections.coAuthoredPrs.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
             </a>
             <!-- Collaborations -->
-            <a href="#${sections.collaborations.id}" class="nav-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; transition: border-color 0.15s ease-in-out;" onmouseover="this.style.borderColor = '${COLORS.primary.rgb}';" onmouseout="this.style.borderColor = '${COLORS.border.light}';" onkeydown="if(event.key==='Enter'){this.click();}" tabindex="0">
+            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
             </a>
@@ -491,11 +524,10 @@ ${navHtmlForReports}
         tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
 
         let counter = 1;
-        // Iterate over each contribution item to build table rows
         for (const item of items) {
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
           const hoverBg = counter % 2 === 1 ? '${COLORS.primary[10]}' : 'rgb(243, 244, 246)';
-          tableContent += `    <tr class="${rowBg}" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" onmouseover="this.style.backgroundColor = '${COLORS.primary[10]}'" onmouseout="this.style.backgroundColor = '${counter % 2 === 1 ? 'rgb(255, 255, 255)' : 'rgb(249, 250, 251)'}'" tabindex="0" role="link" onkeydown="if(event.key==='Enter'){window.location.href='${item.url}';}">\n`;
+          tableContent += `    <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
           const repoSpanHtml = dedent`
             <span
@@ -605,7 +637,7 @@ ${navHtmlForReports}
         </div>
       </div>
     </main>
-    <script>
+          <script>
       // Function to handle opening the correct section on load/hash change
       function openSectionFromHash() {
         const hash = window.location.hash;
@@ -640,14 +672,24 @@ ${navHtmlForReports}
       // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
       window.addEventListener('hashchange', openSectionFromHash);
 
-      // Add hover effects to nav buttons for dynamic color changes
-      const navButtons = document.querySelectorAll('.nav-button');
-      navButtons.forEach(btn => {
-        btn.addEventListener('mouseenter', function() {
-          this.style.borderColor = '${COLORS.primary.rgb}';
-        });
-        btn.addEventListener('mouseleave', function() {
-          this.style.borderColor = '${COLORS.border.light}';
+      // Add click handlers to table rows for link navigation
+      document.addEventListener('DOMContentLoaded', () => {
+        const tableRows = document.querySelectorAll('.table-row-hover');
+        tableRows.forEach(row => {
+          const href = row.getAttribute('data-href');
+          if (href) {
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            row.addEventListener('click', () => {
+              window.location.href = href;
+            });
+            row.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = href;
+              }
+            });
+          }
         });
       });
     </script>
