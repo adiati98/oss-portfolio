@@ -160,7 +160,7 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${COLORS.primary.rgb};">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
             <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               ${leftArrowSvg}
@@ -176,7 +176,7 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${COLORS.primary.rgb};">
             <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
             <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
               <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
@@ -378,19 +378,27 @@ async function writeHtmlFiles(groupedContributions) {
       border-bottom: none;
     }
     /* Accessible hover and focus styles for navigation buttons */
-    .nav-report-button:hover,
-    .nav-report-button:focus-visible {
-      border-color: ${COLORS.primary.rgb};
+    .nav-report-button {
+      border: 1px solid ${COLORS.border.light} !important;
+      transition: border-color 0.15s ease-in-out !important;
+    }
+    .nav-report-button:hover {
+      border-color: ${COLORS.primary.rgb} !important;
     }
     .nav-report-button:focus-visible {
+      border-color: ${COLORS.primary.rgb};
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
-    .nav-contribution-button:hover,
-    .nav-contribution-button:focus-visible {
-      border-color: ${COLORS.primary.rgb};
+    .nav-contribution-button {
+      border: 1px solid ${COLORS.border.light} !important;
+      transition: border-color 0.15s ease-in-out !important;
+    }
+    .nav-contribution-button:hover {
+      border-color: ${COLORS.primary.rgb} !important;
     }
     .nav-contribution-button:focus-visible {
+      border-color: ${COLORS.primary.rgb};
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
@@ -440,27 +448,27 @@ ${navHtmlForReports}
           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             <!-- Merged PRs -->
-            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
             </a>
             <!-- Issues -->
-            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
             </a>
             <!-- Reviewed PRs -->
-            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
             </a>
             <!-- Co-Authored PRs -->
-            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
             </a>
             <!-- Collaborations -->
-            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="border-color: ${COLORS.border.light}; color: ${COLORS.primary.rgb};">
+            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
             </a>

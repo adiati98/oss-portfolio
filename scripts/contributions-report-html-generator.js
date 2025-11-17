@@ -180,7 +180,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
         linkHtml += `
-                <a href="./${link.relativePath}" style="border-color: ${COLORS.border.light}; cursor: pointer; transition: border-color 0.15s ease-in-out; background-color: white; text-decoration: none; display: block;" 
+                <a href="./${link.relativePath}" style="cursor: pointer; background-color: white; text-decoration: none; display: block;" 
                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
                     <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
                     <p style="color: ${COLORS.text.primary};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
@@ -267,11 +267,15 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       background-color: ${COLORS.primary[5]}; /* Light primary background on hover when closed */
     }
     /* Accessible styles for report card links */
-    .report-card-link:hover,
-    .report-card-link:focus-visible {
-      border-color: ${COLORS.primary.rgb};
+    .report-card-link {
+      border: 1px solid ${COLORS.border.light} !important;
+      transition: border-color 0.15s ease-in-out !important;
+    }
+    .report-card-link:hover {
+      border-color: ${COLORS.primary.rgb} !important;
     }
     .report-card-link:focus-visible {
+      border-color: ${COLORS.primary.rgb};
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
