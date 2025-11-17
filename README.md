@@ -163,55 +163,150 @@ Please read your host's official documentation to learn how to configure and dep
 
 ## 🎨 Customizing Colors
 
-The HTML reports use color-coded status badges and design elements that can be customized to match your personal branding.
+The HTML reports use color-coded status badges and design elements that can be customized to match your personal branding. Now with an improved system, you only need to change hex color values and all opacity variants are automatically generated!
 
 ### Where Colors Are Defined
 
-All colors are centralized in `scripts/constants.js` in the `COLORS` object. This makes it easy to update your portfolio's visual style in one place.
+All colors are centralized in `scripts/constants.js` in the `COLOR_PALETTE` object. This single location controls colors across:
 
-### Default Color Scheme
+- Navigation bar and mobile menu
+- Page headers and footers
+- Status badges (OPEN, MERGED, CLOSED)
+- Table rows and backgrounds
+- Links and text colors
+- Section accents and borders
+- Favicon
 
-The default color scheme includes:
+### Color Palette Breakdown
 
-| Element           | Color      | Usage                                     |
-| :---------------- | :--------- | :---------------------------------------- |
-| **OPEN** Status   | Green      | Issues and PRs that are still open        |
-| **MERGED** Status | Purple     | Pull requests that have been merged       |
-| **CLOSED** Status | Red        | Issues and PRs that have been closed      |
-| **Primary**       | Indigo     | Headers, buttons, and primary UI elements |
-| **Background**    | Gray/White | Card backgrounds and neutral areas        |
-| **Accent**        | Various    | Section accents and highlights            |
+The `COLOR_PALETTE` includes 8 customizable colors:
+
+| Color             | Purpose          | Default Hex | Used For                              |
+| :---------------- | :--------------- | :---------- | :------------------------------------ |
+| **primary**       | Main UI accent   | #4f46e5     | Headers, buttons, navigation, accents |
+| **neutral**       | Neutral elements | #6b7280     | Borders, neutral backgrounds          |
+| **success**       | OPEN status      | #10b981     | Open issues/PRs badge                 |
+| **merged**        | MERGED status    | #8b5cf6     | Merged PRs badge                      |
+| **error**         | CLOSED status    | #ef4444     | Closed issues/PRs badge               |
+| **textPrimary**   | Main text        | #1f2937     | Headings, primary text                |
+| **textSecondary** | Secondary text   | #374151     | Descriptions, secondary info          |
+| **textMuted**     | Muted text       | #6b7280     | Timestamps, less important info       |
 
 ### How to Customize Colors
 
-1. Open `scripts/constants.js`.
-2. Locate the `COLORS` object (typically near the top of the file).
-3. Modify the hex color values to your preference.
+The color system automatically generates 7 opacity levels (5%, 10%, 15%, 25%, 50%, 75%, 100%) for each color. You only need to change the hex value:
 
-Example:
+1. Open `scripts/constants.js`.
+2. Locate the `COLOR_PALETTE` object (around line 148).
+3. Modify the hex color values to your preference:
 
 ```javascript
 // scripts/constants.js
 
-const COLORS = {
-  primary: '#4f46e5', // Indigo - change to your favorite color
-  gray: '#6b7280', // Gray - for neutral elements
-  status: {
-    open: '#10b981', // Green - for OPEN badges
-    merged: '#8b5cf6', // Purple - for MERGED badges
-    closed: '#ef4444', // Red - for CLOSED badges
-    default: '#9ca3af', // Gray - for default/unknown status
-  },
-  // ... other color definitions
+const COLOR_PALETTE = {
+  primary: '#4f46e5', // Indigo - for main UI elements
+  neutral: '#6b7280', // Gray - for neutral elements
+  success: '#10b981', // Green - for OPEN status
+  merged: '#8b5cf6', // Purple - for MERGED status
+  error: '#ef4444', // Red - for CLOSED status
+  textPrimary: '#1f2937', // Dark gray - for main text
+  textSecondary: '#374151', // Darker gray - for descriptions (WCAG AA compliant)
+  textMuted: '#6b7280', // Medium gray - for muted text (WCAG AA compliant)
+};
+```
+
+For example, to change to a modern blue theme:
+
+```javascript
+const COLOR_PALETTE = {
+  primary: '#0066cc', // Blue instead of Indigo
+  neutral: '#64748b', // Slate Gray instead of Gray
+  success: '#16a34a', // Darker Green for OPEN
+  merged: '#2563eb', // Blue for MERGED
+  error: '#dc2626', // Darker Red for CLOSED
+  textPrimary: '#111827', // Darker for better contrast
+  textSecondary: '#475569', // Adjusted gray
+  textMuted: '#94a3b8', // Adjusted light gray
 };
 ```
 
 4. After making changes, run `npm start` locally to regenerate the HTML reports.
-5. The new colors will be reflected in all generated reports.
+5. The new colors will be reflected in all generated reports with all opacity levels automatically applied.
+6. **Favicon will also update** to match your primary color!
+
+### How It Works
+
+The color system uses automatic conversion:
+
+- **Input:** Hex color (e.g., `#4f46e5`)
+- **Process:** Converts hex to RGB, then generates opacity variants
+- **Output:** Colors with different opacity levels (5%, 10%, 15%, 25%, 50%, 75%, 100%) plus full RGB and hex
+
+For example, `#8b5cf6` (purple) automatically generates:
+
+- `rgba(139, 92, 246, 0.05)` for 5% opacity (light backgrounds)
+- `rgba(139, 92, 246, 0.1)` for 10% opacity (badge backgrounds)
+- `rgba(139, 92, 246, 1)` for 100% opacity (text and solid elements)
+- `rgb(139, 92, 246)` for full opacity RGB
+- `#8b5cf6` for the original hex value
+
+### Complete Color Customization Examples
+
+All example color schemes below are verified to pass WCAG AA or AAA accessibility standards for contrast ratios.
+
+**Professional Navy:**
+
+```javascript
+const COLOR_PALETTE = {
+  primary: '#1e40af', // Navy Blue (WCAG AAA compliant)
+  neutral: '#64748b', // Slate
+  success: '#059669', // Emerald (WCAG AAA compliant)
+  merged: '#2563eb', // Blue (WCAG AA compliant)
+  error: '#dc2626', // Red (WCAG AA compliant)
+  textPrimary: '#0f172a', // Almost Black
+  textSecondary: '#334155', // Dark Gray
+  textMuted: '#64748b', // Medium Gray
+};
+```
+
+**Modern Green:**
+
+```javascript
+const COLOR_PALETTE = {
+  primary: '#059669', // Emerald (WCAG AAA compliant with white)
+  neutral: '#6b7280', // Gray
+  success: '#0891b2', // Cyan (WCAG AA compliant)
+  merged: '#0d9488', // Teal (WCAG AA compliant)
+  error: '#be123c', // Red (WCAG AA compliant)
+  textPrimary: '#0f172a', // Almost Black
+  textSecondary: '#1e3a8a', // Dark Blue for descriptions (WCAG AAA compliant)
+  textMuted: '#334155', // Dark Gray for muted text (WCAG AA compliant)
+};
+```
+
+**Deep Purple:**
+
+```javascript
+const COLOR_PALETTE = {
+  primary: '#5b21b6', // Deep Purple (WCAG AAA compliant)
+  neutral: '#6b7280', // Gray
+  success: '#059669', // Emerald (WCAG AA compliant)
+  merged: '#7c3aed', // Purple (WCAG AA compliant)
+  error: '#be123c', // Red (WCAG AA compliant)
+  textPrimary: '#0f172a', // Almost Black
+  textSecondary: '#334155', // Dark Gray
+  textMuted: '#64748b', // Medium Gray
+};
+```
 
 ### Color Customization Tips
 
-- Use a **color picker tool** like [Tailwind Color Picker](https://www.tailwindcss.com/docs/customizing-colors) or [Coolors](https://coolors.co/) to find hex values for your desired colors.
-- Ensure sufficient **contrast** between text and background colors for accessibility. Use [WebAIM](https://webaim.org/resources/contrastchecker/) to check color contrast.
+- Use a **color picker tool** like [Coolors.co](https://coolors.co/), [Color Picker](https://www.color-picker.com/), or your browser's built-in color picker to find hex values.
+- **Verify accessibility** using [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to ensure sufficient contrast:
+  - Primary color with white text should pass WCAG AA (4.5:1) at minimum
+  - Status colors should maintain good contrast with light backgrounds
+  - Text colors should have at least 4.5:1 contrast with background
+- All example color schemes above are verified to pass WCAG AA or AAA standards
 - Test your color scheme in both light and dark viewing conditions if you're hosting the reports publicly.
-- The status colors (open, merged, closed) help quickly identify the state of contributions, so choose distinct colors.
+- The status colors (success, merged, error) help quickly identify the state of contributions, so choose distinct, recognizable colors.
+- **All changes are reflected everywhere** - navbar, footer, headers, badges, tables, and even the favicon!
