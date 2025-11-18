@@ -141,6 +141,7 @@ function generateColorVariants(hex) {
  *
  * Color Properties:
  * - Primary: Used for headers, accents, and main buttons
+ * - Primary900: Used for darker background and darker accent
  * - Neutral: Used for backgrounds, borders, and text
  * - Success: Used for OPEN status badges
  * - Merged: Used for MERGED status badges
@@ -155,7 +156,8 @@ function generateColorVariants(hex) {
  * - hex (original hex value)
  */
 const COLOR_PALETTE = {
-  primary: '#4f46e5', // Indigo - for main UI elements, headers, buttons
+  primary: '#4338CA', // Indigo - for main UI elements, headers, buttons
+  primary900: '#312E81', // Dark indigo - for darker background
   neutral: '#6b7280', // Gray - for neutral elements, borders
   success: '#10b981', // Green - for OPEN status
   merged: '#8b5cf6', // Purple - for MERGED status
@@ -171,6 +173,7 @@ const COLOR_PALETTE = {
  */
 function generateColorsObject() {
   const primaryVariants = generateColorVariants(COLOR_PALETTE.primary);
+  const primary900Variants = generateColorVariants(COLOR_PALETTE.primary900);
   const neutralVariants = generateColorVariants(COLOR_PALETTE.neutral);
   const successVariants = generateColorVariants(COLOR_PALETTE.success);
   const mergedVariants = generateColorVariants(COLOR_PALETTE.merged);
@@ -182,6 +185,8 @@ function generateColorsObject() {
   return {
     // Primary accent color
     primary: primaryVariants,
+    // Dark primary color
+    primary900: primary900Variants,
     // Neutral grays
     gray: neutralVariants,
     // Status badge colors
@@ -246,7 +251,7 @@ function generateColorsObject() {
     // Navigation and header colors
     nav: {
       bg: primaryVariants.rgb, // Navigation background
-      bgDark: primaryVariants[100], // Darker shade for mobile menu
+      bgDark: primary900Variants.rgb, // Darker shade for mobile menu
       bgHover: primaryVariants[75], // Hover state
       text: 'rgb(255, 255, 255)', // Navigation text
     },
