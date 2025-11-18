@@ -16,7 +16,7 @@ const navHtml = dedent`
         <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
             <div class="flex items-center space-x-4">
                 <a href="./" 
-                    class="nav-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1">
+                    class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1">
                     <span class="sm:hidden">OSS Portfolio</span>
                     <span class="hidden sm:inline">Open Source Portfolio</span>
                 </a>
@@ -30,7 +30,7 @@ const navHtml = dedent`
                     </a>
 
                     <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
-                        class="nav-link nav-github-link flex align-items"
+                        class="nav-link nav-desktop-link nav-github-link flex align-items"
                         title="View Repository">
                         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">${GITHUB_ICON_PATH}</svg>
                     </a>
@@ -50,12 +50,12 @@ const navHtml = dedent`
         <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
             
             <div class="mb-4">
-                <a href="reports.html" style="background-color: ${COLORS.nav.bg};" 
-                    class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md" 
+                <a href="reports.html"
+                    class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
                     tabindex="0" role="button" onkeydown="if(event.key==='Enter'){this.click();}">Quarterly Reports</a>
             </div>
             
-            <div class="mt-3 pt-3" style="border-top-color: ${COLORS.primary[25]}; border-top-width: 1px;">
+            <div class="mt-3 pt-3" style="border-top-color: ${COLORS.nav.bg}; border-top-width: 1px;">
                 <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
                     class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3" 
                     tabindex="0" role="button" onkeydown="if(event.key==='Enter'){this.click();}"
@@ -135,7 +135,7 @@ const navHtml = dedent`
         .nav-mobile-link {
             padding: 0.5rem 0.75rem; /* Adjusted padding to match block-style link */
             border-width: 1px; /* Optional: Make it look more like a button */
-            background-color: ${COLORS.nav.bg} !important; /* Ensure background stays dark */
+            background-color: ${COLORS.nav.bgDark}
             display: inline-flex;
         }
 
