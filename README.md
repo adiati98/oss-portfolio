@@ -205,7 +205,7 @@ The color system automatically generates 7 opacity levels (5%, 10%, 15%, 25%, 50
 // scripts/constants.js
 
 const COLOR_PALETTE = {
-  primary: '#4f46e5', // Indigo - for main UI elements
+  primary: '#4338CA', // Indigo - for main UI elements
   primary900: '#312E81', // Dark indigo - for darker background
   neutral: '#6b7280', // Gray - for neutral elements
   success: '#10b981', // Green - for OPEN status

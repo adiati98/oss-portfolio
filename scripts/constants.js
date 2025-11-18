@@ -64,7 +64,7 @@ let FAVICON_SVG_ENCODED = null;
 
 /**
  * Converts a hex color to RGB object.
- * @param {string} hex The hex color (e.g., '#4f46e5' or '4f46e5')
+ * @param {string} hex The hex color (e.g., '#4338CA' or '#4f46e5')
  * @returns {object|null} Object with r, g, b properties or null if invalid
  */
 function hexToRgb(hex) {
