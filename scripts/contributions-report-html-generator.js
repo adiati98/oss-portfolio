@@ -171,7 +171,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       // Start a new year section with a dedicated heading
       linkHtml += `
             <details ${openAttribute} class="col-span-full mb-8 border rounded-xl transition duration-300" style="border-color: ${COLORS.border.light};">
-                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-4 sm:p-6 cursor-pointer transition duration-150 rounded-xl flex items-center">
+                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
@@ -342,46 +342,6 @@ ${navHtml}
           </div>
         </section>
       </div>
-
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          document.querySelectorAll('details').forEach(details => {
-            const summary = details.querySelector('summary');
-            
-            // Initial state check for the default 'open' attribute
-            if (details.open) {
-              details.classList.add('is-open');
-            } else {
-              // Apply a background to closed elements for visual separation
-              details.classList.add('bg-gray-50'); 
-            }
-
-            // Add tabindex to summary for keyboard navigation
-            if (summary) {
-              summary.setAttribute('tabindex', '0');
-              
-              // Add keyboard support to summary
-              summary.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  details.open = !details.open;
-                }
-              });
-            }
-
-            // Listener for the 'toggle' event (triggered on open/close)
-            details.addEventListener('toggle', () => {
-              if (details.open) {
-                details.classList.add('is-open');
-                details.classList.remove('bg-gray-50'); // Remove closed background
-              } else {
-                details.classList.remove('is-open');
-                details.classList.add('bg-gray-50'); // Re-apply closed background
-              }
-            });
-          });
-        });
-      </script>
     </div>
   </main>
   ${footerHtml}
