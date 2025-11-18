@@ -161,8 +161,8 @@ const COLOR_PALETTE = {
   merged: '#8b5cf6', // Purple - for MERGED status
   error: '#ef4444', // Red - for CLOSED status
   textPrimary: '#1f2937', // Dark gray - for main text and headings
-  textSecondary: '#374151', // Darker gray - for descriptions (improved from #4b5563 for better accessibility)
-  textMuted: '#6b7280', // Medium gray - for timestamps and muted info (improved from #9ca3af for WCAG compliance)
+  textSecondary: '#374151', // Darker gray - for descriptions
+  textMuted: '#6b7280', // Medium gray - for timestamps and muted info
 };
 
 /**
