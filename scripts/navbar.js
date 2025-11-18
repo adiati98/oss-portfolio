@@ -1,5 +1,6 @@
 const { dedent } = require('./dedent');
 const { GITHUB_USERNAME } = require('./config');
+const { COLORS } = require('./constants');
 
 const GITHUB_REPO_URL = `https://github.com/${GITHUB_USERNAME}/oss-portfolio`;
 
@@ -11,69 +12,59 @@ const GITHUB_ICON_PATH = GITHUB_ICON_PATH_DATA.replace(/\n\s*/g, '');
 
 // Navbar HTML
 const navHtml = dedent`
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg">
+    <nav style="background-color: ${COLORS.nav.bg};" class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg">
         <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-            <!-- Left Side: Title -->
             <div class="flex items-center space-x-4">
-                <a href="./" class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md">
+                <a href="./" 
+                    class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1">
                     <span class="sm:hidden">OSS Portfolio</span>
                     <span class="hidden sm:inline">Open Source Portfolio</span>
                 </a>
             </div>
             
-            <!-- Right Side Container (Desktop Links & Mobile Toggle) -->
             <div class="flex items-center">
                 
-                <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
                 <div class="hidden sm:flex items-center space-x-4">
-                    <!-- Quarterly Reports Link (Desktop) -->
-                    <a href="reports.html" class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700">
-                        Quarterly Reports
+                    <a href="reports.html" style="background-color: ${COLORS.primary[5]}; color: white; cursor: pointer;" 
+                        class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Quarterly Reports
                     </a>
 
-                    <!-- GitHub Icon Link (Desktop) -->
                     <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
-                        class="p-2 transition duration-150 hover:text-gray-200 text-white" 
+                        class="nav-link nav-desktop-link nav-github-link flex align-items"
                         title="View Repository">
-                        <!-- Desktop Size: w-7 h-7 -->
                         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">${GITHUB_ICON_PATH}</svg>
                     </a>
                 </div>
 
-                <!-- Hamburger Button (Mobile Only) -->
-                <button id="menu-button" class="sm:hidden p-2 rounded-md hover:bg-indigo-700 transition duration-150" aria-expanded="false" aria-controls="mobile-menu">
-                    <!-- Menu Open Icon (Hamburger) -->
-                    <svg id="menu-open-icon" class="w-6 h-6 block" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <button id="menu-button" style="background-color: ${COLORS.nav.bgHover}; cursor: pointer;" class="sm:hidden p-2 rounded-md transition duration-150" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu">
+                    <svg id="menu-open-icon" class="w-6 h-6 block" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"/>
                     </svg>
-                    <!-- Menu Close Icon (X) -->
-                    <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg id="menu-close-icon" class="w-6 h-6 hidden" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                         <path d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z" />
                     </svg>
                 </button>
             </div>
         </div>
         
-        <!-- Mobile Menu Panel (Hidden by default, shown by JS) -->
-        <div id="mobile-menu" class="hidden sm:hidden absolute top-16 left-0 right-0 bg-[#342D93] shadow-lg p-4">
+        <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
             
-            <!-- Quarterly Reports Link -->
             <div class="mb-4">
-                <a href="reports.html" class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]">Quarterly Reports</a>
+                <a href="reports.html"
+                    class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+                    tabindex="0" role="button" onkeydown="if(event.key==='Enter'){this.click();}">Quarterly Reports</a>
             </div>
             
-            <!-- GitHub Icon - Mobile (Left Side Bottom) -->
-            <div class="mt-3 pt-3 border-t border-indigo-700">
+            <div class="mt-3 pt-3" style="border-top-color: ${COLORS.nav.bg}; border-top-width: 1px;">
                 <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
-                    class="block w-fit hover:text-gray-200 transition duration-150 ml-3" 
+                    class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3" 
+                    tabindex="0" role="button" onkeydown="if(event.key==='Enter'){this.click();}"
                     title="View Repository">
-                    <!-- Mobile Size: w-6 h-6, ml-3 aligns with the start of 'Quarterly Reports' text -->
                     <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">${GITHUB_ICON_PATH}</svg>
                 </a>
             </div>
         </div>
 
-        <!-- JavaScript for Mobile Menu Toggle -->
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const button = document.getElementById('menu-button');
@@ -99,6 +90,61 @@ const navHtml = dedent`
             });
         </script>
     </nav>
+    <style>
+        /* Base styles for all links to inherit (optional, but good practice) */
+        .nav-link {
+            transition: all 0.15s ease-in-out;
+            border: 2px solid transparent; /* default border width for padding/focus outline */
+            border-radius: 0.375rem;
+            display: inline-flex; /* Use flex for alignment in GitHub icon case */
+            align-items: center;
+        }
+
+        /* --- Global Hover/Focus Effects (Matching Quarterly Reports Desktop) --- */
+        /* Applied to home, desktop quarterly, desktop github, mobile quarterly, and mobile github */
+        .nav-link:hover {
+            border-color: white !important; /* Use !important to override inline styles on reports link */
+            background-color: ${COLORS.primary[10]} !important; 
+        }
+        .nav-link:focus-visible {
+            border-color: white !important; 
+            outline: 2px solid white !important;
+            outline-offset: 2px;
+        }
+
+        /* --- Specific Link Adjustments (Using the common .nav-link styles above) --- */
+        
+        /* Home/Title Link */
+        .nav-home-link {
+             padding: 0.5rem;
+        }
+        
+        /* Desktop Quarterly Reports Link (Ensure background color style is preserved by Tailwind/inline style) */
+        .nav-desktop-link {
+            border-width: 1px; /* Tighter border for the main button */
+            padding: 0.5rem;
+            display: inline-block;
+        }
+        
+        /* Desktop GitHub Link */
+        .nav-github-link {
+            padding: 0.5rem;
+        }
+
+        /* Mobile Quarterly Reports Link */
+        .nav-mobile-link {
+            padding: 0.5rem 0.75rem; /* Adjusted padding to match block-style link */
+            border-width: 1px; /* Optional: Make it look more like a button */
+            background-color: ${COLORS.nav.bgDark}
+            display: inline-flex;
+        }
+
+        /* Mobile GitHub Icon Link */
+        .nav-mobile-github-link {
+            padding: 0.5rem;
+            /* Keep original hover text color, or rely on .nav-link hover background */
+        }
+    </style>
 `;
 
 module.exports = {

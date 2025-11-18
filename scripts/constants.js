@@ -14,15 +14,25 @@ const RIGHT_ARROW_SVG = `
 `;
 
 // Define the raw SVG for the favicon
-const FAVICON_SVG_RAW = `
+// The fill color will be replaced with the primary color from COLOR_PALETTE dynamically
+const FAVICON_SVG_RAW_TEMPLATE = `
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-  <path fill='#4338CA' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/>
-  <path fill='#4338CA' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/>
-  <path fill='#4338CA' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/>
+  <path fill='{{COLOR}}' fill-rule='evenodd' d='M5.75 21a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 19.25a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM5.75 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM2.5 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0zM18.25 6.5a1.75 1.75 0 110-3.5 1.75 1.75 0 010 3.5zM15 4.75a3.25 3.25 0 106.5 0 3.25 3.25 0 00-6.5 0z'/>
+  <path fill='{{COLOR}}' fill-rule='evenodd' d='M5.75 16.75A.75.75 0 006.5 16V8A.75.75 0 005 8v8c0 .414.336.75.75.75z'/>
+  <path fill='{{COLOR}}' fill-rule='evenodd' d='M17.5 8.75v-1H19v1a3.75 3.75 0 01-3.75 3.75h-7a1.75 1.75 0 00-1.75 1.75H5A3.25 3.25 0 018.25 11h7a2.25 2.25 0 002.25-2.25z'/>
 </svg>
 `
   .replace(/\s+/g, ' ') // Remove extra whitespace/newlines for cleaner encoding
   .trim();
+
+/**
+ * Generates the favicon SVG with the specified color.
+ * @param {string} colorHex The hex color to use for the favicon
+ * @returns {string} The SVG string with the color applied
+ */
+function generateFaviconSvg(colorHex) {
+  return FAVICON_SVG_RAW_TEMPLATE.replace(/{{COLOR}}/g, colorHex);
+}
 
 // Function to safely encode the SVG for use in a data URI
 function encodeSvg(svgString) {
@@ -43,107 +53,233 @@ function encodeSvg(svgString) {
   return encoded;
 }
 
-const FAVICON_SVG_ENCODED = encodeSvg(FAVICON_SVG_RAW);
+// This will be set after COLOR_PALETTE is defined
+let FAVICON_SVG_ENCODED = null;
+
+/**
+ * COLOR UTILITY FUNCTIONS
+ * =======================
+ * These functions convert hex colors to RGB and generate opacity variants.
+ */
+
+/**
+ * Converts a hex color to RGB object.
+ * @param {string} hex The hex color (e.g., '#4338CA' or '#4f46e5')
+ * @returns {object|null} Object with r, g, b properties or null if invalid
+ */
+function hexToRgb(hex) {
+  // Remove '#' if present
+  let cleanHex = hex.replace(/^#/, '');
+
+  // Handle shorthand hex (e.g., #FFF -> #FFFFFF)
+  if (cleanHex.length === 3) {
+    cleanHex = cleanHex
+      .split('')
+      .map((char) => char + char)
+      .join('');
+  }
+
+  // Validate hex format
+  if (!/^[0-9A-F]{6}$/i.test(cleanHex)) {
+    console.error(`Invalid hex color: ${hex}`);
+    return null;
+  }
+
+  const r = parseInt(cleanHex.substring(0, 2), 16);
+  const g = parseInt(cleanHex.substring(2, 4), 16);
+  const b = parseInt(cleanHex.substring(4, 6), 16);
+
+  return { r, g, b };
+}
+
+/**
+ * Converts RGB to rgba string with opacity.
+ * @param {object} rgb Object with r, g, b properties
+ * @param {number} opacity Opacity value (0-1, or 0-100 for percentage)
+ * @returns {string} CSS rgba string (e.g., 'rgba(79, 70, 229, 0.1)')
+ */
+function rgbToRgba(rgb, opacity) {
+  if (!rgb) return null;
+  // Convert percentage (0-100) to decimal (0-1) if needed
+  const alpha = opacity > 1 ? opacity / 100 : opacity;
+  return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+}
+
+/**
+ * Generates color variants with different opacity levels from a hex color.
+ * @param {string} hex The hex color
+ * @returns {object} Object with variants at different opacity levels
+ */
+function generateColorVariants(hex) {
+  const rgb = hexToRgb(hex);
+  if (!rgb) return {};
+
+  return {
+    hex: hex,
+    rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+    5: rgbToRgba(rgb, 0.05),
+    10: rgbToRgba(rgb, 0.1),
+    15: rgbToRgba(rgb, 0.15),
+    25: rgbToRgba(rgb, 0.25),
+    50: rgbToRgba(rgb, 0.5),
+    75: rgbToRgba(rgb, 0.75),
+    100: rgbToRgba(rgb, 1.0),
+  };
+}
 
 /**
  * CENTRALIZED COLOR CONFIGURATION
  * ================================
  *
  * This object defines all colors used throughout the generated HTML reports.
- * To customize colors, update the values below using Tailwind CSS color names.
+ * ONLY MODIFY THE HEX VALUES BELOW - all opacity variants are automatically generated.
+ *
+ * To customize:
+ * 1. Change the hex value for the color you want to modify
+ * 2. All opacity variants (5%, 10%, 15%, etc.) will be automatically generated
+ * 3. Re-run the script and all generated files will use the new colors
  *
  * Color Properties:
- * - Primary: Used for headers, accents, and main buttons (default: indigo)
- * - Gray: Used for neutral elements (backgrounds, borders, text)
- * - Status: Used for PR/Issue status badges
- * - Link: Used for hyperlinks
- * - Background: Page and section backgrounds
- * - Border: Border colors for various elements
- * - SectionAccent: Left borders for section headings
+ * - Primary: Used for headers, accents, and main buttons
+ * - Primary900: Used for darker background and darker accent
+ * - Neutral: Used for backgrounds, borders, and text
+ * - Success: Used for OPEN status badges
+ * - Merged: Used for MERGED status badges
+ * - Error: Used for CLOSED status badges
+ * - TextPrimary: Used for primary text (headings, important text)
+ * - TextSecondary: Used for secondary text (descriptions, meta info)
+ * - TextMuted: Used for muted text (timestamps, less important info)
  *
- * IMPORTANT NOTES:
- * 1. Hover effects use pure CSS (not Tailwind) to avoid specificity issues
- * 2. Colors are hardcoded in template literals - changes here affect new generations
- * 3. For custom color schemes, modify the Tailwind class names below
- * 4. Always test hover effects after changing colors
+ * Each color generates these opacity levels automatically:
+ * - 5%, 10%, 15%, 25%, 50%, 75%, 100%
+ * - rgb (solid color)
+ * - hex (original hex value)
  */
-const COLORS = {
-  // Primary accent color (used for main UI elements)
-  primary: {
-    50: 'indigo-50',
-    100: 'indigo-100',
-    500: 'indigo-500',
-    600: 'indigo-600',
-    700: 'indigo-700',
-  },
-  // Neutral grays
-  gray: {
-    50: 'gray-50',
-    100: 'gray-100',
-    200: 'gray-200',
-    500: 'gray-500',
-    600: 'gray-600',
-    700: 'gray-700',
-    800: 'gray-800',
-  },
-  // Status badge colors (for PR/Issue states)
-  status: {
-    green: {
-      bg: 'green-100',
-      text: 'green-700',
-    },
-    purple: {
-      bg: 'purple-100',
-      text: 'purple-700',
-    },
-    red: {
-      bg: 'red-100',
-      text: 'red-700',
-    },
-    gray: {
-      bg: 'gray-100',
-      text: 'gray-700',
-    },
-  },
-  // Link colors
-  link: {
-    text: 'blue-600',
-    textHover: 'blue-800',
-  },
-  // Background colors
-  background: {
-    white: 'white',
-    altRows: 'gray-50',
-  },
-  // Border colors
-  border: {
-    default: 'border-gray-200',
-    section: 'border-gray-200',
-    bottomAccent: 'border-indigo-100',
-  },
-  // Accent borders for section headings
-  sectionAccent: {
-    green: 'border-green-500',
-    yellow: 'border-yellow-500',
-    indigo: 'border-indigo-500',
-  },
+const COLOR_PALETTE = {
+  primary: '#4338CA', // Indigo - for main UI elements, headers, buttons
+  primary900: '#312E81', // Dark indigo - for darker background
+  neutral: '#6b7280', // Gray - for neutral elements, borders
+  success: '#10b981', // Green - for OPEN status
+  merged: '#8b5cf6', // Purple - for MERGED status
+  error: '#ef4444', // Red - for CLOSED status
+  textPrimary: '#1f2937', // Dark gray - for main text and headings
+  textSecondary: '#374151', // Darker gray - for descriptions
+  textMuted: '#6b7280', // Medium gray - for timestamps and muted info
 };
 
 /**
+ * Generates the final COLORS object with all opacity variants.
+ * This replaces manual color definitions with auto-generated variants.
+ */
+function generateColorsObject() {
+  const primaryVariants = generateColorVariants(COLOR_PALETTE.primary);
+  const primary900Variants = generateColorVariants(COLOR_PALETTE.primary900);
+  const neutralVariants = generateColorVariants(COLOR_PALETTE.neutral);
+  const successVariants = generateColorVariants(COLOR_PALETTE.success);
+  const mergedVariants = generateColorVariants(COLOR_PALETTE.merged);
+  const errorVariants = generateColorVariants(COLOR_PALETTE.error);
+  const textPrimaryVariants = generateColorVariants(COLOR_PALETTE.textPrimary);
+  const textSecondaryVariants = generateColorVariants(COLOR_PALETTE.textSecondary);
+  const textMutedVariants = generateColorVariants(COLOR_PALETTE.textMuted);
+
+  return {
+    // Primary accent color
+    primary: primaryVariants,
+    // Dark primary color
+    primary900: primary900Variants,
+    // Neutral grays
+    gray: neutralVariants,
+    // Status badge colors
+    status: {
+      green: {
+        bg: successVariants[10], // 10% opacity for background
+        text: successVariants.rgb, // 100% opacity for text
+        bgHex: successVariants.hex,
+        textRgb: successVariants.rgb,
+      },
+      purple: {
+        bg: mergedVariants[10],
+        text: mergedVariants.rgb,
+        bgHex: mergedVariants.hex,
+        textRgb: mergedVariants.rgb,
+      },
+      red: {
+        bg: errorVariants[10],
+        text: errorVariants.rgb,
+        bgHex: errorVariants.hex,
+        textRgb: errorVariants.rgb,
+      },
+      gray: {
+        bg: neutralVariants[10],
+        text: neutralVariants.rgb,
+        bgHex: neutralVariants.hex,
+        textRgb: neutralVariants.rgb,
+      },
+    },
+    // Link colors
+    link: {
+      text: primaryVariants.rgb,
+      textHover: primaryVariants[75],
+    },
+    // Background colors
+    background: {
+      white: 'rgb(255, 255, 255)',
+      altRows: neutralVariants[5],
+      light: primaryVariants[5], // Light primary background
+      lightGray: neutralVariants[5], // Light gray background
+    },
+    // Border colors
+    border: {
+      default: neutralVariants[15],
+      section: neutralVariants[15],
+      bottomAccent: primaryVariants[15],
+      light: neutralVariants[10],
+    },
+    // Text colors - multiple variants
+    text: {
+      primary: textPrimaryVariants.rgb,
+      secondary: textSecondaryVariants.rgb,
+      muted: textMutedVariants.rgb,
+      white: 'rgb(255, 255, 255)',
+    },
+    // Accent borders for section headings
+    sectionAccent: {
+      green: successVariants.rgb,
+      yellow: '#eab308',
+      indigo: primaryVariants.rgb,
+    },
+    // Navigation and header colors
+    nav: {
+      bg: primaryVariants.rgb, // Navigation background
+      bgDark: primary900Variants.rgb, // Darker shade for mobile menu
+      bgHover: primaryVariants[75], // Hover state
+      text: 'rgb(255, 255, 255)', // Navigation text
+    },
+  };
+}
+
+const COLORS = generateColorsObject();
+
+// Initialize favicon after COLOR_PALETTE is defined
+FAVICON_SVG_ENCODED = encodeSvg(generateFaviconSvg(COLOR_PALETTE.primary));
+
+/**
  * Generates CSS with custom properties for hover effects.
- * This approach ensures hover effects work correctly without relying on Tailwind's
- * hover: prefixed classes in template literals, which can have specificity issues.
+ * This approach ensures hover effects work correctly with the generated colors.
  *
  * Returns: <style> tag with CSS rules for safe hover effects
  */
 function getHoverStyles() {
+  const primaryVariants = generateColorVariants(COLOR_PALETTE.primary);
+  const neutralVariants = generateColorVariants(COLOR_PALETTE.neutral);
+
   return `
     <style>
       /* CSS Custom Properties for easy customization */
       :root {
-        --primary-50: rgb(238, 242, 255);
-        --primary-600: rgb(79, 70, 229);
-        --gray-50: rgb(249, 250, 251);
+        --primary-50: ${primaryVariants[5]};
+        --primary-600: ${primaryVariants.rgb};
+        --gray-50: ${neutralVariants[5]};
       }
       
       /* Safe hover effect for metric cards */
@@ -166,4 +302,8 @@ module.exports = {
   FAVICON_SVG_ENCODED,
   COLORS,
   getHoverStyles,
+  hexToRgb,
+  rgbToRgba,
+  generateColorVariants,
+  COLOR_PALETTE,
 };

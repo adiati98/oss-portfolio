@@ -99,22 +99,21 @@ async function createHtmlReports(quarterlyFileLinks = []) {
         const safeDescription = item.description;
         const safeMetricTitle = item.metricTitle;
 
-        const rowBg = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-
-        // Remove 'border-b' on the last row to eliminate the bottom border
-        const borderClass = index === totalRows - 1 ? '' : 'border-b';
+        const bgColor = index % 2 === 0 ? COLORS.background.white : COLORS.background.altRows;
+        const borderStyle =
+          index === totalRows - 1 ? '' : `style="border-bottom: 1px solid ${COLORS.border.light};"`; // Light gray borders
 
         return `
-            <tr class="${rowBg} ${borderClass} hover:bg-indigo-50 transition duration-150">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-indigo-700">
+            <tr style="background-color: ${bgColor};" ${borderStyle}>
+              <td style="color: ${COLORS.primary.rgb};" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 ${item.section}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-700">
+              <td style="color: ${COLORS.text.secondary};" class="px-6 py-4 text-sm">
                 ${safeDescription}
               </td>
-              <td class="px-6 py-4 text-sm text-gray-700">
+              <td style="color: ${COLORS.text.secondary};" class="px-6 py-4 text-sm">
                 <span>${safeMetricTitle}</span>
-                <span class="block text-xs italic text-gray-500">
+                <span class="block text-xs italic" style="color: ${COLORS.text.muted};">
                   ${item.metricDescription}
                 </span>
               </td>
@@ -171,10 +170,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += `
-            <details ${openAttribute} class="col-span-full mb-8 border border-gray-200 rounded-xl transition duration-300">
-                <summary class="text-2xl font-bold 
-                text-gray-700 p-4 sm:p-6 cursor-pointer 
-                hover:bg-indigo-100 transition duration-150 rounded-xl flex items-center">
+            <details ${openAttribute} class="col-span-full mb-8 border rounded-xl transition duration-300" style="border-color: ${COLORS.border.light};">
+                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
@@ -183,13 +180,12 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
         linkHtml += `
-                <div class="bg-white border border-gray-200 hover:border-indigo-600 transition duration-150 rounded-lg shadow-md overflow-hidden w-full">
-                    <a href="./${link.relativePath}" class="block p-4">
-                        <p class="text-sm font-semibold text-indigo-700">${link.quarterText}</p>
-                        <p class="text-3xl font-extrabold text-gray-800 mt-1">${link.totalContributions}</p>
-                        <p class="text-xs text-gray-500">Total Contributions</p>
-                    </a>
-                </div>
+                <a href="./${link.relativePath}" style="cursor: pointer; background-color: white; text-decoration: none; display: block;" 
+                   class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
+                    <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
+                    <p style="color: ${COLORS.text.primary};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
+                    <p style="color: ${COLORS.text.muted};" class="text-xs">Total Contributions</p>
+                </a>
                 `;
       }
 
@@ -203,7 +199,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     }
   } else {
     // Fallback for no reports generated
-    linkHtml = `<p class="p-4 text-gray-500 italic col-span-full">No quarterly reports have been generated yet.</p>`;
+    linkHtml = `<p style="color: ${COLORS.text.muted};" class="p-4 italic col-span-full">No quarterly reports have been generated yet.</p>`;
   }
 
   // 5. Build HTML Content
@@ -238,25 +234,50 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     details summary {
       cursor: pointer;
       outline: none;
-      color: #1f2937;
+      color: ${COLORS.text.primary};
       transition: background-color 0.15s ease-in-out;
     }
+    summary:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
 
-    /* Apply indigo background to the entire details element when open */
+    /* Apply primary background to the entire details element when open */
     details.is-open {
-      background-color: #EEF2FF; /* Light indigo background */
+      background-color: ${COLORS.primary[5]}; /* Light primary background */
     }
     details.is-open summary {
-      background-color: #EEF2FF; /* Matches the details background */
+      background-color: ${COLORS.primary[5]}; /* Matches the details background */
       border-radius: 0.5rem 0.5rem 0 0; 
-      color: #4338CA; 
+      color: ${COLORS.primary.rgb}; 
+    }
+    details.is-open summary:hover,
+    details.is-open summary:focus-visible {
+      background-color: ${COLORS.primary[10]}; /* Slightly darker on hover */
     }
     details:not(.is-open) {
-      background-color: #f9fafb; /* Light gray background when closed */
+      background-color: ${COLORS.background.altRows}; /* Light gray background when closed */
     }
     details:not(.is-open) summary {
       border-bottom: none;
       border-radius: 0.5rem; 
+    }
+    details:not(.is-open) summary:hover,
+    details:not(.is-open) summary:focus-visible {
+      background-color: ${COLORS.primary[5]}; /* Light primary background on hover when closed */
+    }
+    /* Accessible styles for report card links */
+    .report-card-link {
+      border: 1px solid ${COLORS.border.light} !important;
+      transition: border-color 0.15s ease-in-out !important;
+    }
+    .report-card-link:hover {
+      border-color: ${COLORS.primary.rgb} !important;
+    }
+    .report-card-link:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
     }
     /* --- END Dynamic Styling --- */
   </style>
@@ -266,13 +287,13 @@ ${navHtml}
   <main class="grow w-full">
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-          <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
               Quarterly Reports
           </h1>
-          <p class="text-lg text-gray-600 max-w-3xl mx-auto mt-10 mb-6">
+          <p style="color: ${COLORS.text.secondary};" class="text-lg max-w-3xl mx-auto mt-10 mb-6">
             Organized by calendar quarter, these reports track
-            <a href="https://github.com/${GITHUB_USERNAME}" class="text-xl font-extrabold text-[#4338CA] hover:text-[#5E51D9] transition duration-150">
+            <a href="https://github.com/${GITHUB_USERNAME}" style="color: ${COLORS.primary.rgb};" class="text-xl font-extrabold hover:opacity-80 transition duration-150">
                 ${GITHUB_USERNAME}
             </a>'s external open source involvement, aggregating key community activities across 
             <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
@@ -280,29 +301,29 @@ ${navHtml}
         </header>
 
         <section class="mb-14">
-          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
+          <h2 style="color: ${COLORS.text.primary};" class="text-3xl font-bold pb-3 mb-1">
             Report Structure Breakdown
           </h2>
-          <p class="text-lg text-gray-600 mb-12">
+          <p style="color: ${COLORS.text.secondary};" class="text-lg mb-12">
             Each quarterly report provides a detailed log and summary for that period.
           </p>
             
-          <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-indigo-50">
+          <div style="border-color: ${COLORS.border.light};" class="overflow-x-auto rounded-xl shadow-lg border">
+            <table class="min-w-full" style="border-collapse: separate; border-color: ${COLORS.border.light};">
+              <thead style="background-color: ${COLORS.primary[5]};">
                 <tr>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
+                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4">
                     Section
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/2">
+                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/2">
                     Content Description
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-indigo-700 uppercase tracking-wider w-1/4">
+                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4">
                     Key Metric / Insight
                   </th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-200">
+              <tbody style="border-color: ${COLORS.border.light};">
                   ${renderStructureTableRows()}
               </tbody>
               </table>
@@ -310,10 +331,10 @@ ${navHtml}
         </section>
 
         <section class="mt-14 pt-8">
-          <h2 class="text-3xl font-bold text-gray-800 pb-3 mb-1">
+          <h2 style="color: ${COLORS.text.primary};" class="text-3xl font-bold pb-3 mb-1">
             Quarterly Reports (Detail Pages)
           </h2>
-          <p class="text-lg text-gray-600 mb-12">
+          <p style="color: ${COLORS.text.secondary};" class="text-lg mb-12">
             Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
           </p>
           <div class="grid grid-cols-1 report-list">
@@ -321,31 +342,6 @@ ${navHtml}
           </div>
         </section>
       </div>
-
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          document.querySelectorAll('details').forEach(details => {
-            // Initial state check for the default 'open' attribute
-            if (details.open) {
-              details.classList.add('is-open');
-            } else {
-              // Apply a background to closed elements for visual separation
-              details.classList.add('bg-gray-50'); 
-            }
-
-            // Listener for the 'toggle' event (triggered on open/close)
-            details.addEventListener('toggle', () => {
-              if (details.open) {
-                details.classList.add('is-open');
-                details.classList.remove('bg-gray-50'); // Remove closed background
-              } else {
-                details.classList.remove('is-open');
-                details.classList.add('bg-gray-50'); // Re-apply closed background
-              }
-            });
-          });
-        });
-      </script>
     </div>
   </main>
   ${footerHtml}
