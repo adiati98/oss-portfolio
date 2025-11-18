@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Q3 2023 Contributions Report</title>
     <link
       rel="icon"
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2021a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%2019.25a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM5.75%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM18.25%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM15%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2016.75A.75.75%200%20006.5%2016V8A.75.75%200%20005%208v8c0%20.414.336.75.75.75z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M17.5%208.75v-1H19v1a3.75%203.75%200%2001-3.75%203.75h-7a1.75%201.75%200%2000-1.75%201.75H5A3.25%203.25%200%20018.25%2011h7a2.25%202.25%200%20002.25-2.25z%27%2F%3E%20%3C%2Fsvg%3E"
     />
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
@@ -33,6 +31,10 @@
         padding: 0.5em 0;
         color: #1f2937;
       }
+      summary:focus-visible {
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
       .report-table th,
       .report-table td {
         padding: 10px 12px;
@@ -42,54 +44,86 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      .report-table th {
-        background-color: #eef2ff;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 0.05em;
-        color: #4338ca;
+      .details-section {
+        background-color: rgba(67, 56, 202, 0.05);
+      }
+      .details-section details:open summary {
+        color: rgb(67, 56, 202);
       }
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
+      /* Accessible hover and focus styles for navigation buttons */
+      .nav-report-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-report-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-report-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+      .nav-contribution-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-contribution-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-contribution-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+      /* Table row hover styles */
+      .table-row-hover {
+        background-color: inherit;
+      }
+      .table-row-hover:hover,
+      .table-row-hover:focus-visible {
+        background-color: rgba(67, 56, 202, 0.1) !important;
+      }
+      .table-row-hover:focus-visible {
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: -2px;
+      }
     </style>
   </head>
   <body>
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-[#4338CA] text-white shadow-lg">
+    <nav
+      style="background-color: rgb(67, 56, 202)"
+      class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
+    >
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-        <!-- Left Side: Title -->
         <div class="flex items-center space-x-4">
           <a
             href="../index.html"
-            class="text-md font-extrabold tracking-wider uppercase py-2 rounded-md"
+            class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1"
           >
             <span class="sm:hidden">OSS Portfolio</span>
             <span class="hidden sm:inline">Open Source Portfolio</span>
           </a>
         </div>
 
-        <!-- Right Side Container (Desktop Links & Mobile Toggle) -->
         <div class="flex items-center">
-          <!-- Desktop Navigation (Quarterly Reports + GitHub Icon) -->
           <div class="hidden sm:flex items-center space-x-4">
-            <!-- Quarterly Reports Link (Desktop) -->
             <a
               href="../reports.html"
-              class="text-sm font-semibold p-2 rounded-md transition duration-150 hover:bg-indigo-700"
-            >
-              Quarterly Reports
+              style="background-color: rgba(67, 56, 202, 0.05); color: white; cursor: pointer"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Quarterly Reports
             </a>
 
-            <!-- GitHub Icon Link (Desktop) -->
             <a
               href="https://github.com/adiati98/oss-portfolio"
               target="_blank"
               rel="noopener noreferrer"
-              class="p-2 transition duration-150 hover:text-gray-200 text-white"
+              class="nav-link nav-desktop-link nav-github-link flex align-items"
               title="View Repository"
             >
-              <!-- Desktop Size: w-7 h-7 -->
               <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
                 <path
                   d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
@@ -98,32 +132,33 @@
             </a>
           </div>
 
-          <!-- Hamburger Button (Mobile Only) -->
           <button
             id="menu-button"
-            class="sm:hidden p-2 rounded-md hover:bg-indigo-700 transition duration-150"
+            style="background-color: rgba(67, 56, 202, 0.75); cursor: pointer"
+            class="sm:hidden p-2 rounded-md transition duration-150"
             aria-expanded="false"
             aria-controls="mobile-menu"
+            aria-label="Toggle navigation menu"
           >
-            <!-- Menu Open Icon (Hamburger) -->
             <svg
               id="menu-open-icon"
               class="w-6 h-6 block"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"
               />
             </svg>
-            <!-- Menu Close Icon (X) -->
             <svg
               id="menu-close-icon"
               class="w-6 h-6 hidden"
               fill="currentColor"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
             >
               <path
                 d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z"
@@ -133,30 +168,33 @@
         </div>
       </div>
 
-      <!-- Mobile Menu Panel (Hidden by default, shown by JS) -->
       <div
         id="mobile-menu"
-        class="hidden sm:hidden absolute top-16 left-0 right-0 bg-[#342D93] shadow-lg p-4"
+        style="background-color: rgb(49, 46, 129)"
+        class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
       >
-        <!-- Quarterly Reports Link -->
         <div class="mb-4">
           <a
             href="../reports.html"
-            class="block px-3 py-2 text-base font-medium rounded-md hover:bg-[#4338CA]"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'){this.click();}"
             >Quarterly Reports</a
           >
         </div>
 
-        <!-- GitHub Icon - Mobile (Left Side Bottom) -->
-        <div class="mt-3 pt-3 border-t border-indigo-700">
+        <div class="mt-3 pt-3" style="border-top-color: rgb(67, 56, 202); border-top-width: 1px">
           <a
             href="https://github.com/adiati98/oss-portfolio"
             target="_blank"
             rel="noopener noreferrer"
-            class="block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'){this.click();}"
             title="View Repository"
           >
-            <!-- Mobile Size: w-6 h-6, ml-3 aligns with the start of 'Quarterly Reports' text -->
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
               <path
                 d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
@@ -166,7 +204,6 @@
         </div>
       </div>
 
-      <!-- JavaScript for Mobile Menu Toggle -->
       <script>
         document.addEventListener('DOMContentLoaded', () => {
           const button = document.getElementById('menu-button');
@@ -192,18 +229,82 @@
         });
       </script>
     </nav>
+    <style>
+      /* Base styles for all links to inherit (optional, but good practice) */
+      .nav-link {
+          transition: all 0.15s ease-in-out;
+          border: 2px solid transparent; /* default border width for padding/focus outline */
+          border-radius: 0.375rem;
+          display: inline-flex; /* Use flex for alignment in GitHub icon case */
+          align-items: center;
+      }
+
+      /* --- Global Hover/Focus Effects (Matching Quarterly Reports Desktop) --- */
+      /* Applied to home, desktop quarterly, desktop github, mobile quarterly, and mobile github */
+      .nav-link:hover {
+          border-color: white !important; /* Use !important to override inline styles on reports link */
+          background-color: rgba(67, 56, 202, 0.1) !important;
+      }
+      .nav-link:focus-visible {
+          border-color: white !important;
+          outline: 2px solid white !important;
+          outline-offset: 2px;
+      }
+
+      /* --- Specific Link Adjustments (Using the common .nav-link styles above) --- */
+
+      /* Home/Title Link */
+      .nav-home-link {
+           padding: 0.5rem;
+      }
+
+      /* Desktop Quarterly Reports Link (Ensure background color style is preserved by Tailwind/inline style) */
+      .nav-desktop-link {
+          border-width: 1px; /* Tighter border for the main button */
+          padding: 0.5rem;
+          display: inline-block;
+      }
+
+      /* Desktop GitHub Link */
+      .nav-github-link {
+          padding: 0.5rem;
+      }
+
+      /* Mobile Quarterly Reports Link */
+      .nav-mobile-link {
+          padding: 0.5rem 0.75rem; /* Adjusted padding to match block-style link */
+          border-width: 1px; /* Optional: Make it look more like a button */
+          background-color: rgb(49, 46, 129)
+          display: inline-flex;
+      }
+
+      /* Mobile GitHub Icon Link */
+      .nav-mobile-github-link {
+          padding: 0.5rem;
+          /* Keep original hover text color, or rely on .nav-link hover background */
+      }
+    </style>
     <main class="grow w-full">
       <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
         <div class="max-w-[120ch] mx-auto">
-          <header class="text-center mt-16 mb-12 pb-4 border-b-2 border-indigo-100">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-indigo-700 mb-2 pt-8">Q3 2023</h1>
+          <header
+            style="border-bottom-color: rgba(67, 56, 202, 0.15)"
+            class="text-center mt-16 mb-12 pb-4 border-b-2"
+          >
+            <h1
+              style="color: rgb(67, 56, 202)"
+              class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
+            >
+              Q3 2023
+            </h1>
             <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
           </header>
 
           <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
           <section class="mb-8">
             <h2
-              class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 border-indigo-500 pl-3"
+              style="border-left-color: rgb(67, 56, 202)"
+              class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3"
             >
               📊 Quarterly Statistics
             </h2>
@@ -211,13 +312,15 @@
             <!-- Total Contributions & Total Repositories (Two Big Cards) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div
-                class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+                style="background-color: rgb(67, 56, 202)"
+                class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
                 <p class="text-4xl font-extrabold">76</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
-                class="bg-indigo-600 text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
+                style="background-color: rgb(67, 56, 202)"
+                class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
                 <p class="text-4xl font-extrabold">13</p>
                 <p class="text-lg mt-2 font-medium">Total Repositories</p>
@@ -236,41 +339,46 @@
               <!-- Merged PRs -->
               <a
                 href="#merged-prs"
-                class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold text-indigo-700">24</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">24</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
               </a>
               <!-- Issues -->
               <a
                 href="#issues"
-                class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold text-indigo-700">27</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">27</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
               </a>
               <!-- Reviewed PRs -->
               <a
                 href="#reviewed-prs"
-                class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold text-indigo-700">16</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">16</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
               </a>
               <!-- Co-Authored PRs -->
               <a
                 href="#co-authored-prs"
-                class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold text-indigo-700">2</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">2</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
               </a>
               <!-- Collaborations -->
               <a
                 href="#collaborations"
-                class="flex flex-col items-center p-3 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-indigo-600 transition text-center"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold text-indigo-700">7</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">7</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
               </a>
             </div>
@@ -318,23 +426,27 @@
 
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
-              <summary class="text-xl font-bold text-indigo-600">
+              <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">🚀 Merged PRs (24)</span>
               </summary>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%">No.</th>
-                      <th style="width: 20%">Project</th>
-                      <th style="width: 30%">Title</th>
-                      <th style="width: 15%">Created</th>
-                      <th style="width: 15%">Merged</th>
-                      <th style="width: 15%">Review Period</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 20%; color: rgb(67, 56, 202)">Project</th>
+                      <th style="width: 30%; color: rgb(67, 56, 202)">Title</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Created</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Merged</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Review Period</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/knowledge-hub/pull/10"
+                    >
                       <td>1.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -354,7 +466,11 @@
                       <td>2023-09-28</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/27"
+                    >
                       <td>2.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -374,7 +490,11 @@
                       <td>2023-09-28</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/.github/pull/1"
+                    >
                       <td>3.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -394,7 +514,11 @@
                       <td>2023-09-28</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/21"
+                    >
                       <td>4.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -414,7 +538,11 @@
                       <td>2023-09-25</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/knowledge-hub/pull/9"
+                    >
                       <td>5.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -434,7 +562,11 @@
                       <td>2023-09-25</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/knowledge-hub/pull/8"
+                    >
                       <td>6.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -454,7 +586,11 @@
                       <td>2023-09-25</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/980"
+                    >
                       <td>7.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -474,7 +610,11 @@
                       <td>2023-09-20</td>
                       <td>13 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/OpenSource-Communities/guestbook/pull/82"
+                    >
                       <td>8.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -494,7 +634,11 @@
                       <td>2023-09-19</td>
                       <td>13 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/15"
+                    >
                       <td>9.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -514,7 +658,11 @@
                       <td>2023-09-18</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/5"
+                    >
                       <td>10.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -534,7 +682,11 @@
                       <td>2023-09-08</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/978"
+                    >
                       <td>11.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -554,7 +706,11 @@
                       <td>2023-09-05</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/1"
+                    >
                       <td>12.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -574,7 +730,11 @@
                       <td>2023-09-04</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/973"
+                    >
                       <td>13.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -595,7 +755,11 @@
                       <td>2023-08-29</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/965"
+                    >
                       <td>14.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -615,7 +779,11 @@
                       <td>2023-08-24</td>
                       <td>6 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/967"
+                    >
                       <td>15.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -635,7 +803,11 @@
                       <td>2023-08-18</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/100-days-of-oss-template/pull/8"
+                    >
                       <td>16.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -655,7 +827,11 @@
                       <td>2023-08-14</td>
                       <td>15 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/954"
+                    >
                       <td>17.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -675,7 +851,11 @@
                       <td>2023-08-03</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/947"
+                    >
                       <td>18.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -695,7 +875,11 @@
                       <td>2023-08-03</td>
                       <td>6 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/944"
+                    >
                       <td>19.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -715,7 +899,11 @@
                       <td>2023-08-03</td>
                       <td>7 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/942"
+                    >
                       <td>20.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -735,7 +923,11 @@
                       <td>2023-08-03</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/952"
+                    >
                       <td>21.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -755,7 +947,11 @@
                       <td>2023-08-01</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/895"
+                    >
                       <td>22.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -775,7 +971,11 @@
                       <td>2023-07-19</td>
                       <td>55 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/931"
+                    >
                       <td>23.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -795,7 +995,11 @@
                       <td>2023-07-18</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/the-collab-lab/website/pull/76"
+                    >
                       <td>24.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -821,23 +1025,27 @@
             </details>
 
             <details id="issues" class="border border-gray-200 rounded-xl p-4 shadow-sm">
-              <summary class="text-xl font-bold text-indigo-600">
+              <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">🐞 Issues (27)</span>
               </summary>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%">No.</th>
-                      <th style="width: 25%">Project</th>
-                      <th style="width: 35%">Title</th>
-                      <th style="width: 15%">Created</th>
-                      <th style="width: 15%">Closed</th>
-                      <th style="width: 10%">Closing Period</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 25%; color: rgb(67, 56, 202)">Project</th>
+                      <th style="width: 35%; color: rgb(67, 56, 202)">Title</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Created</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Closed</th>
+                      <th style="width: 10%; color: rgb(67, 56, 202)">Closing Period</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/1764"
+                    >
                       <td>1.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -857,7 +1065,11 @@
                       <td>2023-10-03</td>
                       <td>5 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/991"
+                    >
                       <td>2.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -877,7 +1089,11 @@
                       <td>2023-10-02</td>
                       <td>4 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/knowledge-hub/issues/7"
+                    >
                       <td>3.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -897,7 +1113,11 @@
                       <td>2023-10-02</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/issues/6"
+                    >
                       <td>4.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -917,7 +1137,11 @@
                       <td>2023-09-14</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/979"
+                    >
                       <td>5.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -937,7 +1161,11 @@
                       <td>2023-09-20</td>
                       <td>14 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/OpenSource-Communities/guestbook/issues/81"
+                    >
                       <td>6.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -957,7 +1185,11 @@
                       <td>2023-09-19</td>
                       <td>19 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/969"
+                    >
                       <td>7.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -977,7 +1209,11 @@
                       <td>2023-10-06</td>
                       <td>45 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/964"
+                    >
                       <td>8.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -997,7 +1233,11 @@
                       <td>2023-08-18</td>
                       <td>2 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/963"
+                    >
                       <td>9.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1017,7 +1257,11 @@
                       <td>2023-08-24</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/962"
+                    >
                       <td>10.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1037,7 +1281,11 @@
                       <td>2023-08-24</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/1530"
+                    >
                       <td>11.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1057,7 +1305,11 @@
                       <td>2023-08-09</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/1529"
+                    >
                       <td>12.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1077,7 +1329,11 @@
                       <td>2023-08-15</td>
                       <td>7 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/1528"
+                    >
                       <td>13.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1098,7 +1354,11 @@
                       <td>2023-10-13</td>
                       <td>66 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/community/issues/21"
+                    >
                       <td>14.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1118,7 +1378,11 @@
                       <td>2023-08-14</td>
                       <td>6 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/953"
+                    >
                       <td>15.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1138,7 +1402,11 @@
                       <td>2023-08-03</td>
                       <td>1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/951"
+                    >
                       <td>16.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1158,7 +1426,11 @@
                       <td>2023-08-01</td>
                       <td>2 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/100-days-of-oss-template/issues/7"
+                    >
                       <td>17.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1178,7 +1450,11 @@
                       <td>2023-08-14</td>
                       <td>17 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/946"
+                    >
                       <td>18.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1198,7 +1474,11 @@
                       <td>2023-08-03</td>
                       <td>6 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/943"
+                    >
                       <td>19.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1218,7 +1498,11 @@
                       <td>2023-08-03</td>
                       <td>7 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/1441"
+                    >
                       <td>20.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1238,12 +1522,20 @@
                       <td>N/A</td>
                       <td>
                         <span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
                           >OPEN</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/104"
+                    >
                       <td>21.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1263,7 +1555,11 @@
                       <td>2023-10-09</td>
                       <td>83 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/103"
+                    >
                       <td>22.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1283,12 +1579,20 @@
                       <td>N/A</td>
                       <td>
                         <span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
                           >OPEN</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/930"
+                    >
                       <td>23.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1308,7 +1612,11 @@
                       <td>2023-07-18</td>
                       <td>8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/forem/forem/issues/19689"
+                    >
                       <td>24.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"> forem/forem </span>
@@ -1326,12 +1634,20 @@
                       <td>N/A</td>
                       <td>
                         <span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
                           >OPEN</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/AccessibleForAll/Support/issues/499"
+                    >
                       <td>25.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1351,7 +1667,11 @@
                       <td>2023-07-05</td>
                       <td>0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/320"
+                    >
                       <td>26.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1371,7 +1691,11 @@
                       <td>2023-10-20</td>
                       <td>108 days</td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/the-collab-lab/website/issues/75"
+                    >
                       <td>27.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1397,24 +1721,28 @@
             </details>
 
             <details id="reviewed-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
-              <summary class="text-xl font-bold text-indigo-600">
+              <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">👀 Reviewed PRs (16)</span>
               </summary>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%">No.</th>
-                      <th style="width: 20%">Project</th>
-                      <th style="width: 28%">Title</th>
-                      <th style="width: 10%">Created At</th>
-                      <th style="width: 15%">First Review</th>
-                      <th style="width: 10%">Review Period</th>
-                      <th style="width: 12%">Last Update / Status</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 20%; color: rgb(67, 56, 202)">Project</th>
+                      <th style="width: 28%; color: rgb(67, 56, 202)">Title</th>
+                      <th style="width: 10%; color: rgb(67, 56, 202)">Created At</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">First Review</th>
+                      <th style="width: 10%; color: rgb(67, 56, 202)">Review Period</th>
+                      <th style="width: 12%; color: rgb(67, 56, 202)">Last Update / Status</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/2"
+                    >
                       <td>1.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1435,12 +1763,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-06<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/3"
+                    >
                       <td>2.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1461,12 +1797,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-06<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/4"
+                    >
                       <td>3.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1487,12 +1831,20 @@
                       <td>1 day</td>
                       <td>
                         2023-09-08<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/9"
+                    >
                       <td>4.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1513,12 +1865,20 @@
                       <td>1 day</td>
                       <td>
                         2023-09-14<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/10"
+                    >
                       <td>5.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1539,12 +1899,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-14<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/12"
+                    >
                       <td>6.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1565,12 +1933,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-15<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/14"
+                    >
                       <td>7.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1591,12 +1967,20 @@
                       <td>1 day</td>
                       <td>
                         2023-09-18<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/11"
+                    >
                       <td>8.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1617,12 +2001,20 @@
                       <td>6 days</td>
                       <td>
                         2023-09-20<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/20"
+                    >
                       <td>9.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1643,12 +2035,20 @@
                       <td>1 day</td>
                       <td>
                         2023-09-25<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/23"
+                    >
                       <td>10.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1669,12 +2069,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-26<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/17"
+                    >
                       <td>11.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1695,12 +2103,20 @@
                       <td>4 days</td>
                       <td>
                         2023-09-27<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/25"
+                    >
                       <td>12.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1721,12 +2137,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-27<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/24"
+                    >
                       <td>13.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1747,12 +2171,20 @@
                       <td>1 day</td>
                       <td>
                         2023-09-27<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/shesharpnl/knowledge-hub/pull/11"
+                    >
                       <td>14.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1773,12 +2205,20 @@
                       <td>0 days</td>
                       <td>
                         2023-10-01<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/26"
+                    >
                       <td>15.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1799,12 +2239,20 @@
                       <td>2 days</td>
                       <td>
                         2023-09-29<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/29"
+                    >
                       <td>16.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1825,7 +2273,11 @@
                       <td>0 days</td>
                       <td>
                         2023-09-30<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
@@ -1836,24 +2288,28 @@
             </details>
 
             <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
-              <summary class="text-xl font-bold text-indigo-600">
+              <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">🤝 Co-Authored PRs (2)</span>
               </summary>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%">No.</th>
-                      <th style="width: 15%">Project</th>
-                      <th style="width: 25%">Title</th>
-                      <th style="width: 10%">Created At</th>
-                      <th style="width: 12%">First Commit</th>
-                      <th style="width: 13%">Commit Period</th>
-                      <th style="width: 20%">Last Update / Status</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 15%; color: rgb(67, 56, 202)">Project</th>
+                      <th style="width: 25%; color: rgb(67, 56, 202)">Title</th>
+                      <th style="width: 10%; color: rgb(67, 56, 202)">Created At</th>
+                      <th style="width: 12%; color: rgb(67, 56, 202)">First Commit</th>
+                      <th style="width: 13%; color: rgb(67, 56, 202)">Commit Period</th>
+                      <th style="width: 20%; color: rgb(67, 56, 202)">Last Update / Status</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/25"
+                    >
                       <td>1.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1874,12 +2330,20 @@
                       <td>0 days</td>
                       <td>
                         2023-09-27<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/26"
+                    >
                       <td>2.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1900,7 +2364,11 @@
                       <td>2 days</td>
                       <td>
                         2023-09-29<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
@@ -1911,23 +2379,27 @@
             </details>
 
             <details id="collaborations" class="border border-gray-200 rounded-xl p-4 shadow-sm">
-              <summary class="text-xl font-bold text-indigo-600">
+              <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">💬 Collaborations (7)</span>
               </summary>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%">No.</th>
-                      <th style="width: 25%">Project</th>
-                      <th style="width: 30%">Title</th>
-                      <th style="width: 12%">Created At</th>
-                      <th style="width: 12%">First Comment</th>
-                      <th style="width: 16%">Last Update / Status</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 25%; color: rgb(67, 56, 202)">Project</th>
+                      <th style="width: 30%; color: rgb(67, 56, 202)">Title</th>
+                      <th style="width: 12%; color: rgb(67, 56, 202)">Created At</th>
+                      <th style="width: 12%; color: rgb(67, 56, 202)">First Comment</th>
+                      <th style="width: 16%; color: rgb(67, 56, 202)">Last Update / Status</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/13"
+                    >
                       <td>1.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1947,12 +2419,17 @@
                       <td>2023-09-18</td>
                       <td>
                         2024-03-27<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/vc-preptember/pull/8"
+                    >
                       <td>2.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1972,12 +2449,20 @@
                       <td>2023-09-14</td>
                       <td>
                         2023-09-24<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-purple-100 text-purple-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
                           >MERGED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/issues/56"
+                    >
                       <td>3.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -1997,12 +2482,20 @@
                       <td>2023-09-02</td>
                       <td>
                         2024-03-18<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-green-100 text-green-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
                           >OPEN</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/OpenSource-Communities/guestbook/issues/79"
+                    >
                       <td>4.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -2022,12 +2515,17 @@
                       <td>2023-09-01</td>
                       <td>
                         2023-10-26<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/open-sauced/app/pull/1147"
+                    >
                       <td>5.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -2047,12 +2545,17 @@
                       <td>2023-08-28</td>
                       <td>
                         2023-08-28<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/945"
+                    >
                       <td>6.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -2072,12 +2575,17 @@
                       <td>2023-08-02</td>
                       <td>
                         2023-10-26<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white hover:bg-indigo-50 transition duration-150">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
+                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/940"
+                    >
                       <td>7.</td>
                       <td>
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">
@@ -2097,7 +2605,8 @@
                       <td>2023-07-25</td>
                       <td>
                         2023-08-03<br /><span
-                          class="inline-block px-2 py-0.5 text-xs rounded-full bg-red-100 text-red-700 font-semibold"
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
                         >
                       </td>
@@ -2113,11 +2622,13 @@
             >
               <a
                 href="../2023/Q2-2023.html"
-                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white hover:border-indigo-600 text-left"
+                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white nav-report-button text-left"
+                style="color: rgb(67, 56, 202)"
               >
                 <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
                 <span
-                  class="flex items-center space-x-1 text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal"
+                  class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal"
+                  style="color: rgb(67, 56, 202)"
                 >
                   <svg
                     class="w-4 h-4"
@@ -2141,11 +2652,13 @@
               </a>
               <a
                 href="../2023/Q4-2023.html"
-                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white hover:border-indigo-600 text-right"
+                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white nav-report-button text-right"
+                style="color: rgb(67, 56, 202)"
               >
                 <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
                 <span
-                  class="flex items-center space-x-1 justify-end text-indigo-700 font-bold text-sm sm:text-lg break-words whitespace-normal"
+                  class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal"
+                  style="color: rgb(67, 56, 202)"
                 >
                   <span class="whitespace-normal min-w-0">Q4 2023</span>
 
@@ -2209,14 +2722,39 @@
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
       window.addEventListener('hashchange', openSectionFromHash);
+
+      // Add click handlers to table rows for link navigation
+      document.addEventListener('DOMContentLoaded', () => {
+        const tableRows = document.querySelectorAll('.table-row-hover');
+        tableRows.forEach((row) => {
+          const href = row.getAttribute('data-href');
+          if (href) {
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            row.addEventListener('click', () => {
+              window.location.href = href;
+            });
+            row.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = href;
+              }
+            });
+          }
+        });
+      });
     </script>
-    <footer class="mt-16 py-8 border-t border-gray-300 text-center text-gray-600 text-sm">
+    <footer
+      style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
+      class="mt-16 py-8 border-t text-center text-sm"
+    >
       <div class="mb-1">
         &copy; 2019-2025
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          class="text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150"
+          style="color: rgb(67, 56, 202)"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
         >'s open source contributions, generated on November 18, 2025.
@@ -2227,7 +2765,8 @@
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          class="text-indigo-600 hover:text-indigo-800 font-semibold transition duration-150"
+          style="color: rgb(67, 56, 202)"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           Ayu Adiati
         </a>
