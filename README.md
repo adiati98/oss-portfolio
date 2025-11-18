@@ -179,11 +179,12 @@ All colors are centralized in `scripts/constants.js` in the `COLOR_PALETTE` obje
 
 ### Color Palette Breakdown
 
-The `COLOR_PALETTE` includes 8 customizable colors:
+The `COLOR_PALETTE` includes 9 customizable colors:
 
 | Color             | Purpose          | Default Hex | Used For                              |
 | :---------------- | :--------------- | :---------- | :------------------------------------ |
 | **primary**       | Main UI accent   | #4f46e5     | Headers, buttons, navigation, accents |
+| **primary900**       | Dark UI accent   | #312E81     | Darker navigation background, dark accents |
 | **neutral**       | Neutral elements | #6b7280     | Borders, neutral backgrounds          |
 | **success**       | OPEN status      | #10b981     | Open issues/PRs badge                 |
 | **merged**        | MERGED status    | #8b5cf6     | Merged PRs badge                      |
@@ -205,6 +206,7 @@ The color system automatically generates 7 opacity levels (5%, 10%, 15%, 25%, 50
 
 const COLOR_PALETTE = {
   primary: '#4f46e5', // Indigo - for main UI elements
+  primary900: '#312E81', // Dark indigo - for darker background
   neutral: '#6b7280', // Gray - for neutral elements
   success: '#10b981', // Green - for OPEN status
   merged: '#8b5cf6', // Purple - for MERGED status
@@ -220,6 +222,7 @@ For example, to change to a modern blue theme:
 ```javascript
 const COLOR_PALETTE = {
   primary: '#0066cc', // Blue instead of Indigo
+  primary900: '#004c99', // Darker Blue
   neutral: '#64748b', // Slate Gray instead of Gray
   success: '#16a34a', // Darker Green for OPEN
   merged: '#2563eb', // Blue for MERGED
@@ -257,7 +260,5 @@ For example, `#8b5cf6` (purple) automatically generates:
   - Primary color with white text should pass WCAG AA (4.5:1) at minimum
   - Status colors should maintain good contrast with light backgrounds
   - Text colors should have at least 4.5:1 contrast with background
-- All example color schemes above are verified to pass WCAG AA or AAA standards
 - Test your color scheme in both light and dark viewing conditions if you're hosting the reports publicly.
 - The status colors (success, merged, error) help quickly identify the state of contributions, so choose distinct, recognizable colors.
-- **All changes are reflected everywhere** - navbar, footer, headers, badges, tables, and even the favicon!
