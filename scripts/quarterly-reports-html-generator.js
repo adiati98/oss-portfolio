@@ -495,11 +495,11 @@ ${navHtmlForReports}
       // Sort reviewed and co-authored PRs by their engagement date (ascending order)
       if (section === 'reviewedPrs' && items && items.length > 0) {
         items = [...items].sort((a, b) => {
-          return new Date(a.myFirstReviewDate) - new Date(b.myFirstReviewDate);
+          return new Date(b.myFirstReviewDate) - new Date(a.myFirstReviewDate);
         });
       } else if (section === 'coAuthoredPrs' && items && items.length > 0) {
         items = [...items].sort((a, b) => {
-          return new Date(a.firstCommitDate) - new Date(b.firstCommitDate);
+          return new Date(b.firstCommitDate) - new Date(a.firstCommitDate);
         });
       }
       const openAttribute = '';
