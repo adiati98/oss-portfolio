@@ -37,12 +37,14 @@ After processing, the script generates the reports in two formats to maximize us
 - **Markdown Reports (Output to `contributions/markdown-generated`):**
   - **Quarterly Reports:** Detailed Markdown files are created for each quarter (e.g., `2024/Q1-2024.md`), including statistics like total contribution count and top-contributed repositories.
 
-  - **Contributions README:** A summary `README.md` is generated for high-level statistics and easy viewing on GitHub.
+  - **Contributions README:** A summary `README.md` is generated featuring visual progress bars and percentage breakdowns, providing an immediate snapshot of contribution distribution directly on GitHub.
 
 - **HTML Reports (Output to `contributions/html-generated`):**
   - The same data is now used to generate styled HTML files for both quarterly reports and the summary view.
 
-  - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), [GitHub Pages](https://docs.github.com/en/pages), or any host of your choice. This allows for a more visual and navigable portfolio experience.
+  - The HTML Dashboard features responsive bar charts and calculated metrics to visualize the scale of contributions.
+
+  - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), or any host of your choice. This allows for a more visual and navigable portfolio experience.
 
 ### The Automation: GitHub Action Workflow
 
