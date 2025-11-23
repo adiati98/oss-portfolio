@@ -31,7 +31,7 @@
       .report-list a {
         text-decoration: none;
       }
-      /* Accessible styles for index report links */
+
       .index-report-link {
         border: 1px solid rgba(107, 114, 128, 0.1) !important;
         transition: border-color 0.15s ease-in-out !important;
@@ -43,6 +43,16 @@
         border-color: rgb(67, 56, 202);
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
+      }
+
+      /* Animation for the progress bars */
+      @keyframes loadBar {
+        from {
+          width: 0;
+        }
+      }
+      .progress-bar {
+        animation: loadBar 1s ease-out forwards;
       }
     </style>
   </head>
@@ -259,12 +269,7 @@
                 class="text-xl font-extrabold hover:opacity-80 transition duration-150"
               >
                 adiati98 </a
-              >. It aggregates all-time contribution activities, including
-              <strong
-                >Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general
-                Collaborations</strong
-              >
-              across various repositories.
+              >. It aggregates all-time contribution activities.
             </p>
           </header>
 
@@ -284,78 +289,100 @@
                 </p>
               </div>
 
-              <div class="col-span-1 md:col-span-2 flex flex-col gap-0 md:h-full">
-                <div class="flex flex-col h-full" style="color: rgb(31, 41, 55)">
-                  <div
-                    style="
-                      background-color: rgba(67, 56, 202, 0.05);
-                      border-bottom-color: rgba(107, 114, 128, 0.1);
-                    "
-                    class="flex justify-between items-center border-b px-4 py-4 rounded-t-xl"
-                  >
-                    <span class="text-md sm:text-lg font-medium">Merged PRs</span>
-                    <span
-                      style="color: rgb(67, 56, 202)"
-                      class="text-2xl sm:text-3xl font-extrabold"
-                      >404</span
-                    >
+              <div
+                class="col-span-1 md:col-span-2 flex flex-col h-full bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"
+              >
+                <div
+                  class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex justify-between items-end mb-2">
+                    <span class="text-base sm:text-lg font-medium text-gray-700">Merged PRs</span>
+                    <div class="text-right">
+                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl">404</span>
+                      <span class="text-sm text-gray-400 ml-1 font-mono">20.4%</span>
+                    </div>
                   </div>
-
-                  <div
-                    style="
-                      background-color: rgb(255, 255, 255);
-                      border-bottom-color: rgba(107, 114, 128, 0.1);
-                    "
-                    class="flex justify-between items-center border-b px-4 py-4"
-                  >
-                    <span class="text-md sm:text-lg font-medium">Issues</span>
-                    <span
-                      style="color: rgb(67, 56, 202)"
-                      class="text-2xl sm:text-3xl font-extrabold"
-                      >464</span
-                    >
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      style="width: 20.37317196167423%; background-color: rgb(67, 56, 202)"
+                      class="progress-bar h-2 rounded-full"
+                    ></div>
                   </div>
+                </div>
 
-                  <div
-                    style="
-                      background-color: rgba(67, 56, 202, 0.05);
-                      border-bottom-color: rgba(107, 114, 128, 0.1);
-                    "
-                    class="flex justify-between items-center border-b px-4 py-4"
-                  >
-                    <span class="text-md sm:text-lg font-medium">Reviewed PRs</span>
-                    <span
-                      style="color: rgb(67, 56, 202)"
-                      class="text-2xl sm:text-3xl font-extrabold"
-                      >568</span
-                    >
+                <div
+                  class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex justify-between items-end mb-2">
+                    <span class="text-base sm:text-lg font-medium text-gray-700">Issues</span>
+                    <div class="text-right">
+                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl">464</span>
+                      <span class="text-sm text-gray-400 ml-1 font-mono">23.4%</span>
+                    </div>
                   </div>
-
-                  <div
-                    style="
-                      background-color: rgb(255, 255, 255);
-                      border-bottom-color: rgba(107, 114, 128, 0.1);
-                    "
-                    class="flex justify-between items-center border-b px-4 py-4"
-                  >
-                    <span class="text-md sm:text-lg font-medium">Co-Authored PRs</span>
-                    <span
-                      style="color: rgb(67, 56, 202)"
-                      class="text-2xl sm:text-3xl font-extrabold"
-                      >258</span
-                    >
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      style="width: 23.398890569843672%; background-color: rgb(67, 56, 202)"
+                      class="progress-bar h-2 rounded-full"
+                    ></div>
                   </div>
+                </div>
 
-                  <div
-                    style="background-color: rgba(67, 56, 202, 0.05)"
-                    class="flex justify-between items-center px-4 py-4 rounded-b-xl"
-                  >
-                    <span class="text-md sm:text-lg font-medium">Collaborations</span>
-                    <span
-                      style="color: rgb(67, 56, 202)"
-                      class="text-2xl sm:text-3xl font-extrabold"
-                      >289</span
+                <div
+                  class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex justify-between items-end mb-2">
+                    <span class="text-base sm:text-lg font-medium text-gray-700">Reviewed PRs</span>
+                    <div class="text-right">
+                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl">568</span>
+                      <span class="text-sm text-gray-400 ml-1 font-mono">28.6%</span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      style="width: 28.643469490670704%; background-color: rgb(67, 56, 202)"
+                      class="progress-bar h-2 rounded-full"
+                    ></div>
+                  </div>
+                </div>
+
+                <div
+                  class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex justify-between items-end mb-2">
+                    <span class="text-base sm:text-lg font-medium text-gray-700"
+                      >Co-Authored PRs</span
                     >
+                    <div class="text-right">
+                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl">258</span>
+                      <span class="text-sm text-gray-400 ml-1 font-mono">13.0%</span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      style="width: 13.010590015128592%; background-color: rgb(67, 56, 202)"
+                      class="progress-bar h-2 rounded-full"
+                    ></div>
+                  </div>
+                </div>
+
+                <div
+                  class="flex-1 flex flex-col justify-center px-6 py-2 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div class="flex justify-between items-end mb-2">
+                    <span class="text-base sm:text-lg font-medium text-gray-700"
+                      >Collaborations</span
+                    >
+                    <div class="text-right">
+                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl">289</span>
+                      <span class="text-sm text-gray-400 ml-1 font-mono">14.6%</span>
+                    </div>
+                  </div>
+                  <div class="w-full bg-gray-100 rounded-full h-2">
+                    <div
+                      style="width: 14.573877962682804%; background-color: rgb(67, 56, 202)"
+                      class="progress-bar h-2 rounded-full"
+                    ></div>
                   </div>
                 </div>
               </div>
@@ -367,7 +394,7 @@
                 style="color: rgb(67, 56, 202)"
                 class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-6 py-3 bg-white border font-semibold rounded-lg shadow-md transition duration-200"
               >
-                <span class="pr-2"> View Detailed Quarterly Reports </span>
+                <span class="pr-2">View Detailed Quarterly Reports</span>
 
                 <svg
                   class="w-4 h-4"
