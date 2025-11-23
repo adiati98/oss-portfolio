@@ -146,11 +146,11 @@ ${navHtml}
             <div class="col-span-1 md:col-span-2 flex flex-col h-full bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden"> 
               
               <div class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                <div class="flex justify-between items-end mb-2">
+                <div class="flex justify-between items-center mb-2">
                   <span class="text-base sm:text-lg font-medium text-gray-700">Merged PRs</span>
-                  <div class="text-right">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-2xl">${prCount}</span>
-                    <span class="text-sm text-gray-400 ml-1 font-mono">${stats.prs.pctStr}</span>
+                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                    <span style="color: ${COLORS.primary.rgb};" class="font-extrabold sm:font-bold text-xl sm:text-2xl text-right">${prCount}</span>
+                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono text-right">${stats.prs.pctStr}</span>
                   </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
@@ -159,11 +159,11 @@ ${navHtml}
               </div>
 
               <div class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                <div class="flex justify-between items-end mb-2">
+                <div class="flex justify-between items-center mb-2">
                   <span class="text-base sm:text-lg font-medium text-gray-700">Issues</span>
-                  <div class="text-right">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-2xl">${issueCount}</span>
-                    <span class="text-sm text-gray-400 ml-1 font-mono">${stats.issues.pctStr}</span>
+                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                    <span style="color: ${COLORS.primary.rgb};" class="font-extrabold sm:font-bold text-xl sm:text-2xl text-right">${issueCount}</span>
+                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono text-right">${stats.issues.pctStr}</span>
                   </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
@@ -172,11 +172,11 @@ ${navHtml}
               </div>
 
               <div class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                <div class="flex justify-between items-end mb-2">
+                <div class="flex justify-between items-center mb-2">
                   <span class="text-base sm:text-lg font-medium text-gray-700">Reviewed PRs</span>
-                  <div class="text-right">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-2xl">${reviewedPrCount}</span>
-                    <span class="text-sm text-gray-400 ml-1 font-mono">${stats.reviews.pctStr}</span>
+                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                    <span style="color: ${COLORS.primary.rgb};" class="font-extrabold sm:font-bold text-xl sm:text-2xl text-right">${reviewedPrCount}</span>
+                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono text-right">${stats.reviews.pctStr}</span>
                   </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
@@ -185,11 +185,11 @@ ${navHtml}
               </div>
 
               <div class="flex-1 flex flex-col justify-center px-6 py-2 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-200">
-                <div class="flex justify-between items-end mb-2">
+                <div class="flex justify-between items-center mb-2">
                   <span class="text-base sm:text-lg font-medium text-gray-700">Co-Authored PRs</span>
-                  <div class="text-right">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-2xl">${coAuthoredPrCount}</span>
-                    <span class="text-sm text-gray-400 ml-1 font-mono">${stats.coauth.pctStr}</span>
+                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                    <span style="color: ${COLORS.primary.rgb};" class="font-extrabold sm:font-bold text-xl sm:text-2xl text-right">${coAuthoredPrCount}</span>
+                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono text-right">${stats.coauth.pctStr}</span>
                   </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
@@ -198,11 +198,11 @@ ${navHtml}
               </div>
 
               <div class="flex-1 flex flex-col justify-center px-6 py-2 hover:bg-gray-50 transition-colors duration-200">
-                <div class="flex justify-between items-end mb-2">
+                <div class="flex justify-between items-center mb-2">
                   <span class="text-base sm:text-lg font-medium text-gray-700">Collaborations</span>
-                  <div class="text-right">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-2xl">${collaborationCount}</span>
-                    <span class="text-sm text-gray-400 ml-1 font-mono">${stats.collab.pctStr}</span>
+                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                    <span style="color: ${COLORS.primary.rgb};" class="font-extrabold sm:font-bold text-xl sm:text-2xl text-right">${collaborationCount}</span>
+                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono text-right">${stats.collab.pctStr}</span>
                   </div>
                 </div>
                 <div class="w-full bg-gray-100 rounded-full h-2">
