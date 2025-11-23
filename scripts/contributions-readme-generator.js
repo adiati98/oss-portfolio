@@ -8,6 +8,27 @@ const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';
 
 /**
+ * Helper: Generates a Unicode progress bar string using Squares
+ * Example: ■■■■■■■□□□□□
+ */
+function generateProgressBar(count, total, width) {
+  const filledChar = '■';
+  const emptyChar = '□';
+
+  if (total === 0) return emptyChar.repeat(width);
+
+  const percent = count / total;
+  const filledCount = Math.round(percent * width);
+  const emptyCount = width - filledCount;
+
+  // Safety check to prevent negative repeats
+  const safeFilled = Math.max(0, filledCount);
+  const safeEmpty = Math.max(0, emptyCount);
+
+  return filledChar.repeat(safeFilled) + emptyChar.repeat(safeEmpty);
+}
+
+/**
  * Calculates aggregate totals from all contribution data and writes the
  * contributions/README.md file.
  * @param {object} finalContributions The object with all contributions, grouped by type.
@@ -23,13 +44,34 @@ async function createStatsReadme(finalContributions) {
   const issueCount = finalContributions.issues.length;
   const reviewedPrCount = finalContributions.reviewedPrs.length;
   const collaborationCount = finalContributions.collaborations.length;
-  // coAuthoredPrs may not exist in older data; handle defensively
   const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
     ? finalContributions.coAuthoredPrs.length
     : 0;
 
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
+
+  // --- HELPER: Calculate Stats for display ---
+  const getStats = (count) => {
+    // Width of 30 ensures that small differences (like 100 items) are visible
+    const BAR_WIDTH = 30;
+
+    if (grandTotal === 0) return { pct: '0.0%', bar: generateProgressBar(0, 0, BAR_WIDTH) };
+
+    const pct = (count / grandTotal) * 100;
+    return {
+      pct: pct.toFixed(1) + '%',
+      bar: generateProgressBar(count, grandTotal, BAR_WIDTH),
+    };
+  };
+
+  const stats = {
+    prs: getStats(prCount),
+    issues: getStats(issueCount),
+    reviews: getStats(reviewedPrCount),
+    coauth: getStats(coAuthoredPrCount),
+    collab: getStats(collaborationCount),
+  };
 
   // 2. Calculate Unique Repositories
   const allItems = [
@@ -76,14 +118,15 @@ This is a summary of all contributions fetched since the initial tracking year (
 
 ### Overall Counts
 
-| Category | Total Count |
-| :--- | :--- |
-| **All-Time Contributions** | 🚀 **${grandTotal}** |
-| Merged PRs | ${prCount} |
-| Issues | ${issueCount} |
-| Reviewed PRs | ${reviewedPrCount} |
-| Co-Authored PRs | ${coAuthoredPrCount} |
-| Collaborations | ${collaborationCount} |
+**Total Contributions:** 🚀 **${grandTotal}**
+
+| Category | Contributions | Count | Percentage |
+| :--- | :--- | :--- | :--- |
+| **Merged PRs** | \`${stats.prs.bar}\` | ${prCount} | ${stats.prs.pct} |
+| **Issues** | \`${stats.issues.bar}\` | ${issueCount} | ${stats.issues.pct} |
+| **Reviewed PRs** | \`${stats.reviews.bar}\` | ${reviewedPrCount} | ${stats.reviews.pct} |
+| **Co-Authored PRs** | \`${stats.coauth.bar}\` | ${coAuthoredPrCount} | ${stats.coauth.pct} |
+| **Collaborations** | \`${stats.collab.bar}\` | ${collaborationCount} | ${stats.collab.pct} |
 
 ### Repository Summary
 
@@ -91,6 +134,7 @@ This is a summary of all contributions fetched since the initial tracking year (
 | :--- | :--- |
 | **Unique Repositories** | ${totalUniqueRepos} |
 | **Years Tracked** | ${yearsTracked} |
+
 `;
 
   // 5. Write the file
