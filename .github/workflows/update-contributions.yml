@@ -39,11 +39,11 @@ jobs:
             rm -f data/all-contributions.json
             rm -f data/commit-cache.json
             rm -f data/pr-cache.json
-            node scripts/main.js
+            node scripts/src/main.js
           else
             echo "Running daily update..."
             # Run the script incrementally, relying on existing data files
-            node scripts/main.js
+            node scripts/src/main.js
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

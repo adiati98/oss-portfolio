@@ -1,8 +1,6 @@
-// footer.js
-
-const { dedent } = require('./dedent');
-const { SINCE_YEAR, GITHUB_USERNAME } = require('./config');
-const { COLORS } = require('./constants');
+const { dedent } = require('../utils/dedent');
+const { SINCE_YEAR, GITHUB_USERNAME } = require('../config/config');
+const { COLORS } = require('../config/constants');
 
 /**
  * Generates the common HTML footer for all report pages.
@@ -18,7 +16,6 @@ function createFooterHtml() {
   });
   const currentYear = new Date().getFullYear();
 
-  // New: Use a simpler inline structure
   return dedent`
     <footer style="border-top-color: ${COLORS.border.light}; color: ${COLORS.text.secondary};" class="mt-16 py-8 border-t text-center text-sm">
       <div class="mb-1">

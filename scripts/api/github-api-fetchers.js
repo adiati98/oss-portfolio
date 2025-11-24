@@ -3,7 +3,7 @@ require('dotenv').config();
 const axios = require('axios');
 
 // Import configuration
-const { GITHUB_USERNAME, BASE_URL } = require('./config');
+const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
 
 /**
  * Fetches all contribution data from the GitHub API for a given year range.
