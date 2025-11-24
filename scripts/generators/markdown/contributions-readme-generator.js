@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 
 // Import configuration
-const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
+const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('../../config/config');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';

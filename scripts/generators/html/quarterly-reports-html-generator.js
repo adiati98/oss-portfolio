@@ -1,17 +1,22 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-const { dedent } = require('./dedent');
-const { BASE_DIR } = require('./config');
+const { dedent } = require('../../utils/dedent');
+const { BASE_DIR } = require('../../config/config');
 const {
   formatDate,
   calculatePeriodInDays,
   getPrStatusContent,
   getCollaborationStatusContent,
-} = require('./contribution-formatters');
-const { navHtml } = require('./navbar');
-const { createFooterHtml } = require('./footer');
-const { LEFT_ARROW_SVG, RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED, COLORS } = require('./constants');
+} = require('../../utils/contribution-formatters');
+const { navHtml } = require('../../components/navbar');
+const { createFooterHtml } = require('../../components/footer');
+const {
+  LEFT_ARROW_SVG,
+  RIGHT_ARROW_SVG,
+  FAVICON_SVG_ENCODED,
+  COLORS,
+} = require('../../config/constants');
 
 // Update navigation links for report pages (relative to subdirectories like /2023/)
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');

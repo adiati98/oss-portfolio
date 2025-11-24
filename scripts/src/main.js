@@ -2,22 +2,24 @@ const path = require('path');
 const fs = require('fs/promises');
 
 // Import configuration (SINCE_YEAR is needed here)
-const { SINCE_YEAR } = require('./config');
+const { SINCE_YEAR } = require('../config/config');
 
 // Import core fetching logic
-const { fetchContributions } = require('./github-api-fetchers');
+const { fetchContributions } = require('../api/github-api-fetchers');
 
 // Import grouping logic
-const { groupContributionsByQuarter } = require('./contributions-groupers');
+const { groupContributionsByQuarter } = require('../utils/contributions-groupers');
 
 // Import markdown generation logic
-const { writeMarkdownFiles } = require('./quarterly-reports-generator');
-const { createStatsReadme } = require('./contributions-readme-generator');
+const { writeMarkdownFiles } = require('../generators/markdown/quarterly-reports-generator');
+const { createStatsReadme } = require('../generators/markdown/contributions-readme-generator');
 
 // Import html generation logic
-const { writeHtmlFiles } = require('./quarterly-reports-html-generator');
-const { createStatsHtmlReadme } = require('./contributions-index-html-generator');
-const { createHtmlReports } = require('./contributions-report-html-generator');
+const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
+const {
+  createStatsHtmlReadme,
+} = require('../generators/html/contributions-index-html-generator');
+const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
 
 async function main() {
   // Define the data directory path.

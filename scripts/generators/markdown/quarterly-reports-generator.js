@@ -1,12 +1,12 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { BASE_DIR } = require('./config');
+const { BASE_DIR } = require('../../config/config');
 const {
   formatDate,
   calculatePeriodInDays,
   getPrStatusContent,
   getCollaborationStatusContent,
-} = require('./contribution-formatters');
+} = require('../../utils/contribution-formatters');
 
 /**
  * Generates and writes a separate Markdown file for each quarter's contributions.

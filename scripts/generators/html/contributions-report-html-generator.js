@@ -3,14 +3,14 @@ const path = require('path');
 const prettier = require('prettier');
 
 // Import configuration (SINCE_YEAR is needed for reporting)
-const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('./config');
+const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('../../config/config');
 
 // Import navbar and footer
-const { navHtml } = require('./navbar');
-const { createFooterHtml } = require('./footer');
+const { navHtml } = require('../../components/navbar');
+const { createFooterHtml } = require('../../components/footer');
 
 // Import favicon svg
-const { FAVICON_SVG_ENCODED, COLORS } = require('./constants');
+const { FAVICON_SVG_ENCODED, COLORS } = require('../../config/constants');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';
