@@ -89,10 +89,10 @@ rm -rf contributions
 
 ### 2. Update Configuration
 
-Open the configuration file (`scripts/config.js`) and edit the following lines to match your desired data:
+Open the configuration file (`scripts/config/config.js`) and edit the following lines to match your desired data:
 
 ```javascript
-// scripts/config.js
+// scripts/config/config.js
 
 // Change this to your GitHub handle
 const GITHUB_USERNAME = 'adiati98';
@@ -199,12 +199,12 @@ The `COLOR_PALETTE` includes 9 customizable colors:
 
 The color system automatically generates 7 opacity levels (5%, 10%, 15%, 25%, 50%, 75%, 100%) for each color. You only need to change the hex value:
 
-1. Open `scripts/constants.js`.
+1. Open `scripts/config/constants.js`.
 2. Locate the `COLOR_PALETTE` object (around line 148).
 3. Modify the hex color values to your preference:
 
 ```javascript
-// scripts/constants.js
+// scripts/config/constants.js
 
 const COLOR_PALETTE = {
   primary: '#4338CA', // Indigo - for main UI elements
