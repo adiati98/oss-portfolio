@@ -127,7 +127,35 @@ To test the script or generate files on your local machine, you'll need a Person
    npm start
    ```
 
-### 4. Set up for GitHub Actions (Automated Runs)
+### 4. Configure Deployment Platform (Action Modification)
+
+Before enabling the automated workflow, you need to adjust the deployment trigger for your hosting platform.
+
+The default workflow is set up to automatically trigger a deployment to Netlify after new files are committed.
+
+If you're using a different hosting provider (like Vercel, AWS Amplify, etc.), you must modify or remove the deployment step in the GitHub Actions workflow file:
+
+1. Open the workflow file: `.github/workflows/your-workflow-file.yml`.
+
+2. Locate the final step named `Trigger Netlify Deployment`. This is the code block you're looking for:
+
+   ```yaml
+   - name: Trigger Netlify Deployment
+     if: steps.commit.outputs.pushed == 'true'
+     run: |
+       echo "Content updated. Triggering Netlify deployment via Build Hook..."
+       curl -s -X POST -d {} ${NETLIFY_BUILD_HOOK} -o /dev/null
+     env:
+       NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+   ```
+
+3. Choose one of the following options:
+
+   - **Option A:** Remove the entire `Trigger Netlify Deployment` block if your host (like Vercel) automatically builds your site whenever new commits are pushed to the repository.
+
+   - **Option B:** Replace the `run:` commands with your preferred host's specific API call, Build Hook URL, or deployment script to initiate the build.
+
+### 5. Set up for GitHub Actions (Automated Runs)
 
 For automated runs in a forked repository, you must first explicitly enable GitHub Actions because they are disabled by default for security.
 
