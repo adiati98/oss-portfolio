@@ -131,7 +131,15 @@ To test the script or generate files on your local machine, you'll need a Person
 
 Before enabling the automated workflow, you need to adjust the deployment trigger for your hosting platform.
 
-The default workflow is set up to automatically trigger a deployment to Netlify after new files are committed.
+The default workflow is set up to automatically trigger a deployment to **Netlify** after new files are committed and pushed.
+
+> [!IMPORTANT]
+>
+> If you're using Netlify, you must configure the `NETLIFY_BUILD_HOOK` as a repository secret in your GitHub settings, or the action will fail.
+>
+> Please refer to the official documentation below:
+> - Netlify [Build hooks](https://docs.netlify.com/build/configure-builds/build-hooks/)
+> - [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)
 
 If you're using a different hosting provider (like Vercel, AWS Amplify, etc.), you must modify or remove the deployment step in the GitHub Actions workflow file:
 
