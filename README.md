@@ -16,7 +16,7 @@ This project is powered by a **Node.js script** and a **GitHub Actions workflow*
 
 ### The Brain: The Automation Script
 
-The project's script files are structured around a clear pipeline: fetching data, processing it, and then generating the output files.
+The project's script files are structured around a clear pipeline: fetch data, process it, and generate output files.
 
 #### 1. Data Fetching & Processing
 
@@ -53,9 +53,9 @@ The workflow file in the `.github/workflows` folder defines the two primary auto
 | Event            | Schedule               | Sync Type       | Purpose                                                                                                                                           |
 | :--------------- | :--------------------- | :-------------- | :------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Monthly Sync** | The 1st of every month | **Full Sync**   | Guarantees all data since the initial start year is periodically verified and up-to-date. The run _removes_ the old cache to force a fresh fetch. |
-| **Daily Update** | Once every day         | **Incremental** | Provides a fast, light update to capture any activity from the last 24 hours, ensuring the portfolio is always current.                           |
+| **Daily Update** | Once per day         | **Incremental** | Provides a fast, lightweight update to capture any activity from the last 24 hours, ensuring the portfolio is always current.                           |
 
-The workflow handles checking out the code, running the Node.js script with the necessary **`GITHUB_TOKEN`** secret, and then automatically committing the newly generated or updated Markdown and JSON files back to the repository.
+The workflow checks out the code, runs the Node.js script with the necessary **`GITHUB_TOKEN`** secret, and automatically commits the newly generated or updated Markdown and JSON files back to the repository.
 
 ---
 
@@ -127,7 +127,43 @@ To test the script or generate files on your local machine, you'll need a Person
    npm start
    ```
 
-### 4. Set up for GitHub Actions (Automated Runs)
+### 4. Configure Deployment Platform (Action Modification)
+
+Before enabling the automated workflow, you need to adjust the deployment trigger for your hosting platform.
+
+The default workflow is set up to automatically trigger a deployment to **Netlify** after new files are committed and pushed.
+
+> [!IMPORTANT]
+>
+> If you're using Netlify, you must configure the `NETLIFY_BUILD_HOOK` as a repository secret in your GitHub settings, or the action will fail.
+>
+> Please refer to the official documentation below:
+> - Netlify [Build hooks](https://docs.netlify.com/build/configure-builds/build-hooks/)
+> - [Using secrets in GitHub Actions](https://docs.github.com/en/actions/how-tos/write-workflows/choose-what-workflows-do/use-secrets)
+
+If you're using a different hosting provider (like Vercel, AWS Amplify, etc.), you must modify or remove the deployment step in the GitHub Actions workflow file:
+
+1. Open the workflow file: `.github/workflows/your-workflow-file.yml`.
+
+2. Locate the final step named `Trigger Netlify Deployment`. This is the code block you're looking for:
+
+   ```yaml
+   - name: Trigger Netlify Deployment
+     if: steps.commit.outputs.pushed == 'true'
+     run: |
+       echo "Content updated. Triggering Netlify deployment via Build Hook..."
+       curl -s -X POST -d {} ${NETLIFY_BUILD_HOOK} -o /dev/null
+     env:
+       NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+   ```
+
+3. Choose one of the following options:
+
+   - **Option A:** Remove the entire `Trigger Netlify Deployment` block if your host (like Vercel) automatically builds your site whenever new commits are pushed to the repository.
+
+   - **Option B:** Replace the `run:` commands with your preferred host's specific API call, Build Hook URL, or deployment script to initiate the build.
+
+### 5. Set up for GitHub Actions (Automated Runs)
 
 For automated runs in a forked repository, you must first explicitly enable GitHub Actions because they are disabled by default for security.
 
@@ -145,7 +181,7 @@ For automated runs in a forked repository, you must first explicitly enable GitH
 
    You can read the [GitHub official docs to run a workflow manually](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manually-run-a-workflow).
 
-The workflow uses the repository's built-in `GITHUB_TOKEN` for authentication. Once the manual run is complete, the daily and monthly schedules will take over automatically. If you need to test something, you can always run the script locally or run the workflow manually.
+The workflow uses the repository's built-in `GITHUB_TOKEN` for authentication. Once the manual run is complete, the daily and monthly schedules will automatically take over. If you need to test something, you can always run the script locally or run the workflow manually.
 
 ---
 
@@ -165,7 +201,7 @@ Please read your host's official documentation to learn how to configure and dep
 
 ## 🎨 Customizing Colors
 
-The HTML reports use color-coded status badges and design elements that can be customized to match your personal branding. Now with an improved system, you only need to change hex color values and all opacity variants are automatically generated!
+The HTML reports use color-coded status badges and design elements that can be customized to match your personal branding. Now with an improved system, you only need to change hex color values, and all opacity variants are automatically generated!
 
 ### Where Colors Are Defined
 
@@ -259,8 +295,8 @@ For example, `#8b5cf6` (purple) automatically generates:
 
 - Use a **color picker tool** like [Coolors.co](https://coolors.co/), [Color Picker](https://www.color-picker.com/), or your browser's built-in color picker to find hex values.
 - **Verify accessibility** using [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to ensure sufficient contrast:
-  - Primary color with white text should pass WCAG AA (4.5:1) at minimum
+  - Primary color with white text should pass WCAG AA (4.5:1) at a minimum
   - Status colors should maintain good contrast with light backgrounds
-  - Text colors should have at least 4.5:1 contrast with background
+  - Text colors should have at least 4.5:1 contrast with the background
 - Test your color scheme in both light and dark viewing conditions if you're hosting the reports publicly.
 - The status colors (success, merged, error) help quickly identify the state of contributions, so choose distinct, recognizable colors.
