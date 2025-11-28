@@ -53,7 +53,6 @@
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
-      /* Accessible hover and focus styles for navigation buttons */
       .nav-report-button {
         border: 1px solid rgba(107, 114, 128, 0.1) !important;
         transition: border-color 0.15s ease-in-out !important;
@@ -78,7 +77,6 @@
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
       }
-      /* Table row hover styles */
       .table-row-hover {
         background-color: inherit;
       }
@@ -89,6 +87,17 @@
       .table-row-hover:focus-visible {
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: -2px;
+      }
+      /* Sorting Icons */
+      th .sort-icon {
+        margin-left: 5px;
+        font-size: 0.8em;
+        opacity: 0.5;
+      }
+      th.sort-asc .sort-icon,
+      th.sort-desc .sort-icon {
+        opacity: 1;
+        font-weight: bold;
       }
     </style>
   </head>
@@ -300,7 +309,6 @@
             <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
           </header>
 
-          <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
           <section class="mb-8">
             <h2
               style="border-left-color: rgb(67, 56, 202)"
@@ -308,8 +316,6 @@
             >
               📊 Quarterly Statistics
             </h2>
-
-            <!-- Total Contributions & Total Repositories (Two Big Cards) -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div
                 style="background-color: rgb(67, 56, 202)"
@@ -328,7 +334,6 @@
             </div>
           </section>
 
-          <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
           <section class="mb-8">
             <h3
               class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3"
@@ -336,7 +341,6 @@
               Contribution Breakdown
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-              <!-- Merged PRs -->
               <a
                 href="#merged-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -345,7 +349,6 @@
                 <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">16</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
               </a>
-              <!-- Issues -->
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -354,7 +357,6 @@
                 <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">7</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
               </a>
-              <!-- Reviewed PRs -->
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -363,7 +365,6 @@
                 <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">1</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
               </a>
-              <!-- Co-Authored PRs -->
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -372,7 +373,6 @@
                 <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
               </a>
-              <!-- Collaborations -->
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -384,7 +384,6 @@
             </div>
           </section>
 
-          <!-- 3. TOP 3 REPOSITORIES SECTION -->
           <section class="mb-8">
             <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">
               Top 3 Repositories
@@ -429,16 +428,59 @@
               <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">🚀 Merged PRs (16)</span>
               </summary>
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <input
+                  type="text"
+                  placeholder="Search (Project, Title, status:open...)"
+                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                />
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
-                      <th style="width: 20%; color: rgb(67, 56, 202)">Project</th>
-                      <th style="width: 30%; color: rgb(67, 56, 202)">Title</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">Created</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">Merged</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">Review Period</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Project <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Title <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Created <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Merged <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Review Period <span class="sort-icon">↕</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
@@ -448,23 +490,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/763"
                     >
                       <td>1.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Update events page with recorded events section"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/763"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Update events page with recorded events section</a
                         >
-                          Update events page with recorded events section
-                        </a>
                       </td>
-                      <td>2022-12-07</td>
-                      <td>2022-12-15</td>
-                      <td>8 days</td>
+                      <td data-value="2022-12-07T14:51:07Z" data-col-type="date">2022-12-07</td>
+                      <td data-value="2022-12-15T14:54:48Z" data-col-type="date">2022-12-15</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -472,23 +516,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/776"
                     >
                       <td>2.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add December 2022 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/776"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add December 2022 newsletter to the website</a
                         >
-                          Add December 2022 newsletter to the website
-                        </a>
                       </td>
-                      <td>2022-12-15</td>
-                      <td>2022-12-15</td>
-                      <td>0 days</td>
+                      <td data-value="2022-12-15T11:19:08Z" data-col-type="date">2022-12-15</td>
+                      <td data-value="2022-12-15T14:25:55Z" data-col-type="date">2022-12-15</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -496,23 +542,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/745"
                     >
                       <td>3.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add November 2022 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/745"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add November 2022 newsletter to the website</a
                         >
-                          Add November 2022 newsletter to the website
-                        </a>
                       </td>
-                      <td>2022-11-06</td>
-                      <td>2022-11-09</td>
-                      <td>4 days</td>
+                      <td data-value="2022-11-06T07:03:42Z" data-col-type="date">2022-11-06</td>
+                      <td data-value="2022-11-09T21:28:02Z" data-col-type="date">2022-11-09</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -520,23 +568,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/728"
                     >
                       <td>4.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Convert &#96;newsletters.js&#96; to TypeScript"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/728"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Convert `newsletters.js` to TypeScript</a
                         >
-                          Convert `newsletters.js` to TypeScript
-                        </a>
                       </td>
-                      <td>2022-10-21</td>
-                      <td>2022-10-21</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-21T12:25:59Z" data-col-type="date">2022-10-21</td>
+                      <td data-value="2022-10-21T13:00:15Z" data-col-type="date">2022-10-21</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -544,23 +594,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/708"
                     >
                       <td>5.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Fix links on Table of Content in CONTRIBUTING.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/708"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Fix links on Table of Content in CONTRIBUTING.md</a
                         >
-                          Fix links on Table of Content in CONTRIBUTING.md
-                        </a>
                       </td>
-                      <td>2022-10-14</td>
-                      <td>2022-10-17</td>
-                      <td>3 days</td>
+                      <td data-value="2022-10-14T23:53:23Z" data-col-type="date">2022-10-14</td>
+                      <td data-value="2022-10-17T13:28:27Z" data-col-type="date">2022-10-17</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -568,23 +620,25 @@
                       data-href="https://github.com/mgreiler/se-unlocked/pull/156"
                     >
                       <td>6.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          mgreiler/se-unlocked
-                        </span>
+                      <td data-value="mgreiler/se-unlocked" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mgreiler/se-unlocked</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve transcript 65 Harshit Chitalia"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mgreiler/se-unlocked/pull/156"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve transcript 65 Harshit Chitalia</a
                         >
-                          Improve transcript 65 Harshit Chitalia
-                        </a>
                       </td>
-                      <td>2022-10-14</td>
-                      <td>2022-10-15</td>
-                      <td>1 day</td>
+                      <td data-value="2022-10-14T21:59:11Z" data-col-type="date">2022-10-14</td>
+                      <td data-value="2022-10-15T14:11:39Z" data-col-type="date">2022-10-15</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -592,23 +646,22 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/702"
                     >
                       <td>7.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td data-value="Update CONTRIBUTING and README files" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/702"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Update CONTRIBUTING and README files</a
                         >
-                          Update CONTRIBUTING and README files
-                        </a>
                       </td>
-                      <td>2022-10-13</td>
-                      <td>2022-10-14</td>
-                      <td>1 day</td>
+                      <td data-value="2022-10-13T09:54:54Z" data-col-type="date">2022-10-13</td>
+                      <td data-value="2022-10-14T14:01:21Z" data-col-type="date">2022-10-14</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -616,23 +669,22 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/81"
                     >
                       <td>8.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td data-value="Update Podcast Docs" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/81"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Update Podcast Docs</a
                         >
-                          Update Podcast Docs
-                        </a>
                       </td>
-                      <td>2022-10-10</td>
-                      <td>2022-10-10</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-10T12:58:37Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="2022-10-10T15:55:36Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -640,23 +692,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/79"
                     >
                       <td>9.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve episode transcription Season 5 Special Kirk Day (5_999.srt)"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/79"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve episode transcription Season 5 Special Kirk Day (5_999.srt)</a
                         >
-                          Improve episode transcription Season 5 Special Kirk Day (5_999.srt)
-                        </a>
                       </td>
-                      <td>2022-10-10</td>
-                      <td>2022-10-10</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-10T12:32:27Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="2022-10-10T12:54:31Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -664,23 +718,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/668"
                     >
                       <td>10.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add Code of Conduct link to the footer"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/668"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Code of Conduct link to the footer</a
                         >
-                          Add Code of Conduct link to the footer
-                        </a>
                       </td>
-                      <td>2022-10-05</td>
-                      <td>2022-10-05</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-05T07:47:15Z" data-col-type="date">2022-10-05</td>
+                      <td data-value="2022-10-05T16:57:50Z" data-col-type="date">2022-10-05</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -688,23 +744,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/657"
                     >
                       <td>11.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add October 2022 newsletter to website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/657"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add October 2022 newsletter to website</a
                         >
-                          Add October 2022 newsletter to website
-                        </a>
                       </td>
-                      <td>2022-10-04</td>
-                      <td>2022-10-04</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-04T09:48:53Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="2022-10-04T19:52:26Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -712,23 +770,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/36"
                     >
                       <td>12.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve Transcription Season 5 Episode 6"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/36"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve Transcription Season 5 Episode 6</a
                         >
-                          Improve Transcription Season 5 Episode 6
-                        </a>
                       </td>
-                      <td>2022-09-21</td>
-                      <td>2022-10-04</td>
-                      <td>13 days</td>
+                      <td data-value="2022-09-21T20:46:33Z" data-col-type="date">2022-09-21</td>
+                      <td data-value="2022-10-04T16:27:48Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="13" data-col-type="number">13 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -736,23 +796,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/34"
                     >
                       <td>13.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve Transcription Season 6 Episode 4"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/34"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve Transcription Season 6 Episode 4</a
                         >
-                          Improve Transcription Season 6 Episode 4
-                        </a>
                       </td>
-                      <td>2022-09-19</td>
-                      <td>2022-10-04</td>
-                      <td>15 days</td>
+                      <td data-value="2022-09-19T14:20:19Z" data-col-type="date">2022-09-19</td>
+                      <td data-value="2022-10-04T16:25:26Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="15" data-col-type="number">15 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -760,23 +822,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/33"
                     >
                       <td>14.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve Transcription Season 6 Episode 5"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/33"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve Transcription Season 6 Episode 5</a
                         >
-                          Improve Transcription Season 6 Episode 5
-                        </a>
                       </td>
-                      <td>2022-09-18</td>
-                      <td>2022-10-04</td>
-                      <td>16 days</td>
+                      <td data-value="2022-09-18T19:21:19Z" data-col-type="date">2022-09-18</td>
+                      <td data-value="2022-10-04T16:24:15Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="16" data-col-type="number">16 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -784,23 +848,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/38"
                     >
                       <td>15.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve Transcription Season 6 Episode 6"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/38"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve Transcription Season 6 Episode 6</a
                         >
-                          Improve Transcription Season 6 Episode 6
-                        </a>
                       </td>
-                      <td>2022-09-26</td>
-                      <td>2022-10-04</td>
-                      <td>8 days</td>
+                      <td data-value="2022-09-26T12:54:53Z" data-col-type="date">2022-09-26</td>
+                      <td data-value="2022-10-04T16:22:32Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -808,23 +874,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/658"
                     >
                       <td>16.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add Hacktoberfest 2022 badge to profile"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/658"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Hacktoberfest 2022 badge to profile</a
                         >
-                          Add Hacktoberfest 2022 badge to profile
-                        </a>
                       </td>
-                      <td>2022-10-04</td>
-                      <td>2022-10-04</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-04T11:06:56Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="2022-10-04T12:53:18Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                   </tbody>
                 </table>
@@ -835,16 +903,59 @@
               <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">🐞 Issues (7)</span>
               </summary>
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <input
+                  type="text"
+                  placeholder="Search (Project, Title, status:open...)"
+                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                />
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
-                      <th style="width: 25%; color: rgb(67, 56, 202)">Project</th>
-                      <th style="width: 35%; color: rgb(67, 56, 202)">Title</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">Created</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">Closed</th>
-                      <th style="width: 10%; color: rgb(67, 56, 202)">Closing Period</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Project <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 35%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Title <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Created <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Closed <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Closing Period <span class="sort-icon">↕</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
@@ -854,23 +965,25 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/86"
                     >
                       <td>1.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve episode transcription Season 6 Episode 8"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/86"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve episode transcription Season 6 Episode 8</a
                         >
-                          Improve episode transcription Season 6 Episode 8
-                        </a>
                       </td>
-                      <td>2022-12-28</td>
-                      <td>2023-01-03</td>
-                      <td>6 days</td>
+                      <td data-value="2022-12-28T15:58:16Z" data-col-type="date">2022-12-28</td>
+                      <td data-value="2023-01-03T21:11:10Z" data-col-type="date">2023-01-03</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -878,23 +991,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/775"
                     >
                       <td>2.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add December 2022 newsletter to the website "
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/775"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
-                        >
-                          Add December 2022 newsletter to the website
+                          >Add December 2022 newsletter to the website
                         </a>
                       </td>
-                      <td>2022-12-14</td>
-                      <td>2022-12-15</td>
-                      <td>1 day</td>
+                      <td data-value="2022-12-14T18:50:26Z" data-col-type="date">2022-12-14</td>
+                      <td data-value="2022-12-15T14:25:56Z" data-col-type="date">2022-12-15</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -902,23 +1017,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/742"
                     >
                       <td>3.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add November 2022 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/742"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add November 2022 newsletter to the website</a
                         >
-                          Add November 2022 newsletter to the website
-                        </a>
                       </td>
-                      <td>2022-11-05</td>
-                      <td>2022-11-16</td>
-                      <td>11 days</td>
+                      <td data-value="2022-11-05T07:13:57Z" data-col-type="date">2022-11-05</td>
+                      <td data-value="2022-11-16T09:36:11Z" data-col-type="date">2022-11-16</td>
+                      <td data-value="11" data-col-type="number">11 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -926,23 +1043,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/707"
                     >
                       <td>4.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Fix links on the Table of Contents in CONTRIBUTING.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/707"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Fix links on the Table of Contents in CONTRIBUTING.md</a
                         >
-                          Fix links on the Table of Contents in CONTRIBUTING.md
-                        </a>
                       </td>
-                      <td>2022-10-14</td>
-                      <td>2022-10-17</td>
-                      <td>3 days</td>
+                      <td data-value="2022-10-14T22:44:16Z" data-col-type="date">2022-10-14</td>
+                      <td data-value="2022-10-17T13:28:28Z" data-col-type="date">2022-10-17</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -950,23 +1069,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/699"
                     >
                       <td>5.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add creating a new branch for contribution"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/699"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add creating a new branch for contribution</a
                         >
-                          Add creating a new branch for contribution
-                        </a>
                       </td>
-                      <td>2022-10-12</td>
-                      <td>2022-10-14</td>
-                      <td>2 days</td>
+                      <td data-value="2022-10-12T10:52:43Z" data-col-type="date">2022-10-12</td>
+                      <td data-value="2022-10-14T14:01:22Z" data-col-type="date">2022-10-14</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
                     </tr>
                     <tr
                       class="bg-gray-50 table-row-hover"
@@ -974,23 +1095,22 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/80"
                     >
                       <td>6.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td data-value="Update Docs" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/80"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Update Docs</a
                         >
-                          Update Docs
-                        </a>
                       </td>
-                      <td>2022-10-10</td>
-                      <td>2022-10-10</td>
-                      <td>0 days</td>
+                      <td data-value="2022-10-10T12:55:22Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="2022-10-10T15:55:37Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                     <tr
                       class="bg-white table-row-hover"
@@ -998,23 +1118,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/644"
                     >
                       <td>7.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add October 2022 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/644"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add October 2022 newsletter to the website</a
                         >
-                          Add October 2022 newsletter to the website
-                        </a>
                       </td>
-                      <td>2022-10-03</td>
-                      <td>2022-10-04</td>
-                      <td>1 day</td>
+                      <td data-value="2022-10-03T15:10:29Z" data-col-type="date">2022-10-03</td>
+                      <td data-value="2022-10-04T19:52:27Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
                   </tbody>
                 </table>
@@ -1025,17 +1147,66 @@
               <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">👀 Reviewed PRs (1)</span>
               </summary>
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <input
+                  type="text"
+                  placeholder="Search (Project, Title, status:open...)"
+                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                />
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
-                      <th style="width: 20%; color: rgb(67, 56, 202)">Project</th>
-                      <th style="width: 28%; color: rgb(67, 56, 202)">Title</th>
-                      <th style="width: 10%; color: rgb(67, 56, 202)">Created At</th>
-                      <th style="width: 15%; color: rgb(67, 56, 202)">First Review</th>
-                      <th style="width: 10%; color: rgb(67, 56, 202)">Review Period</th>
-                      <th style="width: 12%; color: rgb(67, 56, 202)">Last Update / Status</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Project <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Title <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Created At <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        First Review <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Review Period <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="status"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Last Update / Status <span class="sort-icon">↕</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
@@ -1045,24 +1216,23 @@
                       data-href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/78"
                     >
                       <td>1.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/podcast-transcripts
-                        </span>
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
-                      <td>
+                      <td data-value="update transcript for 4_2" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/78"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >update transcript for 4_2</a
                         >
-                          update transcript for 4_2
-                        </a>
                       </td>
-                      <td>2022-10-10</td>
-                      <td>2022-10-10</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2022-10-10T00:01:34Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="2022-10-10T14:54:08Z" data-col-type="date">2022-10-10</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2022-10-12<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1091,16 +1261,59 @@
               <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
                 <span class="inline-block">💬 Collaborations (4)</span>
               </summary>
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <input
+                  type="text"
+                  placeholder="Search (Project, Title, status:open...)"
+                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                />
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
               <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
-                      <th style="width: 25%; color: rgb(67, 56, 202)">Project</th>
-                      <th style="width: 30%; color: rgb(67, 56, 202)">Title</th>
-                      <th style="width: 12%; color: rgb(67, 56, 202)">Created At</th>
-                      <th style="width: 12%; color: rgb(67, 56, 202)">First Comment</th>
-                      <th style="width: 16%; color: rgb(67, 56, 202)">Last Update / Status</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Project <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Title <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Created At <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        First Comment <span class="sort-icon">↕</span>
+                      </th>
+                      <th
+                        data-type="status"
+                        title="Click to sort"
+                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        Last Update / Status <span class="sort-icon">↕</span>
+                      </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
@@ -1110,23 +1323,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/752"
                     >
                       <td>1.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add section to events page about our youtube page"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/752"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add section to events page about our youtube page</a
                         >
-                          Add section to events page about our youtube page
-                        </a>
                       </td>
-                      <td>2022-11-28</td>
-                      <td>2022-11-29</td>
-                      <td>
+                      <td data-value="2022-11-28T20:55:06Z" data-col-type="date">2022-11-28</td>
+                      <td data-value="2022-11-29T17:51:20Z" data-col-type="date">2022-11-29</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2022-12-15<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1140,23 +1355,25 @@
                       data-href="https://github.com/mgreiler/se-unlocked/issues/146"
                     >
                       <td>2.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          mgreiler/se-unlocked
-                        </span>
+                      <td data-value="mgreiler/se-unlocked" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mgreiler/se-unlocked</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Improve transcript 65 Harshit Chitalia"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mgreiler/se-unlocked/issues/146"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Improve transcript 65 Harshit Chitalia</a
                         >
-                          Improve transcript 65 Harshit Chitalia
-                        </a>
                       </td>
-                      <td>2022-10-03</td>
-                      <td>2022-10-04</td>
-                      <td>
+                      <td data-value="2022-10-03T17:02:07Z" data-col-type="date">2022-10-03</td>
+                      <td data-value="2022-10-04T11:38:57Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2022-10-15<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1170,23 +1387,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/643"
                     >
                       <td>3.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Give yourself the Hacktoberfest2022 badge!"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/643"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Give yourself the Hacktoberfest2022 badge!</a
                         >
-                          Give yourself the Hacktoberfest2022 badge!
-                        </a>
                       </td>
-                      <td>2022-10-03</td>
-                      <td>2022-10-04</td>
-                      <td>
+                      <td data-value="2022-10-03T14:20:32Z" data-col-type="date">2022-10-03</td>
+                      <td data-value="2022-10-04T09:57:18Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2022-11-28<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1200,23 +1419,25 @@
                       data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/653"
                     >
                       <td>4.</td>
-                      <td>
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">
-                          Virtual-Coffee/virtualcoffee.io
-                        </span>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
-                      <td>
+                      <td
+                        data-value="Add Code of Conduct link to the footer"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/653"
                           target="_blank"
                           class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Code of Conduct link to the footer</a
                         >
-                          Add Code of Conduct link to the footer
-                        </a>
                       </td>
-                      <td>2022-10-03</td>
-                      <td>2022-10-04</td>
-                      <td>
+                      <td data-value="2022-10-03T19:48:32Z" data-col-type="date">2022-10-03</td>
+                      <td data-value="2022-10-04T09:50:12Z" data-col-type="date">2022-10-04</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2022-10-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1299,22 +1520,371 @@
       </div>
     </main>
     <script>
-      // Function to handle opening the correct section on load/hash change
+      /**
+       * Main class to handle table interactions (Sort, Search, Reset)
+       */
+
+      // --- Constants for Status Sorting ---
+      // Custom Priority 1: Open -> Merged -> Closed (Higher score is better/more actionable)
+      const STATUS_PRIORITY_P1 = {
+        OPEN: 3,
+        MERGED: 2,
+        CLOSED: 1,
+        'N/A': 0,
+      };
+
+      // Custom Priority 2: Merged -> Closed -> Open (Second cycle, prioritizing Merged/Closed over Open)
+      const STATUS_PRIORITY_P2 = {
+        OPEN: 1,
+        MERGED: 3,
+        CLOSED: 2,
+        'N/A': 0,
+      };
+
+      class ReportTableManager {
+        constructor(detailsElement) {
+          this.detailsElement = detailsElement;
+          this.table = detailsElement.querySelector('table');
+          this.tbody = this.table.querySelector('tbody');
+          this.rows = Array.from(this.tbody.querySelectorAll('tr'));
+          this.searchInput = detailsElement.querySelector('.search-input');
+          this.resetBtn = detailsElement.querySelector('.reset-btn');
+          this.headers = detailsElement.querySelectorAll('th');
+
+          // Store original order for reset/unsort
+          this.rows.forEach((row, index) => row.setAttribute('data-original-index', index));
+
+          // Updated state to track custom cycles (e.g., 'custom1', 'custom2' for status)
+          this.currentSort = { column: null, direction: 'default' };
+
+          this.init();
+        }
+
+        init() {
+          // Attach Sort Listeners
+          this.headers.forEach((th, index) => {
+            // Only attach listener if 'data-type' is present (to make 'No.' column static)
+            if (th.hasAttribute('data-type')) {
+              th.addEventListener('click', () => this.handleSort(th, index));
+              th.style.cursor = 'pointer';
+              th.title = 'Click to sort';
+            }
+          });
+
+          // Attach Search Listener
+          if (this.searchInput) {
+            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+          }
+
+          // Attach Reset Listener
+          if (this.resetBtn) {
+            this.resetBtn.addEventListener('click', () => this.resetAll());
+          }
+        }
+
+        /**
+         * Determine next sort direction based on current state and column type.
+         */
+        getNextDirection(columnIndex, type) {
+          const { column, direction } = this.currentSort;
+
+          if (column !== columnIndex) {
+            // New column clicked: Set initial direction
+            if (type === 'date') return 'desc'; // Dates start newest first (Desc)
+            if (type === 'number') return 'asc'; // Numbers/Periods start smallest first (Asc)
+            if (type === 'status') return 'custom1'; // Status starts with Custom 1
+            return 'asc'; // Strings start A->Z (Asc)
+          }
+
+          // Same column clicked again: Cycle logic
+          if (type === 'status') {
+            if (direction === 'custom1') return 'custom2';
+            if (direction === 'custom2') return 'default';
+            return 'custom1';
+          } else if (type === 'date') {
+            if (direction === 'desc') return 'asc';
+            if (direction === 'asc') return 'default';
+            return 'desc';
+          } else if (type === 'number' || type === 'string') {
+            if (direction === 'asc') return 'desc';
+            if (direction === 'desc') return 'default';
+            return 'asc';
+          } else {
+            return 'default';
+          }
+        }
+
+        /**
+         * Utility to get a comparable value for 'number' columns, handling N/A states.
+         * This is critical for differentiating N/A strings from the number 0.
+         */
+        getNumberComparableValue(val, direction) {
+          const numericVal = parseFloat(val);
+          // Check if the value is a valid, finite number (not NaN, not Infinity)
+          const isNumeric = !isNaN(numericVal) && isFinite(numericVal);
+
+          if (isNumeric) {
+            return numericVal;
+          } else {
+            // String/N/A encountered (representing 'Open')
+            if (direction === 'asc') {
+              // ASC: N/A must come BEFORE 0. Use negative infinity.
+              return Number.NEGATIVE_INFINITY;
+            } else {
+              // direction === 'desc'
+              // DESC: N/A must come AFTER the longest period (N -> 0). Use positive infinity.
+              return Number.POSITIVE_INFINITY;
+            }
+          }
+        }
+
+        /**
+         * Updates the content of the first <td> in every VISIBLE row to reflect its current index (1-based).
+         * Ensures the 'No.' column is sequential after any reordering or filtering.
+         */
+        updateRowNumbers() {
+          let visibleCounter = 1;
+          this.rows.forEach((row) => {
+            // Only update rows that are currently visible (not hidden by search filter)
+            if (row.style.display !== 'none') {
+              const firstCell = row.children[0];
+              if (firstCell) {
+                firstCell.textContent = `${visibleCounter}.`;
+                visibleCounter++;
+              }
+            }
+          });
+        }
+
+        /**
+         * Sort Logic: Implements the requested multi-state cycles.
+         */
+        handleSort(th, columnIndex) {
+          const type = th.getAttribute('data-type') || 'string';
+          const nextDir = this.getNextDirection(columnIndex, type);
+
+          // 1. Reset all header indicators
+          this.headers.forEach((h) => {
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
+          });
+
+          this.currentSort = { column: columnIndex, direction: nextDir };
+
+          // 2. Sorting implementation
+          if (nextDir === 'default') {
+            // Restore original order
+            this.rows.sort((a, b) => {
+              return (
+                parseInt(a.getAttribute('data-original-index')) -
+                parseInt(b.getAttribute('data-original-index'))
+              );
+            });
+            th.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+          } else {
+            // Update UI icon
+            const icon = th.querySelector('.sort-icon');
+            if (icon) {
+              // Use '▼' for Descending (largest first) or Custom sort
+              if (nextDir === 'desc' || nextDir === 'custom1' || nextDir === 'custom2') {
+                icon.textContent = '▼';
+              } else {
+                // asc (smallest first)
+                icon.textContent = '▲';
+              }
+            }
+            th.classList.add(`sort-${nextDir}`);
+
+            this.rows.sort((rowA, rowB) => {
+              const cellA = rowA.children[columnIndex];
+              const cellB = rowB.children[columnIndex];
+
+              let valA = cellA.getAttribute('data-value') || cellA.textContent.trim(); // Keep original casing for parsing
+              let valB = cellB.getAttribute('data-value') || cellB.textContent.trim();
+
+              let comparison = 0;
+
+              // Custom logic for status
+              if (type === 'status') {
+                const priorityMap = nextDir === 'custom1' ? STATUS_PRIORITY_P1 : STATUS_PRIORITY_P2;
+                const scoreA = priorityMap[valA.toUpperCase()] || 0;
+                const scoreB = priorityMap[valB.toUpperCase()] || 0;
+                comparison = scoreB - scoreA;
+              }
+              // Logic for Date/Number/String
+              else {
+                let compA, compB; // Declare scope outside of if blocks
+
+                if (type === 'date') {
+                  compA = new Date(valA).getTime();
+                  compB = new Date(valB).getTime();
+                  if (isNaN(compA) || isNaN(compB)) {
+                    comparison = String(valA)
+                      .toLowerCase()
+                      .localeCompare(String(valB).toLowerCase());
+                  } else {
+                    comparison = compA - compB;
+                  }
+                } else if (type === 'number') {
+                  // Get comparable value, where N/A is mapped to +/- Infinity based on direction
+                  compA = this.getNumberComparableValue(valA, nextDir);
+                  compB = this.getNumberComparableValue(valB, nextDir);
+
+                  // Standard comparison (A - B) at this stage.
+                  // This is correct for the ASC case, and correctly places N/A in the DESC case.
+                  comparison = compA - compB;
+
+                  if (nextDir === 'desc') {
+                    // Check if both values are finite (actual numbers, not Infinity/N/A)
+                    if (isFinite(compA) && isFinite(compB)) {
+                      // Standard numeric sort is A-B. For DESC, we need B-A, or -(A-B).
+                      comparison = comparison * -1;
+                    }
+                    // If one or both is Infinity (N/A), the standard A-B comparison works:
+                    // -Inf vs Number = -Inf is smaller (N/A is on top)
+                    // +Inf vs Number = +Inf is larger (N/A is on bottom)
+                  }
+                } else {
+                  // string
+                  comparison = String(valA).toLowerCase().localeCompare(String(valB).toLowerCase());
+                }
+              }
+
+              // Apply direction multiplier based on the requested nextDir
+              if (type !== 'status') {
+                if (type === 'number') {
+                  // The comparison for 'number' is fully handled within the block above (including the DESC reversal for finite numbers).
+                  return comparison;
+                }
+                if (nextDir === 'asc') {
+                  // Strings and Dates (Ascending)
+                  return comparison;
+                }
+                if (nextDir === 'desc') {
+                  // Strings and Dates (Descending)
+                  return comparison * -1;
+                }
+              }
+
+              return comparison;
+            });
+          }
+
+          // Re-append rows (this actually moves them in the DOM)
+          this.rows.forEach((row) => this.tbody.appendChild(row));
+
+          // Re-number the rows to maintain sequential order (1, 2, 3...)
+          this.updateRowNumbers();
+        }
+
+        /**
+         * Search Logic
+         */
+        handleSearch(query) {
+          const lowerQuery = query.toLowerCase().trim();
+
+          // Check for "status:" strict mode
+          let statusSearch = null;
+          let textSearch = lowerQuery;
+
+          if (lowerQuery.startsWith('status:')) {
+            statusSearch = lowerQuery.replace('status:', '').trim();
+            textSearch = null; // Disable general text search
+          }
+
+          // Helper to find column index by type (added for robustness in status search)
+          const getColumnIndexByType = (type) => {
+            return Array.from(this.headers).findIndex(
+              (th) => th.getAttribute('data-type') === type
+            );
+          };
+
+          this.rows.forEach((row) => {
+            let shouldShow = false;
+
+            // STRICT STATUS SEARCH
+            if (statusSearch !== null) {
+              const statusColIndex = getColumnIndexByType('status');
+
+              if (statusColIndex !== -1) {
+                // Access the cell using the column index
+                const statusCell = row.children[statusColIndex];
+
+                const statusValue = (
+                  statusCell.getAttribute('data-value') || statusCell.textContent
+                ).toLowerCase();
+
+                if (statusValue.includes(statusSearch)) shouldShow = true;
+              }
+            }
+            // GENERAL SEARCH (Only simple text match remains)
+            else if (textSearch) {
+              // We search through the row's text content
+              const rowText = row.textContent.toLowerCase();
+
+              // Check simple text match
+              if (rowText.includes(textSearch)) {
+                shouldShow = true;
+              }
+            } else {
+              // Empty query
+              shouldShow = true;
+            }
+
+            row.style.display = shouldShow ? '' : 'none';
+          });
+
+          // Re-number the visible rows after filtering
+          this.updateRowNumbers();
+        }
+
+        resetAll() {
+          this.searchInput.value = '';
+          // Restore sort
+          this.currentSort = { column: null, direction: 'default' };
+          this.headers.forEach((h) => {
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
+          });
+
+          // Restore Order
+          this.rows.sort((a, b) => {
+            return (
+              parseInt(a.getAttribute('data-original-index')) -
+              parseInt(b.getAttribute('data-original-index'))
+            );
+          });
+          this.rows.forEach((row) => {
+            this.tbody.appendChild(row);
+            row.style.display = ''; // Show all
+          });
+
+          // Re-number the rows after resetting order
+          this.updateRowNumbers();
+        }
+      }
+
+      // Initialize on Load
+      document.addEventListener('DOMContentLoaded', () => {
+        const detailsSections = document.querySelectorAll('details');
+        detailsSections.forEach((details) => {
+          // Ensure table exists before initializing
+          if (details.querySelector('table')) {
+            new ReportTableManager(details);
+          }
+        });
+      });
+
+      // Existing scripts for hash handling and row clicks...
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
-          // Find the corresponding details element (the ID includes the '#')
           const targetDetails = document.querySelector(hash);
           if (targetDetails && targetDetails.tagName === 'DETAILS') {
-            // Close all other details elements first for a cleaner view
-            document.querySelectorAll('details').forEach((detail) => {
-              detail.open = false;
-            });
-
-            // Open the target details element
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
             targetDetails.open = true;
-
-            // Scroll to the opened section (using a small delay to ensure it's fully rendered open)
             setTimeout(() => {
               targetDetails.scrollIntoView({
                 behavior: 'smooth',
@@ -1323,20 +1893,13 @@
             }, 100);
           }
         } else {
-          // Default behavior: open the first section ('merged-prs') if no hash is present
           const defaultDetails = document.getElementById('merged-prs');
-          if (defaultDetails) {
-            defaultDetails.open = true;
-          }
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
-
-      // Execute on page load
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
-      // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
       window.addEventListener('hashchange', openSectionFromHash);
 
-      // Add click handlers to table rows for link navigation
       document.addEventListener('DOMContentLoaded', () => {
         const tableRows = document.querySelectorAll('.table-row-hover');
         tableRows.forEach((row) => {
@@ -1344,7 +1907,9 @@
           if (href) {
             row.tabIndex = 0;
             row.setAttribute('role', 'button');
-            row.addEventListener('click', () => {
+            row.addEventListener('click', (e) => {
+              // Prevent navigation if text is selected
+              if (window.getSelection().toString().length > 0) return;
               window.location.href = href;
             });
             row.addEventListener('keydown', (e) => {
