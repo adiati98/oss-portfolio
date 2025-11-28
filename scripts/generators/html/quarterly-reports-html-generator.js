@@ -18,17 +18,36 @@ const {
   COLORS,
 } = require('../../config/constants');
 
-// Update navigation links for report pages (relative to subdirectories like /2023/)
+// Update navigation links for report pages
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
 navHtmlForReports = navHtmlForReports.replace(/href="reports\.html"/g, 'href="../reports.html"');
 
 /**
- * Generates and writes a separate HTML file for each quarter's contributions.
- * Files will be stored in a 'html-generated' subfolder within BASE_DIR.
- * @param {object} groupedContributions An object where keys are "YYYY-QX" and values are the contributions for that quarter.
- * @returns {Array<string>} List of relative file paths generated (e.g., ['2023/Q4-2023.html']).
+ * Sanitizes a string for safe use in HTML attributes (prevents " breaking HTML).
  */
+function sanitizeAttribute(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/`/g, '&#96;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
 async function writeHtmlFiles(groupedContributions) {
+  // Read the Interaction Script
+  const interactionsScriptPath = path.join(__dirname, '../../utils/table-filters.js');
+  let tableInteractionsScript = '';
+  try {
+    tableInteractionsScript = await fs.readFile(interactionsScriptPath, 'utf8');
+  } catch (err) {
+    console.warn(
+      'Warning: utils/table-filters.js not found. Interactive features will be disabled.'
+    );
+  }
+
   const allReports = Object.entries(groupedContributions)
     .map(([key, data]) => {
       const [year, quarterPrefix] = key.split('-');
@@ -43,199 +62,132 @@ async function writeHtmlFiles(groupedContributions) {
         totalContributions: Object.values(data).reduce((sum, arr) => sum + arr.length, 0),
       };
     })
-    // Sort reports chronologically for correct Next/Previous order
     .sort((a, b) => a.key.localeCompare(b.key));
 
-  /**
-   * Generates an HTML badge string with GitHub-like styling based on the status word.
-   * Uses inline styles with RGB colors instead of Tailwind classes.
-   * @param {string} status The status keyword (e.g., 'OPEN', 'MERGED', 'CLOSED', 'N/A').
-   * @returns {string} The HTML for the stylized badge.
-   */
   function getStatusBadgeHtml(status) {
-    // Ensure status is uppercase and trim whitespace for reliable matching
     const cleanedStatus = status.toUpperCase().trim();
-
     let bgColor = COLORS.status.gray.bg;
     let textColor = COLORS.status.gray.text;
     let fontWeight = 'font-medium';
 
     switch (cleanedStatus) {
       case 'OPEN':
-        // GitHub green for open issues/PRs
         bgColor = COLORS.status.green.bg;
         textColor = COLORS.status.green.text;
         fontWeight = 'font-semibold';
         break;
       case 'MERGED':
-        // GitHub purple for merged PRs
         bgColor = COLORS.status.purple.bg;
         textColor = COLORS.status.purple.text;
         fontWeight = 'font-semibold';
         break;
       case 'CLOSED':
-        // GitHub red for closed issues/PRs
         bgColor = COLORS.status.red.bg;
         textColor = COLORS.status.red.text;
         fontWeight = 'font-semibold';
         break;
       default:
-        // Use default gray for DRAFT, PENDING, or unknown
         break;
     }
 
-    // Use inline styles for colors (RGB) and Tailwind for other styling
     const style = `background-color: ${bgColor}; color: ${textColor};`;
     return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${fontWeight}" style="${style}">${cleanedStatus}</span>`;
   }
 
-  /**
-   * Helper to build Tailwind classes using color constants.
-   * This helps ensure consistency across the generated HTML.
-   */
-  function buildClasses(classMapping) {
-    const classes = [];
-    for (const [key, colorKey] of Object.entries(classMapping)) {
-      if (colorKey.includes('.')) {
-        // Handle nested color properties like 'primary.700'
-        const [category, shade] = colorKey.split('.');
-        if (COLORS[category]?.[shade]) {
-          classes.push(`${key}-${COLORS[category][shade]}`);
-        }
-      } else {
-        classes.push(`${key}-${colorKey}`);
-      }
-    }
-    return classes.join(' ');
-  }
-
-  /**
-   * Parses the formatter output (e.g., 'YYYY-MM-DD<br><strong>STATUS</strong>')
-   * and replaces the <strong>STATUS</strong> with a colored badge.
-   * @param {string} content The output from getPrStatusContent.
-   * @returns {string} The date followed by the HTML badge.
-   */
   function formatPrStatusWithBadge(content) {
     const parts = content.split('<br>');
-    if (parts.length < 2) return content;
+    if (parts.length < 2) return { html: content, statusText: 'N/A' };
 
     const date = parts[0];
-    const rawStatusTag = parts[1]; // e.g., '<strong>MERGED</strong>'
-
-    // Regex to extract the status word from inside the <strong> tags
-    // This allows us to handle the output from getPrStatusContent which is: YYYY-MM-DD<br><strong>STATUS</strong>
+    const rawStatusTag = parts[1];
     const statusMatch = rawStatusTag.match(/<strong>(.*?)<\/strong>/i);
     const statusWord = statusMatch && statusMatch[1] ? statusMatch[1] : 'N/A';
 
-    const statusBadge = getStatusBadgeHtml(statusWord);
-    return `${date}<br>${statusBadge}`;
+    const statusBadge = getStatusBadgeHtml(statusWord); // Return both the HTML and the raw status text for sorting
+    return {
+      html: `${date}<br>${statusBadge}`,
+      statusText: statusWord,
+    };
   }
 
-  /**
-   * Generates the HTML for the Next/Previous navigation buttons.
-   * @param {number} index - The index of the current report being processed in the allReports array.
-   * @returns {string} The HTML for the navigation bar.
-   */
   function generateReportNavButton(index) {
-    const reports = allReports; // Reference the prepared array
+    // ... (Existing code for buttons, unmodified) ...
+    const reports = allReports;
     const previousReport = index > 0 ? reports[index - 1] : null;
     const nextReport = index < reports.length - 1 ? reports[index + 1] : null;
 
     let previousButton = '';
-    let nextButton = '';
+    let nextButton = ''; // Helper function to build the relative path: ../YEAR/QX-YYYY.html
 
-    const leftArrowSvg = LEFT_ARROW_SVG;
-    const rightArrowSvg = RIGHT_ARROW_SVG;
-
-    // Helper function to build the relative path: ../YEAR/QX-YYYY.html
     const getReportPath = (report) => {
       const fileName = `${report.quarterPrefix}-${report.year}.html`;
-      // Path is relative from the report file: ../YEAR/QX-YYYY.html
       return `../${report.year}/${fileName}`;
     };
 
-    // --- Consolidated Classes for Button Look ---
-    // Keep buttons side by side but adjust text size for small screens
     const baseClasses =
       'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
 
-    const hoverClasses = ''; // Hover handled via inline styles below
-
-    // --- Previous Button Logic (Two Lines) ---
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${COLORS.primary.rgb};">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
-            <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
-              ${leftArrowSvg}
-              <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
-            </span>
-          </a>
-        `;
+          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${COLORS.primary.rgb};">
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
+            <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
+              ${LEFT_ARROW_SVG}
+              <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
+            </span>
+           
+          </a>
+        `;
     } else {
       previousButton = '<div class="w-52 h-20"></div>';
     }
 
-    // --- Next Button Logic ---
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${COLORS.primary.rgb};">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
-            <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
-              <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
-              ${rightArrowSvg}
-            </span>
-          </a>
-        `;
+          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${COLORS.primary.rgb};">
+            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
+            <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
+              <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
+              ${RIGHT_ARROW_SVG}
+            </span>
+          </a>
+        `;
     } else {
       nextButton = '<div class="w-52 h-20"></div>';
     }
 
     return dedent`
-        <div class="mt-12 mb-8 w-full flex justify-center">
-          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
-            ${previousButton}
-            ${nextButton}
-          </div>
-        </div>
-      `;
+        <div class="mt-12 mb-8 w-full flex justify-center">
+          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
+            ${previousButton}
+            ${nextButton}
+          </div>
+        </div>
+      `;
   }
 
-  // Define the base directory path: 'contributions/html-generated'
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const quarterlyFileLinks = [];
-
-  // Create a new base directory if it doesn't exist.
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  // Iterate over the prepared allReports array using the index
   for (let index = 0; index < allReports.length; index++) {
-    const report = allReports[index]; // Destructure the properties needed for file naming and statistics
-    const { key, year, quarterPrefix: quarter, data, totalContributions, fullQuarterName } = report;
-
-    // Generate the dynamic footer and trim any leading/trailing whitespace
+    const report = allReports[index];
+    const { key, year, quarterPrefix: quarter, data, totalContributions } = report;
     const footerHtml = createFooterHtml().trim();
-
-    // Create the year-specific subdirectory inside the new htmlBaseDir (e.g., 'contributions/html-generated/2023')
     const yearDir = path.join(htmlBaseDir, year);
     await fs.mkdir(yearDir, { recursive: true });
 
     const filename = `${quarter}-${year}.html`;
-    // This path is relative to the 'html-generated' directory, needed for the main index file links
     const relativePath = path.join(year, filename);
-
-    // Set the file path and extension (absolute path for writing)
     const filePath = path.join(yearDir, filename);
 
-    // Skip writing the file if there are no contributions for this quarter.
     if (totalContributions === 0) {
       console.log(`Skipping empty quarter: ${key}`);
       continue;
-    }
+    } // ... (Existing repo statistics calculation) ...
 
-    // --- Calculate additional statistics ---
     const allItems = [
       ...data.pullRequests,
       ...data.issues,
@@ -246,20 +198,18 @@ async function writeHtmlFiles(groupedContributions) {
     const uniqueRepos = new Set(allItems.map((item) => item.repo));
     const totalRepos = uniqueRepos.size;
 
-    // Count contributions per repository
     const repoCounts = allItems.reduce((acc, item) => {
       acc[item.repo] = (acc[item.repo] || 0) + 1;
       return acc;
     }, {});
 
-    // Determine and limit to the top 3 most active repositories
     const sortedRepos = Object.entries(repoCounts).sort(([, a], [, b]) => b - a);
     const top3Repos = sortedRepos
       .slice(0, 3)
       .map(
         (item) => dedent`
-           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
-         `
+           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+         `
       )
       .join('');
 
@@ -267,16 +217,16 @@ async function writeHtmlFiles(groupedContributions) {
     const reviewedPrCount = data.reviewedPrs?.length || '0';
     const issueCount = data.issues?.length || '0';
     const coAuthoredPrCount = data.coAuthoredPrs?.length || '0';
-    const collaborationCount = data.collaborations?.length || '0';
+    const collaborationCount = data.collaborations?.length || '0'; // UPDATED SECTIONS CONFIG: Added 'types' for better sorting
 
-    // Configuration for each table section
     const sections = {
       pullRequests: {
         title: 'Merged PRs',
         icon: '🚀',
         id: 'merged-prs',
         headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
-        widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
+        widths: ['5%', '20%', '30%', '15%', '15%', '15%'], // 'string', 'number', 'date', 'status'
+        colTypes: ['number', 'string', 'string', 'date', 'date', 'number'],
         keys: ['repo', 'title', 'date', 'mergedAt', 'reviewPeriod'],
       },
       issues: {
@@ -285,6 +235,7 @@ async function writeHtmlFiles(groupedContributions) {
         id: 'issues',
         headers: ['No.', 'Project', 'Title', 'Created', 'Closed', 'Closing Period'],
         widths: ['5%', '25%', '35%', '15%', '15%', '10%'],
+        colTypes: ['number', 'string', 'string', 'date', 'date', 'number'],
         keys: ['repo', 'title', 'date', 'closedAt', 'closingPeriod'],
       },
       reviewedPrs: {
@@ -301,6 +252,7 @@ async function writeHtmlFiles(groupedContributions) {
           'Last Update / Status',
         ],
         widths: ['5%', '20%', '28%', '10%', '15%', '10%', '12%'],
+        colTypes: ['number', 'string', 'string', 'date', 'date', 'number', 'status'],
         keys: ['repo', 'title', 'createdAt', 'myFirstReviewDate', 'myFirstReviewPeriod', 'date'],
       },
       coAuthoredPrs: {
@@ -317,6 +269,7 @@ async function writeHtmlFiles(groupedContributions) {
           'Last Update / Status',
         ],
         widths: ['5%', '15%', '25%', '10%', '12%', '13%', '20%'],
+        colTypes: ['number', 'string', 'string', 'date', 'date', 'number', 'status'],
         keys: ['repo', 'title', 'createdAt', 'firstCommitDate', 'firstCommitPeriod', 'date'],
       },
       collaborations: {
@@ -325,269 +278,214 @@ async function writeHtmlFiles(groupedContributions) {
         id: 'collaborations',
         headers: ['No.', 'Project', 'Title', 'Created At', 'First Comment', 'Last Update / Status'],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
+        colTypes: ['number', 'string', 'string', 'date', 'date', 'status'],
         keys: ['repo', 'title', 'createdAt', 'date', 'date'],
       },
     };
 
-    // --- Start building the HTML content with the new Tailwind boilerplate and styles ---
     let htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${quarter} ${year} Contributions Report</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh; 
-      display: flex;
-      flex-direction: column;
-    }
-    summary {
-      cursor: pointer;
-      outline: none;
-      margin: 0.5em 0;
-      padding: 0.5em 0;
-      color: #1f2937;
-    }
-    summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    .report-table th, .report-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .details-section {
-      background-color: ${COLORS.primary[5]};
-    }
-    .details-section details:open summary {
-      color: ${COLORS.primary.rgb};
-    }
-    .report-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-    /* Accessible hover and focus styles for navigation buttons */
-    .nav-report-button {
-      border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out !important;
-    }
-    .nav-report-button:hover {
-      border-color: ${COLORS.primary.rgb} !important;
-    }
-    .nav-report-button:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    .nav-contribution-button {
-      border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out !important;
-    }
-    .nav-contribution-button:hover {
-      border-color: ${COLORS.primary.rgb} !important;
-    }
-    .nav-contribution-button:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    /* Table row hover styles */
-    .table-row-hover {
-      background-color: inherit;
-    }
-    .table-row-hover:hover,
-    .table-row-hover:focus-visible {
-      background-color: ${COLORS.primary[10]} !important;
-    }
-    .table-row-hover:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: -2px;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${quarter} ${year} Contributions Report</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    summary { cursor: pointer; outline: none; margin: 0.5em 0; padding: 0.5em 0; color: #1f2937; }
+    summary:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .report-table th, .report-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .details-section { background-color: ${COLORS.primary[5]}; }
+    .details-section details:open summary { color: ${COLORS.primary.rgb}; }
+    .report-table tbody tr:last-child td { border-bottom: none; }
+    .nav-report-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
+    .nav-report-button:hover { border-color: ${COLORS.primary.rgb} !important; }
+    .nav-report-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .nav-contribution-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
+    .nav-contribution-button:hover { border-color: ${COLORS.primary.rgb} !important; }
+    .nav-contribution-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .table-row-hover { background-color: inherit; }
+    .table-row-hover:hover, .table-row-hover:focus-visible { background-color: ${COLORS.primary[10]} !important; }
+    .table-row-hover:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: -2px; }
+    /* Sorting Icons */
+    th .sort-icon { margin-left: 5px; font-size: 0.8em; opacity: 0.5; }
+    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; font-weight: bold; }
+  </style>
 </head>
 <body>
 ${navHtmlForReports}
-  <main class="grow w-full">
-    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
-      <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
-          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
-          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-        </header>
+  <main class="grow w-full">
+    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="max-w-[120ch] mx-auto">
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
+          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+        </header>
 
-        <!-- 1. PRIMARY STATS SECTION (Total Contribs & Repos) -->
-        <section class="mb-8">
-          <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
+        <section class="mb-8">
+           <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <p class="text-4xl font-extrabold">${totalContributions}</p>
+              <p class="text-lg mt-2 font-medium">Total Contributions</p>
+            </div>
+            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+              <p class="text-4xl font-extrabold">${totalRepos}</p>
+              <p class="text-lg mt-2 font-medium">Total Repositories</p>
+            </div>
+          </div>
+        </section>
 
-          <!-- Total Contributions & Total Repositories (Two Big Cards) -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              <p class="text-4xl font-extrabold">${totalContributions}</p>
-              <p class="text-lg mt-2 font-medium">Total Contributions</p>
-            </div>
-            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              <p class="text-4xl font-extrabold">${totalRepos}</p>
-              <p class="text-lg mt-2 font-medium">Total Repositories</p>
-            </div>
-          </div>
-        </section>
+        <section class="mb-8">
+           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+             <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
+             </a>
+             <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
+             </a>
+             <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
+             </a>
+             <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
+             </a>
+             <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
+             </a>
+           </div>
+        </section>
 
-        <!-- 2. CONTRIBUTION BREAKDOWN SECTION -->
-        <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-            <!-- Merged PRs -->
-            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-            </a>
-            <!-- Issues -->
-            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-            </a>
-            <!-- Reviewed PRs -->
-            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-            </a>
-            <!-- Co-Authored PRs -->
-            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
-            </a>
-            <!-- Collaborations -->
-            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-            </a>
-          </div>
-        </section>
+        <section class="mb-8">
+           <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+           <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+             <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+               ${top3Repos}
+             </ol>
+           </div>
+        </section>
 
-        <!-- 3. TOP 3 REPOSITORIES SECTION -->
-        <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-          <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-              ${top3Repos}
-            </ol>
-          </div>
-        </section>
+        <hr class="my-8 border-gray-200">
+     
+        <section class="space-y-6">
+    `;
 
-        <hr class="my-8 border-gray-200">
-    
-        <section class="space-y-6">
-    `;
-
-    // Loop through each contribution type to create a collapsible section.
     for (const [section, sectionInfo] of Object.entries(sections)) {
-      let items = data[section];
+      let items = data[section]; // Keep existing initial sort
 
-      // Sort reviewed and co-authored PRs by their engagement date (ascending order)
       if (section === 'reviewedPrs' && items && items.length > 0) {
-        items = [...items].sort((a, b) => {
-          return new Date(b.myFirstReviewDate) - new Date(a.myFirstReviewDate);
-        });
+        items = [...items].sort(
+          (a, b) => new Date(b.myFirstReviewDate) - new Date(a.myFirstReviewDate)
+        );
       } else if (section === 'coAuthoredPrs' && items && items.length > 0) {
-        items = [...items].sort((a, b) => {
-          return new Date(b.firstCommitDate) - new Date(a.firstCommitDate);
-        });
+        items = [...items].sort(
+          (a, b) => new Date(b.firstCommitDate) - new Date(a.firstCommitDate)
+        );
       }
-      const openAttribute = '';
 
-      // Use the HTML <details> tag with Tailwind styles for a collapsible section
-      htmlContent += `<details id="${sectionInfo.id}" ${openAttribute} class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
+      htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold">\n`;
-      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${
-        sectionInfo.title
-      } (${items ? items.length : 0})</span>\n`;
+      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
         htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
-        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
-        // Use the custom report-table class for styling
-        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
-        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
-        tableContent += `    <tr>\n`;
+        // --- SEARCH BAR AREA ---
+        htmlContent += dedent`
+          <div class="flex flex-wrap gap-2 items-center 
+          mb-4 mt-2 px-1">
+            <input 
+              type="text" 
+              placeholder="Search (Project, Title, status:open...)" 
+              class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+              style="border-color: ${COLORS.primary.rgb}; focus:border-color: ${COLORS.primary[15]};focus:ring-color: ${COLORS.primary[25]};"
+            />
+            <button 
+            class="reset-btn bg-gray-100 
+            hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+            >
+              Reset
+            </button>
+          </div>
+        `;
 
-        // Generate table headers with specified width styles
+        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
+        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
+        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
+        tableContent += `   <tr>\n`; // Headers with data-type
+
         for (let i = 0; i < sectionInfo.headers.length; i++) {
-          tableContent += `    <th style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb};'>${sectionInfo.headers[i]}</th>\n`;
+          const type = sectionInfo.colTypes[i]; // --- MODIFICATION START (Header) ---
+          const isStaticColumn = i === 0; // Check if it's the first column ("No.")
+          // If static, omit data-type, sort-icon, and set cursor to default
+          const thAttributes = isStaticColumn ? '' : `data-type="${type}" title="Click to sort"`;
+          const sortIconHtml = isStaticColumn ? '' : ' <span class="sort-icon">↕</span>';
+          const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;'; // --- MODIFICATION END (Header) ---
+          tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
+             ${sectionInfo.headers[i]}${sortIconHtml}
+          </th>\n`;
         }
-        tableContent += `    </tr>\n`;
-        tableContent += `  </thead>\n`;
-        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
+        tableContent += `   </tr>\n`;
+        tableContent += `  </thead>\n`;
+        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
 
         let counter = 1;
         for (const item of items) {
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
-          const hoverBg = counter % 2 === 1 ? '${COLORS.primary[10]}' : 'rgb(243, 244, 246)';
-          tableContent += `    <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`;
-          tableContent += `      <td>${counter++}.</td>\n`;
-          const repoSpanHtml = dedent`
-            <span
-              class="font-mono text-xs bg-gray-100 p-1 rounded"
-            >
-              ${item.repo}
-            </span>
-          `;
-          tableContent += `      <td>${repoSpanHtml}</td>\n`;
-          // Title: styled as a link
-          const linkHtml = dedent`
-            <a
-              href='${item.url}'
-              target='_blank'
-              class="text-blue-600 hover:text-blue-800 
-              hover:underline"
-            >
-              ${item.title}
-            </a>
-          `;
-          tableContent += `      <td>${linkHtml}</td>\n`;
+          const safeTitle = sanitizeAttribute(item.title);
 
-          // Logic for Merged PRs table structure
+          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`; // 1. Counter (Static Text)
+          // --- MODIFICATION START (Row Data) ---
+          // Remove data-value and data-col-type to prevent it from being sorted.
+
+          tableContent += `     <td>${counter++}.</td>\n`; // --- MODIFICATION END (Row Data) ---
+          // 2. Repo (String)
+          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span>`;
+          tableContent += `     <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`; // 3. Title (String) - sanitized data-value
+
+          const linkHtml = `<a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a>`;
+          tableContent += `     <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
+
           if (section === 'pullRequests') {
             const createdAt = formatDate(item.createdAt);
             const mergedAt = formatDate(item.mergedAt);
             const reviewPeriod = calculatePeriodInDays(item.createdAt, item.mergedAt);
+            const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0; // extract number for sorting
 
-            tableContent += `      <td>${createdAt}</td>\n`;
-            tableContent += `      <td>${mergedAt}</td>\n`;
-            // The review period is just text (e.g., "10 days"), so no badge is needed here.
-            tableContent += `      <td>${reviewPeriod}</td>\n`;
-            // Logic for Issues table structure
+            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `     <td data-value="${item.mergedAt}" data-col-type="date">${mergedAt}</td>\n`;
+            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
             const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
 
-            let closingPeriodHtml = closingPeriod;
+            let closingPeriodHtml = closingPeriod; // NEW SORTING LOGIC: Differentiate between number of days and 'OPEN' status
+            let sortValue = closingPeriod.replace(/[^0-9]/g, ''); // Extract number (e.g., "15" from "15 days")
 
-            // Check for the "OPEN" status string we generated in the formatter script
             if (closingPeriod === '<strong>OPEN</strong>') {
-              closingPeriodHtml = getStatusBadgeHtml('OPEN');
-            }
+              closingPeriodHtml = getStatusBadgeHtml('OPEN'); // Critical Change: Use "N/A" (non-numeric string) as the data-value for open issues.
+              // The table-filters.js logic will map this string to +/- Infinity.
+              sortValue = 'N/A';
+            } else {
+              // If it is a period (e.g., "15 days"), use the raw number or '0' if it's "0 days"
+              sortValue = sortValue || '0';
+            } // The column type must be consistently 'number' (as set in sectionInfo.colTypes)
 
-            tableContent += `      <td>${createdAt}</td>\n`;
-            tableContent += `      <td>${closedAt}</td>\n`;
-            tableContent += `      <td>${closingPeriodHtml}</td>\n`;
-            // Logic for Reviewed PRs table structure
+            tableContent += `     <td data-value="${item.date}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `     <td data-value="${item.closedAt}" data-col-type="date">${closedAt}</td>\n`;
+            tableContent += `     <td data-value="${sortValue}" data-col-type="number">${closingPeriodHtml}</td>\n`;
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
             const myFirstReviewAt = formatDate(item.myFirstReviewDate);
@@ -595,41 +493,40 @@ ${navHtmlForReports}
               item.createdAt,
               item.myFirstReviewDate
             );
-            const lastUpdateContent = getPrStatusContent(item); // e.g., "YYYY-MM-DD<br><strong>MERGED</strong>"
+            const daysNum = myFirstReviewPeriod.replace(/[^0-9]/g, '') || 0;
 
-            tableContent += `      <td>${createdAt}</td>\n`;
-            tableContent += `      <td>${myFirstReviewAt}</td>\n`;
-            tableContent += `      <td>${myFirstReviewPeriod}</td>\n`;
-            // Use the new helper to format the status with a badge
-            tableContent += `      <td>${formatPrStatusWithBadge(lastUpdateContent)}</td>\n`;
-            // Logic for Co-Authored PRs table structure
+            const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
+
+            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `     <td data-value="${item.myFirstReviewDate}" data-col-type="date">${myFirstReviewAt}</td>\n`;
+            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${myFirstReviewPeriod}</td>\n`;
+            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
             const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
-            const lastUpdateContent = getPrStatusContent(item); // e.g., "YYYY-MM-DD<br><strong>OPEN</strong>"
+            const daysNum = firstCommitPeriod.replace(/[^0-9]/g, '') || 0;
 
-            tableContent += `      <td>${createdAt}</td>\n`;
-            tableContent += `      <td>${firstCommitAt}</td>\n`;
-            tableContent += `      <td>${firstCommitPeriod}</td>\n`;
-            // Use the new helper to format the status with a badge
-            tableContent += `      <td>${formatPrStatusWithBadge(lastUpdateContent)}</td>\n`;
-            // Logic for Collaborations table structure
+            const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
+
+            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `     <td data-value="${item.firstCommitDate}" data-col-type="date">${firstCommitAt}</td>\n`;
+            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${firstCommitPeriod}</td>\n`;
+            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
-            const statusContent = getCollaborationStatusContent(item);
+            const statusObj = formatPrStatusWithBadge(getCollaborationStatusContent(item));
 
-            tableContent += `      <td>${createdAt}</td>\n`;
-            tableContent += `      <td>${commentedAt}</td>\n`;
-            // Use the new helper to format the status with a badge
-            tableContent += `      <td>${formatPrStatusWithBadge(statusContent)}</td>\n`;
+            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `     <td data-value="${item.firstCommentedAt}" data-col-type="date">${commentedAt}</td>\n`;
+            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           }
 
-          tableContent += `    </tr>\n`;
+          tableContent += `   </tr>\n`;
         }
 
-        tableContent += `  </tbody>\n`;
+        tableContent += `  </tbody>\n`;
         tableContent += ` </table>\n`;
         tableContent += `</div>\n`;
 
@@ -641,85 +538,70 @@ ${navHtmlForReports}
 
     const navButton = generateReportNavButton(index);
 
-    // Close the last main <section> tag and max-width container
     htmlContent += dedent`
-          </section>
-          ${navButton}
-        </div>
-      </div>
-    </main>
-          <script>
-      // Function to handle opening the correct section on load/hash change
-      function openSectionFromHash() {
-        const hash = window.location.hash;
-        if (hash) {
-          // Find the corresponding details element (the ID includes the '#')
-          const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === 'DETAILS') {
-            // Close all other details elements first for a cleaner view
-            document.querySelectorAll('details').forEach(detail => {
-              detail.open = false;
-            });
+          </section>
+          ${navButton}
+        </div>
+      </div>
+    </main>
+    <script>
+      ${tableInteractionsScript}
+      
+      // Existing scripts for hash handling and row clicks...
+      function openSectionFromHash() {
+        const hash = window.location.hash;
+        if (hash) {
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            document.querySelectorAll('details').forEach(detail => detail.open = false);
+            targetDetails.open = true;
+            setTimeout(() => {
+              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }
+        } else {
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
+        }
+      }
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      window.addEventListener('hashchange', openSectionFromHash);
 
-            // Open the target details element
-            targetDetails.open = true;
-
-            // Scroll to the opened section (using a small delay to ensure it's fully rendered open)
-            setTimeout(() => {
-              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-          }
-        } else {
-          // Default behavior: open the first section ('merged-prs') if no hash is present
-          const defaultDetails = document.getElementById('merged-prs');
-          if (defaultDetails) {
-            defaultDetails.open = true;
-          }
-        }
-      }
-
-      // Execute on page load
-      window.addEventListener('DOMContentLoaded', openSectionFromHash);
-      // Also handle if the hash changes in the same page (though not strictly needed for this link structure)
-      window.addEventListener('hashchange', openSectionFromHash);
-
-      // Add click handlers to table rows for link navigation
-      document.addEventListener('DOMContentLoaded', () => {
-        const tableRows = document.querySelectorAll('.table-row-hover');
-        tableRows.forEach(row => {
-          const href = row.getAttribute('data-href');
-          if (href) {
-            row.tabIndex = 0;
-            row.setAttribute('role', 'button');
-            row.addEventListener('click', () => {
-              window.location.href = href;
-            });
-            row.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = href;
-              }
-            });
-          }
-        });
-      });
-    </script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tableRows = document.querySelectorAll('.table-row-hover');
+        tableRows.forEach(row => {
+          const href = row.getAttribute('data-href');
+          if (href) {
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            row.addEventListener('click', (e) => {
+              // Prevent navigation if text is selected
+              if(window.getSelection().toString().length > 0) return;
+              window.location.href = href;
+            });
+            row.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = href;
+              }
+            });
+          }
+        });
+      });
+    </script>
 ${footerHtml}
-    </body>
+    </body>
 </html>
-`; // Sanitize content: replace NBSPs and trim trailing spaces/newlines to avoid extra spaces after footer
+`;
     htmlContent = htmlContent.replace(/\u00A0/g, ' ').replace(/[ \t]+$/gm, '');
 
-    // Format the content before writing
     const formattedContent = await prettier.format(htmlContent, {
-      parser: 'html', // Ensure Prettier formats it as HTML
+      parser: 'html',
     });
 
-    // Write the final HTML content to the file.
     await fs.writeFile(filePath, formattedContent, 'utf8');
     console.log(`Written file: ${filePath}`);
 
-    // Add the relative path and total contributions to the list to be returned
     quarterlyFileLinks.push({
       path: relativePath,
       total: totalContributions,
