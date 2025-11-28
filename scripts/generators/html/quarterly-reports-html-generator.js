@@ -403,23 +403,22 @@ ${navHtmlForReports}
       } else {
         // --- SEARCH BAR AREA ---
         htmlContent += dedent`
-          <div class="flex flex-wrap gap-2 items-center 
+          <div class="flex flex-wrap gap-2 items-center 
           mb-4 mt-2 px-1">
-            <input 
-              type="text" 
-              placeholder="Search (Project, Title, 
-              'status:open'...)" 
-              class="search-input grow border 
-              border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <button 
-              class="reset-btn bg-gray-100 
-              hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
-            >
-              Reset
-            </button>
-          </div>
-        `;
+            <input 
+              type="text" 
+              placeholder="Search (Project, Title, status:open...)" 
+              class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+              style="border-color: ${COLORS.primary.rgb}; focus:border-color: ${COLORS.primary[15]};focus:ring-color: ${COLORS.primary[25]};"
+            />
+            <button 
+            class="reset-btn bg-gray-100 
+            hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+            >
+              Reset
+            </button>
+          </div>
+        `;
 
         let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
