@@ -99,6 +99,24 @@
         opacity: 1;
         font-weight: bold;
       }
+
+      /* --- Icon Input Styles for Search Bar --- */
+      /* Container holds the input and positions the icon */
+      .icon-input-container {
+        position: relative;
+      }
+      /* Style the input to push text away from the icon */
+      .icon-input-container input {
+        padding-left: 36px !important; /* Make room for the 20px icon + padding */
+      }
+      /* Position the icon absolutely inside the container */
+      .input-icon {
+        position: absolute;
+        left: 8px; /* Offset from the left edge */
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none; /* Allows clicks to pass through to the input */
+      }
     </style>
   </head>
   <body>
@@ -429,12 +447,37 @@
                 <span class="inline-block">🚀 Merged PRs (52)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-                <input
-                  type="text"
-                  placeholder="Search (Project, Title, status:open...)"
-                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
-                />
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="merged-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1772,12 +1815,37 @@
                 <span class="inline-block">🐞 Issues (57)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-                <input
-                  type="text"
-                  placeholder="Search (Project, Title, status:open...)"
-                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
-                />
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="issues-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -3378,12 +3446,37 @@
                 <span class="inline-block">👀 Reviewed PRs (99)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-                <input
-                  type="text"
-                  placeholder="Search (Project, Title, status:open...)"
-                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
-                />
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="reviewed-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -6851,12 +6944,37 @@
                 <span class="inline-block">🤝 Co-Authored PRs (36)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-                <input
-                  type="text"
-                  placeholder="Search (Project, Title, status:open...)"
-                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
-                />
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="co-authored-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Co-Authored PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -8164,12 +8282,37 @@
                 <span class="inline-block">💬 Collaborations (35)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-                <input
-                  type="text"
-                  placeholder="Search (Project, Title, status:open...)"
-                  class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                  style="border-color: rgb(67, 56, 202); focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
-                />
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="collaborations-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -9736,14 +9879,16 @@
         });
       });
 
-      // Existing scripts for hash handling and row clicks...
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
           if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
             document.querySelectorAll('details').forEach((detail) => (detail.open = false));
             targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
             setTimeout(() => {
               targetDetails.scrollIntoView({
                 behavior: 'smooth',
@@ -9752,6 +9897,7 @@
             }, 100);
           }
         } else {
+          // Open 'Merged PRs' by default if no hash is present.
           const defaultDetails = document.getElementById('merged-prs');
           if (defaultDetails) defaultDetails.open = true;
         }
@@ -9759,6 +9905,7 @@
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
 
+      // Add click and keyboard listeners to table rows to navigate to the item's URL.
       document.addEventListener('DOMContentLoaded', () => {
         const tableRows = document.querySelectorAll('.table-row-hover');
         tableRows.forEach((row) => {
