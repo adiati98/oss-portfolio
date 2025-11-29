@@ -14,6 +14,7 @@ const { createFooterHtml } = require('../../components/footer');
 const {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
+  SEARCH_SVG, // <--- NEW: Import the search icon SVG
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
@@ -130,15 +131,15 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-          <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${COLORS.primary.rgb};">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
-            <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
-              ${LEFT_ARROW_SVG}
-              <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
-            </span>
-           
-          </a>
-        `;
+        <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${COLORS.primary.rgb};">
+          <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
+          <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
+            ${LEFT_ARROW_SVG}
+            <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
+          </span>
+          
+        </a>
+      `;
     } else {
       previousButton = '<div class="w-52 h-20"></div>';
     }
@@ -146,26 +147,26 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-          <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${COLORS.primary.rgb};">
-            <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
-            <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
-              <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
-              ${RIGHT_ARROW_SVG}
-            </span>
-          </a>
-        `;
+        <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${COLORS.primary.rgb};">
+          <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
+          <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${COLORS.primary.rgb};">
+            <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
+            ${RIGHT_ARROW_SVG}
+          </span>
+        </a>
+      `;
     } else {
       nextButton = '<div class="w-52 h-20"></div>';
     }
 
     return dedent`
-        <div class="mt-12 mb-8 w-full flex justify-center">
-          <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
-            ${previousButton}
-            ${nextButton}
-          </div>
-        </div>
-      `;
+      <div class="mt-12 mb-8 w-full flex justify-center">
+        <div class="max-w-[120ch] mx-auto w-full flex justify-between items-center gap-4 px-2 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
+          ${previousButton}
+          ${nextButton}
+        </div>
+      </div>
+    `;
   }
 
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -208,8 +209,8 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
-         `
+           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+          `
       )
       .join('');
 
@@ -287,98 +288,116 @@ async function writeHtmlFiles(groupedContributions) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${quarter} ${year} Contributions Report</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    html, body { margin: 0; padding: 0; height: 100%; }
-    body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-    summary { cursor: pointer; outline: none; margin: 0.5em 0; padding: 0.5em 0; color: #1f2937; }
-    summary:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .report-table th, .report-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .details-section { background-color: ${COLORS.primary[5]}; }
-    .details-section details:open summary { color: ${COLORS.primary.rgb}; }
-    .report-table tbody tr:last-child td { border-bottom: none; }
-    .nav-report-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
-    .nav-report-button:hover { border-color: ${COLORS.primary.rgb} !important; }
-    .nav-report-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .nav-contribution-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
-    .nav-contribution-button:hover { border-color: ${COLORS.primary.rgb} !important; }
-    .nav-contribution-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .table-row-hover { background-color: inherit; }
-    .table-row-hover:hover, .table-row-hover:focus-visible { background-color: ${COLORS.primary[10]} !important; }
-    .table-row-hover:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: -2px; }
-    /* Sorting Icons */
-    th .sort-icon { margin-left: 5px; font-size: 0.8em; opacity: 0.5; }
-    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; font-weight: bold; }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${quarter} ${year} Contributions Report</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    html, body { margin: 0; padding: 0; height: 100%; }
+    body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    summary { cursor: pointer; outline: none; margin: 0.5em 0; padding: 0.5em 0; color: #1f2937; }
+    summary:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .report-table th, .report-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .details-section { background-color: ${COLORS.primary[5]}; }
+    .details-section details:open summary { color: ${COLORS.primary.rgb}; }
+    .report-table tbody tr:last-child td { border-bottom: none; }
+    .nav-report-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
+    .nav-report-button:hover { border-color: ${COLORS.primary.rgb} !important; }
+    .nav-report-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .nav-contribution-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
+    .nav-contribution-button:hover { border-color: ${COLORS.primary.rgb} !important; }
+    .nav-contribution-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
+    .table-row-hover { background-color: inherit; }
+    .table-row-hover:hover, .table-row-hover:focus-visible { background-color: ${COLORS.primary[10]} !important; }
+    .table-row-hover:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: -2px; }
+    /* Sorting Icons */
+    th .sort-icon { margin-left: 5px; font-size: 0.8em; opacity: 0.5; }
+    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; font-weight: bold; }
+
+    /* --- Icon Input Styles (Replacing Floating Label Styles) --- */
+    /* Container holds the input and positions the icon */
+    .icon-input-container {
+      position: relative;
+    }
+    /* Style the input to push text away from the icon */
+    .icon-input-container input {
+      padding-left: 36px !important; /* Make room for the 20px icon + padding */
+    }
+    /* Position the icon absolutely inside the container */
+    .input-icon {
+      position: absolute;
+      left: 8px; /* Offset from the left edge */
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none; /* Allows clicks to pass through to the input */
+    }
+  </style>
 </head>
 <body>
 ${navHtmlForReports}
-  <main class="grow w-full">
-    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
-      <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
-          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
-          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
-        </header>
+  <main class="grow w-full">
+    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="max-w-[120ch] mx-auto">
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
+          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+        </header>
 
-        <section class="mb-8">
-           <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              <p class="text-4xl font-extrabold">${totalContributions}</p>
-              <p class="text-lg mt-2 font-medium">Total Contributions</p>
-            </div>
-            <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-              <p class="text-4xl font-extrabold">${totalRepos}</p>
-              <p class="text-lg mt-2 font-medium">Total Repositories</p>
-            </div>
-          </div>
-        </section>
+        <section class="mb-8">
+           <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
+           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+           <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+             <p class="text-4xl font-extrabold">${totalContributions}</p>
+             <p class="text-lg mt-2 font-medium">Total Contributions</p>
+           </div>
+           <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+             <p class="text-4xl font-extrabold">${totalRepos}</p>
+             <p class="text-lg mt-2 font-medium">Total Repositories</p>
+           </div>
+          </div>
+        </section>
 
-        <section class="mb-8">
-           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-             <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-             </a>
-             <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-             </a>
-             <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-             </a>
-             <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
-             </a>
-             <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-             </a>
-           </div>
-        </section>
+        <section class="mb-8">
+           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+             <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
+             </a>
+             <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
+             </a>
+             <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
+             </a>
+             <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
+             </a>
+             <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
+               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
+             </a>
+           </div>
+        </section>
 
-        <section class="mb-8">
-           <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-           <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-             <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-               ${top3Repos}
-             </ol>
-           </div>
-        </section>
+        <section class="mb-8">
+           <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+           <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+             <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+               ${top3Repos}
+             </ol>
+           </div>
+        </section>
 
-        <hr class="my-8 border-gray-200">
-     
-        <section class="space-y-6">
-    `;
+        <hr class="my-8 border-gray-200">
+      
+        <section class="space-y-6">
+    `;
 
     for (const [section, sectionInfo] of Object.entries(sections)) {
       let items = data[section]; // Keep existing initial sort
@@ -401,16 +420,31 @@ ${navHtmlForReports}
       if (!items || items.length === 0) {
         htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
-        // --- SEARCH BAR AREA ---
+        // --- SEARCH BAR AREA (MODIFIED FOR ICON/ARIA-LABEL) ---
+        const searchInputId = `${sectionInfo.id}-search`;
+        const visualPlaceholder = `Search (Project, Title, status:open...)`;
+        const accessibleLabel = `Search contributions in ${sectionInfo.title}`;
+
         htmlContent += dedent`
-          <div class="flex flex-wrap gap-2 items-center 
-          mb-4 mt-2 px-1">
-            <input 
-              type="text" 
-              placeholder="Search (Project, Title, status:open...)" 
-              class="search-input grow border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-              style="border-color: ${COLORS.primary.rgb}; focus:border-color: ${COLORS.primary[15]};focus:ring-color: ${COLORS.primary[25]};"
-            />
+          <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+            
+            <div class="icon-input-container grow">
+              <div class="input-icon" style="color: ${COLORS.primary.rgb};">
+                ${SEARCH_SVG}
+              </div>
+              
+              <input 
+                type="text" 
+                id="${searchInputId}" 
+                placeholder="${visualPlaceholder}" 
+                aria-label="${accessibleLabel}"
+                class="search-input w-full border rounded-md 
+                px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                style="border-color: ${COLORS.primary.rgb}; 
+                focus:border-color: ${COLORS.primary[15]};focus:ring-color: ${COLORS.primary[25]};"
+              />
+            </div>
+
             <button 
             class="reset-btn bg-gray-100 
             hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
@@ -433,8 +467,8 @@ ${navHtmlForReports}
           const sortIconHtml = isStaticColumn ? '' : ' <span class="sort-icon">↕</span>';
           const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;'; // --- MODIFICATION END (Header) ---
           tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
-             ${sectionInfo.headers[i]}${sortIconHtml}
-          </th>\n`;
+              ${sectionInfo.headers[i]}${sortIconHtml}
+          </th>\n`;
         }
         tableContent += `   </tr>\n`;
         tableContent += `  </thead>\n`;
@@ -539,58 +573,58 @@ ${navHtmlForReports}
     const navButton = generateReportNavButton(index);
 
     htmlContent += dedent`
-          </section>
-          ${navButton}
-        </div>
-      </div>
-    </main>
-    <script>
-      ${tableInteractionsScript}
-      
-      // Existing scripts for hash handling and row clicks...
-      function openSectionFromHash() {
-        const hash = window.location.hash;
-        if (hash) {
-          const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === 'DETAILS') {
-            document.querySelectorAll('details').forEach(detail => detail.open = false);
-            targetDetails.open = true;
-            setTimeout(() => {
-              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-          }
-        } else {
-          const defaultDetails = document.getElementById('merged-prs');
-          if (defaultDetails) defaultDetails.open = true;
-        }
-      }
-      window.addEventListener('DOMContentLoaded', openSectionFromHash);
-      window.addEventListener('hashchange', openSectionFromHash);
+          </section>
+          ${navButton}
+        </div>
+      </div>
+    </main>
+    <script>
+      ${tableInteractionsScript}
+      
+      // Existing scripts for hash handling and row clicks...
+      function openSectionFromHash() {
+        const hash = window.location.hash;
+        if (hash) {
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            document.querySelectorAll('details').forEach(detail => detail.open = false);
+            targetDetails.open = true;
+            setTimeout(() => {
+              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+          }
+        } else {
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
+        }
+      }
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      window.addEventListener('hashchange', openSectionFromHash);
 
-      document.addEventListener('DOMContentLoaded', () => {
-        const tableRows = document.querySelectorAll('.table-row-hover');
-        tableRows.forEach(row => {
-          const href = row.getAttribute('data-href');
-          if (href) {
-            row.tabIndex = 0;
-            row.setAttribute('role', 'button');
-            row.addEventListener('click', (e) => {
-              // Prevent navigation if text is selected
-              if(window.getSelection().toString().length > 0) return;
-              window.location.href = href;
-            });
-            row.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = href;
-              }
-            });
-          }
-        });
-      });
-    </script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tableRows = document.querySelectorAll('.table-row-hover');
+        tableRows.forEach(row => {
+          const href = row.getAttribute('data-href');
+          if (href) {
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            row.addEventListener('click', (e) => {
+              // Prevent navigation if text is selected
+              if(window.getSelection().toString().length > 0) return;
+              window.location.href = href;
+            });
+            row.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                window.location.href = href;
+              }
+            });
+          }
+        });
+      });
+    </script>
 ${footerHtml}
-    </body>
+    </body>
 </html>
 `;
     htmlContent = htmlContent.replace(/\u00A0/g, ' ').replace(/[ \t]+$/gm, '');
