@@ -13,6 +13,15 @@ const RIGHT_ARROW_SVG = `
     </svg>
 `;
 
+/**
+ * SVG for the Search icon (used in table filter inputs).
+ */
+const SEARCH_SVG = `
+  <svg class="w-5 h-5" width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+`;
+
 // Define the raw SVG for the favicon
 // The fill color will be replaced with the primary color from COLOR_PALETTE dynamically
 const FAVICON_SVG_RAW_TEMPLATE = `
@@ -55,12 +64,6 @@ function encodeSvg(svgString) {
 
 // This will be set after COLOR_PALETTE is defined
 let FAVICON_SVG_ENCODED = null;
-
-/**
- * COLOR UTILITY FUNCTIONS
- * =======================
- * These functions convert hex colors to RGB and generate opacity variants.
- */
 
 /**
  * Converts a hex color to RGB object.
@@ -133,27 +136,6 @@ function generateColorVariants(hex) {
  *
  * This object defines all colors used throughout the generated HTML reports.
  * ONLY MODIFY THE HEX VALUES BELOW - all opacity variants are automatically generated.
- *
- * To customize:
- * 1. Change the hex value for the color you want to modify
- * 2. All opacity variants (5%, 10%, 15%, etc.) will be automatically generated
- * 3. Re-run the script and all generated files will use the new colors
- *
- * Color Properties:
- * - Primary: Used for headers, accents, and main buttons
- * - Primary900: Used for darker background and darker accent
- * - Neutral: Used for backgrounds, borders, and text
- * - Success: Used for OPEN status badges
- * - Merged: Used for MERGED status badges
- * - Error: Used for CLOSED status badges
- * - TextPrimary: Used for primary text (headings, important text)
- * - TextSecondary: Used for secondary text (descriptions, meta info)
- * - TextMuted: Used for muted text (timestamps, less important info)
- *
- * Each color generates these opacity levels automatically:
- * - 5%, 10%, 15%, 25%, 50%, 75%, 100%
- * - rgb (solid color)
- * - hex (original hex value)
  */
 const COLOR_PALETTE = {
   primary: '#4338CA', // Indigo - for main UI elements, headers, buttons
@@ -299,6 +281,7 @@ function getHoverStyles() {
 module.exports = {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
+  SEARCH_SVG,
   FAVICON_SVG_ENCODED,
   COLORS,
   getHoverStyles,
