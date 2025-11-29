@@ -14,17 +14,19 @@ const { createFooterHtml } = require('../../components/footer');
 const {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
-  SEARCH_SVG, // <--- NEW: Import the search icon SVG
+  SEARCH_SVG,
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
 
-// Update navigation links for report pages
+// Adjust relative paths in the base navigation HTML for use in report subdirectories (e.g., from './' to '../').
 let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
 navHtmlForReports = navHtmlForReports.replace(/href="reports\.html"/g, 'href="../reports.html"');
 
 /**
- * Sanitizes a string for safe use in HTML attributes (prevents " breaking HTML).
+ * Sanitizes a string for safe use in HTML attributes (e.g., prevents double quotes from breaking HTML).
+ * @param {string} str - The string to sanitize.
+ * @returns {string} The sanitized string.
  */
 function sanitizeAttribute(str) {
   if (typeof str !== 'string') return str;
@@ -37,8 +39,13 @@ function sanitizeAttribute(str) {
     .replace(/>/g, '&gt;');
 }
 
+/**
+ * Generates and writes individual HTML report files for each quarter's contributions.
+ * @param {Object} groupedContributions - Data grouped by quarter (e.g., {'2023-Q1': {...}}).
+ * @returns {Array<Object>} List of created report file paths and contribution totals.
+ */
 async function writeHtmlFiles(groupedContributions) {
-  // Read the Interaction Script
+  // Attempt to read the JavaScript file for interactive table features (sorting, filtering).
   const interactionsScriptPath = path.join(__dirname, '../../utils/table-filters.js');
   let tableInteractionsScript = '';
   try {
@@ -49,6 +56,7 @@ async function writeHtmlFiles(groupedContributions) {
     );
   }
 
+  // Transform the grouped data into an array of report objects, calculate totals, and sort by key (chronologically).
   const allReports = Object.entries(groupedContributions)
     .map(([key, data]) => {
       const [year, quarterPrefix] = key.split('-');
@@ -60,11 +68,17 @@ async function writeHtmlFiles(groupedContributions) {
         quarterPrefix,
         fullQuarterName,
         data,
+        // Calculate the total number of contributions across all types for the quarter
         totalContributions: Object.values(data).reduce((sum, arr) => sum + arr.length, 0),
       };
     })
     .sort((a, b) => a.key.localeCompare(b.key));
 
+  /**
+   * Generates an HTML span for a status badge (e.g., OPEN, MERGED, CLOSED) with Tailwind-like styles.
+   * @param {string} status - The raw status text.
+   * @returns {string} HTML for the status badge.
+   */
   function getStatusBadgeHtml(status) {
     const cleanedStatus = status.toUpperCase().trim();
     let bgColor = COLORS.status.gray.bg;
@@ -95,31 +109,44 @@ async function writeHtmlFiles(groupedContributions) {
     return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${fontWeight}" style="${style}">${cleanedStatus}</span>`;
   }
 
+  /**
+   * Replaces the raw status text within a PR status content string (e.g., "Last update: <strong>CLOSED</strong>")
+   * with a styled status badge, keeping the date info.
+   * @param {string} content - The raw PR status content.
+   * @returns {{html: string, statusText: string}} Object containing the new HTML and the raw status word for sorting.
+   */
   function formatPrStatusWithBadge(content) {
     const parts = content.split('<br>');
     if (parts.length < 2) return { html: content, statusText: 'N/A' };
 
     const date = parts[0];
     const rawStatusTag = parts[1];
+    // Extract the status word from the strong tag
     const statusMatch = rawStatusTag.match(/<strong>(.*?)<\/strong>/i);
     const statusWord = statusMatch && statusMatch[1] ? statusMatch[1] : 'N/A';
 
-    const statusBadge = getStatusBadgeHtml(statusWord); // Return both the HTML and the raw status text for sorting
+    const statusBadge = getStatusBadgeHtml(statusWord);
+    // Return both the HTML for display and the raw status text for sorting logic
     return {
       html: `${date}<br>${statusBadge}`,
       statusText: statusWord,
     };
   }
 
+  /**
+   * Generates the HTML block for navigating to the previous and next quarterly reports.
+   * @param {number} index - The index of the current report in the `allReports` array.
+   * @returns {string} The HTML string for the navigation buttons.
+   */
   function generateReportNavButton(index) {
-    // ... (Existing code for buttons, unmodified) ...
     const reports = allReports;
     const previousReport = index > 0 ? reports[index - 1] : null;
     const nextReport = index < reports.length - 1 ? reports[index + 1] : null;
 
     let previousButton = '';
-    let nextButton = ''; // Helper function to build the relative path: ../YEAR/QX-YYYY.html
+    let nextButton = '';
 
+    // Helper function to build the relative path: ../YEAR/QX-YYYY.html
     const getReportPath = (report) => {
       const fileName = `${report.quarterPrefix}-${report.year}.html`;
       return `../${report.year}/${fileName}`;
@@ -141,6 +168,7 @@ async function writeHtmlFiles(groupedContributions) {
         </a>
       `;
     } else {
+      // Placeholder div maintains layout when no previous report exists
       previousButton = '<div class="w-52 h-20"></div>';
     }
 
@@ -156,6 +184,7 @@ async function writeHtmlFiles(groupedContributions) {
         </a>
       `;
     } else {
+      // Placeholder div maintains layout when no next report exists
       nextButton = '<div class="w-52 h-20"></div>';
     }
 
@@ -173,6 +202,7 @@ async function writeHtmlFiles(groupedContributions) {
   const quarterlyFileLinks = [];
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
+  // Iterate over each quarterly report to generate its dedicated HTML file.
   for (let index = 0; index < allReports.length; index++) {
     const report = allReports[index];
     const { key, year, quarterPrefix: quarter, data, totalContributions } = report;
@@ -187,8 +217,9 @@ async function writeHtmlFiles(groupedContributions) {
     if (totalContributions === 0) {
       console.log(`Skipping empty quarter: ${key}`);
       continue;
-    } // ... (Existing repo statistics calculation) ...
+    }
 
+    // Calculate repository statistics for the summary section.
     const allItems = [
       ...data.pullRequests,
       ...data.issues,
@@ -209,8 +240,8 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-           <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
-          `
+          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+        `
       )
       .join('');
 
@@ -218,15 +249,16 @@ async function writeHtmlFiles(groupedContributions) {
     const reviewedPrCount = data.reviewedPrs?.length || '0';
     const issueCount = data.issues?.length || '0';
     const coAuthoredPrCount = data.coAuthoredPrs?.length || '0';
-    const collaborationCount = data.collaborations?.length || '0'; // UPDATED SECTIONS CONFIG: Added 'types' for better sorting
+    const collaborationCount = data.collaborations?.length || '0';
 
+    // Configuration object defining each contribution section, including table headers, widths, and data types for sorting.
     const sections = {
       pullRequests: {
         title: 'Merged PRs',
         icon: '🚀',
         id: 'merged-prs',
         headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
-        widths: ['5%', '20%', '30%', '15%', '15%', '15%'], // 'string', 'number', 'date', 'status'
+        widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
         colTypes: ['number', 'string', 'string', 'date', 'date', 'number'],
         keys: ['repo', 'title', 'date', 'mergedAt', 'reviewPeriod'],
       },
@@ -284,6 +316,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
     };
 
+    // Begin HTML structure for the report page.
     let htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
@@ -316,7 +349,7 @@ async function writeHtmlFiles(groupedContributions) {
     th .sort-icon { margin-left: 5px; font-size: 0.8em; opacity: 0.5; }
     th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; font-weight: bold; }
 
-    /* --- Icon Input Styles (Replacing Floating Label Styles) --- */
+    /* --- Icon Input Styles for Search Bar --- */
     /* Container holds the input and positions the icon */
     .icon-input-container {
       position: relative;
@@ -346,52 +379,52 @@ ${navHtmlForReports}
         </header>
 
         <section class="mb-8">
-           <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
-           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-           <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-             <p class="text-4xl font-extrabold">${totalContributions}</p>
-             <p class="text-lg mt-2 font-medium">Total Contributions</p>
-           </div>
-           <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-             <p class="text-4xl font-extrabold">${totalRepos}</p>
-             <p class="text-lg mt-2 font-medium">Total Repositories</p>
-           </div>
+          <h2 style="border-left-color: ${COLORS.primary.rgb};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+            <p class="text-4xl font-extrabold">${totalContributions}</p>
+            <p class="text-lg mt-2 font-medium">Total Contributions</p>
+          </div>
+          <div style="background-color: ${COLORS.primary.rgb};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
+            <p class="text-4xl font-extrabold">${totalRepos}</p>
+            <p class="text-lg mt-2 font-medium">Total Repositories</p>
+          </div>
           </div>
         </section>
 
         <section class="mb-8">
-           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
-           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-             <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-             </a>
-             <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-             </a>
-             <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-             </a>
-             <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
-             </a>
-             <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-               <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
-               <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-             </a>
-           </div>
+          <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
+            </a>
+            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
+            </a>
+            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
+            </a>
+            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
+            </a>
+            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
+              <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
+            </a>
+          </div>
         </section>
 
         <section class="mb-8">
-           <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-           <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-             <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
-               ${top3Repos}
-             </ol>
-           </div>
+          <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
+          <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
+            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+              ${top3Repos}
+            </ol>
+          </div>
         </section>
 
         <hr class="my-8 border-gray-200">
@@ -399,9 +432,11 @@ ${navHtmlForReports}
         <section class="space-y-6">
     `;
 
+    // Generate HTML for each contribution section (table).
     for (const [section, sectionInfo] of Object.entries(sections)) {
-      let items = data[section]; // Keep existing initial sort
+      let items = data[section]; // Get data for the current section.
 
+      // Apply initial chronological sort to Reviewed PRs and Co-Authored PRs for display consistency.
       if (section === 'reviewedPrs' && items && items.length > 0) {
         items = [...items].sort(
           (a, b) => new Date(b.myFirstReviewDate) - new Date(a.myFirstReviewDate)
@@ -412,15 +447,16 @@ ${navHtmlForReports}
         );
       }
 
+      // Details tag is used for collapsible sections.
       htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold">\n`;
-      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
+      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
         htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
-        // --- SEARCH BAR AREA (MODIFIED FOR ICON/ARIA-LABEL) ---
+        // Search bar with icon styling for the table in the current section.
         const searchInputId = `${sectionInfo.id}-search`;
         const visualPlaceholder = `Search (Project, Title, status:open...)`;
         const accessibleLabel = `Search contributions in ${sectionInfo.title}`;
@@ -454,72 +490,80 @@ ${navHtmlForReports}
           </div>
         `;
 
+        // Generate the contribution table.
         let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
-        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
-        tableContent += `   <tr>\n`; // Headers with data-type
+        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
+        tableContent += `   <tr>\n`;
 
+        // Generate table headers with sorting attributes (data-type).
         for (let i = 0; i < sectionInfo.headers.length; i++) {
-          const type = sectionInfo.colTypes[i]; // --- MODIFICATION START (Header) ---
-          const isStaticColumn = i === 0; // Check if it's the first column ("No.")
-          // If static, omit data-type, sort-icon, and set cursor to default
+          const type = sectionInfo.colTypes[i];
+          const isStaticColumn = i === 0; // The 'No.' column is static (not sortable).
+
           const thAttributes = isStaticColumn ? '' : `data-type="${type}" title="Click to sort"`;
           const sortIconHtml = isStaticColumn ? '' : ' <span class="sort-icon">↕</span>';
-          const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;'; // --- MODIFICATION END (Header) ---
-          tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
-              ${sectionInfo.headers[i]}${sortIconHtml}
+          const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
+
+          tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
+              ${sectionInfo.headers[i]}${sortIconHtml}
           </th>\n`;
         }
-        tableContent += `   </tr>\n`;
-        tableContent += `  </thead>\n`;
-        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
+        tableContent += `   </tr>\n`;
+        tableContent += `  </thead>\n`;
+        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
 
         let counter = 1;
+        // Generate table rows, mapping data properties to columns.
         for (const item of items) {
           const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
           const safeTitle = sanitizeAttribute(item.title);
 
-          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`; // 1. Counter (Static Text)
-          // --- MODIFICATION START (Row Data) ---
-          // Remove data-value and data-col-type to prevent it from being sorted.
+          // Row with data-href to enable click navigation.
+          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`;
 
-          tableContent += `     <td>${counter++}.</td>\n`; // --- MODIFICATION END (Row Data) ---
-          // 2. Repo (String)
+          // No. column (not sortable).
+          tableContent += `    <td>${counter++}.</td>\n`;
+
+          // Repo column (String type).
           const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span>`;
-          tableContent += `     <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`; // 3. Title (String) - sanitized data-value
+          tableContent += `    <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`;
 
+          // Title column (String type, contains hyperlink).
           const linkHtml = `<a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a>`;
-          tableContent += `     <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
+          tableContent += `    <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
 
+          // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
             const createdAt = formatDate(item.createdAt);
             const mergedAt = formatDate(item.mergedAt);
             const reviewPeriod = calculatePeriodInDays(item.createdAt, item.mergedAt);
             const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0; // extract number for sorting
 
-            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `     <td data-value="${item.mergedAt}" data-col-type="date">${mergedAt}</td>\n`;
-            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.mergedAt}" data-col-type="date">${mergedAt}</td>\n`;
+            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
             const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
 
-            let closingPeriodHtml = closingPeriod; // NEW SORTING LOGIC: Differentiate between number of days and 'OPEN' status
-            let sortValue = closingPeriod.replace(/[^0-9]/g, ''); // Extract number (e.g., "15" from "15 days")
+            let closingPeriodHtml = closingPeriod;
+            let sortValue = closingPeriod.replace(/[^0-9]/g, '');
 
             if (closingPeriod === '<strong>OPEN</strong>') {
-              closingPeriodHtml = getStatusBadgeHtml('OPEN'); // Critical Change: Use "N/A" (non-numeric string) as the data-value for open issues.
-              // The table-filters.js logic will map this string to +/- Infinity.
+              // Replace "OPEN" raw text with a badge for display.
+              closingPeriodHtml = getStatusBadgeHtml('OPEN');
+              // Use a non-numeric string for sorting 'OPEN' status, handled by table-filters.js as infinite time.
               sortValue = 'N/A';
             } else {
-              // If it is a period (e.g., "15 days"), use the raw number or '0' if it's "0 days"
+              // If it's a period (e.g., "15 days"), use the raw number or '0' if it's "0 days"
               sortValue = sortValue || '0';
-            } // The column type must be consistently 'number' (as set in sectionInfo.colTypes)
+            }
 
-            tableContent += `     <td data-value="${item.date}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `     <td data-value="${item.closedAt}" data-col-type="date">${closedAt}</td>\n`;
-            tableContent += `     <td data-value="${sortValue}" data-col-type="number">${closingPeriodHtml}</td>\n`;
+            tableContent += `    <td data-value="${item.date}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.closedAt}" data-col-type="date">${closedAt}</td>\n`;
+            tableContent += `    <td data-value="${sortValue}" data-col-type="number">${closingPeriodHtml}</td>\n`;
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
             const myFirstReviewAt = formatDate(item.myFirstReviewDate);
@@ -531,10 +575,10 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `     <td data-value="${item.myFirstReviewDate}" data-col-type="date">${myFirstReviewAt}</td>\n`;
-            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${myFirstReviewPeriod}</td>\n`;
-            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.myFirstReviewDate}" data-col-type="date">${myFirstReviewAt}</td>\n`;
+            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${myFirstReviewPeriod}</td>\n`;
+            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
@@ -543,24 +587,24 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `     <td data-value="${item.firstCommitDate}" data-col-type="date">${firstCommitAt}</td>\n`;
-            tableContent += `     <td data-value="${daysNum}" data-col-type="number">${firstCommitPeriod}</td>\n`;
-            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.firstCommitDate}" data-col-type="date">${firstCommitAt}</td>\n`;
+            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${firstCommitPeriod}</td>\n`;
+            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
             const statusObj = formatPrStatusWithBadge(getCollaborationStatusContent(item));
 
-            tableContent += `     <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `     <td data-value="${item.firstCommentedAt}" data-col-type="date">${commentedAt}</td>\n`;
-            tableContent += `     <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.firstCommentedAt}" data-col-type="date">${commentedAt}</td>\n`;
+            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           }
 
-          tableContent += `   </tr>\n`;
+          tableContent += `   </tr>\n`;
         }
 
-        tableContent += `  </tbody>\n`;
+        tableContent += `  </tbody>\n`;
         tableContent += ` </table>\n`;
         tableContent += `</div>\n`;
 
@@ -572,6 +616,7 @@ ${navHtmlForReports}
 
     const navButton = generateReportNavButton(index);
 
+    // Close main content and insert the table interaction script, other scripts, and footer.
     htmlContent += dedent`
           </section>
           ${navButton}
@@ -581,19 +626,22 @@ ${navHtmlForReports}
     <script>
       ${tableInteractionsScript}
       
-      // Existing scripts for hash handling and row clicks...
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
           if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
             document.querySelectorAll('details').forEach(detail => detail.open = false);
             targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
             setTimeout(() => {
               targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
           }
         } else {
+          // Open 'Merged PRs' by default if no hash is present.
           const defaultDetails = document.getElementById('merged-prs');
           if (defaultDetails) defaultDetails.open = true;
         }
@@ -601,6 +649,7 @@ ${navHtmlForReports}
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
 
+      // Add click and keyboard listeners to table rows to navigate to the item's URL.
       document.addEventListener('DOMContentLoaded', () => {
         const tableRows = document.querySelectorAll('.table-row-hover');
         tableRows.forEach(row => {
@@ -627,8 +676,10 @@ ${footerHtml}
     </body>
 </html>
 `;
+    // Clean up non-breaking spaces and trailing whitespace before formatting.
     htmlContent = htmlContent.replace(/\u00A0/g, ' ').replace(/[ \t]+$/gm, '');
 
+    // Use Prettier to format the final HTML content.
     const formattedContent = await prettier.format(htmlContent, {
       parser: 'html',
     });

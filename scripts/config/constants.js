@@ -15,7 +15,6 @@ const RIGHT_ARROW_SVG = `
 
 /**
  * SVG for the Search icon (used in table filter inputs).
- * Class w-5 h-5 for sizing, stroke-width 2 for boldness.
  */
 const SEARCH_SVG = `
   <svg class="w-5 h-5" width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
