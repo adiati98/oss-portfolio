@@ -2,6 +2,9 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
+// Import the dedent utility
+const { dedent } = require('../../utils/dedent');
+
 // Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('../../config/config');
 
@@ -11,6 +14,9 @@ const { createFooterHtml } = require('../../components/footer');
 
 // Import favicon svg
 const { FAVICON_SVG_ENCODED, COLORS } = require('../../config/constants');
+
+// Import the new style generator function
+const { getReportsListStyleCss } = require('../css/style-generator');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';
@@ -29,8 +35,9 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  // Generate the footer HTML
+  // Generate the footer HTML and dynamic CSS
   const footerHtml = createFooterHtml();
+  const reportsListCss = getReportsListStyleCss();
 
   // Define the report structure data
   const reportStructure = [
@@ -103,7 +110,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
         const borderStyle =
           index === totalRows - 1 ? '' : `style="border-bottom: 1px solid ${COLORS.border.light};"`; // Light gray borders
 
-        return `
+        return dedent`
             <tr style="background-color: ${bgColor};" ${borderStyle}>
               <td style="color: ${COLORS.primary.rgb};" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 ${item.section}
@@ -169,7 +176,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
-      linkHtml += `
+      linkHtml += dedent`
             <details ${openAttribute} class="col-span-full mb-8 border rounded-xl transition duration-300" style="border-color: ${COLORS.border.light};">
                 <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
@@ -179,7 +186,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
-        linkHtml += `
+        linkHtml += dedent`
                 <a href="./${link.relativePath}" style="cursor: pointer; background-color: white; text-decoration: none; display: block;" 
                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
                     <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
@@ -190,7 +197,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       }
 
       // Close the quarterly list/grid for this year
-      linkHtml += `
+      linkHtml += dedent`
                 </div>
             </details>
             `;
@@ -203,7 +210,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   }
 
   // 5. Build HTML Content
-  const htmlContent = `
+  const htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -213,73 +220,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      min-height: 100vh; 
-      display: flex;
-      flex-direction: column;
-    }
-    .report-list { 
-      list-style: none; 
-    } 
-    .report-list a { text-decoration: none; }
-        
-    /* --- Dynamic Styling for Collapsible Year (is-open) --- */
-    details summary {
-      cursor: pointer;
-      outline: none;
-      color: ${COLORS.text.primary};
-      transition: background-color 0.15s ease-in-out;
-    }
-    summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-
-    /* Apply primary background to the entire details element when open */
-    details.is-open {
-      background-color: ${COLORS.primary[5]}; /* Light primary background */
-    }
-    details.is-open summary {
-      background-color: ${COLORS.primary[5]}; /* Matches the details background */
-      border-radius: 0.5rem 0.5rem 0 0; 
-      color: ${COLORS.primary.rgb}; 
-    }
-    details.is-open summary:hover,
-    details.is-open summary:focus-visible {
-      background-color: ${COLORS.primary[10]}; /* Slightly darker on hover */
-    }
-    details:not(.is-open) {
-      background-color: ${COLORS.background.altRows}; /* Light gray background when closed */
-    }
-    details:not(.is-open) summary {
-      border-bottom: none;
-      border-radius: 0.5rem; 
-    }
-    details:not(.is-open) summary:hover,
-    details:not(.is-open) summary:focus-visible {
-      background-color: ${COLORS.primary[5]}; /* Light primary background on hover when closed */
-    }
-    /* Accessible styles for report card links */
-    .report-card-link {
-      border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out !important;
-    }
-    .report-card-link:hover {
-      border-color: ${COLORS.primary.rgb} !important;
-    }
-    .report-card-link:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    /* --- END Dynamic Styling --- */
+    ${reportsListCss}
   </style>
 </head>
 <body>
