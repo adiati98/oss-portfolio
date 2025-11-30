@@ -47,10 +47,10 @@ function sanitizeAttribute(str) {
  */
 async function writeHtmlFiles(groupedContributions) {
   // Attempt to read the JavaScript file for interactive table features (sorting, filtering).
-  const interactionsScriptPath = path.join(__dirname, '../../utils/table-filters.js');
-  let tableInteractionsScript = '';
+  const filtersScriptPath = path.join(__dirname, '../../utils/table-filters.js');
+  let tableFiltersScript = '';
   try {
-    tableInteractionsScript = await fs.readFile(interactionsScriptPath, 'utf8');
+    tableFiltersScript = await fs.readFile(filtersScriptPath, 'utf8');
   } catch (err) {
     console.warn(
       'Warning: utils/table-filters.js not found. Interactive features will be disabled.'
@@ -590,7 +590,7 @@ ${navHtmlForReports}
       </div>
     </main>
     <script>
-      ${tableInteractionsScript}
+      ${tableFiltersScript}
       
       // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
