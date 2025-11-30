@@ -20,9 +20,36 @@
       }
       body {
         font-family: 'Inter', sans-serif;
-        min-height: 100vh;
+        min-height: 10vh;
         display: flex;
         flex-direction: column;
+      }
+
+      /* Navigation Buttons */
+      .nav-report-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-report-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-report-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+
+      .nav-contribution-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-contribution-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-contribution-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
       }
       .report-list {
         list-style: none;
@@ -44,33 +71,28 @@
       }
 
       /* Apply primary background to the entire details element when open */
-      details.is-open {
-        background-color: rgba(67, 56, 202, 0.05); /* Light primary background */
+      details[open] {
+        background-color: rgba(67, 56, 202, 0.05);
       }
-      details.is-open summary {
-        background-color: rgba(67, 56, 202, 0.05); /* Matches the details background */
+      details[open] summary {
+        background-color: rgba(67, 56, 202, 0.05);
         border-radius: 0.5rem 0.5rem 0 0;
         color: rgb(67, 56, 202);
       }
-      details.is-open summary:hover,
-      details.is-open summary:focus-visible {
-        background-color: rgba(67, 56, 202, 0.1); /* Slightly darker on hover */
+      details[open] summary:hover,
+      details[open] summary:focus-visible {
+        background-color: rgba(67, 56, 202, 0.1);
       }
-      details:not(.is-open) {
-        background-color: rgba(107, 114, 128, 0.05); /* Light gray background when closed */
+      details:not([open]) {
+        background-color: rgba(107, 114, 128, 0.05);
       }
-      details:not(.is-open) summary {
+      details:not([open]) summary {
         border-bottom: none;
         border-radius: 0.5rem;
       }
-      details:not(.is-open) summary:hover,
-      details:not(.is-open) summary:focus-visible {
-        background-color: rgba(
-          67,
-          56,
-          202,
-          0.05
-        ); /* Light primary background on hover when closed */
+      details:not([open]) summary:hover,
+      details:not([open]) summary:focus-visible {
+        background-color: rgba(67, 56, 202, 0.05);
       }
       /* Accessible styles for report card links */
       .report-card-link {
@@ -85,7 +107,6 @@
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
       }
-      /* --- END Dynamic Styling --- */
     </style>
   </head>
   <body>
@@ -372,7 +393,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgba(107, 114, 128, 0.05)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -394,7 +414,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgb(255, 255, 255)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -416,7 +435,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgba(107, 114, 128, 0.05)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -438,7 +456,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgb(255, 255, 255)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -459,7 +476,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgba(107, 114, 128, 0.05)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -481,7 +497,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr
                     style="background-color: rgb(255, 255, 255)"
                     style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
@@ -503,7 +518,6 @@
                       </span>
                     </td>
                   </tr>
-
                   <tr style="background-color: rgba(107, 114, 128, 0.05)">
                     <td
                       style="color: rgb(67, 56, 202)"
@@ -560,10 +574,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">171</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2025/Q3-2025.html"
                     style="
                       cursor: pointer;
@@ -575,10 +587,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">300</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2025/Q2-2025.html"
                     style="
                       cursor: pointer;
@@ -590,10 +600,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">127</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2025/Q1-2025.html"
                     style="
                       cursor: pointer;
@@ -609,7 +617,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -633,10 +640,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">167</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2024/Q3-2024.html"
                     style="
                       cursor: pointer;
@@ -648,10 +653,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">130</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2024/Q2-2024.html"
                     style="
                       cursor: pointer;
@@ -663,10 +666,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">279</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2024/Q1-2024.html"
                     style="
                       cursor: pointer;
@@ -682,7 +683,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -706,10 +706,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">224</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2023/Q3-2023.html"
                     style="
                       cursor: pointer;
@@ -721,10 +719,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">76</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2023/Q2-2023.html"
                     style="
                       cursor: pointer;
@@ -736,10 +732,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">18</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2023/Q1-2023.html"
                     style="
                       cursor: pointer;
@@ -755,7 +749,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -779,10 +772,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">28</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2022/Q3-2022.html"
                     style="
                       cursor: pointer;
@@ -794,10 +785,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">38</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2022/Q2-2022.html"
                     style="
                       cursor: pointer;
@@ -809,10 +798,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">17</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2022/Q1-2022.html"
                     style="
                       cursor: pointer;
@@ -828,7 +815,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -852,10 +838,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">50</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2021/Q3-2021.html"
                     style="
                       cursor: pointer;
@@ -867,10 +851,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">14</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2021/Q2-2021.html"
                     style="
                       cursor: pointer;
@@ -886,7 +868,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -914,7 +895,6 @@
                   </a>
                 </div>
               </details>
-
               <details
                 class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
@@ -938,10 +918,8 @@
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">1</p>
-                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p>
-                  </a>
-
-                  <a
+                    <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
+                  ><a
                     href="./2019/Q3-2019.html"
                     style="
                       cursor: pointer;
@@ -975,7 +953,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on November 29, 2025.
+        >'s open source contributions, generated on November 30, 2025.
       </div>
 
       <div class="text-xs mt-1">

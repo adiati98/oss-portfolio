@@ -20,9 +20,36 @@
       }
       body {
         font-family: 'Inter', sans-serif;
-        min-height: 100vh;
+        min-height: 10vh;
         display: flex;
         flex-direction: column;
+      }
+
+      /* Navigation Buttons */
+      .nav-report-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-report-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-report-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+
+      .nav-contribution-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-contribution-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-contribution-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
       }
       .report-list {
         list-style: none;
@@ -466,7 +493,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on November 29, 2025.
+        >'s open source contributions, generated on November 30, 2025.
       </div>
 
       <div class="text-xs mt-1">

@@ -20,9 +20,36 @@
       }
       body {
         font-family: 'Inter', sans-serif;
-        min-height: 100vh;
+        min-height: 10vh;
         display: flex;
         flex-direction: column;
+      }
+
+      /* Navigation Buttons */
+      .nav-report-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-report-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-report-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+
+      .nav-contribution-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-contribution-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-contribution-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
       }
       summary {
         cursor: pointer;
@@ -31,6 +58,7 @@
         padding: 0.5em 0;
         color: #1f2937;
       }
+      /* summary:focus-visible uses the primary color for outline */
       summary:focus-visible {
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
@@ -44,6 +72,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+      /* .details-section and details:open summary use primary colors */
       .details-section {
         background-color: rgba(67, 56, 202, 0.05);
       }
@@ -53,30 +82,8 @@
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
-      .nav-report-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
-        transition: border-color 0.15s ease-in-out !important;
-      }
-      .nav-report-button:hover {
-        border-color: rgb(67, 56, 202) !important;
-      }
-      .nav-report-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
-        outline-offset: 2px;
-      }
-      .nav-contribution-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
-        transition: border-color 0.15s ease-in-out !important;
-      }
-      .nav-contribution-button:hover {
-        border-color: rgb(67, 56, 202) !important;
-      }
-      .nav-contribution-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
-        outline-offset: 2px;
-      }
+
+      /* Table Row Hover/Focus */
       .table-row-hover {
         background-color: inherit;
       }
@@ -88,6 +95,7 @@
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: -2px;
       }
+
       /* Sorting Icons */
       th .sort-icon {
         margin-left: 5px;
@@ -107,15 +115,15 @@
       }
       /* Style the input to push text away from the icon */
       .icon-input-container input {
-        padding-left: 36px !important; /* Make room for the 20px icon + padding */
+        padding-left: 36px !important;
       }
       /* Position the icon absolutely inside the container */
       .input-icon {
         position: absolute;
-        left: 8px; /* Offset from the left edge */
+        left: 8px;
         top: 50%;
         transform: translateY(-50%);
-        pointer-events: none; /* Allows clicks to pass through to the input */
+        pointer-events: none;
       }
     </style>
   </head>
@@ -7407,7 +7415,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on November 29, 2025.
+        >'s open source contributions, generated on November 30, 2025.
       </div>
 
       <div class="text-xs mt-1">
