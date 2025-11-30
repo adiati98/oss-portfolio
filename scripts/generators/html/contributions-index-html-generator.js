@@ -15,6 +15,9 @@ const { createFooterHtml } = require('../../components/footer');
 // Import right arrow and favicon svgs
 const { RIGHT_ARROW_SVG, FAVICON_SVG_ENCODED, COLORS } = require('../../config/constants');
 
+// Import style generator function
+const { getIndexStyleCss } = require('../css/style-generator');
+
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'index.html';
 
@@ -75,8 +78,9 @@ async function createStatsHtmlReadme(finalContributions = []) {
   const currentYear = new Date().getFullYear();
   const yearsTracked = currentYear - SINCE_YEAR + 1;
 
-  // 4. Generate the footer
+  // 4. Generate the footer and dynamic CSS
   const footerHtml = createFooterHtml();
+  const indexCss = getIndexStyleCss();
 
   // 5. Build HTML Content
   const htmlContent = `
@@ -89,30 +93,7 @@ async function createStatsHtmlReadme(finalContributions = []) {
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    html, body { margin: 0; padding: 0; height: 100%; }
-    body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-    .report-list { list-style: none; padding: 0; }
-    .report-list a { text-decoration: none; }
-    
-    .index-report-link {
-      border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out !important;
-    }
-    .index-report-link:hover { border-color: ${COLORS.primary.rgb} !important; }
-    .index-report-link:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    
-    /* Animation for the progress bars */
-    @keyframes loadBar {
-      from { width: 0; }
-    }
-    .progress-bar {
-      animation: loadBar 1s ease-out forwards;
-    }
+    ${indexCss}
   </style>
 </head>
 <body>

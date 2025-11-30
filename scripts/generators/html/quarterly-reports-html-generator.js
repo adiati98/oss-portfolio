@@ -11,6 +11,7 @@ const {
 } = require('../../utils/contribution-formatters');
 const { navHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
+const { getReportStyleCss } = require('../css/style-generator');
 const {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
@@ -46,10 +47,10 @@ function sanitizeAttribute(str) {
  */
 async function writeHtmlFiles(groupedContributions) {
   // Attempt to read the JavaScript file for interactive table features (sorting, filtering).
-  const interactionsScriptPath = path.join(__dirname, '../../utils/table-filters.js');
-  let tableInteractionsScript = '';
+  const filtersScriptPath = path.join(__dirname, '../../utils/table-filters.js');
+  let tableFiltersScript = '';
   try {
-    tableInteractionsScript = await fs.readFile(interactionsScriptPath, 'utf8');
+    tableFiltersScript = await fs.readFile(filtersScriptPath, 'utf8');
   } catch (err) {
     console.warn(
       'Warning: utils/table-filters.js not found. Interactive features will be disabled.'
@@ -202,6 +203,9 @@ async function writeHtmlFiles(groupedContributions) {
   const quarterlyFileLinks = [];
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
+  // Pre-calculate the styles string to be included in the <style> tag.
+  const dynamicCss = getReportStyleCss();
+
   // Iterate over each quarterly report to generate its dedicated HTML file.
   for (let index = 0; index < allReports.length; index++) {
     const report = allReports[index];
@@ -327,45 +331,7 @@ async function writeHtmlFiles(groupedContributions) {
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-    html, body { margin: 0; padding: 0; height: 100%; }
-    body { font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
-    summary { cursor: pointer; outline: none; margin: 0.5em 0; padding: 0.5em 0; color: #1f2937; }
-    summary:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .report-table th, .report-table td { padding: 10px 12px; border-bottom: 1px solid #e5e7eb; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .details-section { background-color: ${COLORS.primary[5]}; }
-    .details-section details:open summary { color: ${COLORS.primary.rgb}; }
-    .report-table tbody tr:last-child td { border-bottom: none; }
-    .nav-report-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
-    .nav-report-button:hover { border-color: ${COLORS.primary.rgb} !important; }
-    .nav-report-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .nav-contribution-button { border: 1px solid ${COLORS.border.light} !important; transition: border-color 0.15s ease-in-out !important; }
-    .nav-contribution-button:hover { border-color: ${COLORS.primary.rgb} !important; }
-    .nav-contribution-button:focus-visible { border-color: ${COLORS.primary.rgb}; outline: 2px solid ${COLORS.primary.rgb}; outline-offset: 2px; }
-    .table-row-hover { background-color: inherit; }
-    .table-row-hover:hover, .table-row-hover:focus-visible { background-color: ${COLORS.primary[10]} !important; }
-    .table-row-hover:focus-visible { outline: 2px solid ${COLORS.primary.rgb}; outline-offset: -2px; }
-    /* Sorting Icons */
-    th .sort-icon { margin-left: 5px; font-size: 0.8em; opacity: 0.5; }
-    th.sort-asc .sort-icon, th.sort-desc .sort-icon { opacity: 1; font-weight: bold; }
-
-    /* --- Icon Input Styles for Search Bar --- */
-    /* Container holds the input and positions the icon */
-    .icon-input-container {
-      position: relative;
-    }
-    /* Style the input to push text away from the icon */
-    .icon-input-container input {
-      padding-left: 36px !important; /* Make room for the 20px icon + padding */
-    }
-    /* Position the icon absolutely inside the container */
-    .input-icon {
-      position: absolute;
-      left: 8px; /* Offset from the left edge */
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none; /* Allows clicks to pass through to the input */
-    }
+    ${dynamicCss}
   </style>
 </head>
 <body>
@@ -624,7 +590,7 @@ ${navHtmlForReports}
       </div>
     </main>
     <script>
-      ${tableInteractionsScript}
+      ${tableFiltersScript}
       
       // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
