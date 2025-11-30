@@ -58,90 +58,6 @@ function getCommonBaseCss() {
 // --- 2. FUNCTIONS FOR EACH HTML GENERATOR ---
 
 /**
- * Generates the CSS block for the <style> tag in the Quarterly Report HTML head.
- * @returns {string} The CSS string.
- */
-function getReportStyleCss() {
-  return dedent`
-    ${getCommonBaseCss()}
-    summary {
-      cursor: pointer;
-      outline: none;
-      margin: 0.5em 0;
-      padding: 0.5em 0;
-      color: #1f2937;
-    }
-    /* summary:focus-visible uses the primary color for outline */
-    summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: 2px;
-    }
-    .report-table th,
-    .report-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #e5e7eb;
-      text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    /* .details-section and details:open summary use primary colors */
-    .details-section {
-      background-color: ${COLORS.primary[5]};
-    }
-    .details-section details:open summary {
-      color: ${COLORS.primary.rgb};
-    }
-    .report-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-        
-    /* Table Row Hover/Focus */
-    .table-row-hover {
-      background-color: inherit;
-    }
-    .table-row-hover:hover,
-    .table-row-hover:focus-visible {
-      background-color: ${COLORS.primary[10]} !important;
-    }
-    .table-row-hover:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: -2px;
-    }
-        
-    /* Sorting Icons */
-    th .sort-icon {
-      margin-left: 5px;
-      font-size: 0.8em;
-      opacity: 0.5;
-    }
-    th.sort-asc .sort-icon,
-    th.sort-desc .sort-icon {
-      opacity: 1;
-      font-weight: bold;
-    }
-
-    /* --- Icon Input Styles for Search Bar --- */
-    /* Container holds the input and positions the icon */
-    .icon-input-container {
-      position: relative;
-    }
-    /* Style the input to push text away from the icon */
-    .icon-input-container input {
-      padding-left: 36px !important;
-    }
-    /* Position the icon absolutely inside the container */
-    .input-icon {
-      position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-    }
-  `;
-}
-
-/**
  * Generates the CSS block for the <style> tag in the All-Time/Index Report HTML head.
  * @returns {string} The CSS string.
  */
@@ -241,6 +157,90 @@ function getReportsListStyleCss() {
       border-color: ${COLORS.primary.rgb};
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
+    }
+  `;
+}
+
+/**
+ * Generates the CSS block for the <style> tag in the Quarterly Report HTML head.
+ * @returns {string} The CSS string.
+ */
+function getReportStyleCss() {
+  return dedent`
+    ${getCommonBaseCss()}
+    summary {
+      cursor: pointer;
+      outline: none;
+      margin: 0.5em 0;
+      padding: 0.5em 0;
+      color: #1f2937;
+    }
+    /* summary:focus-visible uses the primary color for outline */
+    summary:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
+    }
+    .report-table th,
+    .report-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    /* .details-section and details:open summary use primary colors */
+    .details-section {
+      background-color: ${COLORS.primary[5]};
+    }
+    .details-section details:open summary {
+      color: ${COLORS.primary.rgb};
+    }
+    .report-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+        
+    /* Table Row Hover/Focus */
+    .table-row-hover {
+      background-color: inherit;
+    }
+    .table-row-hover:hover,
+    .table-row-hover:focus-visible {
+      background-color: ${COLORS.primary[10]} !important;
+    }
+    .table-row-hover:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: -2px;
+    }
+        
+    /* Sorting Icons */
+    th .sort-icon {
+      margin-left: 5px;
+      font-size: 0.8em;
+      opacity: 0.5;
+    }
+    th.sort-asc .sort-icon,
+    th.sort-desc .sort-icon {
+      opacity: 1;
+      font-weight: bold;
+    }
+
+    /* --- Icon Input Styles for Search Bar --- */
+    /* Container holds the input and positions the icon */
+    .icon-input-container {
+      position: relative;
+    }
+    /* Style the input to push text away from the icon */
+    .icon-input-container input {
+      padding-left: 36px !important;
+    }
+    /* Position the icon absolutely inside the container */
+    .input-icon {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
     }
   `;
 }
