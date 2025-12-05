@@ -486,7 +486,7 @@ ${navHtmlForReports}
           const safeTitle = sanitizeAttribute(item.title);
 
           // Row with data-href to enable click navigation.
-          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out; cursor: pointer;" data-href="${item.url}">\n`;
+          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out;">\n`;
 
           // No. column (not sortable).
           tableContent += `    <td>${counter++}.</td>\n`;
@@ -614,29 +614,6 @@ ${navHtmlForReports}
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
-
-      // Add click and keyboard listeners to table rows to navigate to the item's URL.
-      document.addEventListener('DOMContentLoaded', () => {
-        const tableRows = document.querySelectorAll('.table-row-hover');
-        tableRows.forEach(row => {
-          const href = row.getAttribute('data-href');
-          if (href) {
-            row.tabIndex = 0;
-            row.setAttribute('role', 'button');
-            row.addEventListener('click', (e) => {
-              // Prevent navigation if text is selected
-              if(window.getSelection().toString().length > 0) return;
-              window.location.href = href;
-            });
-            row.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = href;
-              }
-            });
-          }
-        });
-      });
     </script>
 ${footerHtml}
     </body>
