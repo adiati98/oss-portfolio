@@ -555,8 +555,7 @@
                   <tbody class="divide-y divide-gray-100">
                     <tr
                       class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out; cursor: pointer"
-                      data-href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/267"
+                      style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
@@ -1039,29 +1038,6 @@
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
-
-      // Add click and keyboard listeners to table rows to navigate to the item's URL.
-      document.addEventListener('DOMContentLoaded', () => {
-        const tableRows = document.querySelectorAll('.table-row-hover');
-        tableRows.forEach((row) => {
-          const href = row.getAttribute('data-href');
-          if (href) {
-            row.tabIndex = 0;
-            row.setAttribute('role', 'button');
-            row.addEventListener('click', (e) => {
-              // Prevent navigation if text is selected
-              if (window.getSelection().toString().length > 0) return;
-              window.location.href = href;
-            });
-            row.addEventListener('keydown', (e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                window.location.href = href;
-              }
-            });
-          }
-        });
-      });
     </script>
     <footer
       style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
