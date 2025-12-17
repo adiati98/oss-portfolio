@@ -103,9 +103,9 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
   async function getPrMyFirstReviewDate(owner, repo, prNumber, username) {
     try {
       const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
-      // Filter for reviews by the specified user and sort chronologically.
+      // Filter for reviews by the specified user, sort chronologically, and handle "Ghost" users (null user object)
       const myReviews = response.data
-        .filter((review) => review.user.login === username)
+        .filter((review) => review.user?.login === username)
         .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
       // The first review in the sorted list is the user's first review.
       if (myReviews.length > 0) {
@@ -131,7 +131,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       let page = 1;
       while (true) {
         const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
-        const myFirstComment = response.data.find((comment) => comment.user.login === username);
+        const myFirstComment = response.data.find((comment) => comment.user?.login === username);
         if (myFirstComment) {
           return myFirstComment.created_at;
         }
@@ -216,7 +216,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       function isCommitByUser(c) {
         try {
           // 1. Check for explicit GitHub login match (most reliable).
-          if (c.author && c.author.login === username) return true;
+          if (c.author?.login === username) return true;
 
           // Safely extract and normalize the commit author's email.
           const authorEmail = c.commit?.author?.email?.toLowerCase();
@@ -686,7 +686,6 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           updatedAt: item.updated_at,
         });
       }
-
       seenUrls.collaborations.add(item.html_url);
     }
   }
