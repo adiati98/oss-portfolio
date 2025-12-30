@@ -2,26 +2,40 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
+// Import the dedent utility
 const { dedent } = require('../../utils/dedent');
+
+// Import configuration (SINCE_YEAR is needed for reporting)
 const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
+
+// Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
+
+// Import favicon svg and constants
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
   COLORS,
   PULL_REQUEST_LARGE_SVG,
 } = require('../../config/constants');
+
+// Import the style generator function
 const { getIndexStyleCss } = require('../css/style-generator');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'all-contributions.html';
 const rightArrowSvg = RIGHT_ARROW_SVG;
 
+/**
+ * Calculates aggregate totals from all contribution data and writes the
+ * all-time contributions HTML report file.
+ */
 async function createAllTimeContributions(finalContributions = []) {
   const htmlBaseDir = path.join(BASE_DIR, HTML_OUTPUT_DIR_NAME);
   const HTML_OUTPUT_PATH = path.join(htmlBaseDir, HTML_README_FILENAME);
 
+  // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
   const prCount = finalContributions.pullRequests.length;
@@ -63,7 +77,8 @@ async function createAllTimeContributions(finalContributions = []) {
   const indexCss = getIndexStyleCss();
   const navHtml = createNavHtml('./');
 
-  const htmlContent = `
+  // Build HTML Content
+  const htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,13 +123,21 @@ ${navHtml}
 
               <div class="relative z-10 grid grid-cols-2 gap-4">
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <p class="text-2xl font-bold">${totalUniqueRepos}</p>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80">Repos</p>
+                  <div class="h-8 flex items-end">
+                    <p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p>
+                  </div>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repos</p>
                 </div>
+                
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <p class="text-2xl font-bold">${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}</p>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 text-nowrap">Yearly Average</p>
+                  <div class="h-8 flex items-end">
+                    <p class="text-2xl sm:text-3xl font-bold leading-none">
+                      ${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}
+                    </p>
+                  </div>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Yearly Average</p>
                 </div>
+
                 <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                   <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
                   <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>
@@ -123,7 +146,6 @@ ${navHtml}
             </div>
 
             <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
-              
               <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
                 <div class="flex justify-between items-end mb-2">
                   <span class="text-lg font-bold text-slate-700">Merged PRs</span>
@@ -215,10 +237,12 @@ ${navHtml}
 </html>
 `;
 
+  // Format the content
   const formattedContent = await prettier.format(htmlContent, {
     parser: 'html',
   });
 
+  // Write the formatted file
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
   console.log(`Written aggregate HTML report: ${HTML_OUTPUT_PATH}`);
 }
