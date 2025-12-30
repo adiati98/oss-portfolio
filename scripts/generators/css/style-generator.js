@@ -58,52 +58,34 @@ function getCommonBaseCss() {
 // --- 2. FUNCTIONS FOR EACH HTML GENERATOR ---
 
 /**
- * Generates the CSS block for the <style> tag in the All-Time Contributions and Landing Page head.
+ * Generates the CSS block for the <style> tag in the All-Time/Index Report HTML head.
  * @returns {string} The CSS string.
  */
 function getIndexStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
-    /* Feature card specific overrides at landing page*/
-    .feature-card:hover { 
-      border-color: ${COLORS.primary.rgb} !important; 
-      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); 
+    .report-list {
+      list-style: none;
+      padding: 0;
     }
-    .feature-card svg { 
-      width: 1.75rem; 
-      height: 1.75rem; 
-      display: block; 
-    }
-
-    /* Base styles for the link */
-    a.browse-reports {
-      color: ${COLORS.text.secondary};
+    .report-list a {
       text-decoration: none;
     }
-
-    /* Hover state */
-    a.browse-reports:hover {
-      color: ${COLORS.text.primary};
-      text-decoration: underline;
-      text-decoration-color: ${COLORS.primary.rgb};
-      transition: color 0.2s ease-in-out, text-decoration-color 0.2s ease-in-out;
-    }
-
+        
     .index-report-link {
       border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out, box-shadow 0.2s;
+      transition: border-color 0.15s ease-in-out !important;
     }
     .index-report-link:hover {
       border-color: ${COLORS.primary.rgb} !important;
     }
-
-    .index-report-link svg { 
-      transition: transform 0.2s; 
+    .index-report-link:focus-visible {
+      border-color: ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: 2px;
     }
-    .index-report-link:hover svg { 
-      transform: translateX(4px); 
-    }
-
+        
+    /* Animation for the progress bars */
     @keyframes loadBar {
       from { width: 0; }
     }
@@ -127,6 +109,7 @@ function getReportsListStyleCss() {
       text-decoration: none;
     }
         
+    /* --- Dynamic Styling for Collapsible Year (is-open) --- */
     details summary {
       cursor: pointer;
       outline: none;
@@ -138,6 +121,7 @@ function getReportsListStyleCss() {
       outline-offset: 2px;
     }
 
+    /* Apply primary background to the entire details element when open */
     details[open] {
       background-color: ${COLORS.primary[5]};
     }
@@ -161,7 +145,7 @@ function getReportsListStyleCss() {
     details:not([open]) summary:focus-visible {
       background-color: ${COLORS.primary[5]};
     }
-
+    /* Accessible styles for report card links */
     .report-card-link {
       border: 1px solid ${COLORS.border.light} !important;
       transition: border-color 0.15s ease-in-out !important;
@@ -191,6 +175,7 @@ function getReportStyleCss() {
       padding: 0.5em 0;
       color: #1f2937;
     }
+    /* summary:focus-visible uses the primary color for outline */
     summary:focus-visible {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
@@ -204,6 +189,7 @@ function getReportStyleCss() {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    /* .details-section and details:open summary use primary colors */
     .details-section {
       background-color: ${COLORS.primary[5]};
     }
@@ -214,6 +200,7 @@ function getReportStyleCss() {
       border-bottom: none;
     }
         
+    /* Table Row Hover/Focus */
     .table-row-hover {
       background-color: inherit;
     }
@@ -226,6 +213,7 @@ function getReportStyleCss() {
       outline-offset: -2px;
     }
         
+    /* Sorting Icons */
     th .sort-icon {
       margin-left: 5px;
       font-size: 0.8em;
@@ -237,12 +225,16 @@ function getReportStyleCss() {
       font-weight: bold;
     }
 
+    /* --- Icon Input Styles for Search Bar --- */
+    /* Container holds the input and positions the icon */
     .icon-input-container {
       position: relative;
     }
+    /* Style the input to push text away from the icon */
     .icon-input-container input {
       padding-left: 36px !important;
     }
+    /* Position the icon absolutely inside the container */
     .input-icon {
       position: absolute;
       left: 8px;

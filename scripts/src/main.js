@@ -17,10 +17,9 @@ const { createStatsReadme } = require('../generators/markdown/contributions-read
 // Import html generation logic
 const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
 const {
-  createAllTimeContributions,
-} = require('../generators/html/all-contributions-html-generator');
+  createStatsHtmlReadme,
+} = require('../generators/html/contributions-index-html-generator');
 const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
-const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
 
 async function main() {
   // Define the data directory path.
@@ -279,13 +278,10 @@ async function main() {
     // 4. Generate aggregate README (Markdown)
     await createStatsReadme(finalContributions);
 
-    // 5. Generate landing page (index.html)
-    await createIndexHtml();
+    // 5. Generate aggregate README (index.html)
+    await createStatsHtmlReadme(finalContributions);
 
-    // 6. Generate the Dashboard (All-Time Stats HTML)
-    await createAllTimeContributions(finalContributions);
-
-    // 7. Generate reports page (HTML)
+    // 6. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
 
     // Save the updated PR cache to a file for future runs.

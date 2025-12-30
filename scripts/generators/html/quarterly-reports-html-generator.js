@@ -9,11 +9,8 @@ const {
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
-
-// Import navbar and footer
-const { createNavHtml } = require('../../components/navbar');
+const { navHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-
 const { getReportStyleCss } = require('../css/style-generator');
 const {
   LEFT_ARROW_SVG,
@@ -22,6 +19,10 @@ const {
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
+
+// Adjust relative paths in the base navigation HTML for use in report subdirectories (e.g., from './' to '../').
+let navHtmlForReports = navHtml.replace(/href="\.\/"/g, 'href="../index.html"');
+navHtmlForReports = navHtmlForReports.replace(/href="reports\.html"/g, 'href="../reports.html"');
 
 /**
  * Sanitizes a string for safe use in HTML attributes (e.g., prevents double quotes from breaking HTML).
@@ -210,10 +211,6 @@ async function writeHtmlFiles(groupedContributions) {
     const report = allReports[index];
     const { key, year, quarterPrefix: quarter, data, totalContributions } = report;
     const footerHtml = createFooterHtml().trim();
-
-    // Generate the navbar with path relative to the sub-folder (../../..)
-    const navHtmlForReports = createNavHtml('../../../');
-
     const yearDir = path.join(htmlBaseDir, year);
     await fs.mkdir(yearDir, { recursive: true });
 
