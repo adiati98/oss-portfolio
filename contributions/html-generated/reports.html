@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quarterly Reports | Open Source Portfolio</title>
+    <title>Quarterly Reports</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -58,6 +58,7 @@
         text-decoration: none;
       }
 
+      /* --- Dynamic Styling for Collapsible Year (is-open) --- */
       details summary {
         cursor: pointer;
         outline: none;
@@ -69,6 +70,7 @@
         outline-offset: 2px;
       }
 
+      /* Apply primary background to the entire details element when open */
       details[open] {
         background-color: rgba(67, 56, 202, 0.05);
       }
@@ -92,7 +94,7 @@
       details:not([open]) summary:focus-visible {
         background-color: rgba(67, 56, 202, 0.05);
       }
-
+      /* Accessible styles for report card links */
       .report-card-link {
         border: 1px solid rgba(107, 114, 128, 0.1) !important;
         transition: border-color 0.15s ease-in-out !important;
@@ -107,7 +109,7 @@
       }
     </style>
   </head>
-  <body class="bg-white antialiased">
+  <body>
     <nav
       style="background-color: rgb(67, 56, 202)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
@@ -115,7 +117,7 @@
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
-            href="../../contributions/index.html"
+            href="./"
             class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1"
           >
             <span class="sm:hidden">OSS Portfolio</span>
@@ -124,17 +126,10 @@
         </div>
 
         <div class="flex items-center">
-          <div class="hidden sm:flex items-center space-x-3">
+          <div class="hidden sm:flex items-center space-x-4">
             <a
-              href="../../contributions/html-generated/all-contributions.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >All-Time Stats
-            </a>
-
-            <a
-              href="../../contributions/html-generated/reports.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              href="reports.html"
+              style="background-color: rgba(67, 56, 202, 0.05); color: white; cursor: pointer"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Quarterly Reports
             </a>
@@ -143,7 +138,7 @@
               href="https://github.com/adiati98/oss-portfolio"
               target="_blank"
               rel="noopener noreferrer"
-              class="nav-link nav-desktop-link nav-github-link flex items-center"
+              class="nav-link nav-desktop-link nav-github-link flex align-items"
               title="View Repository"
             >
               <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -195,16 +190,13 @@
         style="background-color: rgb(49, 46, 129)"
         class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
       >
-        <div class="flex flex-col space-y-2">
+        <div class="mb-4">
           <a
-            href="../../contributions/html-generated/all-contributions.html"
+            href="reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            >All-Time Stats</a
-          >
-
-          <a
-            href="../../contributions/html-generated/reports.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'){this.click();}"
             >Quarterly Reports</a
           >
         </div>
@@ -215,6 +207,9 @@
             target="_blank"
             rel="noopener noreferrer"
             class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            tabindex="0"
+            role="button"
+            onkeydown="if(event.key==='Enter'){this.click();}"
             title="View Repository"
           >
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -236,8 +231,14 @@
           if (button && menu) {
             button.addEventListener('click', () => {
               const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+              // Toggle ARIA attributes
               button.setAttribute('aria-expanded', String(!isExpanded));
+
+              // Toggle visibility of the menu (Tailwind's 'hidden' class)
               menu.classList.toggle('hidden');
+
+              // Toggle icons (Hamburger <-> X)
               openIcon.classList.toggle('hidden');
               closeIcon.classList.toggle('hidden');
             });
@@ -246,33 +247,58 @@
       </script>
     </nav>
     <style>
+      /* Base styles for all links to inherit (optional, but good practice) */
       .nav-link {
-        transition: all 0.15s ease-in-out;
-        border: 2px solid transparent;
-        border-radius: 0.375rem;
-        display: inline-flex;
-        align-items: center;
+          transition: all 0.15s ease-in-out;
+          border: 2px solid transparent; /* default border width for padding/focus outline */
+          border-radius: 0.375rem;
+          display: inline-flex; /* Use flex for alignment in GitHub icon case */
+          align-items: center;
       }
 
+      /* --- Global Hover/Focus Effects (Matching Quarterly Reports Desktop) --- */
+      /* Applied to home, desktop quarterly, desktop github, mobile quarterly, and mobile github */
       .nav-link:hover {
-        border-color: white !important;
-        background-color: rgba(67, 56, 202, 0.25) !important;
+          border-color: white !important; /* Use !important to override inline styles on reports link */
+          background-color: rgba(67, 56, 202, 0.1) !important;
+      }
+      .nav-link:focus-visible {
+          border-color: white !important;
+          outline: 2px solid white !important;
+          outline-offset: 2px;
       }
 
+      /* --- Specific Link Adjustments (Using the common .nav-link styles above) --- */
+
+      /* Home/Title Link */
       .nav-home-link {
-        padding: 0.5rem;
+           padding: 0.5rem;
       }
+
+      /* Desktop Quarterly Reports Link (Ensure background color style is preserved by Tailwind/inline style) */
       .nav-desktop-link {
-        border-width: 1px;
-        padding: 0.5rem;
+          border-width: 1px; /* Tighter border for the main button */
+          padding: 0.5rem;
+          display: inline-block;
       }
+
+      /* Desktop GitHub Link */
       .nav-github-link {
-        padding: 0.5rem;
+          padding: 0.5rem;
       }
+
+      /* Mobile Quarterly Reports Link */
       .nav-mobile-link {
-        padding: 0.5rem 0.75rem;
-        background-color: rgb(49, 46, 129);
-        width: 100%;
+          padding: 0.5rem 0.75rem; /* Adjusted padding to match block-style link */
+          border-width: 1px; /* Optional: Make it look more like a button */
+          background-color: rgb(49, 46, 129)
+          display: inline-flex;
+      }
+
+      /* Mobile GitHub Icon Link */
+      .nav-mobile-github-link {
+          padding: 0.5rem;
+          /* Keep original hover text color, or rely on .nav-link hover background */
       }
     </style>
     <main class="grow w-full">
@@ -280,59 +306,310 @@
         <div class="max-w-[120ch] mx-auto">
           <header
             style="border-bottom-color: rgba(67, 56, 202, 0.15)"
-            class="text-center mt-16 mb-16 pb-12 border-b-2"
+            class="text-center mt-16 mb-12 pb-4 border-b-2"
           >
-            <h1 style="color: rgb(67, 56, 202)" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+            <h1
+              style="color: rgb(67, 56, 202)"
+              class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
+            >
               Quarterly Reports
             </h1>
-            <p style="color: rgb(55, 65, 81)" class="text-xl max-w-3xl mx-auto leading-relaxed">
-              Organized by calendar quarter, these reports track external open source involvement,
-              aggregating key community activities across all tracked repositories.
+            <p style="color: rgb(55, 65, 81)" class="text-lg max-w-3xl mx-auto mt-10 mb-6">
+              Organized by calendar quarter, these reports track
+              <a
+                href="https://github.com/adiati98"
+                style="color: rgb(67, 56, 202)"
+                class="text-xl font-extrabold hover:opacity-80 transition duration-150"
+              >
+                adiati98 </a
+              >'s external open source involvement, aggregating key community activities across
+              <strong
+                >Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general
+                Collaborations</strong
+              >.
             </p>
           </header>
 
-          <section class="mt-4">
-            <div class="flex flex-col">
+          <section class="mb-14">
+            <h2 style="color: rgb(31, 41, 55)" class="text-3xl font-bold pb-3 mb-1">
+              Report Structure Breakdown
+            </h2>
+            <p style="color: rgb(55, 65, 81)" class="text-lg mb-12">
+              Each quarterly report provides a detailed log and summary for that period.
+            </p>
+
+            <div
+              style="border-color: rgba(107, 114, 128, 0.1)"
+              class="overflow-x-auto rounded-xl shadow-lg border"
+            >
+              <table
+                class="min-w-full"
+                style="border-collapse: separate; border-color: rgba(107, 114, 128, 0.1)"
+              >
+                <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <tr>
+                    <th
+                      scope="col"
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4"
+                    >
+                      Section
+                    </th>
+                    <th
+                      scope="col"
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/2"
+                    >
+                      Content Description
+                    </th>
+                    <th
+                      scope="col"
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4"
+                    >
+                      Key Metric / Insight
+                    </th>
+                  </tr>
+                </thead>
+                <tbody style="border-color: rgba(107, 114, 128, 0.1)">
+                  <tr
+                    style="background-color: rgb(255, 255, 255)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Quarterly Statistics
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      A high-level summary showing the total contributions and repositories involved
+                      in during the quarter.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>Total Count, Unique Repositories</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Aggregated totals for the 90-day period
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgba(107, 114, 128, 0.05)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Contribution Breakdown
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      A table listing the count of contributions for each of the five core
+                      categories within that quarter.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>Category Counts</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Snapshot of all contribution types
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgb(255, 255, 255)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Top 3 Repositories
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      The top three projects where contributions were made in that quarter, ranked
+                      by total count.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>Contribution Frequency</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Count per repository, ranked highest first
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgba(107, 114, 128, 0.05)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Merged PRs
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      Detailed list of Pull Requests authored by user and merged into external
+                      repositories.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>Review Period</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Time from creation to merge
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgb(255, 255, 255)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Issues
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      Detailed list of Issues authored by user on external repositories.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>Closing Period</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Time from creation to close
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgba(107, 114, 128, 0.05)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Reviewed PRs
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      Detailed list of Pull Requests reviewed or merged by user on external
+                      repositories.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>User's First Review Period</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Time from PR creation to user's first review
+                      </span>
+                    </td>
+                  </tr>
+                  <tr
+                    style="background-color: rgb(255, 255, 255)"
+                    style="border-bottom: 1px solid rgba(107, 114, 128, 0.1)"
+                  >
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Co-Authored PRs
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      Pull Requests where user contributed commits (including co-authored commits)
+                      to other contributor's PRs.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>User's First Commit Period</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        Time from PR creation to user's first commit
+                      </span>
+                    </td>
+                  </tr>
+                  <tr style="background-color: rgba(107, 114, 128, 0.05)">
+                    <td
+                      style="color: rgb(67, 56, 202)"
+                      class="px-6 py-4 whitespace-nowrap text-sm font-medium"
+                    >
+                      Collaborations
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      Detailed list of open Issues or PRs where user has commented to participate in
+                      discussion.
+                    </td>
+                    <td style="color: rgb(55, 65, 81)" class="px-6 py-4 text-sm">
+                      <span>User's First Comment</span>
+                      <span class="block text-xs italic" style="color: rgb(107, 114, 128)">
+                        The date of user's initial comment
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="mt-14 pt-8">
+            <h2 style="color: rgb(31, 41, 55)" class="text-3xl font-bold pb-3 mb-1">
+              Quarterly Reports (Detail Pages)
+            </h2>
+            <p style="color: rgb(55, 65, 81)" class="text-lg mb-12">
+              Expand the yearly sections below and click on any quarter to view the detailed tables
+              and statistics for that period.
+            </p>
+            <div class="grid grid-cols-1 report-list">
               <details
                 open
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2025 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2025/Q4-2025.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">209</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2025/Q3-2025.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">304</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2025/Q2-2025.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">127</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2025/Q1-2025.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 1</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">106</p>
@@ -341,44 +618,64 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2024 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2024/Q4-2024.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">167</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2024/Q3-2024.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">130</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2024/Q2-2024.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">279</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2024/Q1-2024.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 1</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">203</p>
@@ -387,44 +684,64 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2023 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2023/Q4-2023.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">224</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2023/Q3-2023.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">76</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2023/Q2-2023.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">18</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2023/Q1-2023.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 1</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">20</p>
@@ -433,44 +750,64 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2022 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2022/Q4-2022.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">28</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2022/Q3-2022.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">38</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2022/Q2-2022.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">17</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2022/Q1-2022.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 1</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">11</p>
@@ -479,36 +816,51 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2021 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2021/Q4-2021.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">50</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2021/Q3-2021.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">14</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2021/Q2-2021.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 2</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">1</p>
@@ -517,20 +869,25 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2020 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2020/Q4-2020.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">7</p>
@@ -539,28 +896,38 @@
                 </div>
               </details>
               <details
-                class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300"
+                class="col-span-full mb-8 border rounded-xl transition duration-300"
                 style="border-color: rgba(107, 114, 128, 0.1)"
               >
                 <summary
                   style="color: rgb(31, 41, 55)"
-                  class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50"
+                  class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center"
                 >
                   <span class="mr-3">📅</span> 2019 Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
                   <a
                     href="./2019/Q4-2019.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 4</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">1</p>
                     <p style="color: rgb(107, 114, 128)" class="text-xs">Total Contributions</p> </a
                   ><a
                     href="./2019/Q3-2019.html"
-                    style="border-color: rgba(107, 114, 128, 0.1)"
-                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
+                    style="
+                      cursor: pointer;
+                      background-color: white;
+                      text-decoration: none;
+                      display: block;
+                    "
+                    class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4"
                   >
                     <p style="color: rgb(67, 56, 202)" class="text-sm font-semibold">Quarter 3</p>
                     <p style="color: rgb(31, 41, 55)" class="text-3xl font-extrabold mt-1">1</p>
