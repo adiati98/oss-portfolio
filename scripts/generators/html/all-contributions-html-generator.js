@@ -2,7 +2,6 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
-const { dedent } = require('../../utils/dedent');
 const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
@@ -108,13 +107,21 @@ ${navHtml}
 
               <div class="relative z-10 grid grid-cols-2 gap-4">
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <p class="text-2xl font-bold">${totalUniqueRepos}</p>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80">Repos</p>
+                  <div class="h-8 flex items-end">
+                    <p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p>
+                  </div>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repos</p>
                 </div>
+                
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <p class="text-2xl font-bold">${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}</p>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 text-nowrap">Yearly Average</p>
+                  <div class="h-8 flex items-end">
+                    <p class="text-2xl sm:text-3xl font-bold leading-none">
+                      ${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}
+                    </p>
+                  </div>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Yearly Average</p>
                 </div>
+
                 <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                   <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
                   <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>

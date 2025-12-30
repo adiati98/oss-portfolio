@@ -127,16 +127,16 @@ async function createIndexHtml() {
         ${cardsHtml}
       </div>
 
-      <div class="mt-20 flex flex-col items-center justify-center gap-8">
+      <div class="mt-20 flex flex-col items-center justify-center gap-8 text-center">
         <a href="all-contributions.html" 
           style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" 
-          class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
-          <span class="pr-2 text-lg">Explore All-Time Contributions</span>
-          ${rightArrowSvg}
+          class="index-report-link inline-flex items-center justify-center px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg w-full sm:w-auto">
+          <span class="text-lg">Explore All-Time Contributions</span>
+          <span class="ml-2">${rightArrowSvg}</span>
         </a>
-        
+  
         <a href="reports.html" 
-          class="browse-reports text-sm font-semibold transition-all">
+          class="browse-reports text-sm font-semibold transition-all hover:opacity-70">
           Or browse specific quarterly reports
         </a>
       </div>
