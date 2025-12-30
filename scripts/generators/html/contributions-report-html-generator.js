@@ -40,7 +40,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   const reportsListCss = getReportsListStyleCss();
 
   // Generate the navbar with the correct relative path to root
-  const navHtml = createNavHtml('../../');
+  const navHtml = createNavHtml('./');
 
   // Generate Quarterly Links HTML
   const sortedLinks = quarterlyFileLinks

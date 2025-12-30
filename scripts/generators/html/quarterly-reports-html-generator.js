@@ -212,7 +212,7 @@ async function writeHtmlFiles(groupedContributions) {
     const footerHtml = createFooterHtml().trim();
 
     // Generate the navbar with path relative to the sub-folder (../../..)
-    const navHtmlForReports = createNavHtml('../../../');
+    const navHtmlForReports = createNavHtml('../../');
 
     const yearDir = path.join(htmlBaseDir, year);
     await fs.mkdir(yearDir, { recursive: true });

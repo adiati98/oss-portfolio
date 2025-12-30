@@ -22,7 +22,7 @@ function createNavHtml(relativePath = './') {
     <nav style="background-color: ${COLORS.nav.bg};" class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg">
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
-          <a href="${base}contributions/index.html" 
+          <a href="${base}index.html" 
             class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1">
             <span class="sm:hidden">OSS Portfolio</span>
             <span class="hidden sm:inline">Open Source Portfolio</span>
@@ -31,11 +31,11 @@ function createNavHtml(relativePath = './') {
         
         <div class="flex items-center">
           <div class="hidden sm:flex items-center space-x-3">
-            <a href="${base}contributions/html-generated/all-contributions.html" style="background-color: ${COLORS.primary[10]};" 
+            <a href="${base}all-contributions.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">All-Time Stats
             </a>
 
-            <a href="${base}contributions/html-generated/reports.html" style="background-color: ${COLORS.primary[10]};" 
+            <a href="${base}reports.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Quarterly Reports
             </a>
 
@@ -59,10 +59,10 @@ function createNavHtml(relativePath = './') {
       
       <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
         <div class="flex flex-col space-y-2">          
-          <a href="${base}contributions/html-generated/all-contributions.html"
+          <a href="${base}all-contributions.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">All-Time Stats</a>
           
-          <a href="${base}contributions/html-generated/reports.html"
+          <a href="${base}reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
         </div>
         

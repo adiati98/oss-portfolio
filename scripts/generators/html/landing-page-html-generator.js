@@ -64,13 +64,17 @@ const reportStructure = [
 ];
 
 async function createIndexHtml() {
-  const HTML_OUTPUT_PATH = path.join(BASE_DIR, 'index.html');
+  const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
+  const HTML_OUTPUT_PATH = path.join(htmlBaseDir, 'index.html');
+
+  // Ensure the directory exists
+  await fs.mkdir(htmlBaseDir, { recursive: true });
+
   const footerHtml = createFooterHtml();
-  const navHtml = createNavHtml('../');
+  const navHtml = createNavHtml('./');
   const indexCss = getIndexStyleCss();
   const rightArrowSvg = RIGHT_ARROW_SVG;
 
-  // Generate the HTML for cards
   const cardsHtml = reportStructure
     .map((item) => {
       const iconSvg = LANDING_PAGE_ICONS[item.iconKey] || '';
@@ -124,14 +128,14 @@ async function createIndexHtml() {
       </div>
 
       <div class="mt-20 flex flex-col items-center justify-center gap-8">
-        <a href="./html-generated/all-contributions.html" 
+        <a href="all-contributions.html" 
           style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" 
           class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
           <span class="pr-2 text-lg">Explore All-Time Contributions</span>
           ${rightArrowSvg}
         </a>
         
-        <a href="./html-generated/reports.html" 
+        <a href="reports.html" 
           class="browse-reports text-sm font-semibold transition-all">
           Or browse specific quarterly reports
         </a>
@@ -146,11 +150,10 @@ async function createIndexHtml() {
 
   const formattedContent = await prettier.format(htmlContent, {
     parser: 'html',
-    printWidth: 120,
   });
 
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
-  console.log('Generated landing page successfully.');
+  console.log('Generated landing page successfully at: ' + HTML_OUTPUT_PATH);
 }
 
 module.exports = { createIndexHtml };

@@ -61,7 +61,7 @@ async function createAllTimeContributions(finalContributions = []) {
 
   const footerHtml = createFooterHtml();
   const indexCss = getIndexStyleCss();
-  const navHtml = createNavHtml('../../');
+  const navHtml = createNavHtml('./');
 
   const htmlContent = `
 <!DOCTYPE html>
