@@ -58,7 +58,6 @@
         padding: 0.5em 0;
         color: #1f2937;
       }
-      /* summary:focus-visible uses the primary color for outline */
       summary:focus-visible {
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
@@ -72,7 +71,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
-      /* .details-section and details:open summary use primary colors */
       .details-section {
         background-color: rgba(67, 56, 202, 0.05);
       }
@@ -83,7 +81,6 @@
         border-bottom: none;
       }
 
-      /* Table Row Hover/Focus */
       .table-row-hover {
         background-color: inherit;
       }
@@ -96,7 +93,6 @@
         outline-offset: -2px;
       }
 
-      /* Sorting Icons */
       th .sort-icon {
         margin-left: 5px;
         font-size: 0.8em;
@@ -108,16 +104,12 @@
         font-weight: bold;
       }
 
-      /* --- Icon Input Styles for Search Bar --- */
-      /* Container holds the input and positions the icon */
       .icon-input-container {
         position: relative;
       }
-      /* Style the input to push text away from the icon */
       .icon-input-container input {
         padding-left: 36px !important;
       }
-      /* Position the icon absolutely inside the container */
       .input-icon {
         position: absolute;
         left: 8px;
@@ -135,7 +127,7 @@
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
-            href="../index.html"
+            href="../../../contributions/index.html"
             class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1"
           >
             <span class="sm:hidden">OSS Portfolio</span>
@@ -144,10 +136,17 @@
         </div>
 
         <div class="flex items-center">
-          <div class="hidden sm:flex items-center space-x-4">
+          <div class="hidden sm:flex items-center space-x-3">
             <a
-              href="../reports.html"
-              style="background-color: rgba(67, 56, 202, 0.05); color: white; cursor: pointer"
+              href="../../../contributions/html-generated/all-contributions.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >All-Time Stats
+            </a>
+
+            <a
+              href="../../../contributions/html-generated/reports.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Quarterly Reports
             </a>
@@ -156,7 +155,7 @@
               href="https://github.com/adiati98/oss-portfolio"
               target="_blank"
               rel="noopener noreferrer"
-              class="nav-link nav-desktop-link nav-github-link flex align-items"
+              class="nav-link nav-desktop-link nav-github-link flex items-center"
               title="View Repository"
             >
               <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -208,13 +207,16 @@
         style="background-color: rgb(49, 46, 129)"
         class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
       >
-        <div class="mb-4">
+        <div class="flex flex-col space-y-2">
           <a
-            href="../reports.html"
+            href="../../../contributions/html-generated/all-contributions.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            tabindex="0"
-            role="button"
-            onkeydown="if(event.key==='Enter'){this.click();}"
+            >All-Time Stats</a
+          >
+
+          <a
+            href="../../../contributions/html-generated/reports.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
             >Quarterly Reports</a
           >
         </div>
@@ -225,9 +227,6 @@
             target="_blank"
             rel="noopener noreferrer"
             class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3"
-            tabindex="0"
-            role="button"
-            onkeydown="if(event.key==='Enter'){this.click();}"
             title="View Repository"
           >
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
@@ -249,14 +248,8 @@
           if (button && menu) {
             button.addEventListener('click', () => {
               const isExpanded = button.getAttribute('aria-expanded') === 'true';
-
-              // Toggle ARIA attributes
               button.setAttribute('aria-expanded', String(!isExpanded));
-
-              // Toggle visibility of the menu (Tailwind's 'hidden' class)
               menu.classList.toggle('hidden');
-
-              // Toggle icons (Hamburger <-> X)
               openIcon.classList.toggle('hidden');
               closeIcon.classList.toggle('hidden');
             });
@@ -265,58 +258,33 @@
       </script>
     </nav>
     <style>
-      /* Base styles for all links to inherit (optional, but good practice) */
       .nav-link {
-          transition: all 0.15s ease-in-out;
-          border: 2px solid transparent; /* default border width for padding/focus outline */
-          border-radius: 0.375rem;
-          display: inline-flex; /* Use flex for alignment in GitHub icon case */
-          align-items: center;
+        transition: all 0.15s ease-in-out;
+        border: 2px solid transparent;
+        border-radius: 0.375rem;
+        display: inline-flex;
+        align-items: center;
       }
 
-      /* --- Global Hover/Focus Effects (Matching Quarterly Reports Desktop) --- */
-      /* Applied to home, desktop quarterly, desktop github, mobile quarterly, and mobile github */
       .nav-link:hover {
-          border-color: white !important; /* Use !important to override inline styles on reports link */
-          background-color: rgba(67, 56, 202, 0.1) !important;
-      }
-      .nav-link:focus-visible {
-          border-color: white !important;
-          outline: 2px solid white !important;
-          outline-offset: 2px;
+        border-color: white !important;
+        background-color: rgba(67, 56, 202, 0.25) !important;
       }
 
-      /* --- Specific Link Adjustments (Using the common .nav-link styles above) --- */
-
-      /* Home/Title Link */
       .nav-home-link {
-           padding: 0.5rem;
+        padding: 0.5rem;
       }
-
-      /* Desktop Quarterly Reports Link (Ensure background color style is preserved by Tailwind/inline style) */
       .nav-desktop-link {
-          border-width: 1px; /* Tighter border for the main button */
-          padding: 0.5rem;
-          display: inline-block;
+        border-width: 1px;
+        padding: 0.5rem;
       }
-
-      /* Desktop GitHub Link */
       .nav-github-link {
-          padding: 0.5rem;
+        padding: 0.5rem;
       }
-
-      /* Mobile Quarterly Reports Link */
       .nav-mobile-link {
-          padding: 0.5rem 0.75rem; /* Adjusted padding to match block-style link */
-          border-width: 1px; /* Optional: Make it look more like a button */
-          background-color: rgb(49, 46, 129)
-          display: inline-flex;
-      }
-
-      /* Mobile GitHub Icon Link */
-      .nav-mobile-github-link {
-          padding: 0.5rem;
-          /* Keep original hover text color, or rely on .nav-link hover background */
+        padding: 0.5rem 0.75rem;
+        background-color: rgb(49, 46, 129);
+        width: 100%;
       }
     </style>
     <main class="grow w-full">
@@ -347,7 +315,7 @@
                 style="background-color: rgb(67, 56, 202)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">303</p>
+                <p class="text-4xl font-extrabold">304</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -396,7 +364,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">30</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">31</span>
                 <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
               </a>
               <a
@@ -423,7 +391,7 @@
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >mautic/user-documentation</a
                   >
-                  (103 contributions)
+                  (104 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -7817,7 +7785,7 @@
 
             <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary style="color: rgb(67, 56, 202)" class="text-xl font-bold">
-                <span class="inline-block">🤝 Co-Authored PRs (30)</span>
+                <span class="inline-block">🤝 Co-Authored PRs (31)</span>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
                 <div class="icon-input-container grow">
@@ -8119,6 +8087,38 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>7.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add user documentation for Segment tracking"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/581"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add user documentation for Segment tracking</a
+                        >
+                      </td>
+                      <td data-value="2025-12-29T08:32:29Z" data-col-type="date">2025-12-29</td>
+                      <td data-value="2025-09-11T20:29:55Z" data-col-type="date">2025-09-11</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="CLOSED" data-col-type="status">
+                        2025-09-11<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          >CLOSED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>8.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -8147,10 +8147,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>8.</td>
+                      <td>9.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -8179,10 +8179,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>9.</td>
+                      <td>10.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8214,10 +8214,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>10.</td>
+                      <td>11.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -8246,10 +8246,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>11.</td>
+                      <td>12.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -8278,10 +8278,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>12.</td>
+                      <td>13.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -8313,10 +8313,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>13.</td>
+                      <td>14.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8348,10 +8348,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>14.</td>
+                      <td>15.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8383,10 +8383,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>15.</td>
+                      <td>16.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -8415,10 +8415,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>16.</td>
+                      <td>17.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -8447,10 +8447,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>17.</td>
+                      <td>18.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8482,10 +8482,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>18.</td>
+                      <td>19.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8517,10 +8517,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>19.</td>
+                      <td>20.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8552,10 +8552,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>20.</td>
+                      <td>21.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8584,10 +8584,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>21.</td>
+                      <td>22.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8616,10 +8616,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>22.</td>
+                      <td>23.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8648,10 +8648,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>23.</td>
+                      <td>24.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8680,10 +8680,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>24.</td>
+                      <td>25.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8712,10 +8712,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>25.</td>
+                      <td>26.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -8747,10 +8747,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>26.</td>
+                      <td>27.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -8782,10 +8782,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>27.</td>
+                      <td>28.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -8817,10 +8817,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>28.</td>
+                      <td>29.</td>
                       <td data-value="ddev/ddev.com" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">ddev/ddev.com</span>
                       </td>
@@ -8850,10 +8850,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>29.</td>
+                      <td>30.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -8886,10 +8886,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>30.</td>
+                      <td>31.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
