@@ -1,18 +1,23 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-const { dedent } = require('../../utils/dedent');
-const { BASE_DIR } = require('../../config/config');
-const { COLORS, FAVICON_SVG_ENCODED, LANDING_PAGE_ICONS } = require('../../config/constants');
+const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
+const {
+  COLORS,
+  FAVICON_SVG_ENCODED,
+  LANDING_PAGE_ICONS,
+  RIGHT_ARROW_SVG,
+} = require('../../config/constants');
 
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
+const { getIndexStyleCss } = require('../css/style-generator');
 
 const reportStructure = [
   {
     section: 'Quarterly Statistics',
     description:
-      'A high-level summary showing the total contributions and repositories involved in during the quarter.',
+      'A high-level summary showing the total contributions and repositories involved during the quarter.',
     iconKey: 'stats',
   },
   {
@@ -46,7 +51,8 @@ const reportStructure = [
   },
   {
     section: 'Co-Authored PRs',
-    description: "Pull Requests where user contributed commits to other contributor's Pull Requests.",
+    description:
+      "Pull Requests where user contributed commits to other contributor's Pull Requests.",
     iconKey: 'coAuthored',
   },
   {
@@ -61,11 +67,12 @@ async function createIndexHtml() {
   const HTML_OUTPUT_PATH = path.join(BASE_DIR, 'index.html');
   const footerHtml = createFooterHtml();
   const navHtml = createNavHtml('../');
+  const indexCss = getIndexStyleCss();
+  const rightArrowSvg = RIGHT_ARROW_SVG;
 
   // Generate the HTML for cards
   const cardsHtml = reportStructure
     .map((item) => {
-      // Safety check: Get icon from constants or show a placeholder if missing
       const iconSvg = LANDING_PAGE_ICONS[item.iconKey] || '';
 
       return `
@@ -92,12 +99,7 @@ async function createIndexHtml() {
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root { --brand-primary: ${COLORS.primary.rgb}; }
-    .feature-card:hover { border-color: var(--brand-primary) !important; box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); }
-    .btn-secondary:hover { background-color: ${COLORS.primary[10]}; transform: translateY(-2px); }
-    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
-    /* Ensure SVGs inside the container are visible and sized correctly */
-    .feature-card svg { width: 1.75rem; height: 1.75rem; display: block; }
+    ${indexCss}
   </style>
 </head>
 <body class="antialiased bg-white text-slate-900">
@@ -105,9 +107,12 @@ async function createIndexHtml() {
   
   <header class="pt-32 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: var(--brand-primary);">Open Source Portfolio</h1>
+      <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
+        Open Source Portfolio
+      </h1>
+      <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75]}";>@${GITHUB_USERNAME}</h2>
       <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${COLORS.text.secondary};">
-        Visualizing open source engagement through structured, data-driven quarterly reports.
+        A comprehensive visualization of open source contributions, from high-level impact to granular quarterly details.
       </p>
     </div>
   </header>
@@ -118,16 +123,17 @@ async function createIndexHtml() {
         ${cardsHtml}
       </div>
 
-      <div class="mt-20 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <div class="mt-20 flex flex-col items-center justify-center gap-8">
         <a href="./html-generated/all-contributions.html" 
-           class="btn-secondary w-full sm:w-auto text-center px-8 py-4 rounded-xl font-bold transition-all border-2" 
-           style="border-color: var(--brand-primary); color: var(--brand-primary);">
-           View All Contributions
+          style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" 
+          class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
+          <span class="pr-2 text-lg">Explore All-Time Contributions</span>
+          ${rightArrowSvg}
         </a>
+        
         <a href="./html-generated/reports.html" 
-           class="btn-primary w-full sm:w-auto text-center px-8 py-4 rounded-xl font-bold text-white transition-all border-2 border-transparent" 
-           style="background-color: var(--brand-primary);">
-           View Quarterly Reports
+          class="browse-reports text-sm font-semibold transition-all">
+          Or browse specific quarterly reports
         </a>
       </div>
     </div>

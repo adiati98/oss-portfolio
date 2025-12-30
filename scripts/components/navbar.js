@@ -58,10 +58,7 @@ function createNavHtml(relativePath = './') {
       </div>
       
       <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
-        <div class="flex flex-col space-y-2">
-          <a href="${base}contributions/index.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Home</a>
-          
+        <div class="flex flex-col space-y-2">          
           <a href="${base}contributions/html-generated/all-contributions.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">All-Time Stats</a>
           
