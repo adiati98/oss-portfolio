@@ -6,10 +6,10 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 
 // Import configuration (SINCE_YEAR is needed for reporting)
-const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('../../config/config');
+const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
 
 // Import navbar and footer
-const { navHtml } = require('../../components/navbar');
+const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 
 // Import favicon svg
@@ -39,98 +39,10 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   const footerHtml = createFooterHtml();
   const reportsListCss = getReportsListStyleCss();
 
-  // Define the report structure data
-  const reportStructure = [
-    {
-      section: 'Quarterly Statistics',
-      description:
-        'A high-level summary showing the total contributions and repositories involved in during the quarter.',
-      metricTitle: 'Total Count, Unique Repositories',
-      metricDescription: 'Aggregated totals for the 90-day period',
-    },
-    {
-      section: 'Contribution Breakdown',
-      description:
-        'A table listing the count of contributions for each of the five core categories within that quarter.',
-      metricTitle: 'Category Counts',
-      metricDescription: 'Snapshot of all contribution types',
-    },
-    {
-      section: 'Top 3 Repositories',
-      description:
-        'The top three projects where contributions were made in that quarter, ranked by total count.',
-      metricTitle: 'Contribution Frequency',
-      metricDescription: 'Count per repository, ranked highest first',
-    },
-    {
-      section: 'Merged PRs',
-      description:
-        'Detailed list of Pull Requests authored by user and merged into external repositories.',
-      metricTitle: 'Review Period',
-      metricDescription: 'Time from creation to merge',
-    },
-    {
-      section: 'Issues',
-      description: 'Detailed list of Issues authored by user on external repositories.',
-      metricTitle: 'Closing Period',
-      metricDescription: 'Time from creation to close',
-    },
-    {
-      section: 'Reviewed PRs',
-      description:
-        'Detailed list of Pull Requests reviewed or merged by user on external repositories.',
-      metricTitle: "User's First Review Period",
-      metricDescription: "Time from PR creation to user's first review",
-    },
-    {
-      section: 'Co-Authored PRs',
-      description:
-        "Pull Requests where user contributed commits (including co-authored commits) to other contributor's PRs.",
-      metricTitle: "User's First Commit Period",
-      metricDescription: "Time from PR creation to user's first commit",
-    },
-    {
-      section: 'Collaborations',
-      description:
-        'Detailed list of open Issues or PRs where user has commented to participate in discussion.',
-      metricTitle: "User's First Comment",
-      metricDescription: "The date of user's initial comment",
-    },
-  ];
+  // Generate the navbar with the correct relative path to root
+  const navHtml = createNavHtml('../../');
 
-  // Helper function to render table rows
-  const renderStructureTableRows = () => {
-    const totalRows = reportStructure.length;
-    return reportStructure
-      .map((item, index) => {
-        const safeDescription = item.description;
-        const safeMetricTitle = item.metricTitle;
-
-        const bgColor = index % 2 === 0 ? COLORS.background.white : COLORS.background.altRows;
-        const borderStyle =
-          index === totalRows - 1 ? '' : `style="border-bottom: 1px solid ${COLORS.border.light};"`; // Light gray borders
-
-        return dedent`
-            <tr style="background-color: ${bgColor};" ${borderStyle}>
-              <td style="color: ${COLORS.primary.rgb};" class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                ${item.section}
-              </td>
-              <td style="color: ${COLORS.text.secondary};" class="px-6 py-4 text-sm">
-                ${safeDescription}
-              </td>
-              <td style="color: ${COLORS.text.secondary};" class="px-6 py-4 text-sm">
-                <span>${safeMetricTitle}</span>
-                <span class="block text-xs italic" style="color: ${COLORS.text.muted};">
-                  ${item.metricDescription}
-                </span>
-              </td>
-            </tr>
-          `;
-      })
-      .join('');
-  };
-
-  // 4. Generate Quarterly Links HTML
+  // Generate Quarterly Links HTML
   const sortedLinks = quarterlyFileLinks
     // Filter out any undefined/null entries or objects missing the 'path' for safety
     .filter((link) => link && typeof link.path === 'string')
@@ -177,18 +89,19 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += dedent`
-            <details ${openAttribute} class="col-span-full mb-8 border rounded-xl transition duration-300" style="border-color: ${COLORS.border.light};">
-                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-4 sm:p-6 transition duration-150 rounded-xl flex items-center">
+            <details ${openAttribute} class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300" style="border-color: ${COLORS.border.light};">
+                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-4 gap-6 report-list p-6 pb-12">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                 `;
 
       // Add the quarterly cards for this year
       for (const link of linksByYear[year]) {
         linkHtml += dedent`
-                <a href="./${link.relativePath}" style="cursor: pointer; background-color: white; text-decoration: none; display: block;" 
-                   class="report-card-link bg-white border rounded-lg shadow-md overflow-hidden w-full hover:shadow-lg transition duration-150 p-4">
+                <a href="./${link.relativePath}" 
+                   style="border-color: ${COLORS.border.light};" 
+                   class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6">
                     <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
                     <p style="color: ${COLORS.text.primary};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
                     <p style="color: ${COLORS.text.muted};" class="text-xs">Total Contributions</p>
@@ -206,79 +119,40 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     }
   } else {
     // Fallback for no reports generated
-    linkHtml = `<p style="color: ${COLORS.text.muted};" class="p-4 italic col-span-full">No quarterly reports have been generated yet.</p>`;
+    linkHtml = `<p style="color: ${COLORS.text.secondary};" class="p-12 text-center italic border-2 border-dashed rounded-2xl">No quarterly reports have been generated yet.</p>`;
   }
 
-  // 5. Build HTML Content
+  // Build HTML Content
   const htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarterly Reports</title>
+  <title>Quarterly Reports | Open Source Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     ${reportsListCss}
   </style>
 </head>
-<body>
+<body class="bg-white antialiased">
 ${navHtml}
   <main class="grow w-full">
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-12 pb-4 border-b-2">
-          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
-              Quarterly Reports
+        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+            Quarterly Reports
           </h1>
-          <p style="color: ${COLORS.text.secondary};" class="text-lg max-w-3xl mx-auto mt-10 mb-6">
-            Organized by calendar quarter, these reports track
-            <a href="https://github.com/${GITHUB_USERNAME}" style="color: ${COLORS.primary.rgb};" class="text-xl font-extrabold hover:opacity-80 transition duration-150">
-                ${GITHUB_USERNAME}
-            </a>'s external open source involvement, aggregating key community activities across 
-            <strong>Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations</strong>.
+          <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+            Organized by calendar quarter, these reports track external open source involvement,
+            aggregating key community activities across all tracked repositories.
           </p>
         </header>
 
-        <section class="mb-14">
-          <h2 style="color: ${COLORS.text.primary};" class="text-3xl font-bold pb-3 mb-1">
-            Report Structure Breakdown
-          </h2>
-          <p style="color: ${COLORS.text.secondary};" class="text-lg mb-12">
-            Each quarterly report provides a detailed log and summary for that period.
-          </p>
-            
-          <div style="border-color: ${COLORS.border.light};" class="overflow-x-auto rounded-xl shadow-lg border">
-            <table class="min-w-full" style="border-collapse: separate; border-color: ${COLORS.border.light};">
-              <thead style="background-color: ${COLORS.primary[5]};">
-                <tr>
-                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4">
-                    Section
-                  </th>
-                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/2">
-                    Content Description
-                  </th>
-                  <th scope="col" style="color: ${COLORS.primary.rgb};" class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider w-1/4">
-                    Key Metric / Insight
-                  </th>
-                </tr>
-              </thead>
-              <tbody style="border-color: ${COLORS.border.light};">
-                  ${renderStructureTableRows()}
-              </tbody>
-              </table>
-          </div>
-        </section>
-
-        <section class="mt-14 pt-8">
-          <h2 style="color: ${COLORS.text.primary};" class="text-3xl font-bold pb-3 mb-1">
-            Quarterly Reports (Detail Pages)
-          </h2>
-          <p style="color: ${COLORS.text.secondary};" class="text-lg mb-12">
-            Expand the yearly sections below and click on any quarter to view the detailed tables and statistics for that period.
-          </p>
-          <div class="grid grid-cols-1 report-list">
+        <section class="mt-4">
+          <div class="flex flex-col">
             ${linkHtml}
           </div>
         </section>
@@ -290,12 +164,12 @@ ${navHtml}
 </html>
 `;
 
-  // 5. Format the content
+  // Format the content
   const formattedContent = await prettier.format(htmlContent, {
-    parser: 'html', // Ensure Prettier formats it as HTML
+    parser: 'html',
   });
 
-  // 6. Write the formatted file
+  // Write the formatted file
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
   console.log(`Written aggregate HTML report: ${HTML_OUTPUT_PATH}`);
 }
