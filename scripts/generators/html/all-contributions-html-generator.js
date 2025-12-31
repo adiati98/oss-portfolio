@@ -5,7 +5,7 @@ const prettier = require('prettier');
 // Import the dedent utility
 const { dedent } = require('../../utils/dedent');
 
-// Import configuration (SINCE_YEAR is needed for reporting)
+// Import configuration
 const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
 
 // Import navbar and footer
@@ -154,8 +154,8 @@ ${navHtml}
                     <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.prs.pctStr}</span>
                   </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div style="width: ${stats.prs.pct}%; background-color: ${COLORS.primary.rgb};" class="progress-bar h-3 rounded-full"></div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div style="width: ${stats.prs.pct}%; max-width: ${stats.prs.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.prs.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
                 </div>
               </div>
 
@@ -167,8 +167,8 @@ ${navHtml}
                     <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.issues.pctStr}</span>
                   </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div style="width: ${stats.issues.pct}%; background-color: ${COLORS.primary.rgb};" class="progress-bar h-3 rounded-full"></div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div style="width: ${stats.issues.pct}%; max-width: ${stats.issues.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.issues.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
                 </div>
               </div>
 
@@ -180,8 +180,8 @@ ${navHtml}
                     <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.reviews.pctStr}</span>
                   </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div style="width: ${stats.reviews.pct}%; background-color: ${COLORS.primary.rgb};" class="progress-bar h-3 rounded-full"></div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div style="width: ${stats.reviews.pct}%; max-width: ${stats.reviews.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.reviews.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
                 </div>
               </div>
 
@@ -193,8 +193,8 @@ ${navHtml}
                     <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.coauth.pctStr}</span>
                   </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div style="width: ${stats.coauth.pct}%; background-color: ${COLORS.primary.rgb};" class="progress-bar h-3 rounded-full"></div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div style="width: ${stats.coauth.pct}%; max-width: ${stats.coauth.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.coauth.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
                 </div>
               </div>
 
@@ -206,8 +206,8 @@ ${navHtml}
                     <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.collab.pctStr}</span>
                   </div>
                 </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
-                  <div style="width: ${stats.collab.pct}%; background-color: ${COLORS.primary.rgb};" class="progress-bar h-3 rounded-full"></div>
+                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div style="width: ${stats.collab.pct}%; max-width: ${stats.collab.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.collab.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
                 </div>
               </div>
             </div> 
