@@ -52,19 +52,19 @@ function determinePersona(counts) {
     },
     {
       title: 'Project Architect',
-      desc: 'Strategic problem-solver focused on technical discovery. Skilled at identifying critical system issues and defining feature specifications that shape the long-term technical roadmap.',
+      desc: 'Strategic problem-solver focused on technical discovery. Skilled at identifying critical system issues and defining feature planning that shapes the long-term technical roadmap.',
       count: issueCount,
       priority: 3,
     },
     {
       title: 'Collaborative Partner',
-      desc: 'Focused on shared project success. Co-authoring code and bridging technical gaps delivers high-impact value through collective development effort.',
+      desc: 'Focused on shared project success. Pair programming and co-authoring code delivers high-impact value through collective development effort.',
       count: coAuthoredPrCount,
       priority: 4,
     },
     {
       title: 'Ecosystem Partner',
-      desc: 'Community builder focused on cross-project growth. Facilitates collaboration between different projects to ensure the open source ecosystem remains vibrant and interconnected.',
+      desc: 'Community builder focused on technical discussion and engagement. Facilitates collaboration through project discussions to ensure the open source ecosystem remains vibrant and interconnected.',
       count: collaborationCount,
       priority: 5,
     },
