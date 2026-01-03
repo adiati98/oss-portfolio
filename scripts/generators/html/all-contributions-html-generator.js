@@ -151,20 +151,40 @@ async function createAllTimeContributions(finalContributions = []) {
       ? topThreeRepos
           .map(([repo, count], idx) => {
             const isTop = idx === 0;
-            const nameClass = isTop ? 'text-base font-bold' : 'text-sm font-medium';
-            const countClass = isTop ? 'text-sm' : 'text-xs';
 
-            return (
-              `
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-50 last:border-0 min-w-0 gap-1 sm:gap-4">
-          <span class="` +
-              nameClass +
-              ` text-slate-600 truncate min-w-0">${repo}</span>
-          <span class="` +
-              countClass +
-              ` font-bold text-slate-400 whitespace-nowrap shrink-0">${count} contributions</span>
-        </div>`
-            );
+            const nameClass = isTop ? 'text-base font-black' : 'text-sm font-bold';
+
+            const [owner, name] = repo.includes('/') ? repo.split('/') : ['', repo];
+            const repoUrl = `https://github.com/${repo}`;
+
+            return `
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-50 last:border-0 gap-3 sm:gap-4">
+          <div class="flex flex-col min-w-0">
+            ${
+              owner
+                ? `
+              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-mono leading-none mb-1">
+                ${owner}
+              </span>`
+                : ''
+            }
+            
+            <a href="${repoUrl}" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="${nameClass} break-all hover:underline underline-offset-4" 
+               style="color: ${COLORS.primary.rgb};"
+               title="View ${repo} repository">
+              ${name}
+            </a>
+          </div>
+          
+          <div class="flex items-center shrink-0 mt-1 sm:mt-0">
+            <span class="text-xs font-bold text-slate-400 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-100">
+              ${count} contributions
+            </span>
+          </div>
+        </div>`;
           })
           .join('')
       : '<p class="text-sm text-slate-400 italic">No activity recorded yet.</p>';
@@ -289,7 +309,7 @@ ${navHtml}
           <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
             <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
               <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Primary Focus Projects</h3>
-              <div class="divide-y divide-slate-50 min-w-0 overflow-hidden">${topReposHtml}</div>
+              <div class="divide-y divide-slate-50 min-w-0">${topReposHtml}</div>
             </div>
             
             <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
@@ -298,7 +318,7 @@ ${navHtml}
                 <span class="ml-2 cursor-help group relative">
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
                   <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
-                    Identified by analyzing the highest contribution volume across categories, using a priority-based hierarchy to determine the primary professional profile.
+                    Identified by analyzing the highest contribution volume across categories.
                   </span>
                 </span>
               </h3>
