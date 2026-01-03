@@ -156,13 +156,13 @@ async function createAllTimeContributions(finalContributions = []) {
 
             return (
               `
-        <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-50 last:border-0 min-w-0 gap-1 sm:gap-4">
           <span class="` +
               nameClass +
-              ` text-slate-600 truncate mr-4">${repo}</span>
+              ` text-slate-600 truncate min-w-0">${repo}</span>
           <span class="` +
               countClass +
-              ` font-bold text-slate-400 whitespace-nowrap">${count} contributions</span>
+              ` font-bold text-slate-400 whitespace-nowrap shrink-0">${count} contributions</span>
         </div>`
             );
           })
@@ -208,8 +208,8 @@ ${navHtml}
 
         <section>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            <div style="background-color: ${COLORS.primary.rgb};" class="relative overflow-hidden text-white p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
-              <div class="absolute -right-4 -top-2 opacity-10 rotate-20 w-48 h-48">${PULL_REQUEST_LARGE_SVG}</div>
+            <div style="background-color: ${COLORS.primary.rgb};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
+              <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
               <div class="relative z-10 space-y-2">
                 <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
                 <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
@@ -276,7 +276,7 @@ ${navHtml}
                     <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ` +
                     COLORS.primary.rgb +
                     `; ${s.pct === 0 ? 'display: none;' : ''}" 
-                         class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
+                           class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
                     </div>
                   </div>
                 </div>`
@@ -287,16 +287,16 @@ ${navHtml}
           </div> 
 
           <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
               <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Primary Focus Projects</h3>
-              <div class="divide-y divide-slate-50">${topReposHtml}</div>
+              <div class="divide-y divide-slate-50 min-w-0 overflow-hidden">${topReposHtml}</div>
             </div>
             
-            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
+            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
               <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center">
                 Collaboration Profile
                 <span class="ml-2 cursor-help group relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
                   <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
                     Identified by analyzing the highest contribution volume across categories, using a priority-based hierarchy to determine the primary professional profile.
                   </span>
@@ -309,7 +309,7 @@ ${navHtml}
             </div>
           </div>
 
-          <div class="mt-20 p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
+          <div class="mt-20 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
             <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
             <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
             <p class="text-center">
