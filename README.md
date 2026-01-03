@@ -40,11 +40,27 @@ After processing, the script generates the reports in two formats to maximize us
   - **Contributions README:** A summary `README.md` is generated featuring visual progress bars and percentage breakdowns, providing an immediate snapshot of contribution distribution directly on GitHub.
 
 - **HTML Reports (Output to `contributions/html-generated`):**
-  - The same data is now used to generate styled HTML files for both quarterly reports and the summary view.
+  - **Portfolio Landing Page (`index.html`):** The entry point of the website. it provides an overview of the report structure, explaining what each section (like Merged PRs or Reviewed PRs) represents.
 
-  - The HTML Dashboard features responsive bar charts and calculated metrics to visualize the scale of contributions.
+  - **All-Time Impact Dashboard:** A lifetime summary view featuring the **[Collaboration Profile](#-collaboration-profiles)** and **Primary Focus Projects**. It uses a visual hierarchy to highlight the most significant areas of impact.
+
+  - **Quarterly HTML Reports:** Detailed, interactive pages generated for every quarter. These allow for deeper inspection of specific contributions within a three-month window.
 
   - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), or any host of your choice. This allows for a more visual and navigable portfolio experience.
+
+#### 👤 Collaboration Profiles
+
+The "All-Time Impact" dashboard automatically assigns a profile based on the processed contribution data. This helps viewers quickly understand the primary impact style within the open source ecosystem.
+
+If two contribution types have the same count, the system uses a priority ranking to determine the title:
+
+| Priority | Persona Title | Focus |
+| :--- | :--- | :--- |
+| 1 | **Community Mentor** | Technical guidance and code quality. |
+| 2 | **Core Contributor** | Feature development and bug fixing. |
+| 3 | **Project Architect** | Problem identification and feature planning. |
+| 4 | **Collaborative Partner** | Pair programming and co-authoring code. |
+| 5 | **Ecosystem Partner** | Technical discussion and community engagement. |
 
 ### The Automation: GitHub Action Workflow
 
