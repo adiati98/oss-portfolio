@@ -18,6 +18,9 @@ function getCommonBaseCss() {
       margin: 0;
       padding: 0;
       height: 100%;
+      max-width: 100%;
+      overflow-x: hidden;
+      position: relative;
     }
     body {
       font-family: 'Inter', sans-serif;
