@@ -40,7 +40,7 @@ function determinePersona(counts) {
   const personaCategories = [
     {
       title: 'Community Mentor',
-      desc: 'Expert advocate for code quality and peer development. By providing technical guidance and constructive feedback, this contributor ensures high standards across the community.',
+      desc: 'Expert advocate for code quality and peer development. Technical guidance and constructive feedback ensure high standards across the community.',
       count: reviewedPrCount,
       priority: 1,
     },
@@ -58,7 +58,7 @@ function determinePersona(counts) {
     },
     {
       title: 'Collaborative Partner',
-      desc: 'Dedicated teammate focused on shared success. This contributor co-authors code and bridges technical gaps to deliver high-impact value through collective development effort.',
+      desc: 'Focused on shared project success. Co-authoring code and bridging technical gaps delivers high-impact value through collective development effort.',
       count: coAuthoredPrCount,
       priority: 4,
     },
