@@ -28,6 +28,63 @@ const HTML_README_FILENAME = 'all-contributions.html';
 const rightArrowSvg = RIGHT_ARROW_SVG;
 
 /**
+ * Determines the contributor's persona title and description.
+ * Uses count-based logic with a priority system for tie-breaking.
+ */
+function determinePersona(counts) {
+  const { prCount, issueCount, reviewedPrCount, coAuthoredPrCount, collaborationCount } = counts;
+
+  const grandTotal =
+    prCount + issueCount + reviewedPrCount + coAuthoredPrCount + collaborationCount;
+
+  const personaCategories = [
+    {
+      title: 'Community Mentor',
+      desc: 'Expert advocate for code quality and peer development. By providing technical guidance and constructive feedback, this contributor ensures high standards across the community.',
+      count: reviewedPrCount,
+      priority: 1,
+    },
+    {
+      title: 'Core Contributor',
+      desc: 'Main driver of project development. Responsible for moving features from concept to production through robust code and resolving complex bugs to ensure software stability.',
+      count: prCount,
+      priority: 2,
+    },
+    {
+      title: 'Project Architect',
+      desc: 'Strategic problem-solver focused on technical discovery. Skilled at identifying critical system issues and defining feature specifications that shape the long-term technical roadmap.',
+      count: issueCount,
+      priority: 3,
+    },
+    {
+      title: 'Collaborative Partner',
+      desc: 'Dedicated teammate focused on shared success. This contributor co-authors code and bridges technical gaps to deliver high-impact value through collective development effort.',
+      count: coAuthoredPrCount,
+      priority: 4,
+    },
+    {
+      title: 'Ecosystem Partner',
+      desc: 'Community builder focused on cross-project growth. Facilitates collaboration between different projects to ensure the open source ecosystem remains vibrant and interconnected.',
+      count: collaborationCount,
+      priority: 5,
+    },
+  ];
+
+  if (grandTotal === 0) {
+    return {
+      title: 'Open Source Contributor',
+      desc: 'Active member of the global open source community.',
+    };
+  }
+
+  return personaCategories.reduce((prev, curr) => {
+    if (curr.count > prev.count) return curr;
+    if (curr.count === prev.count && curr.priority < prev.priority) return curr;
+    return prev;
+  });
+}
+
+/**
  * Calculates aggregate totals from all contribution data and writes the
  * all-time contributions HTML report file.
  */
@@ -35,19 +92,25 @@ async function createAllTimeContributions(finalContributions = []) {
   const htmlBaseDir = path.join(BASE_DIR, HTML_OUTPUT_DIR_NAME);
   const HTML_OUTPUT_PATH = path.join(htmlBaseDir, HTML_README_FILENAME);
 
-  // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  const prCount = finalContributions.pullRequests.length;
-  const issueCount = finalContributions.issues.length;
-  const reviewedPrCount = finalContributions.reviewedPrs.length;
-  const collaborationCount = finalContributions.collaborations.length;
+  const prCount = finalContributions.pullRequests?.length || 0;
+  const issueCount = finalContributions.issues?.length || 0;
+  const reviewedPrCount = finalContributions.reviewedPrs?.length || 0;
+  const collaborationCount = finalContributions.collaborations?.length || 0;
   const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
     ? finalContributions.coAuthoredPrs.length
     : 0;
 
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
+  const maxCount = Math.max(
+    prCount,
+    issueCount,
+    reviewedPrCount,
+    coAuthoredPrCount,
+    collaborationCount
+  );
 
   const getStats = (count) => {
     if (grandTotal === 0) return { pct: 0, pctStr: '0%' };
@@ -64,20 +127,60 @@ async function createAllTimeContributions(finalContributions = []) {
   };
 
   const allItems = [
-    ...finalContributions.pullRequests,
-    ...finalContributions.issues,
-    ...finalContributions.reviewedPrs,
+    ...(finalContributions.pullRequests || []),
+    ...(finalContributions.issues || []),
+    ...(finalContributions.reviewedPrs || []),
     ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
-    ...finalContributions.collaborations,
+    ...(finalContributions.collaborations || []),
   ];
+
   const uniqueRepos = new Set(allItems.map((item) => item.repo));
   const totalUniqueRepos = uniqueRepos.size;
+
+  const repoActivity = allItems.reduce((acc, item) => {
+    acc[item.repo] = (acc[item.repo] || 0) + 1;
+    return acc;
+  }, {});
+
+  const topThreeRepos = Object.entries(repoActivity)
+    .sort(([, a], [, b]) => b - a)
+    .slice(0, 3);
+
+  const topReposHtml =
+    topThreeRepos.length > 0
+      ? topThreeRepos
+          .map(([repo, count], idx) => {
+            const isTop = idx === 0;
+            const nameClass = isTop ? 'text-base font-bold' : 'text-sm font-medium';
+            const countClass = isTop ? 'text-sm' : 'text-xs';
+
+            return (
+              `
+        <div class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0">
+          <span class="` +
+              nameClass +
+              ` text-slate-600 truncate mr-4">${repo}</span>
+          <span class="` +
+              countClass +
+              ` font-bold text-slate-400 whitespace-nowrap">${count} contributions</span>
+        </div>`
+            );
+          })
+          .join('')
+      : '<p class="text-sm text-slate-400 italic">No activity recorded yet.</p>';
+
+  const { title: personaTitle, desc: personaDesc } = determinePersona({
+    prCount,
+    issueCount,
+    reviewedPrCount,
+    coAuthoredPrCount,
+    collaborationCount,
+  });
 
   const footerHtml = createFooterHtml();
   const indexCss = getIndexStyleCss();
   const navHtml = createNavHtml('./');
 
-  // Build HTML Content
   const htmlContent = dedent`
 <!DOCTYPE html>
 <html lang="en">
@@ -87,9 +190,7 @@ async function createAllTimeContributions(finalContributions = []) {
   <title>All-Time Impact | Open Source Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>
-    ${indexCss}
-  </style>
+  <style>${indexCss}</style>
 </head>
 <body class="bg-white antialiased">
 ${navHtml}
@@ -108,36 +209,22 @@ ${navHtml}
         <section>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
             <div style="background-color: ${COLORS.primary.rgb};" class="relative overflow-hidden text-white p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
-              
-              <div class="absolute -right-4 -top-2 opacity-10 rotate-20 w-48 h-48">
-                ${PULL_REQUEST_LARGE_SVG}
-              </div>
-
+              <div class="absolute -right-4 -top-2 opacity-10 rotate-20 w-48 h-48">${PULL_REQUEST_LARGE_SVG}</div>
               <div class="relative z-10 space-y-2">
                 <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
                 <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
                 <p class="text-lg opacity-90 font-medium">Lifetime Contributions</p>
               </div>
-
               <div class="relative z-10 h-px bg-white/20 my-8"></div>
-
               <div class="relative z-10 grid grid-cols-2 gap-4">
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <div class="h-8 flex items-end">
-                    <p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p>
-                  </div>
+                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p></div>
                   <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repos</p>
                 </div>
-                
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <div class="h-8 flex items-end">
-                    <p class="text-2xl sm:text-3xl font-bold leading-none">
-                      ${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}
-                    </p>
-                  </div>
+                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}</p></div>
                   <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Yearly Average</p>
                 </div>
-
                 <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                   <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
                   <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>
@@ -146,85 +233,88 @@ ${navHtml}
             </div>
 
             <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
-              <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-end mb-2">
-                  <span class="text-lg font-bold text-slate-700">Merged PRs</span>
-                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-xl sm:text-2xl">${prCount}</span>
-                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.prs.pctStr}</span>
-                  </div>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
-                  <div style="width: ${stats.prs.pct}%; max-width: ${stats.prs.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.prs.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
-                </div>
-              </div>
+              ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
+                .map((label, idx) => {
+                  const key = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
+                  const count = [
+                    prCount,
+                    issueCount,
+                    reviewedPrCount,
+                    coAuthoredPrCount,
+                    collaborationCount,
+                  ][idx];
+                  const s = stats[key];
+                  const isHighest = grandTotal > 0 && count === maxCount;
+                  const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
 
-              <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-end mb-2">
-                  <span class="text-lg font-bold text-slate-700">Issues</span>
-                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-xl sm:text-2xl">${issueCount}</span>
-                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.issues.pctStr}</span>
-                  </div>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
-                  <div style="width: ${stats.issues.pct}%; max-width: ${stats.issues.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.issues.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
-                </div>
-              </div>
+                  const labelStyle = isHighest
+                    ? 'style="color: ' + COLORS.primary.rgb + '; font-weight: 800;"'
+                    : 'class="text-slate-700 font-bold"';
 
-              <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-end mb-2">
-                  <span class="text-lg font-bold text-slate-700">Reviewed PRs</span>
-                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-xl sm:text-2xl">${reviewedPrCount}</span>
-                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.reviews.pctStr}</span>
-                  </div>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
-                  <div style="width: ${stats.reviews.pct}%; max-width: ${stats.reviews.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.reviews.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
-                </div>
-              </div>
+                  const countClass = isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl';
+                  const pctClass = isHighest ? 'text-sm sm:text-base' : 'text-xs sm:text-sm';
 
-              <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-end mb-2">
-                  <span class="text-lg font-bold text-slate-700">Co-Authored PRs</span>
-                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-xl sm:text-2xl">${coAuthoredPrCount}</span>
-                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.coauth.pctStr}</span>
+                  return (
+                    `
+                <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
+                  <div class="flex justify-between items-end mb-2">
+                    <span ` +
+                    labelStyle +
+                    ` class="text-lg">${label}</span>
+                    <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                      <span style="color: ` +
+                    COLORS.primary.rgb +
+                    `;" class="font-bold ` +
+                    countClass +
+                    `">${count}</span>
+                      <span class="` +
+                    pctClass +
+                    ` text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
+                    </div>
                   </div>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
-                  <div style="width: ${stats.coauth.pct}%; max-width: ${stats.coauth.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.coauth.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
-                </div>
-              </div>
-
-              <div class="flex-1 flex flex-col justify-center px-8 py-4 hover:bg-slate-50 transition-colors">
-                <div class="flex justify-between items-end mb-2">
-                  <span class="text-lg font-bold text-slate-700">Collaborations</span>
-                  <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                    <span style="color: ${COLORS.primary.rgb};" class="font-bold text-xl sm:text-2xl">${collaborationCount}</span>
-                    <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${stats.collab.pctStr}</span>
+                  <div class="w-full bg-slate-100/50 rounded-full h-3 overflow-hidden flex">
+                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ` +
+                    COLORS.primary.rgb +
+                    `; ${s.pct === 0 ? 'display: none;' : ''}" 
+                         class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
+                    </div>
                   </div>
-                </div>
-                <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
-                  <div style="width: ${stats.collab.pct}%; max-width: ${stats.collab.pct}%; background-color: ${COLORS.primary.rgb}; ${stats.collab.pct === 0 ? 'display: none;' : ''}" class="progress-bar h-3 rounded-full"></div>
-                </div>
-              </div>
+                </div>`
+                  );
+                })
+                .join('')}
             </div> 
           </div> 
 
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+              <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Primary Focus Projects</h3>
+              <div class="divide-y divide-slate-50">${topReposHtml}</div>
+            </div>
+            
+            <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
+              <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center">
+                Collaboration Profile
+                <span class="ml-2 cursor-help group relative">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
+                    Identified by analyzing the highest contribution volume across categories, using a priority-based hierarchy to determine the primary professional profile.
+                  </span>
+                </span>
+              </h3>
+              <div>
+                <p style="color: ${COLORS.primary.rgb};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
+                <p class="text-sm text-slate-500 leading-relaxed">${personaDesc}</p>
+              </div>
+            </div>
+          </div>
+
           <div class="mt-20 p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
             <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
-            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">
-              See the specific contributions, repository breakdowns, and timeline of activities through the chronological reports.
-            </p>
-            
+            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
             <p class="text-center">
-              <a href="reports.html" 
-                  style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" 
-                  class="index-report-link inline-flex items-center flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
-                <span class="pr-2">View All Reports</span>
-                ${rightArrowSvg}
+              <a href="reports.html" style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" class="inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
+                <span>View All Reports</span> ${rightArrowSvg}
               </a>
             </p>
           </div>
@@ -237,14 +327,8 @@ ${navHtml}
 </html>
 `;
 
-  // Format the content
-  const formattedContent = await prettier.format(htmlContent, {
-    parser: 'html',
-  });
-
-  // Write the formatted file
+  const formattedContent = await prettier.format(htmlContent, { parser: 'html' });
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
-  console.log(`Written aggregate HTML report: ${HTML_OUTPUT_PATH}`);
 }
 
 module.exports = { createAllTimeContributions };
