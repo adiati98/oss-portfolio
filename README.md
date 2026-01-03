@@ -48,7 +48,7 @@ After processing, the script generates the reports in two formats to maximize us
 
   - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), or any host of your choice. This allows for a more visual and navigable portfolio experience.
 
-#### 👤 Collaboration Profiles
+##### 👤 Collaboration Profiles
 
 The "All-Time Impact" dashboard automatically assigns a profile based on the processed contribution data. This helps viewers quickly understand the primary impact style within the open source ecosystem.
 
