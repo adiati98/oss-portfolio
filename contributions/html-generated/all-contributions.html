@@ -17,6 +17,9 @@
         margin: 0;
         padding: 0;
         height: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        position: relative;
       }
       body {
         font-family: 'Inter', sans-serif;
@@ -293,9 +296,11 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
               <div
                 style="background-color: rgb(67, 56, 202)"
-                class="relative overflow-hidden text-white p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20"
+                class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20"
               >
-                <div class="absolute -right-4 -top-2 opacity-10 rotate-20 w-48 h-48">
+                <div
+                  class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none"
+                >
                   <svg viewBox="0 0 512 448" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M 96 16 C 51.817 16 16 51.817 16 96 C 16 128.801 35.75 156.977 64 169.324 L 64 278.675 C 35.75 291.022 16 319.198 16 352 C 16 396.182 51.817 432 96 432 C 140.182 432 176 396.182 176 352 C 176 319.198 156.249 291.022 128 278.675 L 128 169.324 C 156.249 156.977 176 128.801 176 96 C 176 51.817 140.182 16 96 16 Z M 96 64 C 113.673 64 128 78.326 128 96 C 128 113.673 113.673 128 96 128 C 78.326 128 64 113.673 64 96 C 64 78.326 78.326 64 96 64 Z M 96 320 C 113.673 320 128 334.326 128 352 C 128 369.673 113.673 384 96 384 C 78.326 384 64 369.673 64 352 C 64 334.326 78.326 320 96 320 Z "
@@ -473,38 +478,40 @@
             </div>
 
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-              <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
+              <div
+                class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0"
+              >
                 <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">
                   Primary Focus Projects
                 </h3>
-                <div class="divide-y divide-slate-50">
+                <div class="divide-y divide-slate-50 min-w-0 overflow-hidden">
                   <div
-                    class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0"
+                    class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-50 last:border-0 min-w-0 gap-1 sm:gap-4"
                   >
-                    <span class="text-base font-bold text-slate-600 truncate mr-4"
+                    <span class="text-base font-bold text-slate-600 truncate min-w-0"
                       >OpenSource-Communities/guestbook</span
                     >
-                    <span class="text-sm font-bold text-slate-400 whitespace-nowrap"
+                    <span class="text-sm font-bold text-slate-400 whitespace-nowrap shrink-0"
                       >614 contributions</span
                     >
                   </div>
                   <div
-                    class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0"
+                    class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-50 last:border-0 min-w-0 gap-1 sm:gap-4"
                   >
-                    <span class="text-sm font-medium text-slate-600 truncate mr-4"
+                    <span class="text-sm font-medium text-slate-600 truncate min-w-0"
                       >Virtual-Coffee/virtualcoffee.io</span
                     >
-                    <span class="text-xs font-bold text-slate-400 whitespace-nowrap"
+                    <span class="text-xs font-bold text-slate-400 whitespace-nowrap shrink-0"
                       >259 contributions</span
                     >
                   </div>
                   <div
-                    class="flex items-center justify-between py-3 border-b border-slate-50 last:border-0"
+                    class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-slate-50 last:border-0 min-w-0 gap-1 sm:gap-4"
                   >
-                    <span class="text-sm font-medium text-slate-600 truncate mr-4"
+                    <span class="text-sm font-medium text-slate-600 truncate min-w-0"
                       >mautic/user-documentation</span
                     >
-                    <span class="text-xs font-bold text-slate-400 whitespace-nowrap"
+                    <span class="text-xs font-bold text-slate-400 whitespace-nowrap shrink-0"
                       >188 contributions</span
                     >
                   </div>
@@ -512,7 +519,7 @@
               </div>
 
               <div
-                class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center"
+                class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center"
               >
                 <h3
                   class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center"
@@ -532,8 +539,8 @@
                       class="opacity-50 hover:opacity-100"
                     >
                       <circle cx="12" cy="12" r="10" />
-                      <line x1="12" y1="16" x2="12" y2="12" />
-                      <line x1="12" y1="8" x2="12.01" y2="8" />
+                      <line x1="12" x2="12" y1="16" y2="12" />
+                      <line x1="12" x2="12.01" y1="8" y2="8" />
                     </svg>
                     <span
                       class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal"
@@ -559,7 +566,9 @@
               </div>
             </div>
 
-            <div class="mt-20 p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
+            <div
+              class="mt-20 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200"
+            >
               <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
               <p class="text-slate-500 mb-8 max-w-2xl mx-auto">
                 See specific contributions, repository breakdowns, and timeline of activities.
