@@ -80,7 +80,7 @@ async function createIndexHtml() {
       const iconSvg = LANDING_PAGE_ICONS[item.iconKey] || '';
 
       return `
-        <div class="feature-card p-8 rounded-2xl border flex flex-col h-full transition-all duration-300 hover:-translate-y-1" 
+        <div class="feature-card p-8 rounded-2xl border flex flex-col h-full" 
              style="background-color: ${COLORS.primary[10]}; border-color: ${COLORS.border.light};">
             <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-6 shrink-0" 
                  style="background-color: white; color: ${COLORS.primary.rgb};">
@@ -99,7 +99,7 @@ async function createIndexHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Open Source Portfolio</title>
+  <title>Open Source Portfolio | @${GITHUB_USERNAME}</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
