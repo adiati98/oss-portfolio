@@ -56,7 +56,7 @@ If two contribution types have the same count, the system uses a priority rankin
 
 | Priority | Persona Title | Focus |
 | :--- | :--- | :--- |
-| 1 | **Community Mentor** | Technical guidance and code quality. |
+| 1 | **Community Mentor** | Code review and technical guidance. |
 | 2 | **Core Contributor** | Feature development and bug fixing. |
 | 3 | **Project Architect** | Problem identification and feature planning. |
 | 4 | **Collaborative Partner** | Pair programming and co-authoring code. |
