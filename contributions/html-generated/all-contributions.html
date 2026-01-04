@@ -54,6 +54,39 @@
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: 2px;
       }
+
+      /* Breakdown Icon Wrapper */
+      .breakdown-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        width: 1rem; /* default 16px */
+        height: 1rem;
+      }
+      .breakdown-icon-wrapper svg {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+      }
+
+      /* Breakdown Label text scaling */
+      .breakdown-label {
+        font-size: 0.875rem; /* default sm */
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      /* Small Screen Adjustments for Breakdown Section */
+      @media (max-width: 400px) {
+        .breakdown-icon-wrapper {
+          width: 0.75rem; /* shrinks to 12px */
+          height: 0.75rem;
+        }
+        .breakdown-label {
+          font-size: 0.7rem !important; /* slightly smaller than xs */
+        }
+      }
       /* Feature card specific overrides at landing page*/
       .feature-card:hover {
         border-color: rgb(67, 56, 202) !important;
