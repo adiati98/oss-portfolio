@@ -271,6 +271,11 @@ function getReportStyleCss() {
       background-color: ${COLORS.primary[10]} !important;
     }
 
+    .table-row-hover:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: -2px;
+    }
+
     /* Table Header Sorting Alignment */
     .th-content {
       display: inline-flex;
@@ -285,9 +290,9 @@ function getReportStyleCss() {
       font-size: 0.85em;
       opacity: 0.3;
       line-height: 1;
-      color: inherit;
     }
 
+    /* Highlight the arrow for standard and custom status sorts */
     th.sort-asc .sort-icon,
     th.sort-desc .sort-icon,
     th.sort-custom1 .sort-icon,
