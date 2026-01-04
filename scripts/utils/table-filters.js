@@ -3,19 +3,19 @@
  */
 
 // --- Constants for Status Sorting ---
-// Custom Priority 1: Merged -> Open -> Closed
+// Custom Priority 1: Open -> Merged -> Closed (Focus on progress)
 const STATUS_PRIORITY_P1 = {
-  MERGED: 3,
-  OPEN: 2,
+  OPEN: 3,
+  MERGED: 2,
   CLOSED: 1,
   'N/A': 0,
 };
 
-// Custom Priority 2: Closed -> Open -> Merged
+// Custom Priority 2: Closed -> Merged -> Open (Historical view)
 const STATUS_PRIORITY_P2 = {
   CLOSED: 3,
-  OPEN: 2,
-  MERGED: 1,
+  MERGED: 2,
+  OPEN: 1,
   'N/A': 0,
 };
 
