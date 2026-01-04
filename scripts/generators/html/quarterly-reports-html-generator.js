@@ -365,26 +365,52 @@ ${navHtmlForReports}
         <section class="mb-8">
           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-            </a>
-            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-            </a>
-            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-            </a>
-            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
-            </a>
-            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-            </a>
+            ${[
+              {
+                id: sections.pullRequests.id,
+                count: prCount,
+                label: 'Merged PRs',
+                icon: sections.pullRequests.icon,
+              },
+              {
+                id: sections.issues.id,
+                count: issueCount,
+                label: 'Issues',
+                icon: sections.issues.icon,
+              },
+              {
+                id: sections.reviewedPrs.id,
+                count: reviewedPrCount,
+                label: 'Reviewed PRs',
+                icon: sections.reviewedPrs.icon,
+              },
+              {
+                id: sections.coAuthoredPrs.id,
+                count: coAuthoredPrCount,
+                label: 'Co-Authored PRs',
+                icon: sections.coAuthoredPrs.icon,
+              },
+              {
+                id: sections.collaborations.id,
+                count: collaborationCount,
+                label: 'Collaborations',
+                icon: sections.collaborations.icon,
+              },
+            ]
+              .map(
+                (item) => `
+              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+                <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${item.count}</span>
+                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                  <span class="breakdown-icon-wrapper opacity-70">
+                    ${item.icon}
+                  </span>
+                  <span class="breakdown-label">${item.label}</span>
+                </div>
+              </a>
+              `
+              )
+              .join('')}
           </div>
         </section>
 
