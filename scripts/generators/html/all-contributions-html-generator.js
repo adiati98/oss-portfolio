@@ -18,6 +18,7 @@ const {
   FAVICON_SVG_ENCODED,
   COLORS,
   PULL_REQUEST_LARGE_SVG,
+  INFO_ICON_SVG,
 } = require('../../config/constants');
 
 // Import the style generator function
@@ -316,7 +317,7 @@ ${navHtml}
               <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center">
                 Collaboration Profile
                 <span class="ml-2 cursor-help group relative">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-50 hover:opacity-100"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="16" y2="12"/><line x1="12" x2="12.01" y1="8" y2="8"/></svg>
+                  ${INFO_ICON_SVG}
                   <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
                     Identified by analyzing the highest contribution volume across categories.
                   </span>
@@ -333,7 +334,9 @@ ${navHtml}
             <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
             <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
             <p class="text-center">
-              <a href="reports.html" style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" class="inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg">
+              <a href="reports.html" 
+                 style="color: ${COLORS.primary.rgb};" 
+                 class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md">
                 <span>View All Reports</span> ${rightArrowSvg}
               </a>
             </p>
