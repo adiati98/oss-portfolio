@@ -187,17 +187,36 @@ function getReportsListStyleCss() {
 function getReportStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
+    
     summary {
       cursor: pointer;
       outline: none;
       margin: 0.5em 0;
       padding: 0.5em 0;
       color: #1f2937;
+      display: list-item;
+      white-space: nowrap;
     }
     summary:focus-visible {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
+
+    /* Keeps icon and text aligned horizontally inside summary */
+    summary .inline-flex {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      vertical-align: middle;
+    }
+
+    .details-section {
+      background-color: ${COLORS.primary[5]};
+    }
+    .details-section details:open summary {
+      color: ${COLORS.primary.rgb};
+    }
+
     .report-table th,
     .report-table td {
       padding: 10px 12px;
@@ -206,12 +225,6 @@ function getReportStyleCss() {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-    .details-section {
-      background-color: ${COLORS.primary[5]};
-    }
-    .details-section details:open summary {
-      color: ${COLORS.primary.rgb};
     }
     .report-table tbody tr:last-child td {
       border-bottom: none;
@@ -224,22 +237,8 @@ function getReportStyleCss() {
     .table-row-hover:focus-visible {
       background-color: ${COLORS.primary[10]} !important;
     }
-    .table-row-hover:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
-      outline-offset: -2px;
-    }
-        
-    th .sort-icon {
-      margin-left: 5px;
-      font-size: 0.8em;
-      opacity: 0.5;
-    }
-    th.sort-asc .sort-icon,
-    th.sort-desc .sort-icon {
-      opacity: 1;
-      font-weight: bold;
-    }
 
+    /* Search Bar Icon Positioning */
     .icon-input-container {
       position: relative;
     }
@@ -248,10 +247,25 @@ function getReportStyleCss() {
     }
     .input-icon {
       position: absolute;
-      left: 8px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
+    }
+
+    /* Mobile Screen Optimization (320px screens) */
+    @media (max-width: 400px) {
+      summary .text-xl {
+        font-size: 1.1rem !important;
+      }
+      summary .w-6.h-6 {
+        width: 1.25rem !important;
+        height: 1.25rem !important;
+      }
+      summary .inline-flex {
+        gap: 8px !important;
+        margin-left: 4px !important;
+      }
     }
   `;
 }

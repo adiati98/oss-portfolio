@@ -19,6 +19,7 @@ const {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
   SEARCH_SVG,
+  LANDING_PAGE_ICONS,
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
@@ -262,7 +263,7 @@ async function writeHtmlFiles(groupedContributions) {
     const sections = {
       pullRequests: {
         title: 'Merged PRs',
-        icon: '🚀',
+        icon: LANDING_PAGE_ICONS.merged,
         id: 'merged-prs',
         headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
         widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
@@ -271,7 +272,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       issues: {
         title: 'Issues',
-        icon: '🐞',
+        icon: LANDING_PAGE_ICONS.issues,
         id: 'issues',
         headers: ['No.', 'Project', 'Title', 'Created', 'Closed', 'Closing Period'],
         widths: ['5%', '25%', '35%', '15%', '15%', '10%'],
@@ -280,7 +281,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       reviewedPrs: {
         title: 'Reviewed PRs',
-        icon: '👀',
+        icon: LANDING_PAGE_ICONS.reviewed,
         id: 'reviewed-prs',
         headers: [
           'No.',
@@ -297,7 +298,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       coAuthoredPrs: {
         title: 'Co-Authored PRs',
-        icon: '🤝',
+        icon: LANDING_PAGE_ICONS.coAuthored,
         id: 'co-authored-prs',
         headers: [
           'No.',
@@ -314,7 +315,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       collaborations: {
         title: 'Collaborations',
-        icon: '💬',
+        icon: LANDING_PAGE_ICONS.collaborations,
         id: 'collaborations',
         headers: ['No.', 'Project', 'Title', 'Created At', 'First Comment', 'Last Update / Status'],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
@@ -418,8 +419,11 @@ ${navHtmlForReports}
 
       // Details tag is used for collapsible sections.
       htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
-      htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold">\n`;
-      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
+      htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold cursor-pointer outline-none">\n`;
+      htmlContent += `  <div class="inline-flex items-center flex-nowrap gap-2 ml-3" style="vertical-align: middle;">\n`;
+      htmlContent += `    <span class="w-6 h-6 flex items-center shrink-0">${sectionInfo.icon}</span>\n`;
+      htmlContent += `    <span class="text-xl font-bold whitespace-nowrap">${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
+      htmlContent += `  </div>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
