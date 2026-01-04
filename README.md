@@ -217,95 +217,31 @@ Please read your host's official documentation to learn how to configure and dep
 
 ## 🎨 Customizing Colors
 
-The HTML reports use color-coded status badges and design elements that can be customized to match your personal branding. Now with an improved system, you only need to change hex color values, and all opacity variants are automatically generated!
-
-### Where Colors Are Defined
-
-All colors are centralized in `scripts/constants.js` in the `COLOR_PALETTE` object. This single location controls colors across:
-
-- Navigation bar and mobile menu
-- Page headers and footers
-- Status badges (OPEN, MERGED, CLOSED)
-- Table rows and backgrounds
-- Links and text colors
-- Section accents and borders
-- Favicon
-
-### Color Palette Breakdown
-
-The `COLOR_PALETTE` includes 9 customizable colors:
-
-| Color             | Purpose          | Default Hex | Used For                              |
-| :---------------- | :--------------- | :---------- | :------------------------------------ |
-| **primary**       | Main UI accent   | #4f46e5     | Headers, buttons, navigation, accents |
-| **primary900**       | Dark UI accent   | #312E81     | Darker navigation background, dark accents |
-| **neutral**       | Neutral elements | #6b7280     | Borders, neutral backgrounds          |
-| **success**       | OPEN status      | #10b981     | Open issues/PRs badge                 |
-| **merged**        | MERGED status    | #8b5cf6     | Merged PRs badge                      |
-| **error**         | CLOSED status    | #ef4444     | Closed issues/PRs badge               |
-| **textPrimary**   | Main text        | #1f2937     | Headings, primary text                |
-| **textSecondary** | Secondary text   | #374151     | Descriptions, secondary info          |
-| **textMuted**     | Muted text       | #6b7280     | Timestamps, less important info       |
+You can change the look of your portfolio by updating the colors in one single file. The system automatically creates matching shades for backgrounds, borders, and even updates your browser tab icon (favicon) to match.
 
 ### How to Customize Colors
 
-The color system automatically generates 7 opacity levels (5%, 10%, 15%, 25%, 50%, 75%, 100%) for each color. You only need to change the hex value:
-
 1. Open `scripts/config/constants.js`.
-2. Locate the `COLOR_PALETTE` object (around line 148).
-3. Modify the hex color values to your preference:
+2. Find the `COLOR_PALETTE` object and replace the hex codes (e.g., `#4f46e5`) with your own.
 
-```javascript
-// scripts/config/constants.js
+   ```javascript
+   // scripts/config/constants.js
 
-const COLOR_PALETTE = {
-  primary: '#4338CA', // Indigo - for main UI elements
-  primary900: '#312E81', // Dark indigo - for darker background
-  neutral: '#6b7280', // Gray - for neutral elements
-  success: '#10b981', // Green - for OPEN status
-  merged: '#8b5cf6', // Purple - for MERGED status
-  error: '#ef4444', // Red - for CLOSED status
-  textPrimary: '#1f2937', // Dark gray - for main text
-  textSecondary: '#374151', // Darker gray - for descriptions (WCAG AA compliant)
-  textMuted: '#6b7280', // Medium gray - for muted text (WCAG AA compliant)
-};
-```
+   const COLOR_PALETTE = {
+     primary: '#4338CA',    // Your main brand color
+     primary900: '#312E81', // A darker version of your  primary color
+     success: '#10b981',    // Color for Open items
+     merged: '#8b5cf6',     // Color for Merged items
+     error: '#ef4444',      // Color for Closed items
+     // ... and text colors
+   };
+   ```
 
-For example, to change to a modern blue theme:
+3. Run the script to see your new theme:
 
-```javascript
-const COLOR_PALETTE = {
-  primary: '#0066cc', // Blue instead of Indigo
-  primary900: '#004c99', // Darker Blue
-  neutral: '#64748b', // Slate Gray instead of Gray
-  success: '#16a34a', // Darker Green for OPEN
-  merged: '#2563eb', // Blue for MERGED
-  error: '#dc2626', // Darker Red for CLOSED
-  textPrimary: '#111827', // Darker for better contrast
-  textSecondary: '#475569', // Adjusted gray
-  textMuted: '#94a3b8', // Adjusted light gray
-};
-```
-
-4. After making changes, run `npm start` locally to regenerate the HTML reports.
-5. The new colors will be reflected in all generated reports with all opacity levels automatically applied.
-6. **Favicon will also update** to match your primary color!
-
-### How It Works
-
-The color system uses automatic conversion:
-
-- **Input:** Hex color (e.g., `#4f46e5`)
-- **Process:** Converts hex to RGB, then generates opacity variants
-- **Output:** Colors with different opacity levels (5%, 10%, 15%, 25%, 50%, 75%, 100%) plus full RGB and hex
-
-For example, `#8b5cf6` (purple) automatically generates:
-
-- `rgba(139, 92, 246, 0.05)` for 5% opacity (light backgrounds)
-- `rgba(139, 92, 246, 0.1)` for 10% opacity (badge backgrounds)
-- `rgba(139, 92, 246, 1)` for 100% opacity (text and solid elements)
-- `rgb(139, 92, 246)` for full opacity RGB
-- `#8b5cf6` for the original hex value
+   ```bash
+   npm start
+   ```
 
 ### Color Customization Tips
 
