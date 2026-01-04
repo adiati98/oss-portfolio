@@ -501,11 +501,13 @@ ${navHtmlForReports}
           const isStaticColumn = i === 0; // The 'No.' column is static (not sortable).
 
           const thAttributes = isStaticColumn ? '' : `data-type="${type}" title="Click to sort"`;
-          const sortIconHtml = isStaticColumn ? '' : ' <span class="sort-icon">↕</span>';
+          const headerContent = isStaticColumn
+            ? sectionInfo.headers[i]
+            : `<span class="th-content">${sectionInfo.headers[i]} <span class="sort-icon ml-1">↕</span></span>`;
           const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
 
           tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
-              ${sectionInfo.headers[i]}${sortIconHtml}
+              ${headerContent}
           </th>\n`;
         }
         tableContent += `   </tr>\n`;

@@ -271,6 +271,32 @@ function getReportStyleCss() {
       background-color: ${COLORS.primary[10]} !important;
     }
 
+    /* Table Header Sorting Alignment */
+    .th-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      vertical-align: middle;
+    }
+    
+    .sort-icon {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.85em;
+      opacity: 0.3;
+      line-height: 1;
+      color: inherit;
+    }
+
+    th.sort-asc .sort-icon,
+    th.sort-desc .sort-icon,
+    th.sort-custom1 .sort-icon,
+    th.sort-custom2 .sort-icon {
+      opacity: 1 !important;
+      color: ${COLORS.primary.rgb} !important;
+      font-weight: bold;
+    }
+
     /* Search Bar Icon Positioning */
     .icon-input-container {
       position: relative;

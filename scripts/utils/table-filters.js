@@ -165,10 +165,10 @@ class ReportTableManager {
       const icon = th.querySelector('.sort-icon');
       if (icon) {
         // Use '▼' for Descending (largest first) or Custom sort
-        if (nextDir === 'desc' || nextDir === 'custom1' || nextDir === 'custom2') {
+        if (nextDir === 'desc' || nextDir === 'custom2') {
           icon.textContent = '▼';
         } else {
-          // asc (smallest first)
+          // 'asc' or 'custom1'
           icon.textContent = '▲';
         }
       }
