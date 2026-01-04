@@ -55,6 +55,39 @@ function getCommonBaseCss() {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
+
+    /* Breakdown Icon Wrapper */
+    .breakdown-icon-wrapper {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      vertical-align: middle;
+      width: 1rem;   /* default 16px */
+      height: 1rem;
+    }
+    .breakdown-icon-wrapper svg {
+      width: 100% !important;
+      height: 100% !important;
+      display: block;
+    }
+
+    /* Breakdown Label text scaling */
+    .breakdown-label {
+      font-size: 0.875rem; /* default sm */
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Small Screen Adjustments for Breakdown Section */
+    @media (max-width: 400px) {
+      .breakdown-icon-wrapper {
+        width: 0.75rem; /* shrinks to 12px */
+        height: 0.75rem;
+      }
+      .breakdown-label {
+        font-size: 0.7rem !important; /* slightly smaller than xs */
+      }
+    }
   `;
 }
 
@@ -187,17 +220,36 @@ function getReportsListStyleCss() {
 function getReportStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
+    
     summary {
       cursor: pointer;
       outline: none;
       margin: 0.5em 0;
       padding: 0.5em 0;
       color: #1f2937;
+      display: list-item;
+      white-space: nowrap;
     }
     summary:focus-visible {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: 2px;
     }
+
+    /* Keeps icon and text aligned horizontally inside summary */
+    summary .inline-flex {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      vertical-align: middle;
+    }
+
+    .details-section {
+      background-color: ${COLORS.primary[5]};
+    }
+    .details-section details:open summary {
+      color: ${COLORS.primary.rgb};
+    }
+
     .report-table th,
     .report-table td {
       padding: 10px 12px;
@@ -206,12 +258,6 @@ function getReportStyleCss() {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-    }
-    .details-section {
-      background-color: ${COLORS.primary[5]};
-    }
-    .details-section details:open summary {
-      color: ${COLORS.primary.rgb};
     }
     .report-table tbody tr:last-child td {
       border-bottom: none;
@@ -224,22 +270,39 @@ function getReportStyleCss() {
     .table-row-hover:focus-visible {
       background-color: ${COLORS.primary[10]} !important;
     }
+
     .table-row-hover:focus-visible {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: -2px;
     }
-        
-    th .sort-icon {
-      margin-left: 5px;
-      font-size: 0.8em;
-      opacity: 0.5;
+
+    /* Table Header Sorting Alignment */
+    .th-content {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      vertical-align: middle;
     }
+    
+    .sort-icon {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.85em;
+      opacity: 0.3;
+      line-height: 1;
+    }
+
+    /* Highlight the arrow for standard and custom status sorts */
     th.sort-asc .sort-icon,
-    th.sort-desc .sort-icon {
-      opacity: 1;
+    th.sort-desc .sort-icon,
+    th.sort-custom1 .sort-icon,
+    th.sort-custom2 .sort-icon {
+      opacity: 1 !important;
+      color: ${COLORS.primary.rgb} !important;
       font-weight: bold;
     }
 
+    /* Search Bar Icon Positioning */
     .icon-input-container {
       position: relative;
     }
@@ -248,10 +311,25 @@ function getReportStyleCss() {
     }
     .input-icon {
       position: absolute;
-      left: 8px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
       pointer-events: none;
+    }
+
+    /* Mobile Screen Optimization (320px screens) */
+    @media (max-width: 400px) {
+      summary .text-xl {
+        font-size: 1.1rem !important;
+      }
+      summary .w-6.h-6 {
+        width: 1.25rem !important;
+        height: 1.25rem !important;
+      }
+      summary .inline-flex {
+        gap: 8px !important;
+        margin-left: 4px !important;
+      }
     }
   `;
 }

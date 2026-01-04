@@ -19,6 +19,7 @@ const {
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
   SEARCH_SVG,
+  LANDING_PAGE_ICONS,
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
@@ -262,7 +263,7 @@ async function writeHtmlFiles(groupedContributions) {
     const sections = {
       pullRequests: {
         title: 'Merged PRs',
-        icon: '🚀',
+        icon: LANDING_PAGE_ICONS.merged,
         id: 'merged-prs',
         headers: ['No.', 'Project', 'Title', 'Created', 'Merged', 'Review Period'],
         widths: ['5%', '20%', '30%', '15%', '15%', '15%'],
@@ -271,7 +272,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       issues: {
         title: 'Issues',
-        icon: '🐞',
+        icon: LANDING_PAGE_ICONS.issues,
         id: 'issues',
         headers: ['No.', 'Project', 'Title', 'Created', 'Closed', 'Closing Period'],
         widths: ['5%', '25%', '35%', '15%', '15%', '10%'],
@@ -280,7 +281,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       reviewedPrs: {
         title: 'Reviewed PRs',
-        icon: '👀',
+        icon: LANDING_PAGE_ICONS.reviewed,
         id: 'reviewed-prs',
         headers: [
           'No.',
@@ -297,7 +298,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       coAuthoredPrs: {
         title: 'Co-Authored PRs',
-        icon: '🤝',
+        icon: LANDING_PAGE_ICONS.coAuthored,
         id: 'co-authored-prs',
         headers: [
           'No.',
@@ -314,7 +315,7 @@ async function writeHtmlFiles(groupedContributions) {
       },
       collaborations: {
         title: 'Collaborations',
-        icon: '💬',
+        icon: LANDING_PAGE_ICONS.collaborations,
         id: 'collaborations',
         headers: ['No.', 'Project', 'Title', 'Created At', 'First Comment', 'Last Update / Status'],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
@@ -364,26 +365,52 @@ ${navHtmlForReports}
         <section class="mb-8">
           <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
-            <a href="#${sections.pullRequests.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${prCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Merged PRs</span>
-            </a>
-            <a href="#${sections.issues.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${issueCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Issues</span>
-            </a>
-            <a href="#${sections.reviewedPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${reviewedPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Reviewed PRs</span>
-            </a>
-            <a href="#${sections.coAuthoredPrs.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${coAuthoredPrCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Co-Authored PRs</span>
-            </a>
-            <a href="#${sections.collaborations.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-              <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${collaborationCount}</span>
-              <span class="text-xs sm:text-md text-gray-500 mt-1">Collaborations</span>
-            </a>
+            ${[
+                {
+                  id: sections.pullRequests.id,
+                  count: prCount,
+                  label: 'Merged PRs',
+                  icon: sections.pullRequests.icon,
+                },
+                {
+                  id: sections.issues.id,
+                  count: issueCount,
+                  label: 'Issues',
+                  icon: sections.issues.icon,
+                },
+                {
+                  id: sections.reviewedPrs.id,
+                  count: reviewedPrCount,
+                  label: 'Reviewed PRs',
+                  icon: sections.reviewedPrs.icon,
+                },
+                {
+                  id: sections.coAuthoredPrs.id,
+                  count: coAuthoredPrCount,
+                  label: 'Co-Authored PRs',
+                  icon: sections.coAuthoredPrs.icon,
+                },
+                {
+                  id: sections.collaborations.id,
+                  count: collaborationCount,
+                  label: 'Collaborations',
+                  icon: sections.collaborations.icon,
+                },
+              ]
+              .map(
+                (item) => `
+              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
+                <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${item.count}</span>
+                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                  <span class="breakdown-icon-wrapper opacity-70">
+                    ${item.icon}
+                  </span>
+                  <span class="breakdown-label">${item.label}</span>
+                </div>
+              </a>
+              `
+              )
+              .join('')}
           </div>
         </section>
 
@@ -418,8 +445,11 @@ ${navHtmlForReports}
 
       // Details tag is used for collapsible sections.
       htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
-      htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold">\n`;
-      htmlContent += `  <span class="inline-block">${sectionInfo.icon} ${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
+      htmlContent += ` <summary style="color: ${COLORS.primary.rgb};" class="text-xl font-bold cursor-pointer outline-none">\n`;
+      htmlContent += `  <div class="inline-flex items-center flex-nowrap gap-2 ml-3" style="vertical-align: middle;">\n`;
+      htmlContent += `    <span class="w-6 h-6 flex items-center shrink-0">${sectionInfo.icon}</span>\n`;
+      htmlContent += `    <span class="text-xl font-bold whitespace-nowrap">${sectionInfo.title} (${items ? items.length : 0})</span>\n`;
+      htmlContent += `  </div>\n`;
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
@@ -471,11 +501,13 @@ ${navHtmlForReports}
           const isStaticColumn = i === 0; // The 'No.' column is static (not sortable).
 
           const thAttributes = isStaticColumn ? '' : `data-type="${type}" title="Click to sort"`;
-          const sortIconHtml = isStaticColumn ? '' : ' <span class="sort-icon">↕</span>';
+          const headerContent = isStaticColumn
+            ? sectionInfo.headers[i]
+            : `<span class="th-content">${sectionInfo.headers[i]} <span class="sort-icon ml-1">↕</span></span>`;
           const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
 
           tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
-              ${sectionInfo.headers[i]}${sortIconHtml}
+              ${headerContent}
           </th>\n`;
         }
         tableContent += `   </tr>\n`;
