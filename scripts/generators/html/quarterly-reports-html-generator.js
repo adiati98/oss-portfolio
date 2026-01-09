@@ -490,7 +490,7 @@ ${navHtmlForReports}
         `;
 
         // Generate the contribution table.
-        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
+        let tableContent = `<div class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100">\n`;
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
         tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
         tableContent += `   <tr>\n`;

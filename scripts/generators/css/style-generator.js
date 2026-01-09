@@ -250,6 +250,19 @@ function getReportStyleCss() {
       color: ${COLORS.primary.rgb};
     }
 
+    .report-table {
+      border-collapse: separate; 
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .report-table thead {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
     .report-table th,
     .report-table td {
       padding: 10px 12px;
@@ -259,6 +272,16 @@ function getReportStyleCss() {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+    .report-table th {
+      background-image: linear-gradient(${COLORS.primary[5]}, ${COLORS.primary[5]});
+      background-color: ${COLORS.background.white} !important;
+      font-weight: 600;
+    }
+
+    .report-table thead th {
+      border-bottom: 1px solid #e5e7eb;
+    }
+
     .report-table tbody tr:last-child td {
       border-bottom: none;
     }
@@ -305,6 +328,7 @@ function getReportStyleCss() {
     /* Search Bar Icon Positioning */
     .icon-input-container {
       position: relative;
+      background-color: ${COLORS.background.white};
     }
     .icon-input-container input {
       padding-left: 36px !important;
