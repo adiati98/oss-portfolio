@@ -117,49 +117,15 @@
         color: rgb(67, 56, 202);
       }
 
-      .report-table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      .report-table thead {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-
       .report-table th,
       .report-table td {
         padding: 10px 12px;
         border-bottom: 1px solid #e5e7eb;
         text-align: left;
-        height: 120px;
-        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-
-      .report-table td {
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.4;
-      }
-
-      .report-table th {
-        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
-        background-color: rgb(255, 255, 255) !important;
-        font-weight: 600;
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.2;
-        height: 80px;
-      }
-
-      .report-table thead th {
-        border-bottom: 1px solid #e5e7eb;
-      }
-
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -206,7 +172,6 @@
       /* Search Bar Icon Positioning */
       .icon-input-container {
         position: relative;
-        background-color: rgb(255, 255, 255);
       }
       .icon-input-container input {
         padding-left: 36px !important;
@@ -473,6 +438,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -496,6 +462,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -518,6 +485,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -543,6 +511,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -625,6 +594,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -670,31 +640,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -703,14 +675,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -719,7 +691,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -728,7 +700,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -737,18 +709,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Add June 2023 newsletter" data-col-type="string">
                         <a
@@ -762,18 +731,15 @@
                       <td data-value="2023-06-08T16:06:19Z" data-col-type="date">2023-06-08</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @adiati98 as a contributor" data-col-type="string">
                         <a
@@ -787,18 +753,15 @@
                       <td data-value="2023-05-26T13:58:51Z" data-col-type="date">2023-05-26</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Add May 2023 newsletter" data-col-type="string">
                         <a
@@ -812,18 +775,15 @@
                       <td data-value="2023-05-04T14:17:10Z" data-col-type="date">2023-05-04</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Add April 2023 newsletter" data-col-type="string">
                         <a
@@ -887,31 +847,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="issues-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -920,14 +882,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 35%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -936,7 +898,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closed <span class="sort-icon ml-1">↕</span></span
@@ -945,7 +907,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closing Period <span class="sort-icon ml-1">↕</span></span
@@ -954,18 +916,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Font Responsiveness in Smaller Screen" data-col-type="string">
                         <a
@@ -979,18 +938,15 @@
                       <td data-value="2024-01-19T18:47:37Z" data-col-type="date">2024-01-19</td>
                       <td data-value="204" data-col-type="number">204 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >podcast-transcripts</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
                       <td data-value="Update Transcriptions Guidelines" data-col-type="string">
                         <a
@@ -1004,18 +960,15 @@
                       <td data-value="2023-10-09T12:51:28Z" data-col-type="date">2023-10-09</td>
                       <td data-value="105" data-col-type="number">105 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >podcast-transcripts</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
                       <td data-value="Add License" data-col-type="string">
                         <a
@@ -1029,18 +982,15 @@
                       <td data-value="2023-10-10T12:29:03Z" data-col-type="date">2023-10-10</td>
                       <td data-value="106" data-col-type="number">106 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >podcast-transcripts</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
                       <td data-value="Add CODE_OF_CONDUCT.md" data-col-type="string">
                         <a
@@ -1054,18 +1004,15 @@
                       <td data-value="2023-06-26T13:11:00Z" data-col-type="date">2023-06-26</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >podcast-transcripts</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/podcast-transcripts</span
+                        >
                       </td>
                       <td data-value="Add CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -1079,18 +1026,15 @@
                       <td data-value="2023-10-09T12:50:07Z" data-col-type="date">2023-10-09</td>
                       <td data-value="105" data-col-type="number">105 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Add June 2023 newsletter to the website"
@@ -1107,18 +1051,15 @@
                       <td data-value="2023-06-08T16:06:21Z" data-col-type="date">2023-06-08</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Our Members page on the website breakdown"
@@ -1135,18 +1076,15 @@
                       <td data-value="2023-06-03T04:41:04Z" data-col-type="date">2023-06-03</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Update VC Slack Channel Guide on website"
@@ -1163,18 +1101,15 @@
                       <td data-value="2023-07-19T14:33:34Z" data-col-type="date">2023-07-19</td>
                       <td data-value="69" data-col-type="number">69 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Add May 2023 newsletter to the website"
@@ -1191,18 +1126,15 @@
                       <td data-value="2023-05-04T14:17:11Z" data-col-type="date">2023-05-04</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Add April 2023 newsletter to the website"
@@ -1268,31 +1200,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="reviewed-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1301,14 +1235,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1317,7 +1251,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Review <span class="sort-icon ml-1">↕</span></span
@@ -1326,7 +1260,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -1335,7 +1269,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -1344,21 +1278,18 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td
                         data-value="the-collab-lab/tcl-58-smart-shopping-list"
                         data-col-type="string"
                       >
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >the-collab-lab</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >tcl-58-smart-shopping-list</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >the-collab-lab/tcl-58-smart-shopping-list</span
+                        >
                       </td>
                       <td data-value="Make website look professional" data-col-type="string">
                         <a
@@ -1482,31 +1413,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="collaborations-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1515,14 +1448,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1531,7 +1464,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -1540,7 +1473,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -1549,18 +1482,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Add your profile to our Members Page!" data-col-type="string">
                         <a
@@ -1583,18 +1513,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Add Neurodiverse in Tech resource page"
@@ -1620,18 +1547,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Reorganize VC resources" data-col-type="string">
                         <a
@@ -1979,20 +1903,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
-          const target = document.querySelector(hash);
-          if (target && target.tagName === 'DETAILS') {
-            document.querySelectorAll('details').forEach((d) => (d.open = false));
-            target.open = true;
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
             }, 100);
           }
         } else {
-          const def = document.getElementById('merged-prs');
-          if (def) def.open = true;
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);

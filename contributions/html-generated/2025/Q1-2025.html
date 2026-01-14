@@ -117,49 +117,15 @@
         color: rgb(67, 56, 202);
       }
 
-      .report-table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      .report-table thead {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-
       .report-table th,
       .report-table td {
         padding: 10px 12px;
         border-bottom: 1px solid #e5e7eb;
         text-align: left;
-        height: 120px;
-        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-
-      .report-table td {
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.4;
-      }
-
-      .report-table th {
-        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
-        background-color: rgb(255, 255, 255) !important;
-        font-weight: 600;
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.2;
-        height: 80px;
-      }
-
-      .report-table thead th {
-        border-bottom: 1px solid #e5e7eb;
-      }
-
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -206,7 +172,6 @@
       /* Search Bar Icon Positioning */
       .icon-input-container {
         position: relative;
-        background-color: rgb(255, 255, 255);
       }
       .icon-input-container input {
         padding-left: 36px !important;
@@ -473,6 +438,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -496,6 +462,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -518,6 +485,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -543,6 +511,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -625,6 +594,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -670,31 +640,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -703,14 +675,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -719,7 +691,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -728,7 +700,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -737,18 +709,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="feat: Migrate Docs to Docusaurus" data-col-type="string">
                         <a
@@ -762,18 +731,15 @@
                       <td data-value="2025-03-19T13:00:53Z" data-col-type="date">2025-03-19</td>
                       <td data-value="40" data-col-type="number">40 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >mautic</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >mautic-community-handbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/mautic-community-handbook</span
+                        >
                       </td>
                       <td data-value="Convert Designer section to RST" data-col-type="string">
                         <a
@@ -787,18 +753,15 @@
                       <td data-value="2025-03-03T12:51:17Z" data-col-type="date">2025-03-03</td>
                       <td data-value="19" data-col-type="number">19 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="fix: Change wording for archived newsletters"
@@ -815,18 +778,15 @@
                       <td data-value="2025-02-18T01:37:34Z" data-col-type="date">2025-02-18</td>
                       <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value='fix: Change "quarterly" to "quarter"' data-col-type="string">
                         <a
@@ -840,18 +800,15 @@
                       <td data-value="2025-02-11T22:55:45Z" data-col-type="date">2025-02-11</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add Spring 2025 Quarter Challenge to the website"
@@ -868,18 +825,15 @@
                       <td data-value="2025-01-30T15:26:40Z" data-col-type="date">2025-01-30</td>
                       <td data-value="12" data-col-type="number">12 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="fix: Markdown warnings and monthly challenges documentation structure"
@@ -946,31 +900,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="issues-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -979,14 +935,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 35%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -995,7 +951,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closed <span class="sort-icon ml-1">↕</span></span
@@ -1004,7 +960,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closing Period <span class="sort-icon ml-1">↕</span></span
@@ -1013,18 +969,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Review and update the Community Writers page"
@@ -1041,18 +994,15 @@
                       <td data-value="2025-03-01T09:24:11Z" data-col-type="date">2025-03-01</td>
                       <td data-value="11" data-col-type="number">11 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >mautic</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >mautic-community-handbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/mautic-community-handbook</span
+                        >
                       </td>
                       <td data-value="Convert Designer section to RST" data-col-type="string">
                         <a
@@ -1066,18 +1016,15 @@
                       <td data-value="2025-03-03T12:51:18Z" data-col-type="date">2025-03-03</td>
                       <td data-value="20" data-col-type="number">20 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value='fix: Change "Quarterly" to "Quarter" in Spring 2025 Quarter Challenge page'
@@ -1095,18 +1042,15 @@
                       <td data-value="2025-02-11T22:55:46Z" data-col-type="date">2025-02-11</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Update the January 2025 challenge documentation"
@@ -1123,18 +1067,15 @@
                       <td data-value="2025-06-04T01:48:37Z" data-col-type="date">2025-06-04</td>
                       <td data-value="113" data-col-type="number">113 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Update the December 2024 challenge documentation"
@@ -1151,16 +1092,13 @@
                       <td data-value="2025-02-11T11:54:08Z" data-col-type="date">2025-02-11</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="forem/forem" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >forem</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit">forem</span>
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded">forem/forem</span>
                       </td>
                       <td
                         data-value="Dev.to&#39;s navbar is not shown on mobile app"
@@ -1177,18 +1115,15 @@
                       <td data-value="2025-03-03T23:07:51Z" data-col-type="date">2025-03-03</td>
                       <td data-value="23" data-col-type="number">23 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td
                         data-value="Add Spring 2025 Quarter Challenge to the website"
@@ -1254,31 +1189,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="reviewed-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1287,14 +1224,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1303,7 +1240,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Review <span class="sort-icon ml-1">↕</span></span
@@ -1312,7 +1249,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -1321,7 +1258,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -1330,18 +1267,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Replace references to old newsletter link with new link"
@@ -1368,18 +1302,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @samuelard7 as a contributor"
@@ -1403,16 +1334,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="OpenSource-Communities/intro" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit">intro</span>
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/intro</span
+                        >
                       </td>
                       <td data-value="feat: adds repo to guestbook" data-col-type="string">
                         <a
@@ -1436,18 +1366,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @crow50 as a contributor" data-col-type="string">
                         <a
@@ -1471,18 +1398,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add @aerg04 as a contributor" data-col-type="string">
                         <a
@@ -1506,18 +1430,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add @voaidesr as a contributor " data-col-type="string">
                         <a
@@ -1541,18 +1462,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @sultanovich as a contributor"
@@ -1579,18 +1497,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add @Spcxx as a contributor" data-col-type="string">
                         <a
@@ -1614,18 +1529,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @notavailable4u as a contributor"
@@ -1652,18 +1564,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @pedropalmav as a contributor"
@@ -1690,18 +1599,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @vivienogoun as a contributor"
@@ -1728,18 +1634,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @vianneyyovo as a contributor"
@@ -1766,18 +1669,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add @janzengo as a contributor" data-col-type="string">
                         <a
@@ -1801,18 +1701,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @vianneyyovo as a contributor"
@@ -1836,18 +1733,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @ebubecodes as a contributor"
@@ -1874,18 +1768,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add &lt;@AngelMancilla as a contributor"
@@ -1912,18 +1803,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>17.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @Jajangmyeon01 as a contributor"
@@ -1947,18 +1835,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>18.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @hritikyadav07 as a contributor"
@@ -1985,18 +1870,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>19.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: add @shampost as a contributor" data-col-type="string">
                         <a
@@ -2020,18 +1902,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>20.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @Muzammil-cyber as a contributor"
@@ -2058,18 +1937,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>21.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @muou000 as a contributor" data-col-type="string">
                         <a
@@ -2093,18 +1969,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>22.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add ArchILLtect as a contributor"
@@ -2131,18 +2004,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>23.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="Update the README in the MCs folder" data-col-type="string">
                         <a
@@ -2166,18 +2036,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>24.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @darksoul-7 as a contributor"
@@ -2201,18 +2068,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>25.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @Rhizvo as a contributor" data-col-type="string">
                         <a
@@ -2236,18 +2100,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>26.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @NeverGray as a contributor" data-col-type="string">
                         <a
@@ -2271,18 +2132,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>27.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @doraemon2200 as a contributor"
@@ -2309,18 +2167,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>28.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @shafayat666 as a contributor"
@@ -2347,18 +2202,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>29.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add &lt;@Muskan-Seth03&gt; as a contributor"
@@ -2385,18 +2237,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>30.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @SnowyCrest as a contributor"
@@ -2423,18 +2272,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>31.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @Rijan-Joshi as a contributor"
@@ -2461,18 +2307,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>32.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="Remove Abbey as CTG Coordinator" data-col-type="string">
                         <a
@@ -2496,18 +2339,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>33.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="Remove Pack Hunt – Late Nite Menu" data-col-type="string">
                         <a
@@ -2531,18 +2371,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>34.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >mautic</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >low-no-code</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/low-no-code</span
+                        >
                       </td>
                       <td data-value="Create 2025.md" data-col-type="string">
                         <a
@@ -2566,18 +2403,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>35.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="Add maintainer roles to readme" data-col-type="string">
                         <a
@@ -2601,18 +2435,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>36.</td>
                       <td data-value="OpenSource-Communities/pizza-verse" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >pizza-verse</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/pizza-verse</span
+                        >
                       </td>
                       <td
                         data-value="feat: Added a fun fact about pizza in Egypt"
@@ -2639,18 +2470,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>37.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @quartel as a contributor" data-col-type="string">
                         <a
@@ -2674,18 +2502,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>38.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @manojtharindu11 as a contributor"
@@ -2712,18 +2537,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>39.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: add @jcrosser as a contributor" data-col-type="string">
                         <a
@@ -2747,18 +2569,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>40.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @Aftar-Ahmad-Sami as a contributor"
@@ -2785,18 +2604,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>41.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add mbadrawy1 as a contributor" data-col-type="string">
                         <a
@@ -2820,18 +2636,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>42.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @madevanni as a contributor" data-col-type="string">
                         <a
@@ -2855,18 +2668,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>43.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add @Lmdingi as a contributor" data-col-type="string">
                         <a
@@ -2890,18 +2700,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>44.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @irisxvii as a contributor" data-col-type="string">
                         <a
@@ -2925,18 +2732,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>45.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @daivydking as a contributor"
@@ -2963,18 +2767,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>46.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @BrodyWills as a contributor"
@@ -3001,18 +2802,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>47.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add ankit8848 as a contributor" data-col-type="string">
                         <a
@@ -3036,18 +2834,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>48.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @pyogi27 as a contributor" data-col-type="string">
                         <a
@@ -3071,18 +2866,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>49.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @Luca1905 as a contributor" data-col-type="string">
                         <a
@@ -3106,18 +2898,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>50.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @hakeemyusuff as a contributor"
@@ -3144,18 +2933,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>51.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @RayX81194 as a contributor" data-col-type="string">
                         <a
@@ -3179,18 +2965,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>52.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add &lt;@errantpianist&gt; as a contributor"
@@ -3217,18 +3000,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>53.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @diegodemiranda as a contributor"
@@ -3255,18 +3035,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>54.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @divin3circle as a contributor"
@@ -3345,31 +3122,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="co-authored-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Co-Authored PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -3378,14 +3157,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -3394,7 +3173,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Commit <span class="sort-icon ml-1">↕</span></span
@@ -3403,7 +3182,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 13%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Commit Period <span class="sort-icon ml-1">↕</span></span
@@ -3412,7 +3191,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -3421,18 +3200,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @vianneyyovo as a contributor"
@@ -3459,18 +3235,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @Rhizvo as a contributor" data-col-type="string">
                         <a
@@ -3494,18 +3267,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @NeverGray as a contributor" data-col-type="string">
                         <a
@@ -3529,18 +3299,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @shafayat666 as a contributor"
@@ -3567,18 +3334,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add &lt;@Muskan-Seth03&gt; as a contributor"
@@ -3605,18 +3369,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @SnowyCrest as a contributor"
@@ -3643,18 +3404,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @Rijan-Joshi as a contributor"
@@ -3681,18 +3439,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >mautic</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >low-no-code</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/low-no-code</span
+                        >
                       </td>
                       <td data-value="Create 2025.md" data-col-type="string">
                         <a
@@ -3716,18 +3471,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td data-value="Add maintainer roles to readme" data-col-type="string">
                         <a
@@ -3751,18 +3503,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @manojtharindu11 as a contributor"
@@ -3789,18 +3538,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: add @jcrosser as a contributor" data-col-type="string">
                         <a
@@ -3824,18 +3570,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @Aftar-Ahmad-Sami as a contributor"
@@ -3862,18 +3605,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @irisxvii as a contributor" data-col-type="string">
                         <a
@@ -3897,18 +3637,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @daivydking as a contributor"
@@ -3935,18 +3672,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @Luca1905 as a contributor" data-col-type="string">
                         <a
@@ -3970,18 +3704,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: add @hakeemyusuff as a contributor"
@@ -4008,18 +3739,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>17.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @RayX81194 as a contributor" data-col-type="string">
                         <a
@@ -4043,18 +3771,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>18.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="feat: Add ankit8848 as a contributor" data-col-type="string">
                         <a
@@ -4078,18 +3803,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>19.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add &lt;@errantpianist&gt; as a contributor"
@@ -4116,18 +3838,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>20.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @diegodemiranda as a contributor"
@@ -4154,18 +3873,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>21.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @divin3circle as a contributor"
@@ -4192,18 +3908,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>22.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @pyogi27 as a contributor" data-col-type="string">
                         <a
@@ -4227,18 +3940,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>23.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="docs: add @ivngzmn as a contributor" data-col-type="string">
                         <a
@@ -4262,18 +3972,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>24.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @sasori-morningstar as a contributor"
@@ -4368,31 +4075,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="collaborations-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -4401,14 +4110,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -4417,7 +4126,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -4426,7 +4135,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -4435,18 +4144,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Lint documentation for consistency"
@@ -4472,18 +4178,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="docs: add @arvidtorbjoernsen as a contributor"
@@ -4506,18 +4209,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >mautic</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >mautic-community-handbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/mautic-community-handbook</span
+                        >
                       </td>
                       <td
                         data-value="Convert Contributing to Mautic section to RST [multiple sub-issues]"
@@ -4540,18 +4240,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
                       <td data-value="all-contributors/allcontributors.org" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >all-contributors</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >allcontributors.org</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >all-contributors/allcontributors.org</span
+                        >
                       </td>
                       <td data-value="Call for translators" data-col-type="string">
                         <a
@@ -4574,18 +4271,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="feat: Add @tejasbargujepatil as a contributor"
@@ -4608,18 +4302,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature: add bridgetamana as a contributor "
@@ -4642,18 +4333,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >VC-Community-Docs</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/VC-Community-Docs</span
+                        >
                       </td>
                       <td
                         data-value="docs: Update the README in the MCs folder"
@@ -4676,18 +4364,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td data-value="Feature: Add @livcia as a contributor" data-col-type="string">
                         <a
@@ -4707,18 +4392,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >Virtual-Coffee</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >virtualcoffee.io</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
                       </td>
                       <td data-value="Newsletter needs updated" data-col-type="string">
                         <a
@@ -4738,18 +4420,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature: Add @safi5890 as a contributor."
@@ -4772,18 +4451,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature:Add @ANISHKARTHIC as a Contributor "
@@ -4806,18 +4482,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature: Add @snehaaprabhu as a contributor"
@@ -4840,18 +4513,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature: Add @BansalAbhinav as a contributor"
@@ -4874,18 +4544,15 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >OpenSource-Communities</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >guestbook</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
                       </td>
                       <td
                         data-value="Feature: add @Ahmed-iaaz64 as a contributor"
@@ -5236,20 +4903,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
-          const target = document.querySelector(hash);
-          if (target && target.tagName === 'DETAILS') {
-            document.querySelectorAll('details').forEach((d) => (d.open = false));
-            target.open = true;
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
             }, 100);
           }
         } else {
-          const def = document.getElementById('merged-prs');
-          if (def) def.open = true;
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);

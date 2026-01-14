@@ -117,49 +117,15 @@
         color: rgb(67, 56, 202);
       }
 
-      .report-table {
-        border-collapse: separate;
-        border-spacing: 0;
-        width: 100%;
-        table-layout: fixed;
-      }
-
-      .report-table thead {
-        position: sticky;
-        top: 0;
-        z-index: 20;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      }
-
       .report-table th,
       .report-table td {
         padding: 10px 12px;
         border-bottom: 1px solid #e5e7eb;
         text-align: left;
-        height: 120px;
-        vertical-align: middle;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-
-      .report-table td {
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.4;
-      }
-
-      .report-table th {
-        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
-        background-color: rgb(255, 255, 255) !important;
-        font-weight: 600;
-        white-space: normal;
-        word-wrap: break-word;
-        line-height: 1.2;
-        height: 80px;
-      }
-
-      .report-table thead th {
-        border-bottom: 1px solid #e5e7eb;
-      }
-
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -206,7 +172,6 @@
       /* Search Bar Icon Positioning */
       .icon-input-container {
         position: relative;
-        background-color: rgb(255, 255, 255);
       }
       .icon-input-container input {
         padding-left: 36px !important;
@@ -473,6 +438,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -496,6 +462,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -518,6 +485,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -543,6 +511,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -607,6 +576,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -652,31 +622,33 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div
-                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
-              >
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202)"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -685,14 +657,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202)"
+                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -701,7 +673,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -710,7 +682,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202)"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -719,18 +691,15 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
                       <td data-value="brittanyrw/emojipages" data-col-type="string">
-                        <div class="flex flex-col min-w-0">
-                          <span
-                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
-                            >brittanyrw</span
-                          >
-                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
-                            >emojipages</span
-                          >
-                        </div>
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >brittanyrw/emojipages</span
+                        >
                       </td>
                       <td data-value="Add Jurassic Park" data-col-type="string">
                         <a
@@ -1211,20 +1180,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
-          const target = document.querySelector(hash);
-          if (target && target.tagName === 'DETAILS') {
-            document.querySelectorAll('details').forEach((d) => (d.open = false));
-            target.open = true;
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
             }, 100);
           }
         } else {
-          const def = document.getElementById('merged-prs');
-          if (def) def.open = true;
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
