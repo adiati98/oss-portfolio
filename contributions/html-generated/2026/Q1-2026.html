@@ -117,15 +117,49 @@
         color: rgb(67, 56, 202);
       }
 
+      .report-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        table-layout: fixed;
+      }
+
+      .report-table thead {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
       .report-table th,
       .report-table td {
         padding: 10px 12px;
         border-bottom: 1px solid #e5e7eb;
         text-align: left;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        height: 120px;
+        vertical-align: middle;
       }
+
+      .report-table td {
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.4;
+      }
+
+      .report-table th {
+        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
+        background-color: rgb(255, 255, 255) !important;
+        font-weight: 600;
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.2;
+        height: 80px;
+      }
+
+      .report-table thead th {
+        border-bottom: 1px solid #e5e7eb;
+      }
+
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -172,6 +206,7 @@
       /* Search Bar Icon Positioning */
       .icon-input-container {
         position: relative;
+        background-color: rgb(255, 255, 255);
       }
       .icon-input-container input {
         padding-left: 36px !important;
@@ -396,7 +431,7 @@
                 style="background-color: rgb(67, 56, 202)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">35</p>
+                <p class="text-4xl font-extrabold">38</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -438,13 +473,12 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
-
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">6</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">7</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -462,13 +496,12 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
-
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">9</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">10</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -485,7 +518,6 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
-
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -511,13 +543,12 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
-
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">2</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">3</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -587,14 +618,13 @@
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >mautic/mautic-community-handbook</a
                   >
-                  (6 contributions)
+                  (8 contributions)
                 </li>
               </ol>
             </div>
           </section>
 
           <hr class="my-8 border-gray-200" />
-
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -640,33 +670,31 @@
                       />
                     </svg>
                   </div>
-
                   <input
                     type="text"
                     id="merged-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
-                    aria-label="Search contributions in Merged PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
-
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 20%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -675,14 +703,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 30%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -691,7 +719,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -700,7 +728,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -709,15 +737,18 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>1.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Change Roles page link and fix a broken link in branch 7.1"
@@ -734,15 +765,18 @@
                       <td data-value="2026-01-13T13:00:05Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>2.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Change Roles page link and fix a broken link in branch 7.0"
@@ -759,15 +793,18 @@
                       <td data-value="2026-01-13T12:58:06Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>3.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Add CONTRIBUTING.md to branch 7.1"
@@ -784,15 +821,18 @@
                       <td data-value="2026-01-13T12:57:57Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>4.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Change Roles page link and fix a broken link in branch 6.0"
@@ -809,15 +849,18 @@
                       <td data-value="2026-01-13T12:57:23Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>5.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Add contributing guidelines to branch 7.0"
@@ -834,15 +877,18 @@
                       <td data-value="2026-01-13T12:56:52Z" data-col-type="date">2026-01-13</td>
                       <td data-value="55" data-col-type="number">55 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>6.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Add contributing guidelines to branch 6.0"
@@ -859,15 +905,18 @@
                       <td data-value="2026-01-13T12:16:14Z" data-col-type="date">2026-01-13</td>
                       <td data-value="55" data-col-type="number">55 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>7.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Change Roles page link and fix a broken link"
@@ -884,15 +933,18 @@
                       <td data-value="2026-01-13T10:53:01Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>8.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Overhaul CONTRIBUTING.md for branch 5.2"
@@ -909,15 +961,18 @@
                       <td data-value="2026-01-13T10:32:59Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>9.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Docs: Overhaul CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -931,15 +986,18 @@
                       <td data-value="2026-01-13T09:41:04Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>10.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Fix: Broken link to contributing docs at community handbook"
@@ -956,15 +1014,18 @@
                       <td data-value="2026-01-12T14:32:47Z" data-col-type="date">2026-01-12</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>11.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Fix: Broken link at CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -978,15 +1039,18 @@
                       <td data-value="2026-01-12T13:53:18Z" data-col-type="date">2026-01-12</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>12.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value='Docs: Update "Contributing to Mautic’s documentation" page'
@@ -1003,15 +1067,18 @@
                       <td data-value="2026-01-12T12:44:46Z" data-col-type="date">2026-01-12</td>
                       <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>13.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Docs: Overhaul contributing guidelines"
@@ -1028,15 +1095,18 @@
                       <td data-value="2026-01-12T12:43:17Z" data-col-type="date">2026-01-12</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>14.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Docs: Add Roles page" data-col-type="string">
                         <a
@@ -1050,15 +1120,18 @@
                       <td data-value="2026-01-12T10:55:54Z" data-col-type="date">2026-01-12</td>
                       <td data-value="31" data-col-type="number">31 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>15.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Fix: Broken badge at README" data-col-type="string">
                         <a
@@ -1072,15 +1145,18 @@
                       <td data-value="2026-01-12T10:55:27Z" data-col-type="date">2026-01-12</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>16.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Fix: Broken links" data-col-type="string">
                         <a
@@ -1094,15 +1170,18 @@
                       <td data-value="2026-01-12T10:45:55Z" data-col-type="date">2026-01-12</td>
                       <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>17.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Fix: 404 link to Doctrine ORM query builder"
@@ -1119,15 +1198,18 @@
                       <td data-value="2026-01-09T18:18:54Z" data-col-type="date">2026-01-09</td>
                       <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-gray-50 table-row-hover">
                       <td>18.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Add contributing guidelines and update README"
@@ -1171,7 +1253,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Issues (6)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Issues (7)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1194,33 +1276,31 @@
                       />
                     </svg>
                   </div>
-
                   <input
                     type="text"
                     id="issues-search"
                     placeholder="Search (Project, Title, status:open...)"
-                    aria-label="Search contributions in Issues"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
-
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 20%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1229,14 +1309,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 35%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 30%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -1245,7 +1325,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Closed <span class="sort-icon ml-1">↕</span></span
@@ -1254,7 +1334,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Closing Period <span class="sort-icon ml-1">↕</span></span
@@ -1263,15 +1343,55 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>1.</td>
-                      <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
+                      <td data-value="mautic/mautic-community-handbook" data-col-type="string">
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
+                      </td>
+                      <td
+                        data-value="[DOCS]: Add instructions to find issues"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/mautic-community-handbook/issues/428"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >[DOCS]: Add instructions to find issues</a
                         >
+                      </td>
+                      <td data-value="2026-01-14T08:34:35Z" data-col-type="date">2026-01-14</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
+                        <span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
+                          >OPEN</span
+                        >
+                      </td>
+                    </tr>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>2.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="[DOCS]: Create a Contributing Guidelines in branch 7.1"
@@ -1288,15 +1408,18 @@
                       <td data-value="2026-01-13T13:37:16Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>2.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>3.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/user-documentation</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >user-documentation</span
+                          >
+                        </div>
                       </td>
                       <td data-value="[DOCS]: Overhaul CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -1310,15 +1433,18 @@
                       <td data-value="2026-01-13T10:33:00Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>3.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>4.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td data-value="[DOCS]: Overhaul CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -1332,15 +1458,18 @@
                       <td data-value="2026-01-13T09:41:05Z" data-col-type="date">2026-01-13</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>4.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>5.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="[DOCS]: Overhaul CONTRIBUTING.md" data-col-type="string">
                         <a
@@ -1354,15 +1483,18 @@
                       <td data-value="2026-01-12T12:43:18Z" data-col-type="date">2026-01-12</td>
                       <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>5.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>6.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="[DOCS]: Prioritize local environment than GitHub Codespaces in Tester page"
@@ -1389,15 +1521,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>6.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>7.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/mautic-community-handbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value='[DOCS]: Update "Contributing to Mautic’s documentation" page'
@@ -1440,7 +1575,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (9)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (10)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1463,33 +1598,31 @@
                       />
                     </svg>
                   </div>
-
                   <input
                     type="text"
                     id="reviewed-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
-                    aria-label="Search contributions in Reviewed PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
-
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 20%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1498,14 +1631,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 30%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1514,7 +1647,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 10%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >First Review <span class="sort-icon ml-1">↕</span></span
@@ -1523,7 +1656,7 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 10%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -1532,7 +1665,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 10%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -1541,15 +1674,53 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>1.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >OpenSource-Communities/guestbook</span
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >OpenSource-Communities</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >guestbook</span
+                          >
+                        </div>
+                      </td>
+                      <td data-value="feat: Add @BrendaG04 as a contributor" data-col-type="string">
+                        <a
+                          href="https://github.com/OpenSource-Communities/guestbook/pull/891"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >feat: Add @BrendaG04 as a contributor</a
                         >
+                      </td>
+                      <td data-value="2026-01-14T01:36:27Z" data-col-type="date">2026-01-14</td>
+                      <td data-value="2026-01-14T07:26:24Z" data-col-type="date">2026-01-14</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2026-01-14<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>2.</td>
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >OpenSource-Communities</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >guestbook</span
+                          >
+                        </div>
                       </td>
                       <td data-value="feat: add @Khytron as a contributor" data-col-type="string">
                         <a
@@ -1573,15 +1744,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>2.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>3.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Config form notes interface" data-col-type="string">
                         <a
@@ -1605,15 +1779,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>3.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>4.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Add comprehensive REST API documentation for 6 missing core APIs"
@@ -1640,15 +1817,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>4.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>5.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Navigating UI resources" data-col-type="string">
                         <a
@@ -1672,15 +1852,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>5.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>6.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Move templates to subfolder" data-col-type="string">
                         <a
@@ -1704,15 +1887,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>6.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>7.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Adding docs for flash messages" data-col-type="string">
                         <a
@@ -1736,15 +1922,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>7.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>8.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/developer-documentation-new</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >developer-documentation-new</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Amends form validation docs" data-col-type="string">
                         <a
@@ -1768,15 +1957,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>8.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>9.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/low-no-code</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >low-no-code</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Create 2026.md" data-col-type="string">
                         <a
@@ -1800,15 +1992,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>9.</td>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>10.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >mautic/low-no-code</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >low-no-code</span
+                          >
+                        </div>
                       </td>
                       <td data-value="Add my contribution (#158)" data-col-type="string">
                         <a
@@ -1909,7 +2104,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (2)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (3)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1932,33 +2127,31 @@
                       />
                     </svg>
                   </div>
-
                   <input
                     type="text"
                     id="collaborations-search"
                     placeholder="Search (Project, Title, status:open...)"
-                    aria-label="Search contributions in Collaborations"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
-
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto overflow-y-auto max-h-[70vh] rounded-lg border border-gray-100"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
                   <thead style="background-color: rgba(67, 56, 202, 0.05)">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th style="width: 5%; color: rgb(67, 56, 202)">No.</th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 20%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1967,14 +2160,14 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 30%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1983,7 +2176,7 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -1992,7 +2185,7 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
+                        style="width: 15%; color: rgb(67, 56, 202)"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -2001,15 +2194,49 @@
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr
-                      class="bg-white table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
+                    <tr class="bg-white table-row-hover">
                       <td>1.</td>
-                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >OpenSource-Communities/guestbook</span
+                      <td data-value="mautic/mautic-community-handbook" data-col-type="string">
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >mautic</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >mautic-community-handbook</span
+                          >
+                        </div>
+                      </td>
+                      <td data-value="Convert Promoting Integrations to RST" data-col-type="string">
+                        <a
+                          href="https://github.com/mautic/mautic-community-handbook/issues/259"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Convert Promoting Integrations to RST</a
                         >
+                      </td>
+                      <td data-value="2025-01-27T17:50:49Z" data-col-type="date">2025-01-27</td>
+                      <td data-value="2026-01-14T09:40:32Z" data-col-type="date">2026-01-14</td>
+                      <td data-value="CLOSED" data-col-type="status">
+                        2026-01-14<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          >CLOSED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr class="bg-gray-50 table-row-hover">
+                      <td>2.</td>
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >OpenSource-Communities</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >guestbook</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Feature: Add duytin095 as a contributor."
@@ -2032,15 +2259,18 @@
                         >
                       </td>
                     </tr>
-                    <tr
-                      class="bg-gray-50 table-row-hover"
-                      style="transition: background-color 0.15s ease-in-out"
-                    >
-                      <td>2.</td>
+                    <tr class="bg-white table-row-hover">
+                      <td>3.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
-                          >OpenSource-Communities/guestbook</span
-                        >
+                        <div class="flex flex-col min-w-0">
+                          <span
+                            class="text-[10px] uppercase tracking-wider text-gray-400 font-mono leading-none mb-1"
+                            >OpenSource-Communities</span
+                          >
+                          <span class="font-mono text-xs bg-gray-100 p-1 rounded w-fit"
+                            >guestbook</span
+                          >
+                        </div>
                       </td>
                       <td
                         data-value="Feature: Add @Serontas as a Contributor"
@@ -2362,27 +2592,20 @@
         });
       });
 
-      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;
         if (hash) {
-          const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === 'DETAILS') {
-            // Close all other details tags before opening the target one
-            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
-            targetDetails.open = true;
-            // Scroll to the opened section with a slight delay
+          const target = document.querySelector(hash);
+          if (target && target.tagName === 'DETAILS') {
+            document.querySelectorAll('details').forEach((d) => (d.open = false));
+            target.open = true;
             setTimeout(() => {
-              targetDetails.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
-              });
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 100);
           }
         } else {
-          // Open 'Merged PRs' by default if no hash is present.
-          const defaultDetails = document.getElementById('merged-prs');
-          if (defaultDetails) defaultDetails.open = true;
+          const def = document.getElementById('merged-prs');
+          if (def) def.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
