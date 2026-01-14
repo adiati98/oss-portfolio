@@ -254,6 +254,7 @@ function getReportStyleCss() {
       border-collapse: separate; 
       border-spacing: 0;
       width: 100%;
+      table-layout: fixed;
     }
 
     .report-table thead {
@@ -268,14 +269,24 @@ function getReportStyleCss() {
       padding: 10px 12px;
       border-bottom: 1px solid #e5e7eb;
       text-align: left;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      height: 120px;
+      vertical-align: middle;
     }
+    
+    .report-table td {
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 1.4;
+    }
+
     .report-table th {
       background-image: linear-gradient(${COLORS.primary[5]}, ${COLORS.primary[5]});
       background-color: ${COLORS.background.white} !important;
       font-weight: 600;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 1.2;
+      height: 80px;
     }
 
     .report-table thead th {
