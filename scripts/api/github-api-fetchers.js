@@ -99,6 +99,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
 
+    // Bypass cache if it's the current year or the PR has been updated since last cache
     if (!forceRefresh && commitCache.has(prUrlKey)) {
       const cached = commitCache.get(prUrlKey);
       if (cached && typeof cached === 'object' && cached.prUpdatedAt === prUpdatedAt) {
@@ -120,6 +121,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
       const lowerUsername = username.toLowerCase();
       const userCommits = allCommits.filter((c) => {
+        // Exclude standard GitHub merge commits to avoid inflated counts
         const isMergeCommit = c.parents && c.parents.length > 1;
         const msg = c.commit?.message?.toLowerCase() || '';
         const isMergeMsg =
@@ -160,9 +162,10 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
     console.log(`\n--- Fetching contributions for year: ${year} ---`);
     const yearStart = `${year}-01-01T00:00:00Z`,
       yearEnd = `${year + 1}-01-01T00:00:00Z`;
+    // Toggle forceRefresh for the current year to ensure latest changes are captured
     const isCurrentYear = year === currentYear;
 
-    // 1. Authored PRs
+    // 1. Authored PRs: PRs created by the user
     const prs = await getAllPages(
       `is:pr author:${GITHUB_USERNAME} is:merged merged:>=${yearStart} merged:<${yearEnd}`
     );
@@ -188,7 +191,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       prCache.add(pr.html_url);
     }
 
-    // 2. Issues
+    // 2. Issues: Issues opened by the user in external repositories
     const issues = await getAllPages(
       `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:>=${yearStart} created:<${yearEnd}`
     );
@@ -209,7 +212,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       });
     }
 
-    // 3. Interactions (Deeper search)
+    // 3. Interactions: Detects code contributions, reviews, and comments
     const q = [
       `is:pr -author:${GITHUB_USERNAME} involves:${GITHUB_USERNAME} updated:>=${yearStart} updated:<${yearEnd}`,
       `is:pr -author:${GITHUB_USERNAME} committer:${GITHUB_USERNAME} merged:>=${yearStart} merged:<${yearEnd}`,
@@ -233,6 +236,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       let isReviewer = false;
 
       if (isPR) {
+        // Co-author check: looks deep into PR commits
         const commitDetails = await getFirstCommitDetails(
           owner,
           repoName,
@@ -262,6 +266,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           });
         }
 
+        // Reviewer check: looks for formal GitHub Reviews
         const reviewDate = await getPrMyFirstReviewDate(
           owner,
           repoName,
@@ -294,6 +299,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         }
       }
 
+      // Collaboration fallback: Only counts if the user did NOT co-author or review
       if (!isCoAuthor && !isReviewer) {
         const commentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
         if (commentDate) {
