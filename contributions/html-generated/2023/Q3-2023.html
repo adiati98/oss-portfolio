@@ -396,7 +396,7 @@
                 style="background-color: rgb(67, 56, 202)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">58</p>
+                <p class="text-4xl font-extrabold">76</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -468,7 +468,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">16</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -491,7 +491,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">2</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -564,21 +564,21 @@
               <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
                 <li class="pl-2">
                   <a
+                    href="https://github.com/Virtual-Coffee/vc-preptember"
+                    target="_blank"
+                    class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                    >Virtual-Coffee/vc-preptember</a
+                  >
+                  (25 contributions)
+                </li>
+                <li class="pl-2">
+                  <a
                     href="https://github.com/Virtual-Coffee/virtualcoffee.io"
                     target="_blank"
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >Virtual-Coffee/virtualcoffee.io</a
                   >
                   (25 contributions)
-                </li>
-                <li class="pl-2">
-                  <a
-                    href="https://github.com/Virtual-Coffee/vc-preptember"
-                    target="_blank"
-                    class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
-                    >Virtual-Coffee/vc-preptember</a
-                  >
-                  (8 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -2087,11 +2087,648 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (0)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (16)</span>
                 </div>
               </summary>
-              <div class="p-4 text-gray-500 bg-gray-50 rounded-lg">
-                No contributions of this type in this quarter.
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="reviewed-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
+                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                    <tr>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >First Review <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="status"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>1.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add David to Preptember participants, David S on slack"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/29"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add David to Preptember participants, David S on slack</a
+                        >
+                      </td>
+                      <td data-value="2023-09-30T17:14:34Z" data-col-type="date">2023-09-30</td>
+                      <td data-value="2023-09-30T17:34:31Z" data-col-type="date">2023-09-30</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-30<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>2.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Added My Profile" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/26"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Added My Profile</a
+                        >
+                      </td>
+                      <td data-value="2023-09-27T19:49:30Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-29T15:40:59Z" data-col-type="date">2023-09-29</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-29<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>3.</td>
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >shesharpnl/knowledge-hub</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Support, Code of Conduct, Security, License"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/shesharpnl/knowledge-hub/pull/11"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >docs: Support, Code of Conduct, Security, License</a
+                        >
+                      </td>
+                      <td data-value="2023-09-28T20:57:17Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-09-29T05:59:29Z" data-col-type="date">2023-09-29</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-10-01<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>4.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Added memory-game to repositories list"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/24"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Added memory-game to repositories list</a
+                        >
+                      </td>
+                      <td data-value="2023-09-26T23:36:24Z" data-col-type="date">2023-09-26</td>
+                      <td data-value="2023-09-27T17:30:52Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-27<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>5.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add Christina as a Preptember participant"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/25"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Christina as a Preptember participant</a
+                        >
+                      </td>
+                      <td data-value="2023-09-27T03:56:48Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-27T10:46:31Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-27<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>6.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Adds Ross and Hacktoberfest HOWTO" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/17"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Adds Ross and Hacktoberfest HOWTO</a
+                        >
+                      </td>
+                      <td data-value="2023-09-23T03:27:10Z" data-col-type="date">2023-09-23</td>
+                      <td data-value="2023-09-27T10:40:56Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-27<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>7.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add Tammy M to Preptember participants"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/23"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Tammy M to Preptember participants</a
+                        >
+                      </td>
+                      <td data-value="2023-09-25T22:16:37Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="2023-09-26T05:46:52Z" data-col-type="date">2023-09-26</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-26<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>8.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Added cris crawford" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/20"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Added cris crawford</a
+                        >
+                      </td>
+                      <td data-value="2023-09-24T15:29:32Z" data-col-type="date">2023-09-24</td>
+                      <td data-value="2023-09-25T08:28:59Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-25<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>9.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="feat: add BekahHW to participants and repos to opt in"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/11"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >feat: add BekahHW to participants and repos to opt in</a
+                        >
+                      </td>
+                      <td data-value="2023-09-14T15:22:12Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="2023-09-20T17:56:12Z" data-col-type="date">2023-09-20</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-20<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>10.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Add Teri to Preptember participants" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/14"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Teri to Preptember participants</a
+                        >
+                      </td>
+                      <td data-value="2023-09-17T20:59:50Z" data-col-type="date">2023-09-17</td>
+                      <td data-value="2023-09-18T14:49:49Z" data-col-type="date">2023-09-18</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-18<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>11.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Update repositories-list.md" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/12"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Update repositories-list.md</a
+                        >
+                      </td>
+                      <td data-value="2023-09-15T18:13:21Z" data-col-type="date">2023-09-15</td>
+                      <td data-value="2023-09-15T19:13:46Z" data-col-type="date">2023-09-15</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-15<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>12.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Add David to Preptember participants" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/10"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add David to Preptember participants</a
+                        >
+                      </td>
+                      <td data-value="2023-09-14T13:40:40Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="2023-09-14T15:48:02Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-14<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>13.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Add Preptember repo walkthrough video"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/9"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >docs: Add Preptember repo walkthrough video</a
+                        >
+                      </td>
+                      <td data-value="2023-09-13T19:34:29Z" data-col-type="date">2023-09-13</td>
+                      <td data-value="2023-09-14T07:47:44Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-14<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>14.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: adding fcc developer quiz site to repositories-list"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/4"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >docs: adding fcc developer quiz site to repositories-list</a
+                        >
+                      </td>
+                      <td data-value="2023-09-07T20:24:39Z" data-col-type="date">2023-09-07</td>
+                      <td data-value="2023-09-08T11:11:35Z" data-col-type="date">2023-09-08</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-08<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>15.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Revised grammar for PR template" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/3"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Revised grammar for PR template</a
+                        >
+                      </td>
+                      <td data-value="2023-09-06T19:08:56Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-06T19:31:14Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-06<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>16.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add Dominic to Preptember participants"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/2"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Dominic to Preptember participants</a
+                        >
+                      </td>
+                      <td data-value="2023-09-06T18:57:29Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-06T19:14:09Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-06<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </details>
 
@@ -2119,11 +2756,176 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (2)</span>
                 </div>
               </summary>
-              <div class="p-4 text-gray-500 bg-gray-50 rounded-lg">
-                No contributions of this type in this quarter.
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="co-authored-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Co-Authored PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
+                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                    <tr>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >First Commit <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 13%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Commit Period <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="status"
+                        title="Click to sort"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>1.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td data-value="Added My Profile" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/26"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Added My Profile</a
+                        >
+                      </td>
+                      <td data-value="2023-09-27T19:49:30Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-29T15:39:28Z" data-col-type="date">2023-09-29</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-29<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>2.</td>
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/vc-preptember</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add Christina as a Preptember participant"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/Virtual-Coffee/vc-preptember/pull/25"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Christina as a Preptember participant</a
+                        >
+                      </td>
+                      <td data-value="2023-09-27T03:56:48Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-27T10:44:04Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2023-09-27<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </details>
 
