@@ -396,7 +396,7 @@
                 style="background-color: rgb(67, 56, 202)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">36</p>
+                <p class="text-4xl font-extrabold">37</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -491,7 +491,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">1</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -578,7 +578,7 @@
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >Virtual-Coffee/virtualcoffee.io</a
                   >
-                  (14 contributions)
+                  (15 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -1712,11 +1712,141 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (1)</span>
                 </div>
               </summary>
-              <div class="p-4 text-gray-500 bg-gray-50 rounded-lg">
-                No contributions of this type in this quarter.
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="co-authored-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Co-Authored PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                  />
+                </div>
+
+                <button
+                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
+              <div class="overflow-x-auto rounded-lg border border-gray-100">
+                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
+                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                    <tr>
+                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >First Commit <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        style="width: 13%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Commit Period <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="status"
+                        title="Click to sort"
+                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>1.</td>
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >Virtual-Coffee/virtualcoffee.io</span
+                        >
+                      </td>
+                      <td data-value="Guide to Open Source" data-col-type="string">
+                        <a
+                          href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/420"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Guide to Open Source</a
+                        >
+                      </td>
+                      <td data-value="2021-10-06T18:29:46Z" data-col-type="date">2021-10-06</td>
+                      <td data-value="2022-07-27T15:22:32Z" data-col-type="date">2022-07-27</td>
+                      <td data-value="294" data-col-type="number">294 days</td>
+                      <td data-value="MERGED" data-col-type="status">
+                        2022-08-22<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(139, 92, 246, 0.1);
+                            color: rgb(139, 92, 246);
+                          "
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </details>
 
@@ -1876,7 +2006,7 @@
                       <td data-value="2022-09-01T13:12:26Z" data-col-type="date">2022-09-01</td>
                       <td data-value="2022-09-02T10:05:41Z" data-col-type="date">2022-09-02</td>
                       <td data-value="CLOSED" data-col-type="status">
-                        2022-09-02<br /><span
+                        2022-09-07<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
@@ -1907,7 +2037,7 @@
                       <td data-value="2022-08-20T23:50:38Z" data-col-type="date">2022-08-20</td>
                       <td data-value="2022-08-30T06:02:24Z" data-col-type="date">2022-08-30</td>
                       <td data-value="CLOSED" data-col-type="status">
-                        2022-08-30<br /><span
+                        2022-10-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
                           >CLOSED</span
