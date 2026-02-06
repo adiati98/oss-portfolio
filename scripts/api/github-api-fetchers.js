@@ -121,41 +121,22 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
       const lowerUsername = username.toLowerCase();
       const userCommits = allCommits.filter((c) => {
-        const msg = c.commit?.message?.toLowerCase() || '';
+        // Exclude standard GitHub merge commits to avoid inflated counts
         const isMergeCommit = c.parents && c.parents.length > 1;
-
-        // Broad patterns for automated merge messages (GitHub, Git CLI defaults, etc.)
-        // These are the "don't count these" patterns.
-        const isAutomatedMergeMsg =
-          /^merge branch '.+' (of|into) .+/i.test(msg) ||
-          msg.startsWith('merge remote-tracking branch') ||
-          msg.startsWith('merge pull request #') ||
-          msg.startsWith("merge tag '") ||
-          msg === 'update branch'; // Catch-all for simple UI updates
+        const msg = c.commit?.message?.toLowerCase() || '';
+        const isMergeMsg =
+          msg.startsWith('merge branch') || msg.startsWith('merge remote-tracking branch');
+        if (isMergeCommit || isMergeMsg) return false;
 
         try {
-          const isMe = c.author?.login === username;
-
-          if (isMergeCommit) {
-            // If it's an automated pattern, skip it even if authored by the user.
-            if (isAutomatedMergeMsg) return false;
-
-            // If the user authored a merge commit with ANY other message,
-            // it is considered a manual conflict resolution or custom merge.
-            if (isMe) return true;
-
-            return false;
-          }
-
-          // Standard code contribution (non-merge)
-          if (isMe) return true;
-
-          // Email and Co-authored-by checks
+          if (c.author?.login === username) return true;
           const email = c.commit?.author?.email?.toLowerCase() || '';
+          const name = c.commit?.author?.name?.toLowerCase() || '';
+
           if (email.endsWith('@users.noreply.github.com') && email.includes(`+${lowerUsername}@`))
             return true;
           if (email === `${lowerUsername}@users.noreply.github.com`) return true;
-
+          if (email.includes(lowerUsername) || name.includes(lowerUsername)) return true;
           if (msg.includes('co-authored-by:') && msg.includes(lowerUsername)) return true;
         } catch (e) {
           return false;
