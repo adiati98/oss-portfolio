@@ -35,20 +35,23 @@ This initial stage handles all external communication and data preparation:
 After processing, the script generates the reports in two formats to maximize usability:
 
 - **Markdown Reports (Output to `contributions/markdown-generated`):**
-  - **Quarterly Reports:** Detailed Markdown files are created for each quarter (e.g., `2024/Q1-2024.md`), including statistics like total contribution count and top-contributed repositories.
+  - **Quarterly Reports:** Detailed logs for each three-month window (e.g., `2024/Q1-2024.md`), including statistics and top-contributed repositories.
 
-  - **Contributions README:** A summary `README.md` is generated featuring visual progress bars and percentage breakdowns, providing an immediate snapshot of contribution distribution directly on GitHub.
+  - **Contributions README:** A summary `README.md` that serves as the "front page" of logs on GitHub. It features:
+    - **Visual Progress Bars:** Percentage breakdowns of contribution types.
+    - **Primary Focus Projects:** A list of the top three repositories by all-time activity.
+    - **[Collaboration Profile](#-collaboration-profiles)**.
 
 - **HTML Reports (Output to `contributions/html-generated`):**
-  - **Portfolio Landing Page (`index.html`):** The entry point of the website. it provides an overview of the report structure, explaining what each section (like Merged PRs or Reviewed PRs) represents.
+  - **Portfolio Landing Page (`index.html`):** A dedicated entry point that explains the report structure and contribution categories.
 
-  - **All-Time Impact Dashboard:** A lifetime summary view featuring the **[Collaboration Profile](#-collaboration-profiles)** and **Primary Focus Projects**. It uses a visual hierarchy to highlight the most significant areas of impact.
+  - **All-Time Impact Dashboard:** A lifetime summary view featuring the **[Collaboration Profile](#-collaboration-profiles)** and **Primary Focus Projects**.
 
-  - **Quarterly HTML Reports:** Detailed, interactive pages generated for every quarter. These allow for deeper inspection of specific contributions within a three-month window.
+  - **Quarterly HTML Reports:** Detailed, interactive pages generated for every quarter, designed for easy navigation and inspection.
 
   - The HTML is styled using **Tailwind CSS CDN**, making it ready for publication as a static website on platforms like [Netlify](https://docs.netlify.com/), [Vercel](https://vercel.com/home), or any host of your choice. This allows for a more visual and navigable portfolio experience.
 
-##### 👤 Collaboration Profiles
+##### 🎭 Collaboration Profiles
 
 The "All-Time Impact" dashboard automatically assigns a profile based on the processed contribution data. This helps viewers quickly understand the primary impact style within the open source ecosystem.
 
