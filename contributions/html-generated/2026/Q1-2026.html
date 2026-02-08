@@ -117,15 +117,39 @@
         color: rgb(67, 56, 202);
       }
 
+      .report-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      .report-table th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #ffffff;
+        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
+        font-weight: 700;
+        padding: 12px;
+        text-align: left;
+        border-bottom: none;
+        box-shadow: inset 0 -1px 0 0 rgb(67, 56, 202);
+      }
+
+      .report-table td {
+        background-color: #ffffff;
+      }
+
       .report-table th,
       .report-table td {
-        padding: 10px 12px;
-        border-bottom: 1px solid #e5e7eb;
+        padding: 12px;
         text-align: left;
+        border-bottom: 1px solid #e5e7eb;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -133,6 +157,7 @@
       .table-row-hover {
         background-color: inherit;
       }
+
       .table-row-hover:hover,
       .table-row-hover:focus-visible {
         background-color: rgba(67, 56, 202, 0.1) !important;
@@ -141,6 +166,13 @@
       .table-row-hover:focus-visible {
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: -2px;
+      }
+
+      .report-table tbody tr.bg-white {
+        background-color: #ffffff;
+      }
+      .report-table tbody tr.bg-gray-50 {
+        background-color: #f9fafb;
       }
 
       /* Table Header Sorting Alignment */
@@ -658,15 +690,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -675,14 +712,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -691,7 +730,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -700,7 +740,8 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -1865,15 +1906,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1882,14 +1928,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 35%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -1898,7 +1946,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closed <span class="sort-icon ml-1">↕</span></span
@@ -1907,7 +1956,8 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closing Period <span class="sort-icon ml-1">↕</span></span
@@ -2460,15 +2510,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -2477,14 +2532,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 28%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -2493,7 +2550,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Review <span class="sort-icon ml-1">↕</span></span
@@ -2502,7 +2560,8 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -2511,7 +2570,8 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -2577,7 +2637,7 @@
                       <td data-value="2026-01-28T13:55:57Z" data-col-type="date">2026-01-28</td>
                       <td data-value="0" data-col-type="number">0 days</td>
                       <td data-value="OPEN" data-col-type="status">
-                        2026-02-03<br /><span
+                        2026-02-08<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
                             background-color: rgba(16, 185, 129, 0.1);
@@ -3560,15 +3620,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 15%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -3577,14 +3642,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 10%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -3593,7 +3660,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Commit <span class="sort-icon ml-1">↕</span></span
@@ -3602,7 +3670,8 @@
                       <th
                         data-type="number"
                         title="Click to sort"
-                        style="width: 13%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Commit Period <span class="sort-icon ml-1">↕</span></span
@@ -3611,7 +3680,8 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 20%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -4345,15 +4415,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -4362,14 +4437,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -4378,7 +4455,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -4387,7 +4465,8 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span

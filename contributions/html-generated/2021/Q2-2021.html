@@ -117,15 +117,39 @@
         color: rgb(67, 56, 202);
       }
 
+      .report-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+      }
+
+      .report-table th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #ffffff;
+        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
+        font-weight: 700;
+        padding: 12px;
+        text-align: left;
+        border-bottom: none;
+        box-shadow: inset 0 -1px 0 0 rgb(67, 56, 202);
+      }
+
+      .report-table td {
+        background-color: #ffffff;
+      }
+
       .report-table th,
       .report-table td {
-        padding: 10px 12px;
-        border-bottom: 1px solid #e5e7eb;
+        padding: 12px;
         text-align: left;
+        border-bottom: 1px solid #e5e7eb;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+
       .report-table tbody tr:last-child td {
         border-bottom: none;
       }
@@ -133,6 +157,7 @@
       .table-row-hover {
         background-color: inherit;
       }
+
       .table-row-hover:hover,
       .table-row-hover:focus-visible {
         background-color: rgba(67, 56, 202, 0.1) !important;
@@ -141,6 +166,13 @@
       .table-row-hover:focus-visible {
         outline: 2px solid rgb(67, 56, 202);
         outline-offset: -2px;
+      }
+
+      .report-table tbody tr.bg-white {
+        background-color: #ffffff;
+      }
+      .report-table tbody tr.bg-gray-50 {
+        background-color: #f9fafb;
       }
 
       /* Table Header Sorting Alignment */
@@ -779,15 +811,20 @@
                   Reset
                 </button>
               </div>
-              <div class="overflow-x-auto rounded-lg border border-gray-100">
+              <div
+                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+              >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead style="background-color: rgba(67, 56, 202, 0.05)">
+                  <thead class="bg-white">
                     <tr>
-                      <th style="width: 5%; color: rgb(67, 56, 202); cursor: default">No.</th>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
+                      </th>
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 25%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -796,14 +833,16 @@
                       <th
                         data-type="string"
                         title="Click to sort"
-                        style="width: 30%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -812,7 +851,8 @@
                       <th
                         data-type="date"
                         title="Click to sort"
-                        style="width: 12%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -821,7 +861,8 @@
                       <th
                         data-type="status"
                         title="Click to sort"
-                        style="width: 16%; color: rgb(67, 56, 202); cursor: pointer"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
