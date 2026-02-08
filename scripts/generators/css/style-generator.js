@@ -250,15 +250,39 @@ function getReportStyleCss() {
       color: ${COLORS.primary.rgb};
     }
 
+    .report-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .report-table th {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: #ffffff;
+      background-image: linear-gradient(${COLORS.primary[5]}, ${COLORS.primary[5]});
+      font-weight: 700;
+      padding: 12px;
+      text-align: left;
+      border-bottom: none;
+      box-shadow: inset 0 -1px 0 0 ${COLORS.primary.rgb};
+    }
+
+    .report-table td {
+      background-color: #ffffff;
+    }
+
     .report-table th,
     .report-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 12px;
       text-align: left;
+      border-bottom: 1px solid #e5e7eb;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     .report-table tbody tr:last-child td {
       border-bottom: none;
     }
@@ -266,6 +290,7 @@ function getReportStyleCss() {
     .table-row-hover {
       background-color: inherit;
     }
+
     .table-row-hover:hover,
     .table-row-hover:focus-visible {
       background-color: ${COLORS.primary[10]} !important;
@@ -275,6 +300,9 @@ function getReportStyleCss() {
       outline: 2px solid ${COLORS.primary.rgb};
       outline-offset: -2px;
     }
+
+    .report-table tbody tr.bg-white { background-color: #ffffff; }
+    .report-table tbody tr.bg-gray-50 { background-color: #f9fafb; }
 
     /* Table Header Sorting Alignment */
     .th-content {

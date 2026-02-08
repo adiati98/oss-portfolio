@@ -490,9 +490,9 @@ ${navHtmlForReports}
         `;
 
         // Generate the contribution table.
-        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100">\n`;
+        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto">\n`;
         tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
-        tableContent += `  <thead style="background-color: ${COLORS.primary[5]};">\n`;
+        tableContent += `  <thead class="bg-white">\n`;
         tableContent += `   <tr>\n`;
 
         // Generate table headers with sorting attributes (data-type).
@@ -506,7 +506,7 @@ ${navHtmlForReports}
             : `<span class="th-content">${sectionInfo.headers[i]} <span class="sort-icon ml-1">↕</span></span>`;
           const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
 
-          tableContent += `    <th ${thAttributes} style='width:${sectionInfo.widths[i]}; color: ${COLORS.primary.rgb}; ${cursorStyle}'>
+          tableContent += `    <th ${thAttributes} class="py-3 px-4" style="color: ${COLORS.primary.rgb}; ${cursorStyle}">
               ${headerContent}
           </th>\n`;
         }
