@@ -212,53 +212,66 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
       let commitCount = 0;
       let earliestCommitDate = null;
 
-      // Helper to determine whether a commit should be attributed to the username.
+      /**
+       * Determines if a commit should be attributed to the user.
+       * Excludes automated "Update branch" commits from GitHub UI.
+       */
       function isCommitByUser(c) {
         try {
-          // 1. Check for explicit GitHub login match (most reliable).
+          const lowerUsername = username.toLowerCase();
+          const commitMessage = c.commit?.message || '';
+
+          // --- 1. Filter out GitHub UI branch updates ---
+          // This matches: "Merge branch 'main' into feature-branch"
+          // This is a standard GitHub pattern for the "Update branch" button.
+          const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
+
+          if (isBranchUpdate) {
+            return false;
+          }
+
+          // --- 2. Check for explicit GitHub login match ---
           if (c.author?.login === username) return true;
 
-          // Safely extract and normalize the commit author's email.
+          // --- 3. Email Attribution Checks ---
           const authorEmail = c.commit?.author?.email?.toLowerCase();
-          // Skip if email metadata is missing.
-          if (!authorEmail) return false;
+          if (authorEmail) {
+            // Standard ID+username@users.noreply.github.com
+            if (
+              authorEmail.endsWith('@users.noreply.github.com') &&
+              authorEmail.includes(`+${lowerUsername}@`)
+            ) {
+              return true;
+            }
 
-          const lowerUsername = username.toLowerCase();
+            // Legacy username@users.noreply.github.com
+            if (authorEmail === `${lowerUsername}@users.noreply.github.com`) {
+              return true;
+            }
 
-          // --- Email Attribution Checks ---
+            // Fallback: Check if email contains username
+            if (authorEmail.includes(lowerUsername)) {
+              return true;
+            }
+          }
 
-          // 2. Check for standard GitHub noreply format (ID+username@users.noreply.github.com).
-          // This catches local commits made using the user's private GitHub email.
+          // --- 4. Name Attribution ---
           if (
-            authorEmail.endsWith('@users.noreply.github.com') &&
-            authorEmail.includes(`+${lowerUsername}@`)
+            c.commit?.author?.name &&
+            c.commit.author.name.toLowerCase().includes(lowerUsername)
           ) {
             return true;
           }
 
-          // 3. Check for legacy GitHub noreply format (username@users.noreply.github.com).
-          if (authorEmail === `${lowerUsername}@users.noreply.github.com`) {
-            return true;
-          }
-
-          // 4. Fallback: Check if the commit email contains the username.
-          if (authorEmail.includes(lowerUsername)) {
-            return true;
-          }
-
-          // 5. Fallback: Check if the commit author name contains the username (less reliable).
-          if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-            return true;
-
-          // 6. Check for Co-authored-by trailer in the commit message.
+          // --- 5. Co-authored-by trailers ---
           if (
-            c.commit?.message &&
-            /Co-authored-by:/i.test(c.commit.message) &&
-            c.commit.message.toLowerCase().includes(lowerUsername)
-          )
+            /Co-authored-by:/i.test(commitMessage) &&
+            commitMessage.toLowerCase().includes(lowerUsername)
+          ) {
             return true;
+          }
         } catch (e) {
-          // Ignore unexpected errors (e.g., malformed commit object) and default to false.
+          // Default to false on error to avoid false positives in others' data
           return false;
         }
         return false;
@@ -291,7 +304,11 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
     } catch (err) {
       if (err.response && (err.response.status === 403 || err.response.status === 404)) {
         // Treat API error/not found as null result for caching
-        result = null;
+        result = {
+          firstCommitDate: null,
+          commitCount: 0,
+          prUpdatedAt,
+        };
       } else {
         throw err;
       }
@@ -415,7 +432,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         continue;
       }
 
-      // --- 2. Variable Declaration (MUST be 'let' and inside the loop for correct scoping) ---
+      // --- 2. Variable Declaration ---
       let owner = null;
       let repoName = null;
       const prNumber = pr.number; // pr.number is reliably available
@@ -464,9 +481,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           mergePeriod = 'Closed';
         }
 
-        // --- 6. Check Co-Authored PRs ---
-        // Check for commits regardless of whether it's a reviewed PR or not. This detects PRs
-        // where the user contributed code but wasn't the author/primary reviewer, and adds them to a separate category.
+        // --- 6. Check Co-Authored PRs (INDEPENDENT) ---
         const commitDetails = await getFirstCommitDetails(
           owner,
           repoName,
@@ -476,31 +491,19 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           pr.updated_at
         );
 
-        // Process co-authored PR details only if a first commit was found
+        // Process co-authored PR details if user commits were found
         if (commitDetails && commitDetails.firstCommitDate) {
-          // Calculate first commit period
-          // Add a defensive check to ensure both dates exist and are valid
-          const firstCommitPeriod =
-            commitDetails.firstCommitDate && pr.created_at
-              ? Math.round(
-                  (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
-                    (1000 * 60 * 60 * 24)
-                ) +
-                (Math.round(
-                  (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
-                    (1000 * 60 * 60 * 24)
-                ) === 0
-                  ? ' day'
-                  : ' days')
-              : 'N/A';
+          const daysDiff = Math.round(
+            (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
+              (1000 * 60 * 60 * 24)
+          );
+          const firstCommitPeriod = daysDiff + (daysDiff === 1 ? ' day' : ' days');
 
-          // Use first commit date as the date for consistent ordering with PR timeline
-          const contributionDate = commitDetails.firstCommitDate || pr.updated_at;
           contributions.coAuthoredPrs.push({
             title: pr.title,
             url: pr.html_url,
             repo: `${owner}/${repoName}`,
-            date: contributionDate,
+            date: commitDetails.firstCommitDate || pr.updated_at,
             createdAt: pr.created_at,
             firstCommitDate: commitDetails.firstCommitDate,
             firstCommitPeriod: firstCommitPeriod,
@@ -508,10 +511,10 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
             mergedAt: mergedAt,
             state: pr.state,
           });
+          seenUrls.coAuthoredPrs.add(pr.html_url);
         }
 
-        // --- 7. Reviewed PRs Logic ---
-        // Process review information independent of commit status
+        // --- 7. Reviewed PRs Logic (INDEPENDENT) ---
         const myFirstReviewDate = await getPrMyFirstReviewDate(
           owner,
           repoName,
@@ -519,28 +522,25 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
           GITHUB_USERNAME
         );
 
-        // Add to reviewedPrs if there's a review, regardless of commit status
-        if (myFirstReviewDate) {
+        if (myFirstReviewDate && !uniqueReviewedPrs.has(pr.html_url)) {
           let myFirstReviewPeriod =
             Math.round(
               (new Date(myFirstReviewDate) - new Date(pr.created_at)) / (1000 * 60 * 60 * 24)
             ) + ' days';
 
-          if (!uniqueReviewedPrs.has(pr.html_url)) {
-            contributions.reviewedPrs.push({
-              title: pr.title,
-              url: pr.html_url,
-              repo: `${owner}/${repoName}`,
-              date: pr.updated_at,
-              createdAt: pr.created_at,
-              mergedAt,
-              mergePeriod,
-              myFirstReviewDate,
-              myFirstReviewPeriod,
-              state: pr.state,
-            });
-            uniqueReviewedPrs.add(pr.html_url);
-          }
+          contributions.reviewedPrs.push({
+            title: pr.title,
+            url: pr.html_url,
+            repo: `${owner}/${repoName}`,
+            date: pr.updated_at,
+            createdAt: pr.created_at,
+            mergedAt,
+            mergePeriod,
+            myFirstReviewDate,
+            myFirstReviewPeriod,
+            state: pr.state,
+          });
+          uniqueReviewedPrs.add(pr.html_url);
         }
       }
     }
@@ -572,12 +572,9 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         continue;
       }
 
-      // --- 2. Check for commits on PRs (Co-Authored PRs) ---
-      // This is a re-check for co-authored commits on *all* collaborations (PRs only),
-      // ensuring that co-authored PRs that weren't reviewed are still caught.
+      // --- 2. Check for commits on PRs (Co-Authored Promotion) ---
       let hasCommits = false;
       if (item.pull_request) {
-        // Only PRs have 'commits' endpoint
         const commitDetails = await getFirstCommitDetails(
           owner,
           repoName,
@@ -589,36 +586,31 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
         if (commitDetails && commitDetails.firstCommitDate) {
           hasCommits = true;
-          // If my commits exist, add it to the new category. Use the
-          // first commit date for grouping, falling back to the PR's
-          // updated_at when necessary.
-          let mergedAt = null;
-          if (item.pull_request && item.pull_request.merged_at) {
-            mergedAt = item.pull_request.merged_at;
+          if (!seenUrls.coAuthoredPrs.has(item.html_url)) {
+            let mergedAt = item.pull_request.merged_at || null;
+            const daysDiff = Math.round(
+              (new Date(commitDetails.firstCommitDate) - new Date(item.created_at)) /
+                (1000 * 60 * 60 * 24)
+            );
+
+            contributions.coAuthoredPrs.push({
+              title: item.title,
+              url: item.html_url,
+              repo: `${owner}/${repoName}`,
+              date: commitDetails.firstCommitDate,
+              createdAt: item.created_at,
+              firstCommitDate: commitDetails.firstCommitDate,
+              firstCommitPeriod: daysDiff + (daysDiff === 1 ? ' day' : ' days'),
+              commitCount: commitDetails.commitCount,
+              mergedAt: mergedAt,
+              state: item.state,
+            });
+            seenUrls.coAuthoredPrs.add(item.html_url);
           }
-
-          const contributionDate = commitDetails.firstCommitDate || item.updated_at;
-
-          // Note: If an item is co-authored, it is added to coAuthoredPrs here.
-          // It will also be added to 'collaborations' below if a comment exists,
-          // resulting in an intentional overlap in categories for combined code/comment contributions.
-          contributions.coAuthoredPrs.push({
-            title: item.title,
-            url: item.html_url,
-            repo: `${owner}/${repoName}`,
-            date: contributionDate,
-            createdAt: item.created_at,
-            firstCommitDate: commitDetails.firstCommitDate,
-            commitCount: commitDetails.commitCount,
-            mergedAt: mergedAt,
-            state: item.state,
-          });
         }
       }
 
-      // --- 3. Check for reviews (Reviewed PRs) ---
-      // Check if this item has been reviewed by the user, even if it wasn't caught
-      // in the initial reviewedPrs query (e.g., PRs that were found via collaborations).
+      // --- 3. Check for reviews (Reviewed Promotion) ---
       let hasReview = false;
       if (item.pull_request && !uniqueReviewedPrs.has(item.html_url)) {
         const myFirstReviewDate = await getPrMyFirstReviewDate(
@@ -630,17 +622,13 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
 
         if (myFirstReviewDate) {
           hasReview = true;
-          let mergedAt = null;
-          let mergePeriod = 'Open';
-
-          if (item.pull_request && item.pull_request.merged_at) {
-            mergedAt = item.pull_request.merged_at;
-            mergePeriod =
-              Math.round((new Date(mergedAt) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)) +
-              ' days';
-          } else if (item.state === 'closed') {
-            mergePeriod = 'Closed';
-          }
+          let mergedAt = item.pull_request.merged_at || null;
+          let mergePeriod = mergedAt
+            ? Math.round((new Date(mergedAt) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)) +
+              ' days'
+            : item.state === 'closed'
+              ? 'Closed'
+              : 'Open';
 
           let myFirstReviewPeriod =
             Math.round(
@@ -663,8 +651,7 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
         }
       }
 
-      // --- 4. Collaborations Logic (Tracks first *comment* on issues/PRs not covered by reviews) ---
-      // Only add to collaborations if it doesn't have commits or reviews (those are higher-tier categories)
+      // --- 4. Collaborations Logic ---
       if (!hasCommits && !hasReview) {
         const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
 
