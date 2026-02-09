@@ -1,6 +1,6 @@
 # Curated Open Source Portfolio
 
-This repository serves as a portfolio of my open source contributions. You can check out the [contributions log](./contributions/markdown-generated/#readme) to see my work.
+This repository serves as a portfolio of my open source contributions. You can check out the [contributions log](./contributions/markdown-generated/#readme.md) to see my work.
 
 My goal in creating this log is to maintain a detailed and organized record of my work, containing pull requests (PRs), bug reports, and general collaborations. It's a way for me to track my journey and share my contributions with the community.
 
