@@ -209,13 +209,13 @@ ${navHtml}
               <div class="relative z-10 space-y-2">
                 <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
                 <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
-                <p class="text-lg opacity-90 font-medium">Lifetime Contributions</p>
+                <p class="text-lg opacity-90 font-medium">Lifetime Contributions on GitHub</p>
               </div>
               <div class="relative z-10 h-px bg-white/20 my-8"></div>
               <div class="relative z-10 grid grid-cols-2 gap-4">
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                   <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p></div>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repos</p>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repositories Impacted</p>
                 </div>
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                   <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${articleCount}</p></div>
