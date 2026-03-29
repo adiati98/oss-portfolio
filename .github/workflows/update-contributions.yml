@@ -39,6 +39,8 @@ jobs:
             rm -f data/all-contributions.json
             rm -f data/commit-cache.json
             rm -f data/pr-cache.json
+            # Force article refresh by deleting the articles data
+            rm -f data/all-articles.json
             node scripts/src/main.js
           else
             echo "Running daily update..."
@@ -86,4 +88,4 @@ jobs:
           curl -s -X POST -d {} ${NETLIFY_BUILD_HOOK} -o /dev/null
         env:
           # Reference the Build Hook URL secret
-          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}    
+          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}

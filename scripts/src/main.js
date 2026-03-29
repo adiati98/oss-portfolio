@@ -2,10 +2,11 @@ const path = require('path');
 const fs = require('fs/promises');
 
 // Import configuration (SINCE_YEAR is needed here)
-const { SINCE_YEAR } = require('../config/config');
+const { SINCE_YEAR, BLOG } = require('../config/config');
 
 // Import core fetching logic
 const { fetchContributions } = require('../api/github-api-fetchers');
+const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
 // Import grouping logic
 const { groupContributionsByQuarter } = require('../utils/contributions-groupers');
@@ -13,6 +14,7 @@ const { groupContributionsByQuarter } = require('../utils/contributions-groupers
 // Import markdown generation logic
 const { writeMarkdownFiles } = require('../generators/markdown/quarterly-reports-generator');
 const { createStatsReadme } = require('../generators/markdown/contributions-readme-generator');
+const { writeArticlesMarkdown } = require('../generators/markdown/blog-markdown-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
@@ -21,6 +23,7 @@ const {
 } = require('../generators/html/all-contributions-html-generator');
 const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
 const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
+const { createBlogHtml } = require('../generators/html/blog-html-generator');
 
 async function main() {
   // Define the data directory path.
@@ -31,6 +34,7 @@ async function main() {
   // Use the path module to correctly build the file paths.
   const cacheFile = path.join(dataDir, 'pr-cache.json');
   const dataFile = path.join(dataDir, 'all-contributions.json');
+  const articlesFile = path.join(dataDir, 'all-articles.json');
 
   let prCache = new Set();
 
@@ -67,6 +71,12 @@ async function main() {
   }
 
   try {
+    // --- Fetch Articles ---
+    console.log('Fetching Open Source Software articles from external platforms...');
+    const articles = await fetchStrictOssArticles();
+    await fs.writeFile(articlesFile, JSON.stringify(articles, null, 2), 'utf8');
+    console.log(`Saved ${articles.length} articles to ${articlesFile}`);
+
     let allContributions = {};
 
     // Try to load the full contributions data from a JSON file.
@@ -277,16 +287,20 @@ async function main() {
     const quarterlyHtmlLinks = await writeHtmlFiles(grouped);
 
     // 4. Generate aggregate README (Markdown)
-    await createStatsReadme(finalContributions);
+    await createStatsReadme(finalContributions, articles);
 
     // 5. Generate landing page (index.html)
     await createIndexHtml();
 
     // 6. Generate the Dashboard (All-Time Stats HTML)
-    await createAllTimeContributions(finalContributions);
+    await createAllTimeContributions(finalContributions, articles);
 
     // 7. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
+
+    // --- Generate Blog Reports (HTML and Markdown) ---
+    await createBlogHtml(articles);
+    await writeArticlesMarkdown(articles);
 
     // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');

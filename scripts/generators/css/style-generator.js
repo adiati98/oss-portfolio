@@ -94,6 +94,42 @@ function getCommonBaseCss() {
 // --- 2. FUNCTIONS FOR EACH HTML GENERATOR ---
 
 /**
+ * Generates the CSS block for the blog page (blog.html).
+ * @returns {string} The CSS string.
+ */
+function getBlogStyleCss() {
+  return dedent`
+    ${getCommonBaseCss()}
+    .article-card {
+      border-bottom: 1px solid ${COLORS.border.light};
+      padding: 1.5rem 0;
+      transition: background-color 0.2s;
+    }
+    .article-card:last-child {
+      border-bottom: none;
+    }
+    .article-card h3 a {
+      color: ${COLORS.primary.rgb};
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .article-card h3 a:hover {
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .article-meta {
+      color: ${COLORS.text.secondary};
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+    .platform-tag {
+      font-weight: 600;
+      color: ${COLORS.text.primary};
+    }
+  `;
+}
+
+/**
  * Generates the CSS block for the <style> tag in the All-Time Contributions and Landing Page head.
  * @returns {string} The CSS string.
  */
@@ -366,4 +402,5 @@ module.exports = {
   getReportStyleCss,
   getIndexStyleCss,
   getReportsListStyleCss,
+  getBlogStyleCss,
 };

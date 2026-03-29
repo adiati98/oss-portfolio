@@ -8,9 +8,16 @@ const BASE_URL = 'https://api.github.com';
 const BASE_DIR = 'contributions';
 const path = require('path');
 
+// --- Blog & RSS Configuration ---
+const BLOG = {
+  // domain: 'adiati.com',
+  devToUser: 'adiatiayu',
+};
+
 module.exports = {
   GITHUB_USERNAME,
   SINCE_YEAR,
   BASE_URL,
   BASE_DIR,
+  BLOG,
 };

@@ -76,11 +76,7 @@ function generateProgressBar(count, total, width) {
   return filledChar.repeat(Math.max(0, filledCount)) + emptyChar.repeat(Math.max(0, emptyCount));
 }
 
-/**
- * Calculates aggregate totals from all contribution data and writes the
- * contributions/README.md file.
- */
-async function createStatsReadme(finalContributions) {
+async function createStatsReadme(finalContributions, articles = []) {
   const markdownBaseDir = path.join(BASE_DIR, MARKDOWN_OUTPUT_DIR_NAME);
   const MARKDOWN_OUTPUT_PATH = path.join(markdownBaseDir, MARKDOWN_README_FILENAME);
 
@@ -94,6 +90,8 @@ async function createStatsReadme(finalContributions) {
   const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
     ? finalContributions.coAuthoredPrs.length
     : 0;
+
+  const articleCount = articles.length || 0;
 
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
@@ -117,10 +115,9 @@ async function createStatsReadme(finalContributions) {
 
   const lowerDesc = personaDesc.charAt(0).toLowerCase() + personaDesc.slice(1);
   const firstLetter = lowerDesc.charAt(0);
-  // Capitalized article for sentence start
   const article = ['a', 'e', 'i', 'o', 'u'].includes(firstLetter) ? 'An' : 'A';
 
-  // 3. Stats Helper (handles bolding of max values)
+  // 3. Stats Helper
   const getStats = (count) => {
     const BAR_WIDTH = 30;
     if (grandTotal === 0)
@@ -181,7 +178,7 @@ async function createStatsReadme(finalContributions) {
   const yearsTracked = currentYear - SINCE_YEAR + 1;
   const generatedAt = now.toLocaleString();
 
-  // 6. Generate Quarterly Links (Newest First)
+  // 6. Generate Quarterly Links
   let reportLinksContent = '## 📂 Detailed Quarterly Reports\n\n';
   try {
     const files = await fs.readdir(markdownBaseDir);
@@ -213,7 +210,7 @@ async function createStatsReadme(finalContributions) {
   // 7. Build Markdown Content
   let markdownContent = `# 📈 Open Source Contributions Report
 
-Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement since **${SINCE_YEAR}**. This portfolio aggregates key community activities across Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations.
+Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement since **${SINCE_YEAR}**. This portfolio aggregates key community activities and **technical writing** insights.
 
 ---
 
@@ -225,6 +222,7 @@ Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](http
 | :--- | :--- |
 | 🏗️ **Unique Repositories** | **${totalUniqueRepos}** projects |
 | 📅 **Active Since** | **${SINCE_YEAR}** (${yearsTracked} years tracked) |
+| ✍️ **Articles Written** | **${articleCount}** published articles |
 
 ### 🧩 Contribution Distribution
 
@@ -246,6 +244,14 @@ ${article} ${lowerDesc}
 
 ---
 
+## ✍️ Open Source and GitHub Articles
+
+In addition to code, I contribute to the ecosystem through technical writing and tutorials. 
+
+👉 [**View full articles list (${articleCount})**](./blog.md)
+
+---
+
 ## 🛠️ Report Structure Breakdown
 
 Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a detailed log and summary for that period. Use the table below to understand the metrics tracked in those reports:
@@ -253,7 +259,7 @@ Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a d
 | Section | Description | Key Metric Tracked |
 | :--- | :--- | :--- |
 | **Quarterly Statistics** | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter. | Total Count, Unique Repositories |
-| **Contribution Breakdown** | A table listing the count of contributions for each of the five core categories within that quarter. | Category Counts |
+| **Contribution Breakdown** | A table listing the count of contributions for each of the core categories within that quarter. | Category Counts |
 | **Top 3 Repositories** | The top three projects where contributions were made in that quarter, ranked by total count. | Contribution Frequency |
 | **Merged PRs** | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories. | **Review Period** |
 | **Issues** | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories. | **Closing Period** |
