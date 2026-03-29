@@ -2,17 +2,11 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 
-// Import the dedent utility
 const { dedent } = require('../../utils/dedent');
-
-// Import configuration
 const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
-
-// Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 
-// Import favicon svg and constants
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
@@ -21,17 +15,12 @@ const {
   INFO_ICON_SVG,
 } = require('../../config/constants');
 
-// Import the style generator function
 const { getIndexStyleCss } = require('../css/style-generator');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'all-contributions.html';
 const rightArrowSvg = RIGHT_ARROW_SVG;
 
-/**
- * Determines the contributor's persona title and description.
- * Uses count-based logic with a priority system for tie-breaking.
- */
 function determinePersona(counts) {
   const { prCount, issueCount, reviewedPrCount, coAuthoredPrCount, collaborationCount } = counts;
 
@@ -86,10 +75,9 @@ function determinePersona(counts) {
 }
 
 /**
- * Calculates aggregate totals from all contribution data and writes the
- * all-time contributions HTML report file.
+ * Added articles parameter to display writing impact alongside code.
  */
-async function createAllTimeContributions(finalContributions = []) {
+async function createAllTimeContributions(finalContributions = [], articles = []) {
   const htmlBaseDir = path.join(BASE_DIR, HTML_OUTPUT_DIR_NAME);
   const HTML_OUTPUT_PATH = path.join(htmlBaseDir, HTML_README_FILENAME);
 
@@ -102,6 +90,9 @@ async function createAllTimeContributions(finalContributions = []) {
   const coAuthoredPrCount = Array.isArray(finalContributions.coAuthoredPrs)
     ? finalContributions.coAuthoredPrs.length
     : 0;
+
+  // Article count for the summary card
+  const articleCount = articles.length || 0;
 
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
@@ -152,34 +143,18 @@ async function createAllTimeContributions(finalContributions = []) {
       ? topThreeRepos
           .map(([repo, count], idx) => {
             const isTop = idx === 0;
-
             const nameClass = isTop ? 'text-base font-black' : 'text-sm font-bold';
-
             const [owner, name] = repo.includes('/') ? repo.split('/') : ['', repo];
             const repoUrl = `https://github.com/${repo}`;
 
             return `
         <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-50 last:border-0 gap-3 sm:gap-4">
           <div class="flex flex-col min-w-0">
-            ${
-              owner
-                ? `
-              <span class="text-[10px] uppercase tracking-wider text-slate-400 font-mono leading-none mb-1">
-                ${owner}
-              </span>`
-                : ''
-            }
-            
-            <a href="${repoUrl}" 
-               target="_blank" 
-               rel="noopener noreferrer" 
-               class="${nameClass} break-all hover:underline underline-offset-4" 
-               style="color: ${COLORS.primary.rgb};"
-               title="View ${repo} repository">
+            ${owner ? `<span class="text-[10px] uppercase tracking-wider text-slate-400 font-mono leading-none mb-1">${owner}</span>` : ''}
+            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${COLORS.primary.rgb};">
               ${name}
             </a>
           </div>
-          
           <div class="flex items-center shrink-0 mt-1 sm:mt-0">
             <span class="text-xs font-bold text-slate-400 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-100">
               ${count} contributions
@@ -220,7 +195,7 @@ ${navHtml}
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
           <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
-            All-Time Contributions
+            All-Time Impact
           </h1>
           <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
             Aggregated lifetime metrics and high-level performance across all tracked repositories since ${SINCE_YEAR}.
@@ -243,8 +218,8 @@ ${navHtml}
                   <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repos</p>
                 </div>
                 <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${(grandTotal / (new Date().getFullYear() - SINCE_YEAR + 1)).toFixed(0)}</p></div>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Yearly Average</p>
+                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${articleCount}</p></div>
+                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Articles Written</p>
                 </div>
                 <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                   <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
@@ -269,39 +244,24 @@ ${navHtml}
                   const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
 
                   const labelStyle = isHighest
-                    ? 'style="color: ' + COLORS.primary.rgb + '; font-weight: 800;"'
+                    ? `style="color: ${COLORS.primary.rgb}; font-weight: 800;"`
                     : 'class="text-slate-700 font-bold"';
 
-                  const countClass = isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl';
-                  const pctClass = isHighest ? 'text-sm sm:text-base' : 'text-xs sm:text-sm';
-
-                  return (
-                    `
+                  return `
                 <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
                   <div class="flex justify-between items-end mb-2">
-                    <span ` +
-                    labelStyle +
-                    ` class="text-lg">${label}</span>
+                    <span ${labelStyle} class="text-lg">${label}</span>
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: ` +
-                    COLORS.primary.rgb +
-                    `;" class="font-bold ` +
-                    countClass +
-                    `">${count}</span>
-                      <span class="` +
-                    pctClass +
-                    ` text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
+                      <span style="color: ${COLORS.primary.rgb};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
+                      <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
                     </div>
                   </div>
                   <div class="w-full bg-slate-100/50 rounded-full h-3 overflow-hidden flex">
-                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ` +
-                    COLORS.primary.rgb +
-                    `; ${s.pct === 0 ? 'display: none;' : ''}" 
-                           class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
+                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${COLORS.primary.rgb}; ${s.pct === 0 ? 'display: none;' : ''}" 
+                         class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
                     </div>
                   </div>
-                </div>`
-                  );
+                </div>`;
                 })
                 .join('')}
             </div> 
@@ -330,7 +290,7 @@ ${navHtml}
             </div>
           </div>
 
-          <div class="mt-20 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
+          <div class="mt-8 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
             <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
             <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
             <p class="text-center">
@@ -338,6 +298,18 @@ ${navHtml}
                  style="color: ${COLORS.primary.rgb};" 
                  class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md">
                 <span>View All Reports</span> ${rightArrowSvg}
+              </a>
+            </p>
+          </div>
+
+          <div class="mt-8 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200 bg-slate-50/30">
+            <h2 class="text-2xl font-bold mb-4 text-slate-800">Open Source and GitHub Articles</h2>
+            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">In addition to code, I contribute to the ecosystem through articles and tutorials about Open Source and GitHub.</p>
+            <p class="text-center">
+              <a href="blog.html" 
+                 style="color: ${COLORS.primary.rgb};" 
+                 class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md hover:shadow-lg transition-shadow">
+                <span>Read Articles (${articleCount})</span> ${rightArrowSvg}
               </a>
             </p>
           </div>
