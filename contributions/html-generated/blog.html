@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Articles | adiati98 Portfolio</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2021a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%2019.25a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM5.75%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM18.25%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM15%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2016.75A.75.75%200%20006.5%2016V8A.75.75%200%20005%208v8c0%20.414.336.75.75.75z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M17.5%208.75v-1H19v1a3.75%203.75%200%2001-3.75%203.75h-7a1.75%201.75%200%2000-1.75%201.75H5A3.25%203.25%200%20018.25%2011h7a2.25%202.25%200%20002.25-2.25z%27%2F%3E%20%3C%2Fsvg%3E"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        position: relative;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        min-height: 10vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Navigation Buttons */
+      .nav-report-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-report-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-report-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+
+      .nav-contribution-button {
+        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        transition: border-color 0.15s ease-in-out !important;
+      }
+      .nav-contribution-button:hover {
+        border-color: rgb(67, 56, 202) !important;
+      }
+      .nav-contribution-button:focus-visible {
+        border-color: rgb(67, 56, 202);
+        outline: 2px solid rgb(67, 56, 202);
+        outline-offset: 2px;
+      }
+
+      /* Breakdown Icon Wrapper */
+      .breakdown-icon-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+        width: 1rem; /* default 16px */
+        height: 1rem;
+      }
+      .breakdown-icon-wrapper svg {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+      }
+
+      /* Breakdown Label text scaling */
+      .breakdown-label {
+        font-size: 0.875rem; /* default sm */
+        font-weight: 500;
+        white-space: nowrap;
+      }
+
+      /* Small Screen Adjustments for Breakdown Section */
+      @media (max-width: 400px) {
+        .breakdown-icon-wrapper {
+          width: 0.75rem; /* shrinks to 12px */
+          height: 0.75rem;
+        }
+        .breakdown-label {
+          font-size: 0.7rem !important; /* slightly smaller than xs */
+        }
+      }
+      .article-card {
+        border-bottom: 1px solid rgba(107, 114, 128, 0.1);
+        padding: 1.5rem 0;
+        transition: background-color 0.2s;
+      }
+      .article-card:last-child {
+        border-bottom: none;
+      }
+      .article-card h3 a {
+        color: rgb(67, 56, 202);
+        text-decoration: none;
+        font-weight: 700;
+      }
+      .article-card h3 a:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+      }
+      .article-meta {
+        color: rgb(55, 65, 81);
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+      }
+      .platform-tag {
+        font-weight: 600;
+        color: rgb(31, 41, 55);
+      }
+    </style>
+  </head>
+  <body class="bg-white antialiased flex flex-col min-h-screen">
+    <nav
+      style="background-color: rgb(67, 56, 202)"
+      class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
+    >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center space-x-4">
+          <a
+            href="./index.html"
+            class="nav-link nav-desktop-link nav-home-link text-md font-extrabold tracking-wider uppercase py-1"
+          >
+            <span class="sm:hidden">OSS Portfolio</span>
+            <span class="hidden sm:inline">Open Source Portfolio</span>
+          </a>
+        </div>
+
+        <div class="flex items-center">
+          <div class="hidden sm:flex items-center space-x-3">
+            <a
+              href="./all-contributions.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >All-Time Stats
+            </a>
+
+            <a
+              href="./reports.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Quarterly Reports
+            </a>
+
+            <a
+              href="./blog.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Articles
+            </a>
+
+            <a
+              href="https://github.com/adiati98/oss-portfolio"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="nav-link nav-desktop-link nav-github-link flex items-center"
+              title="View Repository"
+            >
+              <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+                />
+              </svg>
+            </a>
+          </div>
+
+          <button
+            id="menu-button"
+            style="background-color: rgba(67, 56, 202, 0.75); cursor: pointer"
+            class="sm:hidden p-2 rounded-md transition duration-150"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+            aria-label="Toggle navigation menu"
+          >
+            <svg
+              id="menu-open-icon"
+              class="w-6 h-6 block"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M3.5,7 C3.22385763,7 3,6.77614237 3,6.5 C3,6.22385763 3.22385763,6 3.5,6 L20.5,6 C20.7761424,6 21,6.22385763 21,6.5 C21,6.77614237 20.7761424,7 20.5,7 L3.5,7 Z M3.5,12 C3.22385763,12 3,11.7761424 3,11.5 C3,11.2238576 3.22385763,11 3.5,11 L20.5,11 C20.7761424,11 21,11.2238576 21,11.5 C21,11.7761424 20.7761424,12 20.5,12 L3.5,12 Z M3.5,17 C3.22385763,17 3,16.7761424 3,16.5 C3,16.2238576 3.22385763,16 3.5,16 L20.5,16 C20.7761424,16 21,16.2238576 21,16.5 C21,16.7761424 20.7761424,17 20.5,17 L3.5,17 Z"
+              />
+            </svg>
+            <svg
+              id="menu-close-icon"
+              class="w-6 h-6 hidden"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M9.207 8.5l6.646 6.646-0.707 0.707-6.646-6.646-6.646 6.646-0.707-0.707 6.646-6.646-6.647-6.646 0.707-0.707 6.647 6.646 6.646-6.646 0.707 0.707-6.646 6.646z"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div
+        id="mobile-menu"
+        style="background-color: rgb(49, 46, 129)"
+        class="hidden sm:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
+      >
+        <div class="flex flex-col space-y-2">
+          <a
+            href="./all-contributions.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >All-Time Stats</a
+          >
+
+          <a
+            href="./reports.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Quarterly Reports</a
+          >
+
+          <a
+            href="./blog.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Articles</a
+          >
+        </div>
+
+        <div class="mt-3 pt-3" style="border-top-color: rgb(67, 56, 202); border-top-width: 1px">
+          <a
+            href="https://github.com/adiati98/oss-portfolio"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3"
+            title="View Repository"
+          >
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
+              />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
+
+          if (button && menu) {
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden');
+              closeIcon.classList.toggle('hidden');
+            });
+          }
+        });
+      </script>
+    </nav>
+    <style>
+      .nav-link {
+        transition: all 0.15s ease-in-out;
+        border: 2px solid transparent;
+        border-radius: 0.375rem;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      .nav-link:hover {
+        border-color: white !important;
+        background-color: rgba(67, 56, 202, 0.25) !important;
+      }
+
+      .nav-home-link {
+        padding: 0.5rem;
+      }
+      .nav-desktop-link {
+        border-width: 1px;
+        padding: 0.5rem;
+      }
+      .nav-github-link {
+        padding: 0.5rem;
+      }
+      .nav-mobile-link {
+        padding: 0.5rem 0.75rem;
+        background-color: rgb(49, 46, 129);
+        width: 100%;
+      }
+    </style>
+    <main class="grow w-full py-24">
+      <div class="max-w-[80ch] mx-auto px-6">
+        <header class="mb-12 border-b-2 border-slate-100 pb-8">
+          <h1 class="text-4xl font-black text-slate-900 mb-4">Open Source and GitHub Articles</h1>
+          <p class="text-lg text-slate-500">
+            A collection of articles that <strong>adiati98</strong> wrote covering insights and
+            tutorials regarding the Open Source and GitHub ecosystem.
+          </p>
+        </header>
+        <div class="articles-list">
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/open-source-engagement-whats-working-now-37b9"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Source Engagement: What's Working Now?
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — December 10, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Beyond Hacktoberfest: Building a True Open Source Journey
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 27, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/my-first-video-tutorials-contribution-for-hacktoberfest-3blg"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                My First Video Tutorials Contribution for Hacktoberfest
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 22, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/giving-non-code-contributions-the-recognition-they-deserve-2phj"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Giving non-code contributions the recognition they deserve
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 15, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/hacktoberfest-making-it-enjoyable-for-contributors-and-maintainers-54gk"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest: Making it Enjoyable for Contributors and Maintainers
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 13, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How I Built a Curated, Automated Open Source Portfolio
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 6, 2025
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/open-source-is-for-everyone-first-experience-in-non-code-contribution-to-mautic-during-4oph"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Source is For Everyone: First Experience in Non-Code Contribution to Mautic
+                during Hacktoberfest 2024
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 19, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/hacktoberfest-2024-my-2nd-year-experience-as-a-maintainer-n7f"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest 2024: My 2nd Year Experience as A Maintainer
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 3, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/virtualcoffee/hacktoberfest-2024-why-you-should-participate-4ffm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest 2024: Why You Should Participate
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 30, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://www.freecodecamp.org/news/github-cli-wsl2-guide/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Set Up GitHub CLI on WSL2
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">freeCodeCamp</span>
+              — August 14, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/from-contributor-to-maintainer-my-journey-in-open-source-1lif"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                From Contributor to Maintainer: My Journey in Open Source
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — May 21, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/opensauced/streamline-your-contributions-mastering-issue-forms-and-pr-templates-36j5"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Streamline Your Contributions: Mastering Issue Forms and PR Templates
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — May 9, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/opensauced/building-bridges-not-walls-the-importance-of-documentation-in-open-source-projects-oaj"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Building Bridges, Not Walls: The Importance of Documentation in Open Source Projects
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — April 30, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/opensauced/the-secret-recipe-to-getting-your-pull-requests-reviewed-and-merged-faster-1fag"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                The Secret Recipe to Getting Your Pull Requests Reviewed (and Merged) Faster
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — April 23, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/opensauced/the-missing-piece-why-your-project-needs-a-maintainer-onboarding-process-np0"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                The Missing Piece: Why Your Project Needs a Maintainer Onboarding Process
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — April 18, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/opensauced/collaborate-conquer-grow-mastering-the-art-of-issue-management-for-open-source-projects-49gi"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Collaborate, Conquer, & Grow: Mastering the Art of Issue Management for Open Source
+                Projects
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — March 5, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/open-source-project-ideas-4n3b"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Source Project Ideas
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — January 24, 2024
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/devimpact2023-my-end-of-year-reflections-2pok"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                🌟 #DEVImpact2023: My End of Year Reflections
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — December 29, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-become-a-better-open-source-maintainer-464f"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Become a Better Open Source Maintainer
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 30, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-resolve-merge-conflicts-using-the-merge-editor-feature-on-vs-code-pic"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Resolve Merge Conflicts Using the Merge Editor Feature on VS Code
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 22, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://www.freecodecamp.org/news/keep-branches-up-to-date-resolve-merge-conflicts/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Keep Branches Up-to-Date and Resolve Merge Conflicts in GitHub and VS Code
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">freeCodeCamp</span>
+              — November 22, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/building-your-brand-as-a-developer-through-open-source-djl"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Building Your Brand as a Developer Through Open Source
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 21, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/hacktoberfest-2023-first-experience-as-a-maintainer-16"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest 2023: First Experience as a Maintainer
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 20, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/hacktoberfest23-the-5th-year-contributor-48o3"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest23: The 5th Year Contributor
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 19, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/ayus-hacktoberfest-2023-pledge-4d48"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ayu's Hacktoberfest 2023 Pledge
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 1, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/virtualcoffee/hacktoberfest-2023-lets-make-positive-impacts-learn-grow-together-in-open-source-52a1"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Hacktoberfest 2023: Let's Make Positive Impacts, Learn & Grow Together in Open
+                Source!
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 1, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-important-is-a-code-of-conduct-in-an-open-source-project-507j"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How Important is a Code of Conduct in an Open-Source Project?
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 26, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://www.freecodecamp.org/news/git-and-github-workflow-for-open-source/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Contribute to Open-Source Projects – Git & GitHub Workflow for Beginners
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">freeCodeCamp</span>
+              — September 22, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://www.freecodecamp.org/news/how-to-contribute-to-open-source/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Contribute to Open Source Projects – Non-Technical Things You Should Know
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">freeCodeCamp</span>
+              — September 14, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/100daysofoss-recap-day-28-50-l8h"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                #100DaysOfOSS Recap: Day 28-50
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 11, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/open-source-and-git-glossary-mn2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Source and Git Glossary
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — August 30, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/100daysofoss-recap-day-15-27-360h"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                #100DaysOfOSS Recap: Day 15-27
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — August 18, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-communicate-better-in-open-source-3hdj"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to Communicate Better in Open Source
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — August 14, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/100daysofoss-recap-day-1-14-3f0j"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                #100DaysOfOSS Recap: Day 1-14
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — August 7, 2023
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Mini Portfolio: Bring Your GitHub Profile To The Next Level
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 12, 2022
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-use-github-for-project-collaboration-based-on-agile-method-kb7"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How To Use GitHub For Project Collaboration — Based on Agile Method
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — March 4, 2022
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-fetch-a-contribution-branch-to-test-it-locally-as-an-open-source-maintainer-hgf"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How to fetch a contribution branch to test it locally as an open-source maintainer
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — February 24, 2022
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/git-how-to-pull-a-branch-from-the-upstream-to-the-local-repo-in-5-steps-1ili"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Git: How to fetch a branch from the upstream to the local repo in 5 steps
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — February 14, 2022
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/what-i-learned-from-hacktoberfest-2021-8ol"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                What I Learned From Hacktoberfest 2021
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 2, 2021
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/contributing-to-open-source-101-2dnm"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contributing To Open-Source 101
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 29, 2021
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/first-week-of-the-hacktoberfest-8-top-questions-around-git-5g70"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                First Week of The Hacktoberfest: 8 Top Questions Around Git
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — October 13, 2021
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/how-to-make-changes-on-a-commit-in-a-pull-request-directly-on-github-s-website-30cd"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                How To Make Changes On A Commit In A Pull Request Directly On GitHub's Website
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 27, 2021
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/contributing-ethics-in-open-source-5eem"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Why Ethics In Contributing To Open-Source Matters
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — September 20, 2021
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/contributing-to-an-open-source-by-a-first-timer-part-2-20a0"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contributing To An Open Source by A First-Timer (Part 2)
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 21, 2020
+            </p>
+          </div>
+          <div class="article-card px-4 sm:px-0">
+            <h3 class="text-xl mb-2">
+              <a
+                href="https://dev.to/adiatiayu/contributing-to-an-open-source-by-a-first-timer-part-1-2opa"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contributing To An Open Source by A First-Timer (Part 1)
+              </a>
+            </h3>
+            <p class="article-meta text-slate-500 text-sm">
+              Published on
+              <span class="platform-tag font-bold text-slate-700">Dev.to</span>
+              — November 21, 2020
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer
+      style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
+      class="mt-16 py-8 border-t text-center text-sm"
+    >
+      <div class="mb-1">
+        &copy; 2019-2026
+        <a
+          href="https://github.com/adiati98"
+          target="_blank"
+          style="color: rgb(67, 56, 202)"
+          class="hover:opacity-80 font-semibold transition duration-150"
+        >
+          adiati98 </a
+        >'s open source contributions, generated on March 29, 2026.
+      </div>
+
+      <div class="text-xs mt-1">
+        Made with 💙 by
+        <a
+          href="https://github.com/adiati98"
+          target="_blank"
+          style="color: rgb(67, 56, 202)"
+          class="hover:opacity-80 font-semibold transition duration-150"
+        >
+          Ayu Adiati
+        </a>
+      </div>
+    </footer>
+  </body>
+</html>

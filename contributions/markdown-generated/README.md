@@ -1,6 +1,6 @@
 # 📈 Open Source Contributions Report
 
-Organized by calendar quarter, these reports track [**adiati98**](https://github.com/adiati98)'s external open source involvement since **2019**. This portfolio aggregates key community activities across Merged PRs, Issues, Reviewed PRs, Co-Authored PRs, and general Collaborations.
+Organized by calendar quarter, these reports track [**adiati98**](https://github.com/adiati98)'s external open source involvement since **2019**. This portfolio aggregates key community activities and **technical writing** insights.
 
 ---
 
@@ -12,6 +12,7 @@ Organized by calendar quarter, these reports track [**adiati98**](https://github
 | :------------------------- | :------------------------- |
 | 🏗️ **Unique Repositories** | **52** projects            |
 | 📅 **Active Since**        | **2019** (8 years tracked) |
+| ✍️ **Articles Written**    | **45** published articles  |
 
 ### 🧩 Contribution Distribution
 
@@ -35,6 +36,14 @@ An expert advocate for code quality and peer development. Code review and techni
 
 ---
 
+## ✍️ Open Source and GitHub Articles
+
+In addition to code, I contribute to the ecosystem through technical writing and tutorials.
+
+👉 [**View full articles list (45)**](./blog.md)
+
+---
+
 ## 🛠️ Report Structure Breakdown
 
 Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a detailed log and summary for that period. Use the table below to understand the metrics tracked in those reports:
@@ -42,7 +51,7 @@ Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a det
 | Section                    | Description                                                                                                            | Key Metric Tracked               |
 | :------------------------- | :--------------------------------------------------------------------------------------------------------------------- | :------------------------------- |
 | **Quarterly Statistics**   | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter.    | Total Count, Unique Repositories |
-| **Contribution Breakdown** | A table listing the count of contributions for each of the five core categories within that quarter.                   | Category Counts                  |
+| **Contribution Breakdown** | A table listing the count of contributions for each of the core categories within that quarter.                        | Category Counts                  |
 | **Top 3 Repositories**     | The top three projects where contributions were made in that quarter, ranked by total count.                           | Contribution Frequency           |
 | **Merged PRs**             | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories.     | **Review Period**                |
 | **Issues**                 | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories.                         | **Closing Period**               |
@@ -103,4 +112,4 @@ Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a det
 
 ---
 
-_Report last generated on: 3/29/2026, 1:40:26 AM_
+_Report last generated on: 3/29/2026, 10:05:40 AM_
