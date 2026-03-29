@@ -100,8 +100,7 @@ Fork this repository and follow the configuration steps below to get your own co
 
 ```bash
 # Delete the existing contribution logs and cache
-rm -rf data
-rm -rf contributions
+npm run clean
 ```
 
 **Note:** The `data` and `contributions` folders contain the JSON files that hold the contribution history from the previous user. Deleting it ensures your portfolio starts clean.
