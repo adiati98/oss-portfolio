@@ -3,7 +3,7 @@
 This repository serves as a portfolio of my open source contributions. You can check out the [Contribution Log](./contributions/markdown-generated/README.md) to see my work.
 
 > [!TIP]
-> **Want to build your own?** I created this system to be reusable. If you want to generate a similar portfolio for your own GitHub activity, please use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template) for the easiest setup.
+> **Want to build your own?** I created this system to be reusable. If you want to generate a similar portfolio for your own GitHub activity, please use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template) for a clean, standard setup.
 
 I created this log to maintain a detailed and organized record of my journey, including Pull Requests (PRs), bug reports, and general collaborations. 
 
@@ -33,6 +33,7 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 #### 1. Data Fetching & Processing
 
 - **GitHub Application Programming Interface (API) (v3):** The script communicates with the GitHub Representational State Transfer (REST) API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
+- **External Article Fetching:** (Personal Customization) Integrated fetching from **Dev.to** and **freeCodeCamp** to include technical writing metrics.
 - **Smart Syncing:** The script automatically determines whether to perform a fast incremental update or a full historical sync.
 - **Caching:** The script maintains `pr-cache.json` and `commit-cache.json` to optimize performance and respect GitHub API rate limits.
 
@@ -58,7 +59,7 @@ The system analyzes contribution patterns to automatically assign a persona titl
 ## 🛠️ Local Development
 
 > [!NOTE]
-> **Want to use this for your own portfolio?** These instructions cover manual configuration for this specific repository. To set up your own automated contribution tracker with the latest features and a cleaner starting point, please use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template).
+> **Want to use this for your own portfolio?** These instructions cover the manual configuration for this specific repository, which includes personal customizations like blog post integration. To set up a portfolio focused on the core reporting features (All-Time Stats and Quarterly Contribution Reports), please use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template) for a clean setup.
 
 ### 1. Prerequisites
 
