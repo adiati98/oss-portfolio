@@ -50,7 +50,7 @@ async function createCommunityHtml(contributions, rolesData) {
             <h3 class="text-lg font-black leading-tight text-center" style="color: ${indigoColor};">
               ${ach.title}
             </h3>
-            <div class="inline-flex items-center h-7 px-3 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 whitespace-nowrap">
+            <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 text-center">
               ${ach.org} <span class="mx-2 opacity-40" aria-hidden="true">|</span> ${ach.year}
             </div>
           </div>
@@ -68,7 +68,7 @@ async function createCommunityHtml(contributions, rolesData) {
       const bulletColor = isActive ? '#10b981' : '#94a3b8';
 
       return dedent`
-        <div class="table-row-hover flex items-center justify-between p-5 border-b border-slate-100 last:border-0 transition-colors">
+        <div class="table-row-hover flex items-center justify-between p-4 sm:p-5 border-b border-slate-100 last:border-0 transition-colors">
           <div class="flex items-center space-x-4">
             <div class="w-2.5 h-2.5 rounded-full shrink-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
             <div>
@@ -76,12 +76,12 @@ async function createCommunityHtml(contributions, rolesData) {
               <p class="text-sm text-slate-500">${role.org}</p>
             </div>
           </div>
-          <div class="text-right">
+          <div class="text-right shrink-0 ml-4">
             <span class="px-2 py-1 rounded text-xs font-bold uppercase tracking-widest mb-1 block" 
                   style="background-color: ${statusBg}; color: ${statusColor};">
               ${isActive ? 'Active' : 'Past'}
             </span>
-            <span class="text-xs font-mono text-slate-500">${role.period}</span>
+            <span class="text-xs font-mono text-slate-500 block leading-tight">${role.period}</span>
           </div>
         </div>
       `;
@@ -95,10 +95,10 @@ async function createCommunityHtml(contributions, rolesData) {
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-500">${new Date(pr.date).getFullYear()}</td>
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-slate-700">${repoName}</td>
-          <td class="px-6 py-4 text-sm">
+          <td class="px-6 py-4 text-sm font-bold text-slate-700">${repoName}</td>
+          <td class="px-6 py-4 text-sm min-w-[200px] break-words">
             <a href="${pr.url}" target="_blank" class="hover:underline font-medium inline-flex items-center group" style="color: ${indigoColor};">
-              ${pr.status === 'draft' ? `<span class="mr-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200 uppercase font-bold">Draft</span>` : ''}
+              ${pr.status === 'draft' ? `<span class="mr-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200 uppercase font-bold shrink-0">Draft</span>` : ''}
               <span>${pr.title}</span>
               <svg class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -132,7 +132,7 @@ async function createCommunityHtml(contributions, rolesData) {
     <body class="bg-white antialiased">
       ${navHtml}
       <main class="grow w-full">
-        <div class="min-h-full px-6 sm:px-12 lg:px-24 xl:px-48 py-10">
+        <div class="min-h-full px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-12 mb-16 pb-12 border-b-2">
               <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
