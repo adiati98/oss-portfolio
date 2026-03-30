@@ -2,6 +2,7 @@ const { generateColorsObject } = require('../utils/color-helpers');
 const { generateFaviconSvg, encodeSvg } = require('../utils/icon-processor');
 const {
   LANDING_PAGE_ICONS,
+  SPARKLES_SVG,
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
   SEARCH_SVG,
@@ -12,7 +13,6 @@ const {
 
 /**
  * CENTRALIZED COLOR CONFIGURATION
- * Only modify the hex values below to change the theme.
  */
 const COLOR_PALETTE = {
   primary: '#4338CA',
@@ -58,6 +58,7 @@ function getHoverStyles() {
 
 module.exports = {
   LANDING_PAGE_ICONS,
+  SPARKLES_SVG,
   LEFT_ARROW_SVG,
   RIGHT_ARROW_SVG,
   SEARCH_SVG,

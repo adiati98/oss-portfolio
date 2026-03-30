@@ -244,11 +244,12 @@ ${article} ${lowerDesc}
 
 ---
 
-## ✍️ Open Source and GitHub Articles
+## 🏛️ Ecosystem Engagement
 
-In addition to code, I contribute to the ecosystem through technical writing and tutorials. 
+Beyond code contributions, I maintain active roles in community leadership and technical content creation around open source.
 
-👉 [**View full articles list (${articleCount})**](./blog.md)
+* ✍️ **Technical Writing:** [**View full articles list (${articleCount})**](./blog.md)
+* 🏗️ **Roles & Impact:** [**View community leadership & activity**](./community-activity.md)
 
 ---
 

@@ -39,6 +39,10 @@ function createNavHtml(relativePath = './') {
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Quarterly Reports
             </a>
 
+            <a href="${base}community-activity.html" style="background-color: ${COLORS.primary[10]};" 
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Community & Activity
+            </a>
+
             <a href="${base}blog.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Articles
             </a>
@@ -68,6 +72,9 @@ function createNavHtml(relativePath = './') {
           
           <a href="${base}reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
+
+          <a href="${base}community-activity.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Community & Activity</a>
 
           <a href="${base}blog.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Articles</a>
