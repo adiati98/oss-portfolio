@@ -102,8 +102,6 @@ async function main() {
 
     let fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : today.getFullYear() - 1;
 
-    // If there is no existing contributions data (first run / full fetch), clear
-    // the persistent PR cache so authored PRs are re-processed and repopulated.
     if (!lastUpdate) {
       fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : fetchStartYear;
       console.log('First run - fetching all contributions');
@@ -133,6 +131,8 @@ async function main() {
 
     console.log(`Fetching contributions from year: ${fetchStartYear}`);
 
+    // If there is no existing contributions data (first run / full fetch), clear
+    // the persistent PR cache so authored PRs are re-processed and repopulated.
     if (!lastUpdate) {
       prCache = new Set();
       console.log(
@@ -165,7 +165,7 @@ async function main() {
       'Preserving existing contributions by category (enforcing hierarchy: reviewedPrs/coAuthoredPrs > collaborations).'
     );
 
-    const globalLoadedBy = new Map();
+    const globalLoadedBy = new Map(); // url -> Set of categories
 
     // Load existing data from disk and allow duplication only for reviewedPrs + coAuthoredPrs combo
     const categoryOrder = Object.keys(finalContributions);
@@ -309,6 +309,7 @@ async function main() {
     await createCommunityHtml(finalContributions, leadershipData);
     await createCommunityMarkdown(finalContributions, leadershipData);
 
+    // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');
     console.log('Updated PR cache saved to file.');
 
