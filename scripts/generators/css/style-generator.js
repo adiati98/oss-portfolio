@@ -94,8 +94,41 @@ function getCommonBaseCss() {
 // --- 2. FUNCTIONS FOR EACH HTML GENERATOR ---
 
 /**
- * Generates the CSS block for the blog page (blog.html).
+ * Generates the CSS block for the Community & Activity page.
  * @returns {string} The CSS string.
+ */
+function getCommunityStyleCss() {
+  return dedent`
+    ${getCommonBaseCss()}
+    
+    /* Achievement/Metric Cards */
+    .metric-card-hover {
+      transition: all 0.2s ease-in-out;
+    }
+    .metric-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: ${COLORS.primary.rgb} !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Table & Row Hovers */
+    .table-row-hover {
+      transition: background-color 0.15s ease-in-out;
+    }
+    .table-row-hover:hover {
+      background-color: ${COLORS.primary[5]} !important;
+    }
+
+    /* Workbench Table custom scrollbar for mobile */
+    .overflow-x-auto {
+      scrollbar-width: thin;
+      scrollbar-color: ${COLORS.border.light} transparent;
+    }
+  `;
+}
+
+/**
+ * Generates the CSS block for the blog page (blog.html).
  */
 function getBlogStyleCss() {
   return dedent`
@@ -131,7 +164,6 @@ function getBlogStyleCss() {
 
 /**
  * Generates the CSS block for the <style> tag in the All-Time Contributions and Landing Page head.
- * @returns {string} The CSS string.
  */
 function getIndexStyleCss() {
   return dedent`
@@ -187,7 +219,6 @@ function getIndexStyleCss() {
 
 /**
  * Generates the CSS block for the <style> tag in the Quarterly Reports List (reports.html) HTML head.
- * @returns {string} The CSS string.
  */
 function getReportsListStyleCss() {
   return dedent`
@@ -251,7 +282,6 @@ function getReportsListStyleCss() {
 
 /**
  * Generates the CSS block for the <style> tag in the Quarterly Report HTML head.
- * @returns {string} The CSS string.
  */
 function getReportStyleCss() {
   return dedent`
@@ -403,4 +433,5 @@ module.exports = {
   getIndexStyleCss,
   getReportsListStyleCss,
   getBlogStyleCss,
+  getCommunityStyleCss, // Export the new function
 };

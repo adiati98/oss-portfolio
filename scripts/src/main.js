@@ -1,8 +1,11 @@
 const path = require('path');
 const fs = require('fs/promises');
 
-// Import configuration (SINCE_YEAR is needed here)
+// Import configuration
 const { SINCE_YEAR, BLOG } = require('../config/config');
+
+// Import Leadership Metadata
+const leadershipData = require('../../metadata/leadership');
 
 // Import core fetching logic
 const { fetchContributions } = require('../api/github-api-fetchers');
@@ -15,6 +18,7 @@ const { groupContributionsByQuarter } = require('../utils/contributions-groupers
 const { writeMarkdownFiles } = require('../generators/markdown/quarterly-reports-generator');
 const { createStatsReadme } = require('../generators/markdown/contributions-readme-generator');
 const { writeArticlesMarkdown } = require('../generators/markdown/blog-markdown-generator');
+const { createCommunityMarkdown } = require('../generators/markdown/community-markdown-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
@@ -24,6 +28,7 @@ const {
 const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
 const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
 const { createBlogHtml } = require('../generators/html/blog-html-generator');
+const { createCommunityHtml } = require('../generators/html/community-html-generator');
 
 async function main() {
   // Define the data directory path.
@@ -44,13 +49,12 @@ async function main() {
     prCache = new Set(JSON.parse(cacheData));
     console.log('Loaded PR cache from file.');
   } catch (e) {
-    // Ignore 'file not found' (ENOENT); otherwise, log the error.
     if (e.code !== 'ENOENT') {
       console.error('Failed to load PR cache:', e);
     }
   }
 
-  // Load persistent commit cache (if present) so we don't re-query PR commits repeatedly
+  // Load persistent commit cache
   const commitCacheFile = path.join(dataDir, 'commit-cache.json');
   let commitCacheFromDisk = new Map();
   try {
@@ -62,7 +66,6 @@ async function main() {
     }
     console.log('Loaded commit cache from file.');
   } catch (e) {
-    // Ignore 'file not found' (ENOENT); otherwise, log the error.
     if (e.code !== 'ENOENT') {
       console.error('Failed to load commit cache:', e);
     } else {
@@ -85,7 +88,6 @@ async function main() {
       allContributions = JSON.parse(data);
       console.log('Loaded existing contributions data.');
     } catch (e) {
-      // Ignore 'file not found' (ENOENT); otherwise, log the error.
       if (e.code !== 'ENOENT') {
         console.error('Failed to load contributions data:', e);
       } else {
@@ -298,9 +300,14 @@ async function main() {
     // 7. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
 
-    // --- Generate Blog Reports (HTML and Markdown) ---
+    // 8. Generate Blog Reports (HTML and Markdown)
     await createBlogHtml(articles);
     await writeArticlesMarkdown(articles);
+
+    // 9. Generate Community & Activity Reports
+    console.log('Generating Community & Activity reports...');
+    await createCommunityHtml(finalContributions, leadershipData);
+    await createCommunityMarkdown(finalContributions, leadershipData);
 
     // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');
