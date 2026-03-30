@@ -36,11 +36,12 @@ An expert advocate for code quality and peer development. Code review and techni
 
 ---
 
-## ✍️ Open Source and GitHub Articles
+## 🏛️ Ecosystem Engagement
 
-In addition to code, I contribute to the ecosystem through technical writing and tutorials.
+Beyond code contributions, I maintain active roles in community leadership and technical content creation around open source.
 
-👉 [**View full articles list (45)**](./blog.md)
+- ✍️ **Technical Writing:** [**View full articles list (45)**](./blog.md)
+- 🏗️ **Roles & Impact:** [**View community leadership & activity**](./community-activity.md)
 
 ---
 
@@ -112,4 +113,4 @@ Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a det
 
 ---
 
-_Report last generated on: 3/30/2026, 1:43:17 AM_
+_Report last generated on: 3/30/2026, 7:18:28 PM_
