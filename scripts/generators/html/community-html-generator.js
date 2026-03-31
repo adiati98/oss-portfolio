@@ -9,6 +9,7 @@ const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/cons
 const { getCommunityStyleCss } = require('../css/style-generator');
 const leadershipData = require('../../../metadata/leadership');
 const { getColorValue } = require('../../utils/color-helpers');
+const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 /**
  * Generates the Community & Activity HTML page.
@@ -47,7 +48,7 @@ async function createCommunityHtml(contributions, rolesData) {
               ${ach.title}
             </h3>
             <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 text-center">
-              ${ach.org} <span class="mx-2 opacity-40" aria-hidden="true">|</span> ${ach.year}
+              ${sanitizeAttribute(ach.org)} <span class="mx-2 opacity-40" aria-hidden="true">|</span> ${ach.year}
             </div>
           </div>
         </div>
@@ -94,7 +95,7 @@ async function createCommunityHtml(contributions, rolesData) {
           <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${new Date(pr.date).getFullYear()}</td>
           <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
           <td class="px-6 py-4 text-sm min-w-[200px] break-words">
-            <a href="${pr.url}" target="_blank" class="hover:underline font-bold inline-flex items-center group" style="color: ${indigoColor};">
+            <a href="${pr.url}" target="_blank" title="${sanitizeAttribute(pr.title)}" class="hover:underline font-bold inline-flex items-center group" style="color: ${indigoColor};">
               ${pr.status === 'draft' ? `<span class="mr-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-700 border border-slate-200 uppercase font-black shrink-0">Draft</span>` : ''}
               <span>${pr.title}</span>
               <svg class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

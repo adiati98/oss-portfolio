@@ -21,20 +21,7 @@ const {
   COLORS,
 } = require('../../config/constants');
 const { getColorValue } = require('../../utils/color-helpers');
-
-/**
- * Sanitizes a string for safe use in HTML attributes.
- */
-function sanitizeAttribute(str) {
-  if (typeof str !== 'string') return str;
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/`/g, '&#96;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
+const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 /**
  * Generates and writes individual HTML report files for each quarter's contributions.
