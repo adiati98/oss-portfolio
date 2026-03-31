@@ -12,6 +12,7 @@ const {
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getIndexStyleCss } = require('../css/style-generator');
+const { getColorValue } = require('../../utils/color-helpers');
 
 const reportStructure = [
   {
@@ -81,13 +82,13 @@ async function createIndexHtml() {
 
       return `
         <div class="feature-card p-8 rounded-2xl border flex flex-col h-full" 
-             style="background-color: ${COLORS.primary[10]}; border-color: ${COLORS.border.light};">
+             style="background-color: ${COLORS.primary[10] || '#f8fafc'}; border-color: ${getColorValue(COLORS.border?.light, '#e2e8f0')};">
             <div class="w-12 h-12 rounded-lg flex items-center justify-center mb-6 shrink-0" 
-                 style="background-color: white; color: ${COLORS.primary.rgb};">
+                 style="background-color: white; color: ${getColorValue(COLORS.primary)};">
                 ${iconSvg}
             </div>
-            <h3 class="text-xl font-bold mb-3" style="color: ${COLORS.primary.rgb};">${item.section}</h3>
-            <p class="text-sm leading-relaxed" style="color: ${COLORS.text.secondary};">${item.description}</p>
+            <h3 class="text-xl font-bold mb-3" style="color: ${getColorValue(COLORS.primary)};">${item.section}</h3>
+            <p class="text-sm leading-relaxed" style="color: ${getColorValue(COLORS.text?.secondary, '#475569')};">${item.description}</p>
         </div>
       `;
     })
@@ -109,13 +110,13 @@ async function createIndexHtml() {
 <body class="antialiased bg-white text-slate-900">
   ${navHtml}
   
-  <header class="pt-32 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
+  <header class="pt-32 pb-20 px-6 border-b" style="border-color: ${getColorValue(COLORS.border?.light, '#e2e8f0')};">
     <div class="max-w-4xl mx-auto text-center">
-      <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
+      <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: ${getColorValue(COLORS.primary)};">
         Open Source Portfolio
       </h1>
-      <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75]}";>@${GITHUB_USERNAME}</h2>
-      <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${COLORS.text.secondary};">
+      <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75] || '#1e293b'}">@${GITHUB_USERNAME}</h2>
+      <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${getColorValue(COLORS.text?.secondary, '#475569')};">
         A comprehensive visualization of open source contributions, from high-level impact to granular quarterly details.
       </p>
     </div>
@@ -129,7 +130,7 @@ async function createIndexHtml() {
 
       <div class="mt-20 flex flex-col items-center justify-center gap-8 text-center">
         <a href="all-contributions.html" 
-          style="color: ${COLORS.primary.rgb}; border-color: ${COLORS.primary[15]};" 
+          style="color: ${getColorValue(COLORS.primary)}; border-color: ${COLORS.primary[15] || '#e2e8f0'};" 
           class="index-report-link inline-flex items-center justify-center px-8 py-4 bg-white border font-bold rounded-xl shadow-md transition duration-200 hover:shadow-lg w-full sm:w-auto">
           <span class="text-lg">Explore All-Time Contributions</span>
           <span class="ml-2">${rightArrowSvg}</span>

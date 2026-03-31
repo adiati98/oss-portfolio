@@ -144,9 +144,24 @@ function generateColorsObject(palette) {
   };
 }
 
+/**
+ * Safely extracts a color string from a potential color object or string.
+ * This is useful for accessing the generated COLORS object which contains nested variants.
+ * @param {string|object} color - The color entry (e.g., COLORS.primary or COLORS.text.secondary)
+ * @param {string} fallback - A hex or rgb string if the color is undefined
+ * @returns {string} The CSS color value
+ */
+function getColorValue(color, fallback = '#000000') {
+  if (!color) return fallback;
+  if (typeof color === 'string') return color;
+  // Prioritize .rgb, then .hex, then the object itself if it happens to be a string
+  return color.rgb || color.hex || (typeof color === 'object' ? fallback : color);
+}
+
 module.exports = {
   hexToRgb,
   rgbToRgba,
   generateColorVariants,
   generateColorsObject,
+  getColorValue,
 };

@@ -1,12 +1,10 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-
 const { dedent } = require('../../utils/dedent');
 const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
@@ -14,8 +12,8 @@ const {
   PULL_REQUEST_LARGE_SVG,
   INFO_ICON_SVG,
 } = require('../../config/constants');
-
 const { getIndexStyleCss } = require('../css/style-generator');
+const { getColorValue } = require('../../utils/color-helpers');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_README_FILENAME = 'all-contributions.html';
@@ -151,7 +149,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
         <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-50 last:border-0 gap-3 sm:gap-4">
           <div class="flex flex-col min-w-0">
             ${owner ? `<span class="text-[10px] uppercase tracking-wider text-slate-400 font-mono leading-none mb-1">${owner}</span>` : ''}
-            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${COLORS.primary.rgb};">
+            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${getColorValue(COLORS.primary)};">
               ${name}
             </a>
           </div>
@@ -194,7 +192,7 @@ ${navHtml}
     <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+          <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
             All-Time Impact
           </h1>
           <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
@@ -204,7 +202,7 @@ ${navHtml}
 
         <section>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            <div style="background-color: ${COLORS.primary.rgb};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
+            <div style="background-color: ${getColorValue(COLORS.primary)};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
               <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
               <div class="relative z-10 space-y-2">
                 <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
@@ -244,7 +242,7 @@ ${navHtml}
                   const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
 
                   const labelStyle = isHighest
-                    ? `style="color: ${COLORS.primary.rgb}; font-weight: 800;"`
+                    ? `style="color: ${getColorValue(COLORS.primary)}; font-weight: 800;"`
                     : 'class="text-slate-700 font-bold"';
 
                   return `
@@ -252,12 +250,12 @@ ${navHtml}
                   <div class="flex justify-between items-end mb-2">
                     <span ${labelStyle} class="text-lg">${label}</span>
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: ${COLORS.primary.rgb};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
+                      <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
                       <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
                     </div>
                   </div>
                   <div class="w-full bg-slate-100/50 rounded-full h-3 overflow-hidden flex">
-                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${COLORS.primary.rgb}; ${s.pct === 0 ? 'display: none;' : ''}" 
+                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${getColorValue(COLORS.primary)}; ${s.pct === 0 ? 'display: none;' : ''}" 
                          class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
                     </div>
                   </div>
@@ -284,7 +282,7 @@ ${navHtml}
                 </span>
               </h3>
               <div>
-                <p style="color: ${COLORS.primary.rgb};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
+                <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
                 <p class="text-sm text-slate-500 leading-relaxed">${personaDesc}</p>
               </div>
             </div>
@@ -295,7 +293,7 @@ ${navHtml}
             <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
             <p class="text-center">
               <a href="reports.html" 
-                 style="color: ${COLORS.primary.rgb};" 
+                 style="color: ${getColorValue(COLORS.primary)};" 
                  class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md">
                 <span>View All Reports</span> ${rightArrowSvg}
               </a>
@@ -307,7 +305,7 @@ ${navHtml}
             <p class="text-slate-500 mb-8 max-w-2xl mx-auto">In addition to code, I contribute to the ecosystem through articles and tutorials about Open Source and GitHub.</p>
             <p class="text-center">
               <a href="blog.html" 
-                 style="color: ${COLORS.primary.rgb};" 
+                 style="color: ${getColorValue(COLORS.primary)};" 
                  class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md hover:shadow-lg transition-shadow">
                 <span>Read Articles (${articleCount})</span> ${rightArrowSvg}
               </a>

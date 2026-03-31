@@ -101,7 +101,7 @@ function getCommunityStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
     
-    /* Achievement/Metric Cards */
+    /* Achievement Cards */
     .metric-card-hover {
       transition: all 0.2s ease-in-out;
     }
@@ -433,5 +433,5 @@ module.exports = {
   getIndexStyleCss,
   getReportsListStyleCss,
   getBlogStyleCss,
-  getCommunityStyleCss, // Export the new function
+  getCommunityStyleCss,
 };
