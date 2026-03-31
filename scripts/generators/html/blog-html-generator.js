@@ -8,6 +8,7 @@ const { COLORS } = require('../../config/constants');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getBlogStyleCss } = require('../css/style-generator');
+const { getColorValue } = require('../../utils/color-helpers');
 
 async function createBlogHtml(articles) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -18,11 +19,6 @@ async function createBlogHtml(articles) {
   const blogCss = getBlogStyleCss();
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
-
-  const getColorValue = (colorObj, fallback = '#000000') => {
-    if (typeof colorObj === 'string') return colorObj;
-    return colorObj?.rgb || colorObj || fallback;
-  };
 
   const listItems = articles
     .map((article) => {

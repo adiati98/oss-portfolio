@@ -8,6 +8,7 @@ const { BASE_DIR } = require('../../config/config');
 const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/constants');
 const { getCommunityStyleCss } = require('../css/style-generator');
 const leadershipData = require('../../../metadata/leadership');
+const { getColorValue } = require('../../utils/color-helpers');
 
 /**
  * Generates the Community & Activity HTML page.
@@ -21,11 +22,6 @@ async function createCommunityHtml(contributions, rolesData) {
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
   const communityCss = getCommunityStyleCss();
-
-  const getColorValue = (colorObj, fallback = '#000000') => {
-    if (typeof colorObj === 'string') return colorObj;
-    return colorObj?.rgb || colorObj || fallback;
-  };
 
   const { pullRequests } = contributions;
   const openPRs = pullRequests
