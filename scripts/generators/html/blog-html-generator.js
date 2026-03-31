@@ -4,6 +4,7 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { FAVICON_SVG_ENCODED } = require('../../config/constants');
+const { COLORS } = require('../../config/constants');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getBlogStyleCss } = require('../css/style-generator');
@@ -18,6 +19,11 @@ async function createBlogHtml(articles) {
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
 
+  const getColorValue = (colorObj, fallback = '#000000') => {
+    if (typeof colorObj === 'string') return colorObj;
+    return colorObj?.rgb || colorObj || fallback;
+  };
+
   const listItems = articles
     .map((article) => {
       const date = new Date(article.date).toLocaleDateString('en-US', {
@@ -27,13 +33,13 @@ async function createBlogHtml(articles) {
       });
 
       return dedent`
-      <div class="article-card px-4 sm:px-0">
-        <h3 class="text-xl mb-2">
-          <a href="${article.link}" target="_blank" rel="noopener noreferrer">
+      <div class="article-card group py-10 border-b border-slate-100 last:border-0 transition-colors hover:bg-indigo-50/50">
+        <h2 class="text-xl sm:text-2xl font-bold mb-3 pl-4">
+          <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 group-hover:text-indigo-800 transition-colors block">
             ${article.title}
           </a>
-        </h3>
-        <p class="article-meta text-slate-500 text-sm">
+        </h2>
+        <p class="article-meta text-slate-500 text-sm font-medium pl-4">
           Published on <span class="platform-tag font-bold text-slate-700">${article.platform}</span> — ${date}
         </p>
       </div>`;
@@ -53,16 +59,23 @@ async function createBlogHtml(articles) {
     </head>
     <body class="bg-white antialiased flex flex-col min-h-screen">
       ${navHtml}
-      <main class="grow w-full py-24">
-        <div class="max-w-[80ch] mx-auto px-6">
-          <header class="mb-12 border-b-2 border-slate-100 pb-8">
-            <h1 class="text-4xl font-black text-slate-900 mb-4">Open Source and GitHub Articles</h1>
-            <p class="text-lg text-slate-500">
-              A collection of articles that <strong>${GITHUB_USERNAME}</strong> wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
-            </p>
-          </header>
-          <div class="articles-list">
-            ${listItems || '<p class="text-slate-400 italic">No articles found with Open Source or GitHub tags.</p>'}
+      <main class="grow w-full">
+        <div class="min-h-full px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
+          <div class="max-w-7xl mx-auto">
+            <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+              <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+                Open Source and GitHub Articles
+              </h1>
+              <p style="color: ${COLORS.text?.secondary || '#374151'};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+                A collection of articles that <strong>${GITHUB_USERNAME}</strong> wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
+              </p>
+            </header>
+
+            <div class="max-w-[90ch] mx-auto">
+              <div class="articles-list">
+                ${listItems || '<p class="text-slate-400 italic text-center py-12">No articles found with Open Source or GitHub tags.</p>'}
+              </div>
+            </div>
           </div>
         </div>
       </main>

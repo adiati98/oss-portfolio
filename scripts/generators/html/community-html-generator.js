@@ -135,7 +135,7 @@ async function createCommunityHtml(contributions, rolesData) {
       <main class="grow w-full">
         <div class="min-h-full px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-12 mb-16 pb-12 border-b-2">
+            <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
               <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Community & Activity
               </h1>
