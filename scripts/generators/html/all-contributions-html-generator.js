@@ -176,149 +176,180 @@ async function createAllTimeContributions(finalContributions = [], articles = []
   const navHtml = createNavHtml('./');
 
   const htmlContent = dedent`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All-Time Impact | Open Source Portfolio</title>
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-  <style>${indexCss}</style>
-</head>
-<body class="bg-white antialiased">
-${navHtml}
-  <main class="grow w-full">
-    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
-      <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-          <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
-            All-Time Impact
-          </h1>
-          <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
-            Aggregated lifetime metrics and high-level performance across all tracked repositories since ${SINCE_YEAR}.
-          </p>
-        </header>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>All-Time Impact | Open Source Portfolio</title>
+      <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+      <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      <style>${indexCss}</style>
+    </head>
+    <body class="bg-white antialiased">
+      ${navHtml}
+      <main class="grow w-full">
+        <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+          <div class="max-w-[120ch] mx-auto">
+            <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+              <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+                All-Time Impact
+              </h1>
+              <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+                Aggregated lifetime metrics and high-level performance across all tracked repositories since ${SINCE_YEAR}.
+              </p>
+            </header>
 
-        <section>
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-            <div style="background-color: ${getColorValue(COLORS.primary)};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
-              <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
-              <div class="relative z-10 space-y-2">
-                <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
-                <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
-                <p class="text-lg opacity-90 font-medium">Lifetime Contributions on GitHub</p>
-              </div>
-              <div class="relative z-10 h-px bg-white/20 my-8"></div>
-              <div class="relative z-10 grid grid-cols-2 gap-4">
-                <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p></div>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repositories Impacted</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                  <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${articleCount}</p></div>
-                  <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Articles Written</p>
-                </div>
-                <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
-                  <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
-                  <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
-              ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
-                .map((label, idx) => {
-                  const key = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
-                  const count = [
-                    prCount,
-                    issueCount,
-                    reviewedPrCount,
-                    coAuthoredPrCount,
-                    collaborationCount,
-                  ][idx];
-                  const s = stats[key];
-                  const isHighest = grandTotal > 0 && count === maxCount;
-                  const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
-
-                  const labelStyle = isHighest
-                    ? `style="color: ${getColorValue(COLORS.primary)}; font-weight: 800;"`
-                    : 'class="text-slate-700 font-bold"';
-
-                  return `
-                <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
-                  <div class="flex justify-between items-end mb-2">
-                    <span ${labelStyle} class="text-lg">${label}</span>
-                    <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
-                      <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
+            <section>
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+                <div style="background-color: ${getColorValue(COLORS.primary)};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
+                  <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
+                  <div class="relative z-10 space-y-2">
+                    <p class="text-xs uppercase tracking-widest font-bold opacity-70">Total Impact</p>
+                    <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
+                    <p class="text-lg opacity-90 font-medium">Lifetime Contributions on GitHub</p>
+                  </div>
+                  <div class="relative z-10 h-px bg-white/20 my-8"></div>
+                  <div class="relative z-10 grid grid-cols-2 gap-4">
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p></div>
+                      <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Repositories Impacted</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
+                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${articleCount}</p></div>
+                      <p class="text-[10px] uppercase tracking-wider opacity-80 leading-tight mt-1">Articles Written</p>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
+                      <span class="text-[10px] uppercase tracking-wider opacity-80 font-bold">Active Since</span>
+                      <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100/50 rounded-full h-3 overflow-hidden flex">
-                    <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${getColorValue(COLORS.primary)}; ${s.pct === 0 ? 'display: none;' : ''}" 
-                         class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
-                    </div>
+                </div>
+
+                <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
+                  ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
+                    .map((label, idx) => {
+                      const key = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
+                      const count = [
+                        prCount,
+                        issueCount,
+                        reviewedPrCount,
+                        coAuthoredPrCount,
+                        collaborationCount,
+                      ][idx];
+                      const s = stats[key];
+                      const isHighest = grandTotal > 0 && count === maxCount;
+                      const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
+
+                      const labelStyle = isHighest
+                        ? `style="color: ${getColorValue(COLORS.primary)}; font-weight: 800;"`
+                        : 'class="text-slate-700 font-bold"';
+
+                      return `
+                    <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
+                      <div class="flex justify-between items-end mb-2">
+                        <span ${labelStyle} class="text-lg">${label}</span>
+                        <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
+                          <span class="text-xs sm:text-sm text-gray-400 ml-0 sm:ml-1 font-mono">${s.pctStr}</span>
+                        </div>
+                      </div>
+                      <div class="w-full bg-slate-100/50 rounded-full h-3 overflow-hidden flex">
+                        <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${getColorValue(COLORS.primary)}; ${s.pct === 0 ? 'display: none;' : ''}" 
+                             class="progress-bar h-3 rounded-full ${barOpacity} transition-all duration-300">
+                        </div>
+                      </div>
+                    </div>`;
+                    })
+                    .join('')}
+                </div> 
+              </div> 
+
+              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
+                  <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Primary Focus Projects</h3>
+                  <div class="divide-y divide-slate-50 min-w-0">${topReposHtml}</div>
+                </div>
+                
+                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
+                  <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center">
+                    Collaboration Profile
+                    <span class="ml-2 cursor-help group relative">
+                      ${INFO_ICON_SVG}
+                      <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
+                        Identified by analyzing the highest contribution volume across categories.
+                      </span>
+                    </span>
+                  </h3>
+                  <div>
+                    <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">${personaDesc}</p>
                   </div>
-                </div>`;
-                })
-                .join('')}
-            </div> 
-          </div> 
-
-          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
-              <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4">Primary Focus Projects</h3>
-              <div class="divide-y divide-slate-50 min-w-0">${topReposHtml}</div>
-            </div>
-            
-            <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
-              <h3 class="text-xs uppercase tracking-widest font-bold text-slate-400 mb-4 flex items-center">
-                Collaboration Profile
-                <span class="ml-2 cursor-help group relative">
-                  ${INFO_ICON_SVG}
-                  <span class="invisible group-hover:visible absolute bottom-full mb-2 left-1/2 -translate-x-1/2 w-64 p-3 bg-slate-800 text-white text-[10px] rounded shadow-xl normal-case font-medium z-20 text-center leading-normal">
-                    Identified by analyzing the highest contribution volume across categories.
-                  </span>
-                </span>
-              </h3>
-              <div>
-                <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
-                <p class="text-sm text-slate-500 leading-relaxed">${personaDesc}</p>
+                </div>
               </div>
-            </div>
-          </div>
 
-          <div class="mt-8 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">Detailed Quarterly Reports</h2>
-            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">See specific contributions, repository breakdowns, and timeline of activities.</p>
-            <p class="text-center">
-              <a href="reports.html" 
-                 style="color: ${getColorValue(COLORS.primary)};" 
-                 class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md">
-                <span>View All Reports</span> ${rightArrowSvg}
-              </a>
-            </p>
-          </div>
+              <section class="mt-16 pt-12 border-t border-slate-100">
+                <h2 class="text-xs uppercase tracking-[0.2em] font-black text-slate-400 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  
+                  <a href="community-activity.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
+                    <div class="flex items-center space-x-4 mb-4">
+                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                         🤝
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Community</h4>
+                        <p class="text-xs text-slate-500 font-medium">Roles & Active Tasks</p>
+                      </div>
+                    </div>
+                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
+                      <span>View Activity</span>
+                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
+                    </div>
+                  </a>
 
-          <div class="mt-8 p-6 sm:p-12 rounded-3xl text-center border-2 border-dashed border-slate-200 bg-slate-50/30">
-            <h2 class="text-2xl font-bold mb-4 text-slate-800">Open Source and GitHub Articles</h2>
-            <p class="text-slate-500 mb-8 max-w-2xl mx-auto">In addition to code, I contribute to the ecosystem through articles and tutorials about Open Source and GitHub.</p>
-            <p class="text-center">
-              <a href="blog.html" 
-                 style="color: ${getColorValue(COLORS.primary)};" 
-                 class="index-report-link inline-flex items-center space-x-2 px-8 py-4 bg-white border font-bold rounded-xl shadow-md hover:shadow-lg transition-shadow">
-                <span>Read Articles (${articleCount})</span> ${rightArrowSvg}
-              </a>
-            </p>
+                  <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
+                    <div class="flex items-center space-x-4 mb-4">
+                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                         📊
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Reports</h4>
+                        <p class="text-xs text-slate-500 font-medium">Seasonal breakdown</p>
+                      </div>
+                    </div>
+                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
+                      <span>View Reports</span>
+                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
+                    </div>
+                  </a>
+
+                  <a href="blog.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
+                    <div class="flex items-center space-x-4 mb-4">
+                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                         ✍️
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Articles</h4>
+                        <p class="text-xs text-slate-500 font-medium">${articleCount} Tutorials & Posts</p>
+                      </div>
+                    </div>
+                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
+                      <span>Read Articles</span>
+                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
+                    </div>
+                  </a>
+
+                </div>
+              </section>
+            </section>
           </div>
-        </section>
-      </div>
-    </div>
-  </main>
-  ${footerHtml}
-</body>
-</html>
-`;
+        </div>
+      </main>
+      ${footerHtml}
+    </body>
+    </html>
+  `;
 
   const formattedContent = await prettier.format(htmlContent, { parser: 'html' });
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
