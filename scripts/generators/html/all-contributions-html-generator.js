@@ -292,26 +292,10 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                 <h2 class="text-xs uppercase tracking-[0.2em] font-black text-slate-400 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   
-                  <a href="community-activity.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
+                  <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-indigo-400 transition-all flex flex-col justify-between">
                     <div class="flex items-center space-x-4 mb-4">
                       <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                         🤝
-                      </div>
-                      <div>
-                        <h4 class="font-bold text-slate-900">Community</h4>
-                        <p class="text-xs text-slate-500 font-medium">Roles & Active Tasks</p>
-                      </div>
-                    </div>
-                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
-                      <span>View Activity</span>
-                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
-                    </div>
-                  </a>
-
-                  <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
-                    <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                         📊
+                        📊
                       </div>
                       <div>
                         <h4 class="font-bold text-slate-900">Reports</h4>
@@ -324,10 +308,26 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                     </div>
                   </a>
 
-                  <a href="blog.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-slate-300 transition-all flex flex-col justify-between">
+                  <a href="community-activity.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-indigo-400 transition-all flex flex-col justify-between">
                     <div class="flex items-center space-x-4 mb-4">
                       <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                         ✍️
+                        🤝
+                      </div>
+                      <div>
+                        <h4 class="font-bold text-slate-900">Community</h4>
+                        <p class="text-xs text-slate-500 font-medium">Roles & Active Tasks</p>
+                      </div>
+                    </div>
+                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-bold uppercase tracking-wider opacity-60 group-hover:opacity-100 transition-opacity">
+                      <span>View Activity</span>
+                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
+                    </div>
+                  </a>
+
+                  <a href="blog.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:border-indigo-400 transition-all flex flex-col justify-between">
+                    <div class="flex items-center space-x-4 mb-4">
+                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                        ✍️
                       </div>
                       <div>
                         <h4 class="font-bold text-slate-900">Articles</h4>
