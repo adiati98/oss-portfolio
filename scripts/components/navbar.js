@@ -20,7 +20,7 @@ function createNavHtml(relativePath = './') {
         </div>
         
         <div class="flex items-center">
-          <div class="hidden lg:flex items-center space-x-3">
+          <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a href="${base}all-contributions.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">All-Time Stats</a>
             <a href="${base}reports.html" style="background-color: ${COLORS.primary[10]};" 
@@ -38,7 +38,7 @@ function createNavHtml(relativePath = './') {
           </div>
 
           <button id="menu-button" style="background-color: ${COLORS.nav.bgHover}; cursor: pointer;" 
-            class="lg:hidden w-10 h-10 flex items-center justify-center rounded-md transition duration-150" 
+            class="min-[1025px]:hidden w-10 h-10 flex items-center justify-center rounded-md transition duration-150" 
             aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle navigation menu">
             <span id="menu-open-icon" class="w-6 h-6 block">${NAV_ICONS.menuOpen}</span>
             <span id="menu-close-icon" class="w-6 h-6 hidden">${NAV_ICONS.menuClose}</span>
@@ -46,7 +46,7 @@ function createNavHtml(relativePath = './') {
         </div>
       </div>
       
-      <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden lg:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
+      <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden min-[1025px]:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
         <div class="flex flex-col space-y-2">          
           <a href="${base}all-contributions.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">All-Time Stats</a>
           <a href="${base}reports.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
@@ -75,7 +75,6 @@ function createNavHtml(relativePath = './') {
               const isExpanded = button.getAttribute('aria-expanded') === 'true';
               button.setAttribute('aria-expanded', String(!isExpanded));
               menu.classList.toggle('hidden');
-              // Ensure we toggle the "hidden" class accurately
               openIcon.classList.toggle('hidden', !isExpanded);
               closeIcon.classList.toggle('hidden', isExpanded);
             });
@@ -90,7 +89,8 @@ function createNavHtml(relativePath = './') {
       .nav-desktop-link { border-width: 1px; padding: 0.5rem; }
       .nav-github-link { padding: 0.5rem; }
       .nav-mobile-link { padding: 0.5rem 0.75rem; background-color: ${COLORS.nav.bgDark}; width: 100%; }
-      #menu-button span svg { width: 1.5rem; height: 1.5rem; }
+      
+      #menu-button span svg { width: 1.5rem; height: 1.5rem; display: block; }
       .nav-github-link svg, .nav-mobile-github-link svg { width: 100%; height: 100%; }
     </style>
   `;
