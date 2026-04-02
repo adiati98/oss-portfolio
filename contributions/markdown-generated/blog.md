@@ -2,6 +2,9 @@
 
 A collection of articles that **adiati98** wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
 
+- **[The Curated, Automated Open Source Portfolio: How It’s Going](https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98)**
+  - Published on **Dev.to** — April 1, 2026
+
 - **[Open Source Engagement: What's Working Now?](https://dev.to/adiatiayu/open-source-engagement-whats-working-now-37b9)**
   - Published on **Dev.to** — December 10, 2025
 
