@@ -95,20 +95,22 @@ async function createCommunityHtml(contributions, rolesData) {
     .map((pr) => {
       const repoName = pr.repo.split('/')[1];
       const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
+      const labelText = pr.workbenchType || 'To Review';
+
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${new Date(pr.sortDate || pr.date).getFullYear()}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${new Date(pr.date).getFullYear()}</td>
           <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
           <td class="px-6 py-4 min-w-[200px] break-words">
             <div class="flex flex-wrap items-center gap-2 mb-2">
-               <span class="text-[10px] px-2 py-0.5 rounded font-black uppercase tracking-wider border bg-amber-50 text-amber-700 border-amber-200">
-                To Review
+              <span class="text-xs px-2.5 py-0.5 rounded font-black uppercase tracking-wider border bg-amber-50 text-amber-900 border-amber-200">
+                ${labelText}
               </span>
               ${isDraft ? `<span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200 uppercase font-black shrink-0">Draft</span>` : ''}
             </div>
             <a href="${pr.url}" 
                target="_blank" 
-               class="hover:underline font-bold text-base inline-flex items-center group leading-snug" 
+               class="hover:underline font-bold text-sm sm:text-base inline-flex items-center group leading-snug"
                style="color: ${indigoColor};">
               <span>${pr.title}</span>
               <svg class="w-4 h-4 ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
