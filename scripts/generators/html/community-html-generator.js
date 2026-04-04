@@ -28,16 +28,20 @@ async function createCommunityHtml(contributions, rolesData) {
 
   const activeReviews = reviewedPrs
     .filter((pr) => (pr.state || '').toLowerCase() === 'open')
-    .map((pr) => ({
-      ...pr,
-      workbenchType: 'To Review',
-      sortDate: pr.date,
-    }))
-    .sort((a, b) => new Date(b.sortDate || b.date) - new Date(a.sortDate || a.date));
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const indigoColor = '#4338ca';
   const softIndigoBg = '#eef2ff';
   const highContrastRed = '#b91c1c';
+
+  function getToReviewBadgeHtml() {
+    const bgColor = '#fffbeb';
+    const textColor = '#92400e';
+    const borderColor = '#fde68a';
+
+    const style = `background-color: ${bgColor}; color: ${textColor}; border: 1px solid ${borderColor};`;
+    return `<span class="inline-block px-2.5 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider" style="${style}">To Review</span>`;
+  }
 
   // --- 1. Honors & Recognition Cards ---
   const achievementCards = rolesData.achievements
@@ -94,42 +98,37 @@ async function createCommunityHtml(contributions, rolesData) {
   const workbenchRows = activeReviews
     .map((pr) => {
       const repoName = pr.repo.split('/')[1];
-      const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
-      const labelText = pr.workbenchType || 'To Review';
 
-      // Format date to DD-MM-YYYY
       const formattedDate = (() => {
         const d = new Date(pr.date);
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}-${month}-${year}`;
+        return `${day}-${month}-${d.getFullYear()}`;
       })();
+
+      const statusBadge = getToReviewBadgeHtml();
 
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${formattedDate}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-600">${formattedDate}</td>
           <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
           <td class="px-6 py-4 min-w-[200px] break-words">
-            <div class="flex flex-wrap items-center gap-2 mb-2">
-              <span class="text-xs px-2.5 py-0.5 rounded font-black uppercase tracking-wider border bg-amber-50 text-amber-900 border-amber-200">
-                ${labelText}
-              </span>
-              ${isDraft ? `<span class="px-2 py-0.5 rounded text-[10px] bg-slate-100 text-slate-600 border border-slate-200 uppercase font-black shrink-0">Draft</span>` : ''}
+            <div class="mb-1.5">
+              ${statusBadge}
             </div>
             <a href="${pr.url}" 
                target="_blank" 
-               class="hover:underline font-bold text-sm sm:text-base inline-flex items-center leading-snug"
+               class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
                style="color: ${indigoColor};">
               <span>${pr.title}</span>
-              </a>
+            </a>
           </td>
         </tr>
       `;
     })
     .join('');
 
-  // UI Status Colors
+  // UI Status Count Badge
   const reviewCount = activeReviews.length;
   const hasTasks = reviewCount > 0;
   const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
