@@ -46,17 +46,29 @@ async function createCommunityMarkdown(contributions, rolesData) {
   if (activeReviews.length === 0) {
     md += `_No active maintenance tasks._\n`;
   } else {
-    // Table format for cleaner workbench view in Markdown
-    md += `| Year | Repository | Task |\n`;
-    md += `| :--- | :--- | :--- |\n`;
-    activeReviews.forEach((pr) => {
-      const year = new Date(pr.date).getFullYear();
-      const repoName = pr.repo.split('/')[1];
-      const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
-      const draftLabel = isDraft ? '`Draft` ' : '';
-      const typeLabel = '`To Review` ';
+    md += `| Last Activity | Repository | Status | Task |\n`;
+    md += `| :--- | :--- | :--- | :--- |\n`;
 
-      md += `| ${year} | **${repoName}** | ${typeLabel}${draftLabel}[${pr.title}](${pr.url}) |\n`;
+    activeReviews.forEach((pr) => {
+      // Format date to DD-MM-YYYY
+      const formattedDate = (() => {
+        const d = new Date(pr.date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+      })();
+
+      const repoName = pr.repo.split('/')[1];
+
+      // Determine Status Labels
+      const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
+      const statusLabels = isDraft ? '`To Review` `Draft`' : '`To Review`';
+
+      // Task is the linked PR Title
+      const taskLink = `[${pr.title}](${pr.url})`;
+
+      md += `| ${formattedDate} | **${repoName}** | ${statusLabels} | ${taskLink} |\n`;
     });
   }
 
