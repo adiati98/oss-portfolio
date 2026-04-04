@@ -97,9 +97,18 @@ async function createCommunityHtml(contributions, rolesData) {
       const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
       const labelText = pr.workbenchType || 'To Review';
 
+      // Format date to DD-MM-YYYY
+      const formattedDate = (() => {
+        const d = new Date(pr.date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+      })();
+
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${new Date(pr.date).getFullYear()}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${formattedDate}</td>
           <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
           <td class="px-6 py-4 min-w-[200px] break-words">
             <div class="flex flex-wrap items-center gap-2 mb-2">
@@ -110,13 +119,10 @@ async function createCommunityHtml(contributions, rolesData) {
             </div>
             <a href="${pr.url}" 
                target="_blank" 
-               class="hover:underline font-bold text-sm sm:text-base inline-flex items-center group leading-snug"
+               class="hover:underline font-bold text-sm sm:text-base inline-flex items-center leading-snug"
                style="color: ${indigoColor};">
               <span>${pr.title}</span>
-              <svg class="w-4 h-4 ml-1.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
+              </a>
           </td>
         </tr>
       `;
@@ -193,8 +199,8 @@ async function createCommunityHtml(contributions, rolesData) {
                     <caption class="sr-only">List of active maintenance tasks and pull requests</caption>
                     <thead class="bg-slate-50/80">
                       <tr>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Year</th>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repo</th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Last Activity</th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
                         <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                       </tr>
                     </thead>
