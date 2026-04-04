@@ -7,7 +7,6 @@ const { createFooterHtml } = require('../../components/footer');
 const { BASE_DIR } = require('../../config/config');
 const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/constants');
 const { getCommunityStyleCss } = require('../css/style-generator');
-const leadershipData = require('../../../metadata/leadership');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 
@@ -24,16 +23,25 @@ async function createCommunityHtml(contributions, rolesData) {
   const footerHtml = createFooterHtml();
   const communityCss = getCommunityStyleCss();
 
-  const { pullRequests } = contributions;
-  const openPRs = pullRequests
-    .filter((pr) => pr.status === 'open' || pr.status === 'draft')
+  // --- WORKBENCH LOGIC: Strictly Reviewed PRs ---
+  const { reviewedPrs = [] } = contributions;
+
+  const activeReviews = reviewedPrs
+    .filter((pr) => (pr.state || '').toLowerCase() === 'open')
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   const indigoColor = '#4338ca';
   const softIndigoBg = '#eef2ff';
+  const highContrastRed = '#b91c1c';
 
-  // High-contrast accessibility overrides
-  const highContrastRed = '#b91c1c'; // Red-700 for AA contrast
+  function getToReviewBadgeHtml() {
+    const bgColor = '#fffbeb';
+    const textColor = '#92400e';
+    const borderColor = '#fde68a';
+
+    const style = `background-color: ${bgColor}; color: ${textColor}; border: 1px solid ${borderColor};`;
+    return `<span class="inline-block px-2.5 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider" style="${style}">To Review</span>`;
+  }
 
   // --- 1. Honors & Recognition Cards ---
   const achievementCards = rolesData.achievements
@@ -87,20 +95,32 @@ async function createCommunityHtml(contributions, rolesData) {
     .join('');
 
   // --- 3. Active Workbench Rows ---
-  const workbenchRows = openPRs
+  const workbenchRows = activeReviews
     .map((pr) => {
       const repoName = pr.repo.split('/')[1];
+
+      const formattedDate = (() => {
+        const d = new Date(pr.date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        return `${day}-${month}-${d.getFullYear()}`;
+      })();
+
+      const statusBadge = getToReviewBadgeHtml();
+
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-700">${new Date(pr.date).getFullYear()}</td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-600">${formattedDate}</td>
           <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
-          <td class="px-6 py-4 text-sm min-w-[200px] break-words">
-            <a href="${pr.url}" target="_blank" title="${sanitizeAttribute(pr.title)}" class="hover:underline font-bold inline-flex items-center group" style="color: ${indigoColor};">
-              ${pr.status === 'draft' ? `<span class="mr-2 px-1.5 py-0.5 rounded text-[10px] bg-slate-100 text-slate-700 border border-slate-200 uppercase font-black shrink-0">Draft</span>` : ''}
+          <td class="px-6 py-4 min-w-[200px] break-words">
+            <div class="mb-1.5">
+              ${statusBadge}
+            </div>
+            <a href="${pr.url}" 
+               target="_blank" 
+               class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+               style="color: ${indigoColor};">
               <span>${pr.title}</span>
-              <svg class="w-4 h-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
             </a>
           </td>
         </tr>
@@ -108,8 +128,9 @@ async function createCommunityHtml(contributions, rolesData) {
     })
     .join('');
 
-  // --- Logic for Task-specific Colors ---
-  const hasTasks = openPRs.length > 0;
+  // UI Status Count Badge
+  const reviewCount = activeReviews.length;
+  const hasTasks = reviewCount > 0;
   const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
   const badgeTextColor = hasTasks ? COLORS.status.green.text : highContrastRed;
   const badgeBorderColor = hasTasks ? 'border-green-200' : 'border-red-200';
@@ -168,7 +189,7 @@ async function createCommunityHtml(contributions, rolesData) {
                   </h2>
                   <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border ${badgeBorderColor} text-center transition-all"
                         style="background-color: ${badgeBg}; color: ${badgeTextColor};">
-                    ${openPRs.length} Ongoing Tasks
+                    ${reviewCount} Ongoing Tasks
                   </span>
                 </div>
 
@@ -177,9 +198,9 @@ async function createCommunityHtml(contributions, rolesData) {
                     <caption class="sr-only">List of active maintenance tasks and pull requests</caption>
                     <thead class="bg-slate-50/80">
                       <tr>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Year</th>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repo</th>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Pull Request</th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Last Activity</th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
+                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100">

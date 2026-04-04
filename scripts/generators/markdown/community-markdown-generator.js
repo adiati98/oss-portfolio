@@ -13,9 +13,11 @@ async function createCommunityMarkdown(contributions, rolesData) {
 
   await fs.mkdir(mdBaseDir, { recursive: true });
 
-  const { pullRequests } = contributions;
-  const openPRs = pullRequests
-    .filter((pr) => pr.status === 'open' || pr.status === 'draft')
+  // --- WORKBENCH LOGIC: Strictly Reviewed PRs ---
+  const { reviewedPrs = [] } = contributions;
+
+  const activeReviews = reviewedPrs
+    .filter((pr) => (pr.state || '').toLowerCase() === 'open')
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // 1. Build Header
@@ -38,20 +40,35 @@ async function createCommunityMarkdown(contributions, rolesData) {
   md += `\n`;
 
   // 4. Active Workbench
-  md += `## 🛠️ Active Workbench (${openPRs.length})\n\n`;
+  md += `## 🛠️ Active Workbench (${activeReviews.length})\n\n`;
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
-  if (openPRs.length === 0) {
-    md += `_No active maintenance tasks at the moment._\n`;
+  if (activeReviews.length === 0) {
+    md += `_No active maintenance tasks._\n`;
   } else {
-    // Table format for cleaner workbench view in Markdown
-    md += `| Year | Repository | Task |\n`;
-    md += `| :--- | :--- | :--- |\n`;
-    openPRs.forEach((pr) => {
-      const year = new Date(pr.date).getFullYear();
+    md += `| Last Activity | Repository | Status | Task |\n`;
+    md += `| :--- | :--- | :--- | :--- |\n`;
+
+    activeReviews.forEach((pr) => {
+      // Format date to DD-MM-YYYY
+      const formattedDate = (() => {
+        const d = new Date(pr.date);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}-${month}-${year}`;
+      })();
+
       const repoName = pr.repo.split('/')[1];
-      const statusLabel = pr.status === 'draft' ? '`Draft` ' : '';
-      md += `| ${year} | **${repoName}** | ${statusLabel}[${pr.title}](${pr.url}) |\n`;
+
+      // Determine Status Labels
+      const isDraft = (pr.status || pr.state || '').toLowerCase() === 'draft';
+      const statusLabels = isDraft ? '`To Review` `Draft`' : '`To Review`';
+
+      // Task is the linked PR Title
+      const taskLink = `[${pr.title}](${pr.url})`;
+
+      md += `| ${formattedDate} | **${repoName}** | ${statusLabels} | ${taskLink} |\n`;
     });
   }
 
