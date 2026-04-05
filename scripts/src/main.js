@@ -8,7 +8,7 @@ const { SINCE_YEAR, BLOG } = require('../config/config');
 const leadershipData = require('../../metadata/leadership');
 
 // Import core fetching logic
-const { fetchContributions } = require('../api/github-api-fetchers');
+const { fetchContributions, fetchOngoingReviews } = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
 // Import grouping logic
@@ -40,6 +40,7 @@ async function main() {
   const cacheFile = path.join(dataDir, 'pr-cache.json');
   const dataFile = path.join(dataDir, 'all-contributions.json');
   const articlesFile = path.join(dataDir, 'all-articles.json');
+  const ongoingTasksFile = path.join(dataDir, 'ongoing-tasks.json');
 
   let prCache = new Set();
 
@@ -74,6 +75,28 @@ async function main() {
   }
 
   try {
+    // --- Fetch Ongoing Reviews (Workbench) ---
+    console.log('Fetching ongoing review tasks for the Active Workbench...');
+    const rawOngoingTasks = await fetchOngoingReviews();
+
+    // Filter out excluded organizations and specific repositories
+    const ongoingTasks = rawOngoingTasks.filter((task) => {
+      const repoName = task.repo.toLowerCase();
+
+      // Check if it belongs to the open-sauced organization
+      const isOpenSauced = repoName.startsWith('open-sauced/');
+
+      // Check for the specific astro-partykit-starter repo
+      const isAstroStarter = repoName.includes('astro-partykit-starter');
+
+      return !isOpenSauced && !isAstroStarter;
+    });
+
+    await fs.writeFile(ongoingTasksFile, JSON.stringify(ongoingTasks, null, 2), 'utf8');
+    console.log(
+      `Saved ${ongoingTasks.length} ongoing tasks to ${ongoingTasksFile} (after exclusions).`
+    );
+
     // --- Fetch Articles ---
     console.log('Fetching Open Source Software articles from external platforms...');
     const articles = await fetchStrictOssArticles();
@@ -306,7 +329,7 @@ async function main() {
 
     // 9. Generate Community & Activity Reports
     console.log('Generating Community & Activity reports...');
-    await createCommunityHtml(finalContributions, leadershipData);
+    await createCommunityHtml(finalContributions, leadershipData, ongoingTasks);
     await createCommunityMarkdown(finalContributions, leadershipData);
 
     // Save the updated PR cache to a file for future runs.
