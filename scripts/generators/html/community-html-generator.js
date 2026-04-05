@@ -134,9 +134,9 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
       <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
         <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
           <div class="flex items-center gap-3">
-             <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border" 
+             <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
                   style="background-color: ${statusStyle.bg}; color: ${statusStyle.text}; border-color: ${statusStyle.border};">
-              <span class="text-base border-r pr-3" style="border-color: ${statusStyle.border};">${count}</span>
+              <span class="text-xs sm:text-base border-r pr-2 sm:pr-3" style="border-color: ${statusStyle.border};">${count}</span>
               <span>${label}</span>
             </span>
             <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
