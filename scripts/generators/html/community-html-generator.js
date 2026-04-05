@@ -5,7 +5,12 @@ const { dedent } = require('../../utils/dedent');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { BASE_DIR } = require('../../config/config');
-const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/constants');
+const {
+  COLORS,
+  FAVICON_SVG_ENCODED,
+  SPARKLES_SVG,
+  WORKBENCH_STATUS_COLORS,
+} = require('../../config/constants');
 const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
@@ -23,19 +28,19 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
   const footerHtml = createFooterHtml();
   const communityCss = getCommunityStyleCss();
 
-  const indigoColor = '#4338ca';
-  const softIndigoBg = '#eef2ff';
+  const mainAccentColor = COLORS.primary.hex;
+  const softBg = COLORS.primary[10] || '#eef2ff';
 
   // --- 1. Honors & Recognition Cards ---
   const achievementCards = rolesData.achievements
     .map(
       (ach) => dedent`
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 transition-colors duration-200 flex flex-col items-center text-center">
-          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${COLORS.primary[10] || '#f0f7ff'}; color: ${indigoColor};">
+          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${COLORS.primary[10] || '#f0f7ff'}; color: ${mainAccentColor};">
             ${SPARKLES_SVG}
           </div>
           <div class="flex flex-col items-center gap-3">
-            <h3 class="text-lg font-black leading-tight text-center" style="color: ${indigoColor};">
+            <h3 class="text-lg font-black leading-tight text-center" style="color: ${mainAccentColor};">
               ${ach.title}
             </h3>
             <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 text-center">
@@ -53,7 +58,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
       const isActive = role.active;
       const statusBg = isActive ? COLORS.status.green.bg : COLORS.status.gray.bg;
       const statusColor = isActive ? COLORS.status.green.text : COLORS.status.gray.text;
-      const bulletColor = isActive ? '#10b981' : '#94a3b8';
+      const bulletColor = isActive ? COLORS.status.green.text : COLORS.text.muted;
 
       return dedent`
         <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
@@ -78,10 +83,6 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
   // --- 3. Active Workbench Dashboard Logic ---
 
-  /**
-   * Universal Bot Check
-   * Handles string user, object user, and common bot patterns
-   */
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
     const userStr = String(username || '').toLowerCase();
@@ -93,29 +94,15 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     );
   };
 
-  // 1. Manual Request review (Excluding Bots)
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
-
-  // 2. Review in progress
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
-
-  // 3. Bot request review
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
 
-  /**
-   * Helper function to render specific status tables
-   */
   function renderWorkbenchTable(tasks, label, type, index) {
     const count = tasks.length;
     const openAttribute = index === 0 ? 'open' : '';
 
-    const styles = {
-      manual: { bg: '#fffbeb', text: '#92400e', border: '#fde68a' },
-      ongoing: { bg: '#eff6ff', text: '#1e40af', border: '#bfdbfe' },
-      bot: { bg: '#f8fafc', text: '#475569', border: '#e2e8f0' },
-    };
-
-    const s = styles[type] || styles.manual;
+    const statusStyle = WORKBENCH_STATUS_COLORS[type] || WORKBENCH_STATUS_COLORS.manual;
 
     const rows =
       count > 0
@@ -124,15 +111,15 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             .map((task) => {
               const repoName = task.repo.split('/')[1] || task.repo;
               return dedent`
-              <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-                <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
-                <td class="px-6 py-4">
-                  <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${indigoColor};">
-                    <span>${task.title}</span>
-                  </a>
-                </td>
-              </tr>
-            `;
+            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
+              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
+              <td class="px-6 py-4">
+                <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${mainAccentColor};">
+                  <span>${task.title}</span>
+                </a>
+              </td>
+            </tr>
+          `;
             })
             .join('')
         : dedent`
@@ -148,8 +135,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
         <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
           <div class="flex items-center gap-3">
              <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border" 
-                  style="background-color: ${s.bg}; color: ${s.text}; border-color: ${s.border};">
-              <span class="text-base border-r pr-3" style="border-color: ${s.border};">${count}</span>
+                  style="background-color: ${statusStyle.bg}; color: ${statusStyle.text}; border-color: ${statusStyle.border};">
+              <span class="text-base border-r pr-3" style="border-color: ${statusStyle.border};">${count}</span>
               <span>${label}</span>
             </span>
             <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
@@ -190,8 +177,9 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
   const taskCount = ongoingTasks.length;
   const hasTasks = taskCount > 0;
+
   const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
-  const badgeTextColor = hasTasks ? COLORS.status.green.text : '#b91c1c';
+  const badgeTextColor = hasTasks ? COLORS.status.green.text : COLORS.status.red.text;
 
   const fullHtml = dedent`
     <!DOCTYPE html>
@@ -224,7 +212,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             <section class="mb-20" aria-labelledby="milestones-heading">
               <div class="flex flex-col items-center mb-10">
                 <h2 id="milestones-heading" class="text-sm font-black uppercase tracking-[0.4em] text-slate-600 mb-3 text-center">Milestones and Awards</h2>
-                <div class="w-16 h-1.5 bg-indigo-500 rounded-full" aria-hidden="true"></div>
+                <div class="w-16 h-1.5 rounded-full" style="background-color: ${mainAccentColor};" aria-hidden="true"></div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 ${achievementCards}
@@ -233,8 +221,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
               <section class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100" style="background-color: ${softIndigoBg};">
-                  <h2 class="text-xl font-bold" style="color: ${indigoColor};">Ecosystem Advocacy & Roles</h2>
+                <div class="p-6 border-b border-slate-100" style="background-color: ${softBg};">
+                  <h2 class="text-xl font-bold" style="color: ${mainAccentColor};">Ecosystem Advocacy & Roles</h2>
                 </div>
                 <div class="divide-y divide-slate-100">
                   ${rolesItems}
@@ -242,8 +230,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
               </section>
 
               <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${softIndigoBg};">
-                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${indigoColor};">
+                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${softBg};">
+                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${mainAccentColor};">
                     Active Workbench
                   </h2>
                   <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
