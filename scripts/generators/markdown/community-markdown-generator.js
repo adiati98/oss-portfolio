@@ -4,9 +4,6 @@ const { BASE_DIR } = require('../../config/config');
 
 /**
  * Generates the Community & Activity Markdown report.
- * @param {Object} contributions - Full contributions data
- * @param {Object} rolesData - LEADERSHIP_DATA from config
- * @param {Array} ongoingTasks - Real-time workbench tasks
  */
 async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = []) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
@@ -37,7 +34,6 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   md += `## 🛠️ Active Workbench\n\n`;
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
-  // Filter and sort by layers
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -48,18 +44,16 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
 
   /**
    * Helper function to build a collapsible table section.
-   * Uses <details> for toggling visibility.
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
-    // Section is open by default if it contains tasks
-    let section = `<details ${count > 0 ? 'open' : ''}>\n`;
-    section += `<summary><b>${icon} ${title} (${count})</b></summary>\n\n`;
+
+    let section = `<details>\n`;
+    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${count})</h3></summary>\n\n`;
 
     if (count === 0) {
-      section += `_No tasks in this category._\n\n`;
+      section += `_No tasks in this category._\n`;
     } else {
-      // Table with only Repository and Task (Date and Status removed)
       section += `| Repository | Task |\n`;
       section += `| :--- | :--- |\n`;
       tasks.forEach((task) => {
@@ -67,17 +61,16 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
         const taskLink = `[${task.title}](${task.url})`;
         section += `| **${repoName}** | ${taskLink} |\n`;
       });
-      section += `\n`;
     }
 
-    section += `</details>\n\n`;
+    section += `\n</details>\n\n`;
     return section;
   };
 
   // Layer 1: Request review
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
 
-  // Layer 2: Ongoing review (Renamed from "Under review")
+  // Layer 2: Ongoing review
   md += buildCollapsibleSection('Ongoing review', '🔄', ongoingReviewTasks);
 
   md += `---\n`;
