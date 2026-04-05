@@ -24,6 +24,7 @@ const COLOR_PALETTE = {
   textPrimary: '#1f2937',
   textSecondary: '#374151',
   textMuted: '#6b7280',
+  highlightBg: '#eef2ff',
 };
 
 // Generate theme-ready colors
@@ -56,6 +57,28 @@ function getHoverStyles() {
   `;
 }
 
+/**
+ * WORKBENCH STATUS CONFIGURATION
+ * Specific color pairs for the Active Workbench dashboard
+ */
+const WORKBENCH_STATUS_COLORS = {
+  manual: { 
+    bg: '#fffbeb', 
+    text: '#92400e', 
+    border: '#fde68a' 
+  },
+  ongoing: { 
+    bg: '#eff6ff', 
+    text: '#1e40af', 
+    border: '#bfdbfe' 
+  },
+  bot: { 
+    bg: '#f8fafc', 
+    text: '#475569', 
+    border: '#e2e8f0' 
+  },
+};
+
 module.exports = {
   LANDING_PAGE_ICONS,
   SPARKLES_SVG,
@@ -68,4 +91,5 @@ module.exports = {
   COLORS,
   getHoverStyles,
   COLOR_PALETTE,
+  WORKBENCH_STATUS_COLORS,
 };
