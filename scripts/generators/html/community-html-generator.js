@@ -77,30 +77,52 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     .join('');
 
   // --- 3. Active Workbench Dashboard Logic ---
-  const requestedTasks = ongoingTasks.filter((t) => t.status === 'Request review');
-  const underReviewTasks = ongoingTasks.filter((t) => t.status === 'Under review');
 
   /**
-   * Helper function to render specific status tables inside details/summary
+   * Universal Bot Check
+   * Handles string user, object user, and common bot patterns
    */
-  function renderWorkbenchTable(tasks, statusLabel, index) {
+  const isBot = (t) => {
+    const username = typeof t.user === 'object' ? t.user?.login : t.user;
+    const userStr = String(username || '').toLowerCase();
+    const titleStr = String(t.title || '').toLowerCase();
+    return (
+      userStr.includes('dependabot') ||
+      titleStr.startsWith('[snyk]') ||
+      (titleStr.startsWith('bump') && userStr.includes('dependabot'))
+    );
+  };
+
+  // 1. Manual Request review (Excluding Bots)
+  const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
+
+  // 2. Review in progress
+  const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
+
+  // 3. Bot request review
+  const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
+
+  /**
+   * Helper function to render specific status tables
+   */
+  function renderWorkbenchTable(tasks, label, type, index) {
     const count = tasks.length;
-    const isRequest = statusLabel === 'Request review';
-    const displayLabel = isRequest ? 'Request review' : 'Ongoing review';
+    const openAttribute = index === 0 ? 'open' : '';
 
-    const isOpen = index === 0 ? 'open' : '';
+    const styles = {
+      manual: { bg: '#fffbeb', text: '#92400e', border: '#fde68a' },
+      ongoing: { bg: '#eff6ff', text: '#1e40af', border: '#bfdbfe' },
+      bot: { bg: '#f8fafc', text: '#475569', border: '#e2e8f0' },
+    };
 
-    // Color Logic for Labels
-    const labelBg = isRequest ? '#fffbeb' : '#eff6ff';
-    const labelText = isRequest ? '#92400e' : '#1e40af';
-    const labelBorder = isRequest ? '#fde68a' : '#bfdbfe';
+    const s = styles[type] || styles.manual;
 
     const rows =
       count > 0
         ? tasks
             .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
             .map((task) => {
-              const repoName = task.repo.split('/')[1];
+              const repoName = task.repo.split('/')[1] || task.repo;
               return dedent`
               <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
                 <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
@@ -122,13 +144,13 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
         `;
 
     return dedent`
-      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${isOpen}>
+      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
         <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
           <div class="flex items-center gap-3">
              <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border" 
-                  style="background-color: ${labelBg}; color: ${labelText}; border-color: ${labelBorder};">
-              <span class="text-base border-r pr-3" style="border-color: ${labelBorder};">${count}</span>
-              <span>${displayLabel}</span>
+                  style="background-color: ${s.bg}; color: ${s.text}; border-color: ${s.border};">
+              <span class="text-base border-r pr-3" style="border-color: ${s.border};">${count}</span>
+              <span>${label}</span>
             </span>
             <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
@@ -154,10 +176,17 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     `;
   }
 
-  const workbenchHtml = [
-    renderWorkbenchTable(requestedTasks, 'Request review', 0),
-    renderWorkbenchTable(underReviewTasks, 'Under review', 1),
-  ].join('');
+  const sections = [
+    { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
+    { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
+    { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
+  ];
+
+  const workbenchHtml = sections
+    .map((section, index) =>
+      renderWorkbenchTable(section.tasks, section.label, section.type, index)
+    )
+    .join('');
 
   const taskCount = ongoingTasks.length;
   const hasTasks = taskCount > 0;

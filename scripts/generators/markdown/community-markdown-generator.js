@@ -34,12 +34,36 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   md += `## 🛠️ Active Workbench\n\n`;
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
+  // --- Filtering Logic ---
+
+  /**
+   * Universal Bot Check
+   * Handles string user, object user, and common bot patterns
+   */
+  const isBot = (t) => {
+    const username = typeof t.user === 'object' ? t.user?.login : t.user;
+    const userStr = String(username || '').toLowerCase();
+    const titleStr = String(t.title || '').toLowerCase();
+    return (
+      userStr.includes('dependabot') ||
+      titleStr.startsWith('[snyk]') ||
+      (titleStr.startsWith('bump') && userStr.includes('dependabot'))
+    );
+  };
+
+  // 1. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
-    .filter((t) => t.status === 'Request review')
+    .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  const ongoingReviewTasks = ongoingTasks
-    .filter((t) => t.status === 'Under review')
+  // 2. Review in progress
+  const inProgressTasks = ongoingTasks
+    .filter((t) => t.status === 'Review in progress')
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 3. Bot Request Review
+  const botRequestReviewTasks = ongoingTasks
+    .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   /**
@@ -67,11 +91,10 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
     return section;
   };
 
-  // Layer 1: Request review
+  // Build the sections with consistent labeling
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
-
-  // Layer 2: Ongoing review
-  md += buildCollapsibleSection('Ongoing review', '🔄', ongoingReviewTasks);
+  md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
+  md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
 
   md += `---\n`;
   md += `*Last updated: ${new Date().toLocaleDateString('en-US', {
