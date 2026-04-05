@@ -9,7 +9,10 @@ I created this log to maintain a detailed and organized record of my journey, in
 
 The content in this repository updates automatically via a Node.js script and a GitHub Actions workflow.
 
-If you want to learn about the motivation and development process for this project, read my full write-up: [How I Built a Curated, Automated Open Source Portfolio](https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0).
+If you want to learn about the motivation and development process for this project, read my full write-ups:
+
+- [How I Built a Curated, Automated Open Source Portfolio](https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0)
+- [The Curated, Automated Open Source Portfolio: How It’s Going](https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98)
 
 ---
 
@@ -32,15 +35,22 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 
 #### 1. Data Fetching & Processing
 
-- **GitHub Application Programming Interface (API) (v3):** The script communicates with the GitHub Representational State Transfer (REST) API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
-- **External Article Fetching:** (Personal Customization) Integrated fetching from **Dev.to** and **freeCodeCamp** to include technical writing metrics.
-- **Smart Syncing:** The script automatically determines whether to perform a fast incremental update or a full historical sync.
-- **Caching:** The script maintains `pr-cache.json` and `commit-cache.json` to optimize performance and respect GitHub API rate limits.
+- **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
+- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility.
+- **Personal Technical Writing:**
+    - **Automated Sync:** Fetches my latest articles from **Dev.to** via their API.
+    - **Curated Content:** Integrates long-form technical guides authored for **freeCodeCamp**, managed through manual metadata in `metadata/fcc-articles.js`.
+- **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
+- **Hierarchical Caching:** Maintains `pr-cache.json` and `commit-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
 
 #### 2. Output Generation
 
-- **Markdown Reports:** The script generates detailed quarterly logs and a summary `README.md` in `contributions/markdown-generated/`.
-- **HTML Reports:** The script generates a Tailwind-styled landing page and interactive dashboards in `contributions/html-generated/`.
+The script transforms raw JSON data into a suite of high-fidelity reports:
+
+- **Quarterly & All-Time Stats:** Detailed logs and interactive dashboards built with Tailwind CSS.
+- **Authored Technical Blog:** A dedicated showcase of my technical writing, documentation, and Open Source Software (OSS) articles.
+- **Community & Activity:** A high-level overview of leadership roles, major milestones, and the **Active Workbench (Current Tasks)**.
+- **Markdown Ecosystem:** Generates a summary `README.md` and quarterly reports for native GitHub viewing.
 
 #### 3. Collaboration Profiles
 
@@ -74,8 +84,17 @@ The system analyzes contribution patterns to automatically assign a persona titl
 
 ### 3. Configuration
 
-- **Settings:** Update `scripts/config/config.js` for username or year changes.
-- **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HyperText Markup Language (HTML) reports.
+- **Settings:** Update `scripts/config/config.js` to personalize your data fetching:
+    - `GITHUB_USERNAME`: Set this to your GitHub handle.
+    - `SINCE_YEAR`: Define the starting year for your contribution history (e.g., `2019`).
+    - `BLOG`: Configure your `devToUser` handle for automated article syncing.
+- **Leadership Metadata:** Update `metadata/leadership.js` to reflect your roles and achievements.
+- **Article Metadata:** Manually update `metadata/fcc-articles.js` to add new freeCodeCamp publications. 
+
+> [!TIP]
+> If you do not have articles on freeCodeCamp, leave this file as an empty array: `module.exports = [];` to ensure the generator runs smoothly.
+
+- **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
 
 ### 4. Deployment
 
