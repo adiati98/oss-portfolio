@@ -6,7 +6,7 @@ const { BASE_DIR } = require('../../config/config');
  * Generates the Community & Activity Markdown report.
  * @param {Object} contributions - Full contributions data
  * @param {Object} rolesData - LEADERSHIP_DATA from config
- * @param {Array} ongoingTasks - Real-time workbench tasks from fetchOngoingReviews
+ * @param {Array} ongoingTasks - Real-time workbench tasks
  */
 async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = []) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
@@ -34,43 +34,53 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   md += `\n`;
 
   // --- 4. Active Workbench ---
-  // Sort tasks to match the HTML logic (Latest activity first)
-  const sortedTasks = [...ongoingTasks].sort(
-    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-  );
-
-  md += `## 🛠️ Active Workbench (${sortedTasks.length})\n\n`;
+  md += `## 🛠️ Active Workbench\n\n`;
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
-  if (sortedTasks.length === 0) {
-    md += `_No active maintenance tasks._\n`;
-  } else {
-    md += `| Last Activity | Repository | Status | Task |\n`;
-    md += `| :--- | :--- | :--- | :--- |\n`;
+  // Filter and sort by layers
+  const requestReviewTasks = ongoingTasks
+    .filter((t) => t.status === 'Request review')
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-    sortedTasks.forEach((task) => {
-      // Format date to DD-MM-YYYY using task.updatedAt
-      const formattedDate = (() => {
-        const d = new Date(task.updatedAt);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}-${month}-${year}`;
-      })();
+  const ongoingReviewTasks = ongoingTasks
+    .filter((t) => t.status === 'Under review')
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-      const repoName = task.repo.split('/')[1];
+  /**
+   * Helper function to build a collapsible table section.
+   * Uses <details> for toggling visibility.
+   */
+  const buildCollapsibleSection = (title, icon, tasks) => {
+    const count = tasks.length;
+    // Section is open by default if it contains tasks
+    let section = `<details ${count > 0 ? 'open' : ''}>\n`;
+    section += `<summary><b>${icon} ${title} (${count})</b></summary>\n\n`;
 
-      // Use task.status for the Status column, wrapped in backticks for visibility
-      const statusLabel = `\`${task.status}\``;
+    if (count === 0) {
+      section += `_No tasks in this category._\n\n`;
+    } else {
+      // Table with only Repository and Task (Date and Status removed)
+      section += `| Repository | Task |\n`;
+      section += `| :--- | :--- |\n`;
+      tasks.forEach((task) => {
+        const repoName = task.repo.split('/')[1] || task.repo;
+        const taskLink = `[${task.title}](${task.url})`;
+        section += `| **${repoName}** | ${taskLink} |\n`;
+      });
+      section += `\n`;
+    }
 
-      // Task is the linked PR Title
-      const taskLink = `[${task.title}](${task.url})`;
+    section += `</details>\n\n`;
+    return section;
+  };
 
-      md += `| ${formattedDate} | **${repoName}** | ${statusLabel} | ${taskLink} |\n`;
-    });
-  }
+  // Layer 1: Request review
+  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
 
-  md += `\n---\n`;
+  // Layer 2: Ongoing review (Renamed from "Under review")
+  md += buildCollapsibleSection('Ongoing review', '🔄', ongoingReviewTasks);
+
+  md += `---\n`;
   md += `*Last updated: ${new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
