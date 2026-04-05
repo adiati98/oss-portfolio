@@ -6,15 +6,12 @@ const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { BASE_DIR } = require('../../config/config');
 const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/constants');
-const { getCommunityStyleCss } = require('../css/style-generator');
+const { getReportsListStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 /**
  * Generates the Community & Activity HTML page.
- * @param {object} contributions - Historical data for quarterly reports.
- * @param {object} rolesData - Honors and roles information.
- * @param {Array} ongoingTasks - Real-time workbench tasks from fetchOngoingReviews.
  */
 async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -24,32 +21,10 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
-  const communityCss = getCommunityStyleCss();
+  const communityCss = getReportsListStyleCss();
 
   const indigoColor = '#4338ca';
   const softIndigoBg = '#eef2ff';
-  const highContrastRed = '#b91c1c';
-
-  /**
-   * Generates dynamic badges based on the task status.
-   */
-  function getStatusBadgeHtml(status) {
-    let bgColor, textColor, borderColor;
-
-    if (status === 'Request review') {
-      bgColor = '#fffbeb'; // Amber-50
-      textColor = '#92400e'; // Amber-800
-      borderColor = '#fde68a'; // Amber-200
-    } else {
-      // Under Review
-      bgColor = '#eff6ff'; // Blue-50
-      textColor = '#1e40af'; // Blue-800
-      borderColor = '#bfdbfe'; // Blue-200
-    }
-
-    const style = `background-color: ${bgColor}; color: ${textColor}; border: 1px solid ${borderColor};`;
-    return `<span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full uppercase tracking-tight" style="${style}">${status}</span>`;
-  }
 
   // --- 1. Honors & Recognition Cards ---
   const achievementCards = rolesData.achievements
@@ -89,7 +64,6 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
               <p class="text-sm text-slate-700 font-medium">${role.org}</p>
             </div>
           </div>
-
           <div class="flex flex-col items-start xl:items-end justify-center shrink-0 mt-1 xl:mt-0">
             <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-widest mb-1" 
                   style="background-color: ${statusBg}; color: ${statusColor};">
@@ -102,51 +76,92 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     })
     .join('');
 
-  // --- 3. Active Workbench Rows ---
-  // Sort tasks so "Request review" (high priority) usually appears near the top
-  const sortedTasks = [...ongoingTasks].sort(
-    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-  );
+  // --- 3. Active Workbench Dashboard Logic ---
+  const requestedTasks = ongoingTasks.filter((t) => t.status === 'Request review');
+  const underReviewTasks = ongoingTasks.filter((t) => t.status === 'Under review');
 
-  const workbenchRows = sortedTasks
-    .map((task) => {
-      const repoName = task.repo.split('/')[1];
+  /**
+   * Helper function to render specific status tables inside details/summary
+   */
+  function renderWorkbenchTable(tasks, statusLabel, index) {
+    const count = tasks.length;
+    const isRequest = statusLabel === 'Request review';
+    const displayLabel = isRequest ? 'Request review' : 'Ongoing review';
 
-      const formattedDate = (() => {
-        const d = new Date(task.updatedAt);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        return `${day}-${month}-${d.getFullYear()}`;
-      })();
+    // Logic: Only the first table (index 0) is open by default
+    const isOpen = index === 0 ? 'open' : '';
 
-      const statusBadge = getStatusBadgeHtml(task.status);
+    const labelText = isRequest ? '#92400e' : '#1e40af';
+    const labelBorder = isRequest ? '#fde68a' : '#bfdbfe';
 
-      return dedent`
-        <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-          <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-600">${formattedDate}</td>
-          <td class="px-6 py-4 text-sm font-bold text-slate-800">${repoName}</td>
-          <td class="px-6 py-4 min-w-[200px] break-words">
-            <div class="mb-1.5">
-              ${statusBadge}
-            </div>
-            <a href="${task.url}" 
-               target="_blank" 
-               class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-               style="color: ${indigoColor};">
-              <span>${task.title}</span>
-            </a>
-          </td>
-        </tr>
-      `;
-    })
-    .join('');
+    const rows =
+      count > 0
+        ? tasks
+            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+            .map((task) => {
+              const repoName = task.repo.split('/')[1];
+              return dedent`
+              <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
+                <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
+                <td class="px-6 py-4">
+                  <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${indigoColor};">
+                    <span>${task.title}</span>
+                  </a>
+                </td>
+              </tr>
+            `;
+            })
+            .join('')
+        : dedent`
+          <tr>
+            <td colspan="2" class="px-6 py-10 text-center italic text-slate-400 text-sm">
+              No tasks currently in this stage.
+            </td>
+          </tr>
+        `;
 
-  // UI Status Count Badge
+    return dedent`
+      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${isOpen}>
+        <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
+          <div class="flex items-center gap-3">
+             <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border bg-white" 
+                  style="color: ${labelText}; border-color: ${labelBorder};">
+              <span class="text-base border-r pr-3" style="border-color: ${labelBorder};">${count}</span>
+              <span>${displayLabel}</span>
+            </span>
+            <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </div>
+        </summary>
+        <div class="overflow-x-auto bg-white border-t border-slate-100">
+          <div class="min-w-[600px]">
+            <table class="min-w-full">
+              <thead class="bg-slate-50/80 border-b border-slate-100">
+                <tr>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                ${rows}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    `;
+  }
+
+  const workbenchHtml = [
+    renderWorkbenchTable(requestedTasks, 'Request review', 0),
+    renderWorkbenchTable(underReviewTasks, 'Under review', 1),
+  ].join('');
+
   const taskCount = ongoingTasks.length;
   const hasTasks = taskCount > 0;
   const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
-  const badgeTextColor = hasTasks ? COLORS.status.green.text : highContrastRed;
-  const badgeBorderColor = hasTasks ? 'border-green-200' : 'border-red-200';
+  const badgeTextColor = hasTasks ? COLORS.status.green.text : '#b91c1c';
 
   const fullHtml = dedent`
     <!DOCTYPE html>
@@ -159,6 +174,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>
         ${communityCss}
+        details summary::-webkit-details-marker { display:none; }
       </style>
     </head>
     <body class="bg-white antialiased">
@@ -170,12 +186,12 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
               <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Community & Activity
               </h1>
-              <p style="color: ${COLORS.text?.secondary || '#374151'};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600">
                 A showcase of ecosystem honors, dedicated stewardship roles, and real-time maintenance efforts.
               </p>
             </header>
 
-            <section class="mb-12" aria-labelledby="milestones-heading">
+            <section class="mb-20" aria-labelledby="milestones-heading">
               <div class="flex flex-col items-center mb-10">
                 <h2 id="milestones-heading" class="text-sm font-black uppercase tracking-[0.4em] text-slate-600 mb-3 text-center">Milestones and Awards</h2>
                 <div class="w-16 h-1.5 bg-indigo-500 rounded-full" aria-hidden="true"></div>
@@ -186,47 +202,28 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              <section class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" aria-labelledby="roles-heading">
+              <section class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div class="p-6 border-b border-slate-100" style="background-color: ${softIndigoBg};">
-                  <h2 id="roles-heading" class="text-xl font-bold" style="color: ${indigoColor};">Ecosystem Advocacy & Roles</h2>
+                  <h2 class="text-xl font-bold" style="color: ${indigoColor};">Ecosystem Advocacy & Roles</h2>
                 </div>
                 <div class="divide-y divide-slate-100">
                   ${rolesItems}
                 </div>
               </section>
 
-              <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" aria-labelledby="workbench-heading">
-                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4" style="background-color: ${softIndigoBg};">
-                  <h2 id="workbench-heading" class="text-xl font-bold text-center sm:text-left" style="color: ${indigoColor};">
+              <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${softIndigoBg};">
+                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${indigoColor};">
                     Active Workbench
                   </h2>
-                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border ${badgeBorderColor} text-center transition-all"
-                        style="background-color: ${badgeBg}; color: ${badgeTextColor};">
+                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm bg-white"
+                        style="color: ${badgeTextColor};">
                     ${taskCount} Ongoing Tasks
                   </span>
                 </div>
 
-                <div class="overflow-x-auto">
-                  <table class="min-w-full">
-                    <caption class="sr-only">List of active maintenance tasks and pull requests</caption>
-                    <thead class="bg-slate-50/80">
-                      <tr>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Last Activity</th>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
-                        <th scope="col" class="px-6 py-4 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                      ${
-                        workbenchRows ||
-                        `<tr>
-                          <td colspan="3" class="px-6 py-16 text-center italic font-medium" style="color: ${highContrastRed};">
-                            No active maintenance tasks.
-                          </td>
-                        </tr>`
-                      }
-                    </tbody>
-                  </table>
+                <div class="px-6 pb-8">
+                  ${workbenchHtml}
                 </div>
               </section>
             </div>
