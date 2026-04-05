@@ -88,9 +88,10 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     const isRequest = statusLabel === 'Request review';
     const displayLabel = isRequest ? 'Request review' : 'Ongoing review';
 
-    // Logic: Only the first table (index 0) is open by default
     const isOpen = index === 0 ? 'open' : '';
 
+    // Color Logic for Labels
+    const labelBg = isRequest ? '#fffbeb' : '#eff6ff';
     const labelText = isRequest ? '#92400e' : '#1e40af';
     const labelBorder = isRequest ? '#fde68a' : '#bfdbfe';
 
@@ -124,8 +125,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
       <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${isOpen}>
         <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
           <div class="flex items-center gap-3">
-             <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border bg-white" 
-                  style="color: ${labelText}; border-color: ${labelBorder};">
+             <span class="inline-flex items-center gap-3 px-4 py-1.5 rounded-full text-sm font-black uppercase tracking-widest border" 
+                  style="background-color: ${labelBg}; color: ${labelText}; border-color: ${labelBorder};">
               <span class="text-base border-r pr-3" style="border-color: ${labelBorder};">${count}</span>
               <span>${displayLabel}</span>
             </span>
@@ -216,8 +217,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
                   <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${indigoColor};">
                     Active Workbench
                   </h2>
-                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm bg-white"
-                        style="color: ${badgeTextColor};">
+                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
+                        style="background-color: ${badgeBg}; color: ${badgeTextColor};">
                     ${taskCount} Ongoing Tasks
                   </span>
                 </div>
