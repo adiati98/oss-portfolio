@@ -330,7 +330,7 @@ async function main() {
     // 9. Generate Community & Activity Reports
     console.log('Generating Community & Activity reports...');
     await createCommunityHtml(finalContributions, leadershipData, ongoingTasks);
-    await createCommunityMarkdown(finalContributions, leadershipData);
+    await createCommunityMarkdown(finalContributions, leadershipData, ongoingTasks);
 
     // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');
