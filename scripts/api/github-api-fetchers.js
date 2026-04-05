@@ -680,6 +680,87 @@ async function fetchContributions(startYear, prCache, persistentCommitCache) {
   return { contributions, prCache, commitCache };
 }
 
+/**
+ * Fetches open Pull Requests from external repositories where the user is a reviewer.
+ * Distinguishes between "Requested" (not yet reviewed) and "Under Review" (already commented/reviewed).
+ * @returns {Promise<Array<object>>} List of ongoing review tasks.
+ */
+async function fetchOngoingReviews() {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+
+  /**
+   * Helper for internal search pagination and rate limit handling.
+   */
+  async function searchAll(query) {
+    let results = [];
+    let page = 1;
+    while (true) {
+      try {
+        const response = await axiosInstance.get(
+          `/search/issues?q=${query}&per_page=100&page=${page}`
+        );
+        results.push(...response.data.items);
+        const link = response.headers.link;
+        if (link && link.includes('rel="next"')) {
+          page++;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        } else {
+          break;
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 403) {
+          console.log('Rate limit hit in fetchOngoingReviews. Waiting for 60 seconds...');
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          continue;
+        }
+        throw err;
+      }
+    }
+    return results;
+  }
+
+  // 1. Fetch PRs where review is requested but NO review has been submitted yet.
+  const requestedQuery = `is:pr is:open review-requested:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
+
+  // 2. Fetch PRs where review was requested AND the user has already engaged.
+  const underReviewQuery = `is:pr is:open reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
+
+  const [requestedPrs, underReviewPrs] = await Promise.all([
+    searchAll(requestedQuery),
+    searchAll(underReviewQuery),
+  ]);
+
+  const ongoingTasks = [];
+
+  const formatTask = (pr, status) => {
+    const repoParts = new URL(pr.repository_url).pathname.split('/');
+    return {
+      title: pr.title,
+      url: pr.html_url,
+      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+      status: status,
+      createdAt: pr.created_at,
+      updatedAt: pr.updated_at,
+      number: pr.number,
+    };
+  };
+
+  requestedPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Request review')));
+  underReviewPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Under review')));
+
+  return ongoingTasks;
+}
+
 module.exports = {
   fetchContributions,
+  fetchOngoingReviews,
 };

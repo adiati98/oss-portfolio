@@ -12,8 +12,11 @@ const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 /**
  * Generates the Community & Activity HTML page.
+ * @param {object} contributions - Historical data for quarterly reports.
+ * @param {object} rolesData - Honors and roles information.
+ * @param {Array} ongoingTasks - Real-time workbench tasks from fetchOngoingReviews.
  */
-async function createCommunityHtml(contributions, rolesData) {
+async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'community-activity.html');
 
@@ -23,24 +26,29 @@ async function createCommunityHtml(contributions, rolesData) {
   const footerHtml = createFooterHtml();
   const communityCss = getCommunityStyleCss();
 
-  // --- WORKBENCH LOGIC: Strictly Reviewed PRs ---
-  const { reviewedPrs = [] } = contributions;
-
-  const activeReviews = reviewedPrs
-    .filter((pr) => (pr.state || '').toLowerCase() === 'open')
-    .sort((a, b) => new Date(b.date) - new Date(a.date));
-
   const indigoColor = '#4338ca';
   const softIndigoBg = '#eef2ff';
   const highContrastRed = '#b91c1c';
 
-  function getToReviewBadgeHtml() {
-    const bgColor = '#fffbeb';
-    const textColor = '#92400e';
-    const borderColor = '#fde68a';
+  /**
+   * Generates dynamic badges based on the task status.
+   */
+  function getStatusBadgeHtml(status) {
+    let bgColor, textColor, borderColor;
+
+    if (status === 'Request review') {
+      bgColor = '#fffbeb'; // Amber-50
+      textColor = '#92400e'; // Amber-800
+      borderColor = '#fde68a'; // Amber-200
+    } else {
+      // Under Review
+      bgColor = '#eff6ff'; // Blue-50
+      textColor = '#1e40af'; // Blue-800
+      borderColor = '#bfdbfe'; // Blue-200
+    }
 
     const style = `background-color: ${bgColor}; color: ${textColor}; border: 1px solid ${borderColor};`;
-    return `<span class="inline-block px-2.5 py-0.5 text-[10px] font-bold rounded-full uppercase tracking-wider" style="${style}">To Review</span>`;
+    return `<span class="inline-block px-2 py-0.5 text-xs font-semibold rounded-full uppercase tracking-tight" style="${style}">${status}</span>`;
   }
 
   // --- 1. Honors & Recognition Cards ---
@@ -95,18 +103,23 @@ async function createCommunityHtml(contributions, rolesData) {
     .join('');
 
   // --- 3. Active Workbench Rows ---
-  const workbenchRows = activeReviews
-    .map((pr) => {
-      const repoName = pr.repo.split('/')[1];
+  // Sort tasks so "Request review" (high priority) usually appears near the top
+  const sortedTasks = [...ongoingTasks].sort(
+    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+  );
+
+  const workbenchRows = sortedTasks
+    .map((task) => {
+      const repoName = task.repo.split('/')[1];
 
       const formattedDate = (() => {
-        const d = new Date(pr.date);
+        const d = new Date(task.updatedAt);
         const day = String(d.getDate()).padStart(2, '0');
         const month = String(d.getMonth() + 1).padStart(2, '0');
         return `${day}-${month}-${d.getFullYear()}`;
       })();
 
-      const statusBadge = getToReviewBadgeHtml();
+      const statusBadge = getStatusBadgeHtml(task.status);
 
       return dedent`
         <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
@@ -116,11 +129,11 @@ async function createCommunityHtml(contributions, rolesData) {
             <div class="mb-1.5">
               ${statusBadge}
             </div>
-            <a href="${pr.url}" 
+            <a href="${task.url}" 
                target="_blank" 
                class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
                style="color: ${indigoColor};">
-              <span>${pr.title}</span>
+              <span>${task.title}</span>
             </a>
           </td>
         </tr>
@@ -129,8 +142,8 @@ async function createCommunityHtml(contributions, rolesData) {
     .join('');
 
   // UI Status Count Badge
-  const reviewCount = activeReviews.length;
-  const hasTasks = reviewCount > 0;
+  const taskCount = ongoingTasks.length;
+  const hasTasks = taskCount > 0;
   const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
   const badgeTextColor = hasTasks ? COLORS.status.green.text : highContrastRed;
   const badgeBorderColor = hasTasks ? 'border-green-200' : 'border-red-200';
@@ -189,7 +202,7 @@ async function createCommunityHtml(contributions, rolesData) {
                   </h2>
                   <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border ${badgeBorderColor} text-center transition-all"
                         style="background-color: ${badgeBg}; color: ${badgeTextColor};">
-                    ${reviewCount} Ongoing Tasks
+                    ${taskCount} Ongoing Tasks
                   </span>
                 </div>
 
