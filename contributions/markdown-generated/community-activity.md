@@ -21,6 +21,13 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
+
+> **_You've outpaced the tasks!_**
+
+</details>
+
+<details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (13)</h3></summary>
 
 | Repository                      | Task                                                                                                                                                 |
