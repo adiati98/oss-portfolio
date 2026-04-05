@@ -6,7 +6,7 @@ const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { BASE_DIR } = require('../../config/config');
 const { COLORS, FAVICON_SVG_ENCODED, SPARKLES_SVG } = require('../../config/constants');
-const { getReportsListStyleCss } = require('../css/style-generator');
+const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 
@@ -21,7 +21,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
-  const communityCss = getReportsListStyleCss();
+  const communityCss = getCommunityStyleCss();
 
   const indigoColor = '#4338ca';
   const softIndigoBg = '#eef2ff';
