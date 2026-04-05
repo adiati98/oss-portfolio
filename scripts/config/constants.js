@@ -62,20 +62,28 @@ function getHoverStyles() {
  * Specific color pairs for the Active Workbench dashboard
  */
 const WORKBENCH_STATUS_COLORS = {
-  manual: { 
-    bg: '#fffbeb', 
-    text: '#92400e', 
-    border: '#fde68a' 
+  todo: {
+    bg: '#ecfeff',
+    text: '#0891b2',
+    border: '#cffafe',
   },
-  ongoing: { 
-    bg: '#eff6ff', 
-    text: '#1e40af', 
-    border: '#bfdbfe' 
+  manual: {
+    bg: '#fffbeb',
+    text: '#92400e',
+    border: '#fde68a',
   },
-  bot: { 
-    bg: '#f8fafc', 
-    text: '#475569', 
-    border: '#e2e8f0' 
+  ongoing: {
+    bg: '#eff6ff',
+    text: '#1e40af',
+    border: '#bfdbfe',
+  },
+  bot: {
+    bg: '#f8fafc',
+    text: '#475569',
+    border: '#e2e8f0',
+  },
+  emptyMessage: {
+    text: '#991b1b',
   },
 };
 
