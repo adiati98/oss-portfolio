@@ -11,6 +11,7 @@ const {
   SPARKLES_SVG,
   WORKBENCH_STATUS_COLORS,
 } = require('../../config/constants');
+const { WORKBENCH_SUCCESS_MESSAGES } = require('../../../metadata/workbench-messages');
 const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
@@ -94,23 +95,30 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     );
   };
 
+  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
 
   function renderWorkbenchTable(tasks, label, type, index) {
     const count = tasks.length;
+    const displayCount = String(count);
     const openAttribute = index === 0 ? 'open' : '';
-
     const statusStyle = WORKBENCH_STATUS_COLORS[type] || WORKBENCH_STATUS_COLORS.manual;
+    const redText = WORKBENCH_STATUS_COLORS.emptyMessage.text;
 
-    const rows =
-      count > 0
-        ? tasks
-            .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
-            .map((task) => {
-              const repoName = task.repo.split('/')[1] || task.repo;
-              return dedent`
+    const randomMsg =
+      WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
+
+    // Define the content based on whether tasks exist
+    let sectionContent;
+
+    if (count > 0) {
+      const rows = tasks
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        .map((task) => {
+          const repoName = task.repo.split('/')[1] || task.repo;
+          return dedent`
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
               <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
               <td class="px-6 py-4">
@@ -120,31 +128,11 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
               </td>
             </tr>
           `;
-            })
-            .join('')
-        : dedent`
-          <tr>
-            <td colspan="2" class="px-6 py-10 text-center italic text-slate-400 text-sm">
-              No tasks currently in this stage.
-            </td>
-          </tr>
-        `;
+        })
+        .join('');
 
-    return dedent`
-      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
-        <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
-          <div class="flex items-center gap-3">
-             <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
-                  style="background-color: ${statusStyle.bg}; color: ${statusStyle.text}; border-color: ${statusStyle.border};">
-              <span class="text-xs sm:text-base border-r pr-2 sm:pr-3" style="border-color: ${statusStyle.border};">${count}</span>
-              <span>${label}</span>
-            </span>
-            <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-            </span>
-          </div>
-        </summary>
-        <div class="overflow-x-auto bg-white border-t border-slate-100">
+      sectionContent = dedent`
+        <div class="overflow-x-auto">
           <div class="min-w-[600px]">
             <table class="min-w-full">
               <thead class="bg-slate-50/80 border-b border-slate-100">
@@ -159,11 +147,43 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             </table>
           </div>
         </div>
+      `;
+    } else {
+      // Empty State: No table, just a wrapping div
+      sectionContent = dedent`
+        <div class="px-6 py-12 text-center">
+          <p class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md" style="color: ${redText};">
+            ${randomMsg}
+          </p>
+        </div>
+      `;
+    }
+
+    return dedent`
+      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
+        <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
+          <div class="flex items-center gap-3">
+             <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
+                  style="background-color: ${statusStyle.bg}; color: ${statusStyle.text}; border-color: ${statusStyle.border};">
+              <span class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]" style="border-color: ${statusStyle.border};">
+                ${displayCount}
+              </span>
+              <span>${label}</span>
+            </span>
+            <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </span>
+          </div>
+        </summary>
+        <div class="bg-white border-t border-slate-100">
+          ${sectionContent}
+        </div>
       </details>
     `;
   }
 
   const sections = [
+    { tasks: todoTasks, label: 'To do issues', type: 'todo' },
     { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
