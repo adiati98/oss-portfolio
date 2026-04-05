@@ -1,6 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { BASE_DIR } = require('../../config/config');
+const { WORKBENCH_SUCCESS_MESSAGES } = require('../../../metadata/workbench-messages');
 
 /**
  * Generates the Community & Activity Markdown report.
@@ -36,10 +37,6 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
 
   // --- Filtering Logic ---
 
-  /**
-   * Universal Bot Check
-   * Handles string user, object user, and common bot patterns
-   */
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
     const userStr = String(username || '').toLowerCase();
@@ -51,17 +48,20 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
     );
   };
 
-  // 1. Manual Request Review (Exclude Bots)
+  // 1. To do issues
+  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
+
+  // 2. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 2. Review in progress
+  // 3. Review in progress
   const inProgressTasks = ongoingTasks
     .filter((t) => t.status === 'Review in progress')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 3. Bot Request Review
+  // 4. Bot Request Review
   const botRequestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -71,12 +71,18 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
+    // Explicitly show 0 as a string
+    const displayCount = String(count);
+
+    // Pick a random success message for empty states
+    const randomMsg =
+      WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
     let section = `<details>\n`;
-    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${count})</h3></summary>\n\n`;
+    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${displayCount})</h3></summary>\n\n`;
 
     if (count === 0) {
-      section += `_No tasks in this category._\n`;
+      section += `> ***${randomMsg}***\n`;
     } else {
       section += `| Repository | Task |\n`;
       section += `| :--- | :--- |\n`;
@@ -91,7 +97,7 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
     return section;
   };
 
-  // Build the sections with consistent labeling
+  md += buildCollapsibleSection('To do issues', '📝', todoTasks);
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
   md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
