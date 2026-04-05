@@ -4,9 +4,6 @@ const { BASE_DIR } = require('../../config/config');
 
 /**
  * Generates the Community & Activity Markdown report.
- * @param {Object} contributions - Full contributions data
- * @param {Object} rolesData - LEADERSHIP_DATA from config
- * @param {Array} ongoingTasks - Real-time workbench tasks from fetchOngoingReviews
  */
 async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = []) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
@@ -34,43 +31,72 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   md += `\n`;
 
   // --- 4. Active Workbench ---
-  // Sort tasks to match the HTML logic (Latest activity first)
-  const sortedTasks = [...ongoingTasks].sort(
-    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
-  );
-
-  md += `## 🛠️ Active Workbench (${sortedTasks.length})\n\n`;
+  md += `## 🛠️ Active Workbench\n\n`;
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
-  if (sortedTasks.length === 0) {
-    md += `_No active maintenance tasks._\n`;
-  } else {
-    md += `| Last Activity | Repository | Status | Task |\n`;
-    md += `| :--- | :--- | :--- | :--- |\n`;
+  // --- Filtering Logic ---
 
-    sortedTasks.forEach((task) => {
-      // Format date to DD-MM-YYYY using task.updatedAt
-      const formattedDate = (() => {
-        const d = new Date(task.updatedAt);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}-${month}-${year}`;
-      })();
+  /**
+   * Universal Bot Check
+   * Handles string user, object user, and common bot patterns
+   */
+  const isBot = (t) => {
+    const username = typeof t.user === 'object' ? t.user?.login : t.user;
+    const userStr = String(username || '').toLowerCase();
+    const titleStr = String(t.title || '').toLowerCase();
+    return (
+      userStr.includes('dependabot') ||
+      titleStr.startsWith('[snyk]') ||
+      (titleStr.startsWith('bump') && userStr.includes('dependabot'))
+    );
+  };
 
-      const repoName = task.repo.split('/')[1];
+  // 1. Manual Request Review (Exclude Bots)
+  const requestReviewTasks = ongoingTasks
+    .filter((t) => t.status === 'Request review' && !isBot(t))
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-      // Use task.status for the Status column, wrapped in backticks for visibility
-      const statusLabel = `\`${task.status}\``;
+  // 2. Review in progress
+  const inProgressTasks = ongoingTasks
+    .filter((t) => t.status === 'Review in progress')
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-      // Task is the linked PR Title
-      const taskLink = `[${task.title}](${task.url})`;
+  // 3. Bot Request Review
+  const botRequestReviewTasks = ongoingTasks
+    .filter((t) => t.status === 'Request review' && isBot(t))
+    .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-      md += `| ${formattedDate} | **${repoName}** | ${statusLabel} | ${taskLink} |\n`;
-    });
-  }
+  /**
+   * Helper function to build a collapsible table section.
+   */
+  const buildCollapsibleSection = (title, icon, tasks) => {
+    const count = tasks.length;
 
-  md += `\n---\n`;
+    let section = `<details>\n`;
+    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${count})</h3></summary>\n\n`;
+
+    if (count === 0) {
+      section += `_No tasks in this category._\n`;
+    } else {
+      section += `| Repository | Task |\n`;
+      section += `| :--- | :--- |\n`;
+      tasks.forEach((task) => {
+        const repoName = task.repo.split('/')[1] || task.repo;
+        const taskLink = `[${task.title}](${task.url})`;
+        section += `| **${repoName}** | ${taskLink} |\n`;
+      });
+    }
+
+    section += `\n</details>\n\n`;
+    return section;
+  };
+
+  // Build the sections with consistent labeling
+  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
+  md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
+  md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
+
+  md += `---\n`;
   md += `*Last updated: ${new Date().toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',

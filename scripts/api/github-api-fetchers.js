@@ -751,11 +751,12 @@ async function fetchOngoingReviews() {
       createdAt: pr.created_at,
       updatedAt: pr.updated_at,
       number: pr.number,
+      user: pr.user,
     };
   };
 
   requestedPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Request review')));
-  underReviewPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Under review')));
+  underReviewPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Review in progress')));
 
   return ongoingTasks;
 }
