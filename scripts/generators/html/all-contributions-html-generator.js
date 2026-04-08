@@ -205,7 +205,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                 <div style="background-color: ${getColorValue(COLORS.primary)};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
                   <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
                   <div class="relative z-10 space-y-2">
-                    <p class="text-xs uppercase tracking-widest font-black opacity-100">Total Impact</p>
+                    <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
                     <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
                     <p class="text-lg opacity-100 font-bold">Lifetime Contributions on GitHub</p>
                   </div>
@@ -213,11 +213,11 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                   <div class="relative z-10 grid grid-cols-2 gap-4">
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                       <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${totalUniqueRepos}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white leading-tight mt-1">Impacted Repos</p>
+                      <p class="text-sm uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                       <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${articleCount}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white leading-tight mt-1">Articles</p>
+                      <p class="text-sm uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                       <span class="text-sm uppercase tracking-widest text-white">Active Since</span>
@@ -267,12 +267,12 @@ async function createAllTimeContributions(finalContributions = [], articles = []
 
               <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
-                  <h2 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4">Primary Focus Projects</h2>
+                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-500 mb-4">Primary Focus Projects</h2>
                   <div class="divide-y divide-slate-100 min-w-0">${topReposHtml}</div>
                 </div>
                 
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                  <h2 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4 flex items-center">
+                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-500 mb-4 flex items-center">
                     Collaboration Profile
                     <span class="ml-2 cursor-help group relative">
                       ${INFO_ICON_SVG}
@@ -283,13 +283,13 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                   </h2>
                   <div>
                     <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
-                    <p class="text-sm text-slate-600 font-bold leading-relaxed">${personaDesc}</p>
+                    <p class="text-md text-slate-500 leading-relaxed">${personaDesc}</p>
                   </div>
                 </div>
               </div>
 
               <section class="mt-16 pt-12 border-t border-slate-100">
-                <h2 class="text-xs uppercase tracking-[0.2em] font-black text-slate-500 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
+                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-500 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   
                   <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
