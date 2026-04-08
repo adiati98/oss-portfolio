@@ -23,22 +23,7 @@ const {
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
-
-/**
- * Sanitizes a string for safe use in HTML attributes (e.g., prevents double quotes from breaking HTML).
- * @param {string} str - The string to sanitize.
- * @returns {string} The sanitized string.
- */
-function sanitizeAttribute(str) {
-  if (typeof str !== 'string') return str;
-  return str
-    .replace(/&/g, '&amp;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-    .replace(/`/g, '&#96;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-}
+const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 /**
  * Generates and writes individual HTML report files for each quarter's contributions.
