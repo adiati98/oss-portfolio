@@ -501,6 +501,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -524,6 +525,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -546,6 +548,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -571,6 +574,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -653,6 +657,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -698,14 +703,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -716,516 +725,620 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Merged <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Merged <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Review Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="shesharpnl/knowledge-hub">
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/knowledge-hub</span
                         >
                       </td>
-                      <td data-value="Update Contributing section in README">
+                      <td data-value="Update Contributing section in README" data-col-type="string">
                         <a
                           href="https://github.com/shesharpnl/knowledge-hub/pull/10"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Contributing section in README</a
                         >
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-09-28</td>
-                      <td>1 day</td>
+                      <td data-value="2023-09-28T08:28:12Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-09-28T20:31:10Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Fix links to OpenSauced docs and pizza-verse repos">
+                      <td
+                        data-value="Fix links to OpenSauced docs and pizza-verse repos"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/27"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix links to OpenSauced docs and pizza-verse repos</a
                         >
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-09-28</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-28T14:50:41Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-09-28T15:51:13Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="shesharpnl/.github">
+                      <td data-value="shesharpnl/.github" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/.github</span
                         >
                       </td>
-                      <td data-value="Added &#96;.github&#96; folder">
+                      <td data-value="Added &#96;.github&#96; folder" data-col-type="string">
                         <a
                           href="https://github.com/shesharpnl/.github/pull/1"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Added `.github` folder</a
                         >
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-09-28</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-28T10:00:43Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-09-28T10:07:42Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Forem to the repositories list">
+                      <td data-value="Add Forem to the repositories list" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/21"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Forem to the repositories list</a
                         >
                       </td>
-                      <td>2023-09-25</td>
-                      <td>2023-09-25</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-25T13:08:40Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="2023-09-25T17:33:48Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="shesharpnl/knowledge-hub">
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/knowledge-hub</span
                         >
                       </td>
-                      <td data-value="Add Contributing Guide">
+                      <td data-value="Add Contributing Guide" data-col-type="string">
                         <a
                           href="https://github.com/shesharpnl/knowledge-hub/pull/9"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Contributing Guide</a
                         >
                       </td>
-                      <td>2023-09-25</td>
-                      <td>2023-09-25</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-25T11:34:16Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="2023-09-25T17:11:09Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="shesharpnl/knowledge-hub">
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/knowledge-hub</span
                         >
                       </td>
-                      <td data-value="Move Resources to Their Own Files">
+                      <td data-value="Move Resources to Their Own Files" data-col-type="string">
                         <a
                           href="https://github.com/shesharpnl/knowledge-hub/pull/8"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Move Resources to Their Own Files</a
                         >
                       </td>
-                      <td>2023-09-25</td>
-                      <td>2023-09-25</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-25T09:59:09Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="2023-09-25T10:00:16Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add September 2023 newsletter">
+                      <td data-value="Add September 2023 newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/980"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add September 2023 newsletter</a
                         >
                       </td>
-                      <td>2023-09-07</td>
-                      <td>2023-09-20</td>
-                      <td>13 days</td>
+                      <td data-value="2023-09-07T11:41:53Z" data-col-type="date">2023-09-07</td>
+                      <td data-value="2023-09-20T13:36:56Z" data-col-type="date">2023-09-20</td>
+                      <td data-value="13" data-col-type="number">13 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="feat: Update instructions in README">
+                      <td data-value="feat: Update instructions in README" data-col-type="string">
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/82"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: Update instructions in README</a
                         >
                       </td>
-                      <td>2023-09-06</td>
-                      <td>2023-09-19</td>
-                      <td>13 days</td>
+                      <td data-value="2023-09-06T19:09:45Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-19T17:24:45Z" data-col-type="date">2023-09-19</td>
+                      <td data-value="13" data-col-type="number">13 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="docs: Add Notes">
+                      <td data-value="docs: Add Notes" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/15"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Add Notes</a
                         >
                       </td>
-                      <td>2023-09-18</td>
-                      <td>2023-09-18</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-18T14:56:31Z" data-col-type="date">2023-09-18</td>
+                      <td data-value="2023-09-18T18:10:10Z" data-col-type="date">2023-09-18</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add BioDrop to the repositories list">
+                      <td data-value="Add BioDrop to the repositories list" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/5"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add BioDrop to the repositories list</a
                         >
                       </td>
-                      <td>2023-09-08</td>
-                      <td>2023-09-08</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-08T11:26:35Z" data-col-type="date">2023-09-08</td>
+                      <td data-value="2023-09-08T17:15:56Z" data-col-type="date">2023-09-08</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add September 2023 Monthly Challenge">
+                      <td data-value="Add September 2023 Monthly Challenge" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/978"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add September 2023 Monthly Challenge</a
                         >
                       </td>
-                      <td>2023-09-04</td>
-                      <td>2023-09-05</td>
-                      <td>1 day</td>
+                      <td data-value="2023-09-04T23:44:25Z" data-col-type="date">2023-09-04</td>
+                      <td data-value="2023-09-05T18:10:17Z" data-col-type="date">2023-09-05</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Update repository">
+                      <td data-value="Update repository" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/1"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update repository</a
                         >
                       </td>
-                      <td>2023-09-04</td>
-                      <td>2023-09-04</td>
-                      <td>0 days</td>
+                      <td data-value="2023-09-04T20:08:47Z" data-col-type="date">2023-09-04</td>
+                      <td data-value="2023-09-04T20:09:14Z" data-col-type="date">2023-09-04</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
                       <td
                         data-value="Fix broken links and typos in monthly challenges, September, and October challenge pages"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/973"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix broken links and typos in monthly challenges, September, and October
                           challenge pages</a
                         >
                       </td>
-                      <td>2023-08-28</td>
-                      <td>2023-08-29</td>
-                      <td>1 day</td>
+                      <td data-value="2023-08-28T19:17:38Z" data-col-type="date">2023-08-28</td>
+                      <td data-value="2023-08-29T19:52:24Z" data-col-type="date">2023-08-29</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
                       <td
                         data-value="Update a Slack channel&#39;s name and Sunday&#39;s Accountabilibuddies leader"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/965"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update a Slack channel's name and Sunday's Accountabilibuddies leader</a
                         >
                       </td>
-                      <td>2023-08-18</td>
-                      <td>2023-08-24</td>
-                      <td>6 days</td>
+                      <td data-value="2023-08-18T09:19:54Z" data-col-type="date">2023-08-18</td>
+                      <td data-value="2023-08-24T13:55:42Z" data-col-type="date">2023-08-24</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
                       <td
                         data-value="Add the Coffee Host role and remove the Coffee Coordinator role"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/967"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add the Coffee Host role and remove the Coffee Coordinator role</a
                         >
                       </td>
-                      <td>2023-08-18</td>
-                      <td>2023-08-18</td>
-                      <td>0 days</td>
+                      <td data-value="2023-08-18T20:48:10Z" data-col-type="date">2023-08-18</td>
+                      <td data-value="2023-08-18T21:03:27Z" data-col-type="date">2023-08-18</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
-                      <td data-value="open-sauced/100-days-of-oss-template">
+                      <td data-value="open-sauced/100-days-of-oss-template" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/100-days-of-oss-template</span
                         >
                       </td>
-                      <td data-value="Add More Information to Use This Template in the README">
+                      <td
+                        data-value="Add More Information to Use This Template in the README"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/100-days-of-oss-template/pull/8"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add More Information to Use This Template in the README</a
                         >
                       </td>
-                      <td>2023-07-30</td>
-                      <td>2023-08-14</td>
-                      <td>15 days</td>
+                      <td data-value="2023-07-30T21:39:32Z" data-col-type="date">2023-07-30</td>
+                      <td data-value="2023-08-14T13:26:45Z" data-col-type="date">2023-08-14</td>
+                      <td data-value="15" data-col-type="number">15 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>17.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add August 2023 newsletter">
+                      <td data-value="Add August 2023 newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/954"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add August 2023 newsletter</a
                         >
                       </td>
-                      <td>2023-08-02</td>
-                      <td>2023-08-03</td>
-                      <td>1 day</td>
+                      <td data-value="2023-08-02T06:20:02Z" data-col-type="date">2023-08-02</td>
+                      <td data-value="2023-08-03T15:22:10Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>18.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update Links in the README.md and CONTRIBUTING.md">
+                      <td
+                        data-value="Update Links in the README.md and CONTRIBUTING.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/947"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Links in the README.md and CONTRIBUTING.md</a
                         >
                       </td>
-                      <td>2023-07-28</td>
-                      <td>2023-08-03</td>
-                      <td>6 days</td>
+                      <td data-value="2023-07-28T06:23:44Z" data-col-type="date">2023-07-28</td>
+                      <td data-value="2023-08-03T15:04:24Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>19.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Move Links from Titles to Content in Resources">
+                      <td
+                        data-value="Move Links from Titles to Content in Resources"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/944"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Move Links from Titles to Content in Resources</a
                         >
                       </td>
-                      <td>2023-07-27</td>
-                      <td>2023-08-03</td>
-                      <td>7 days</td>
+                      <td data-value="2023-07-27T09:14:25Z" data-col-type="date">2023-07-27</td>
+                      <td data-value="2023-08-03T15:03:17Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="7" data-col-type="number">7 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>20.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Fix wording on how to receive invite">
+                      <td data-value="Fix wording on how to receive invite" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/942"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix wording on how to receive invite</a
                         >
                       </td>
-                      <td>2023-07-26</td>
-                      <td>2023-08-03</td>
-                      <td>8 days</td>
+                      <td data-value="2023-07-26T15:34:25Z" data-col-type="date">2023-07-26</td>
+                      <td data-value="2023-08-03T15:00:00Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>21.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update monthly challenge">
+                      <td data-value="Update monthly challenge" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/952"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update monthly challenge</a
                         >
                       </td>
-                      <td>2023-07-31</td>
-                      <td>2023-08-01</td>
-                      <td>1 day</td>
+                      <td data-value="2023-07-31T08:40:12Z" data-col-type="date">2023-07-31</td>
+                      <td data-value="2023-08-01T17:24:30Z" data-col-type="date">2023-08-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>22.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Reorganize Virtual Coffee Resources">
+                      <td data-value="Reorganize Virtual Coffee Resources" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/895"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Reorganize Virtual Coffee Resources</a
                         >
                       </td>
-                      <td>2023-05-25</td>
-                      <td>2023-07-19</td>
-                      <td>55 days</td>
+                      <td data-value="2023-05-25T20:33:28Z" data-col-type="date">2023-05-25</td>
+                      <td data-value="2023-07-19T14:33:31Z" data-col-type="date">2023-07-19</td>
+                      <td data-value="55" data-col-type="number">55 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>23.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add July 2023 newsletter">
+                      <td data-value="Add July 2023 newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/931"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add July 2023 newsletter</a
                         >
                       </td>
-                      <td>2023-07-11</td>
-                      <td>2023-07-18</td>
-                      <td>8 days</td>
+                      <td data-value="2023-07-11T06:44:28Z" data-col-type="date">2023-07-11</td>
+                      <td data-value="2023-07-18T19:55:13Z" data-col-type="date">2023-07-18</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>24.</td>
-                      <td data-value="the-collab-lab/website">
+                      <td data-value="the-collab-lab/website" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >the-collab-lab/website</span
                         >
                       </td>
                       <td
                         data-value="fix: typo of command to clone the repo with plain git command"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/the-collab-lab/website/pull/76"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >fix: typo of command to clone the repo with plain git command</a
                         >
                       </td>
-                      <td>2023-07-03</td>
-                      <td>2023-07-03</td>
-                      <td>0 days</td>
+                      <td data-value="2023-07-03T10:39:55Z" data-col-type="date">2023-07-03</td>
+                      <td data-value="2023-07-03T10:58:53Z" data-col-type="date">2023-07-03</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </details>
+
             <details id="issues" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1271,14 +1384,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="issues-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1289,435 +1406,550 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closed <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closed <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closing Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closing Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
-                      <td data-value="Bug: Highlight Card Overflow On Small Screen">
+                      <td
+                        data-value="Bug: Highlight Card Overflow On Small Screen"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/app/issues/1764"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Bug: Highlight Card Overflow On Small Screen</a
                         >
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-10-03</td>
-                      <td>5 days</td>
+                      <td data-value="2023-09-28T18:49:55Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-10-03T15:54:18Z" data-col-type="date">2023-10-03</td>
+                      <td data-value="5" data-col-type="number">5 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update Monthly Challenge — Oct 2023">
+                      <td data-value="Update Monthly Challenge — Oct 2023" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/991"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Monthly Challenge — Oct 2023
                         </a>
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-10-02</td>
-                      <td>4 days</td>
+                      <td data-value="2023-09-28T18:06:40Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-10-02T18:22:28Z" data-col-type="date">2023-10-02</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="shesharpnl/knowledge-hub">
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/knowledge-hub</span
                         >
                       </td>
-                      <td data-value="feat: Improve Documentation">
+                      <td data-value="feat: Improve Documentation" data-col-type="string">
                         <a
                           href="https://github.com/shesharpnl/knowledge-hub/issues/7"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: Improve Documentation</a
                         >
                       </td>
-                      <td>2023-09-24</td>
-                      <td>2023-10-02</td>
-                      <td>8 days</td>
+                      <td data-value="2023-09-24T08:22:34Z" data-col-type="date">2023-09-24</td>
+                      <td data-value="2023-10-02T15:26:58Z" data-col-type="date">2023-10-02</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="docs: Add Preptember repo walkthrough video">
+                      <td
+                        data-value="docs: Add Preptember repo walkthrough video"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/issues/6"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Add Preptember repo walkthrough video
                         </a>
                       </td>
-                      <td>2023-09-12</td>
-                      <td>2023-09-14</td>
-                      <td>1 day</td>
+                      <td data-value="2023-09-12T20:58:22Z" data-col-type="date">2023-09-12</td>
+                      <td data-value="2023-09-14T07:48:01Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add September 2023 newsletter to the website">
+                      <td
+                        data-value="Add September 2023 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/979"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add September 2023 newsletter to the website</a
                         >
                       </td>
-                      <td>2023-09-06</td>
-                      <td>2023-09-20</td>
-                      <td>14 days</td>
+                      <td data-value="2023-09-06T19:33:54Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-20T13:36:57Z" data-col-type="date">2023-09-20</td>
+                      <td data-value="14" data-col-type="number">14 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
                       <td
                         data-value="Feature: Steps to edit the &#96;.all-contributorsrc&#96; file"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/issues/81"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature: Steps to edit the `.all-contributorsrc` file</a
                         >
                       </td>
-                      <td>2023-08-31</td>
-                      <td>2023-09-19</td>
-                      <td>19 days</td>
+                      <td data-value="2023-08-31T08:30:08Z" data-col-type="date">2023-08-31</td>
+                      <td data-value="2023-09-19T17:24:47Z" data-col-type="date">2023-09-19</td>
+                      <td data-value="19" data-col-type="number">19 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Fix broken links on the Monthly Challenges page">
+                      <td
+                        data-value="Fix broken links on the Monthly Challenges page"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/969"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix broken links on the Monthly Challenges page</a
                         >
                       </td>
-                      <td>2023-08-22</td>
-                      <td>2023-10-06</td>
-                      <td>45 days</td>
+                      <td data-value="2023-08-22T12:47:56Z" data-col-type="date">2023-08-22</td>
+                      <td data-value="2023-10-06T15:17:27Z" data-col-type="date">2023-10-06</td>
+                      <td data-value="45" data-col-type="number">45 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
                       <td
                         data-value="Update the Coffee Coordinator section in Paths to Leadership &amp; Roles"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/964"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update the Coffee Coordinator section in Paths to Leadership & Roles</a
                         >
                       </td>
-                      <td>2023-08-16</td>
-                      <td>2023-08-18</td>
-                      <td>2 days</td>
+                      <td data-value="2023-08-16T20:47:54Z" data-col-type="date">2023-08-16</td>
+                      <td data-value="2023-08-18T21:03:28Z" data-col-type="date">2023-08-18</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update Sunday&#39;s Accountabilibuddies leader">
+                      <td
+                        data-value="Update Sunday&#39;s Accountabilibuddies leader"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/963"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Sunday's Accountabilibuddies leader</a
                         >
                       </td>
-                      <td>2023-08-16</td>
-                      <td>2023-08-24</td>
-                      <td>8 days</td>
+                      <td data-value="2023-08-16T20:47:12Z" data-col-type="date">2023-08-16</td>
+                      <td data-value="2023-08-24T13:55:44Z" data-col-type="date">2023-08-24</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update a Slack channel&#39;s name">
+                      <td data-value="Update a Slack channel&#39;s name" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/962"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update a Slack channel's name</a
                         >
                       </td>
-                      <td>2023-08-16</td>
-                      <td>2023-08-24</td>
-                      <td>8 days</td>
+                      <td data-value="2023-08-16T20:46:38Z" data-col-type="date">2023-08-16</td>
+                      <td data-value="2023-08-24T13:55:44Z" data-col-type="date">2023-08-24</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
                       <td
                         data-value="Bug: Left sidebar on highlights page is cut off on big screen"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/open-sauced/app/issues/1530"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Bug: Left sidebar on highlights page is cut off on big screen</a
                         >
                       </td>
-                      <td>2023-08-08</td>
-                      <td>2023-08-09</td>
-                      <td>0 days</td>
+                      <td data-value="2023-08-08T22:08:16Z" data-col-type="date">2023-08-08</td>
+                      <td data-value="2023-08-09T02:18:38Z" data-col-type="date">2023-08-09</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
-                      <td data-value="Bug: Avatar is either not shown or is not the user">
+                      <td
+                        data-value="Bug: Avatar is either not shown or is not the user"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/app/issues/1529"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Bug: Avatar is either not shown or is not the user</a
                         >
                       </td>
-                      <td>2023-08-08</td>
-                      <td>2023-08-15</td>
-                      <td>7 days</td>
+                      <td data-value="2023-08-08T21:46:13Z" data-col-type="date">2023-08-08</td>
+                      <td data-value="2023-08-15T19:43:30Z" data-col-type="date">2023-08-15</td>
+                      <td data-value="7" data-col-type="number">7 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
                       <td
                         data-value="Bug: Calendar cut off when adding highlight, moving up and down when editing highlight"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/open-sauced/app/issues/1528"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Bug: Calendar cut off when adding highlight, moving up and down when
                           editing highlight</a
                         >
                       </td>
-                      <td>2023-08-08</td>
-                      <td>2023-10-13</td>
-                      <td>66 days</td>
+                      <td data-value="2023-08-08T20:53:18Z" data-col-type="date">2023-08-08</td>
+                      <td data-value="2023-10-13T18:41:55Z" data-col-type="date">2023-10-13</td>
+                      <td data-value="66" data-col-type="number">66 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
-                      <td data-value="open-sauced/community">
+                      <td data-value="open-sauced/community" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/community</span
                         >
                       </td>
-                      <td data-value="Feature: Order the highlights based on the selected date">
+                      <td
+                        data-value="Feature: Order the highlights based on the selected date"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/community/issues/21"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature: Order the highlights based on the selected date</a
                         >
                       </td>
-                      <td>2023-08-08</td>
-                      <td>2023-08-14</td>
-                      <td>6 days</td>
+                      <td data-value="2023-08-08T18:50:47Z" data-col-type="date">2023-08-08</td>
+                      <td data-value="2023-08-14T22:34:20Z" data-col-type="date">2023-08-14</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add August 2023 newsletter to the website">
+                      <td
+                        data-value="Add August 2023 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/953"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add August 2023 newsletter to the website</a
                         >
                       </td>
-                      <td>2023-08-02</td>
-                      <td>2023-08-03</td>
-                      <td>1 day</td>
+                      <td data-value="2023-08-02T05:49:52Z" data-col-type="date">2023-08-02</td>
+                      <td data-value="2023-08-03T15:22:11Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update Monthly Challenge">
+                      <td data-value="Update Monthly Challenge" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/951"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Monthly Challenge</a
                         >
                       </td>
-                      <td>2023-07-30</td>
-                      <td>2023-08-01</td>
-                      <td>2 days</td>
+                      <td data-value="2023-07-30T22:17:10Z" data-col-type="date">2023-07-30</td>
+                      <td data-value="2023-08-01T17:24:32Z" data-col-type="date">2023-08-01</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>17.</td>
-                      <td data-value="open-sauced/100-days-of-oss-template">
+                      <td data-value="open-sauced/100-days-of-oss-template" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/100-days-of-oss-template</span
                         >
                       </td>
-                      <td data-value="Feature: Clarification on How To Create Progress Journals">
+                      <td
+                        data-value="Feature: Clarification on How To Create Progress Journals"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/100-days-of-oss-template/issues/7"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature: Clarification on How To Create Progress Journals</a
                         >
                       </td>
-                      <td>2023-07-28</td>
-                      <td>2023-08-14</td>
-                      <td>17 days</td>
+                      <td data-value="2023-07-28T07:50:28Z" data-col-type="date">2023-07-28</td>
+                      <td data-value="2023-08-14T13:26:46Z" data-col-type="date">2023-08-14</td>
+                      <td data-value="17" data-col-type="number">17 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>18.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Fix Links in the README.md and CONTRIBUTING.md">
+                      <td
+                        data-value="Fix Links in the README.md and CONTRIBUTING.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/946"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix Links in the README.md and CONTRIBUTING.md</a
                         >
                       </td>
-                      <td>2023-07-28</td>
-                      <td>2023-08-03</td>
-                      <td>6 days</td>
+                      <td data-value="2023-07-28T06:05:18Z" data-col-type="date">2023-07-28</td>
+                      <td data-value="2023-08-03T15:04:25Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>19.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Move links from the titles to content in resources">
+                      <td
+                        data-value="Move links from the titles to content in resources"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/943"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Move links from the titles to content in resources</a
                         >
                       </td>
-                      <td>2023-07-27</td>
-                      <td>2023-08-03</td>
-                      <td>7 days</td>
+                      <td data-value="2023-07-27T07:23:27Z" data-col-type="date">2023-07-27</td>
+                      <td data-value="2023-08-03T15:03:18Z" data-col-type="date">2023-08-03</td>
+                      <td data-value="7" data-col-type="number">7 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>20.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
-                      <td data-value="Feature: Subscription Dashboard for Paid User">
+                      <td
+                        data-value="Feature: Subscription Dashboard for Paid User"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/open-sauced/app/issues/1441"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature: Subscription Dashboard for Paid User</a
                         >
                       </td>
-                      <td>2023-07-27</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2023-07-27T07:11:50Z" data-col-type="date">2023-07-27</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1728,43 +1960,55 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>21.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts">
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
                         >
                       </td>
-                      <td data-value="Improve episode transcription Season 8 Episode 5">
+                      <td
+                        data-value="Improve episode transcription Season 8 Episode 5"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/104"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Improve episode transcription Season 8 Episode 5</a
                         >
                       </td>
-                      <td>2023-07-18</td>
-                      <td>2023-10-09</td>
-                      <td>83 days</td>
+                      <td data-value="2023-07-18T06:56:09Z" data-col-type="date">2023-07-18</td>
+                      <td data-value="2023-10-09T12:53:36Z" data-col-type="date">2023-10-09</td>
+                      <td data-value="83" data-col-type="number">83 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>22.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts">
+                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
                         >
                       </td>
-                      <td data-value="Improve previous edited episodes to follow new guidelines">
+                      <td
+                        data-value="Improve previous edited episodes to follow new guidelines"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/103"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Improve previous edited episodes to follow new guidelines</a
                         >
                       </td>
-                      <td>2023-07-13</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2023-07-13T09:33:10Z" data-col-type="date">2023-07-13</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1775,105 +2019,134 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>23.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add July 2023 newsletter to the website">
+                      <td
+                        data-value="Add July 2023 newsletter to the website"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/930"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add July 2023 newsletter to the website</a
                         >
                       </td>
-                      <td>2023-07-11</td>
-                      <td>2023-07-18</td>
-                      <td>8 days</td>
+                      <td data-value="2023-07-11T05:33:50Z" data-col-type="date">2023-07-11</td>
+                      <td data-value="2023-07-18T19:55:14Z" data-col-type="date">2023-07-18</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>24.</td>
-                      <td data-value="forem/forem">
+                      <td data-value="forem/forem" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded">forem/forem</span>
                       </td>
-                      <td data-value="Cannot Sign In to CodeNewbie with Twitter">
+                      <td
+                        data-value="Cannot Sign In to CodeNewbie with Twitter"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/forem/forem/issues/19689"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cannot Sign In to CodeNewbie with Twitter</a
                         >
                       </td>
-                      <td>2023-07-05</td>
-                      <td>2025-12-18</td>
-                      <td>896 days</td>
+                      <td data-value="2023-07-05T17:57:57Z" data-col-type="date">2023-07-05</td>
+                      <td data-value="2025-12-18T00:22:58Z" data-col-type="date">2025-12-18</td>
+                      <td data-value="896" data-col-type="number">896 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>25.</td>
-                      <td data-value="AccessibleForAll/Support">
+                      <td data-value="AccessibleForAll/Support" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >AccessibleForAll/Support</span
                         >
                       </td>
-                      <td data-value="Please invite me to the GitHub Community Organization">
+                      <td
+                        data-value="Please invite me to the GitHub Community Organization"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/AccessibleForAll/Support/issues/499"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Please invite me to the GitHub Community Organization</a
                         >
                       </td>
-                      <td>2023-07-05</td>
-                      <td>2023-07-05</td>
-                      <td>0 days</td>
+                      <td data-value="2023-07-05T09:06:56Z" data-col-type="date">2023-07-05</td>
+                      <td data-value="2023-07-05T09:07:10Z" data-col-type="date">2023-07-05</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>26.</td>
-                      <td data-value="Virtual-Coffee/VC-Community-Docs">
+                      <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/VC-Community-Docs</span
                         >
                       </td>
                       <td
                         data-value="Update Leaders and Frequency sections in coffee-table-groups.md"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/320"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update Leaders and Frequency sections in coffee-table-groups.md</a
                         >
                       </td>
-                      <td>2023-07-04</td>
-                      <td>2023-10-20</td>
-                      <td>108 days</td>
+                      <td data-value="2023-07-04T18:15:51Z" data-col-type="date">2023-07-04</td>
+                      <td data-value="2023-10-20T19:53:46Z" data-col-type="date">2023-10-20</td>
+                      <td data-value="108" data-col-type="number">108 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>27.</td>
-                      <td data-value="the-collab-lab/website">
+                      <td data-value="the-collab-lab/website" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >the-collab-lab/website</span
                         >
                       </td>
-                      <td data-value="Mistake in repo clone command with plain Git command">
+                      <td
+                        data-value="Mistake in repo clone command with plain Git command"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/the-collab-lab/website/issues/75"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Mistake in repo clone command with plain Git command</a
                         >
                       </td>
-                      <td>2023-07-03</td>
-                      <td>2023-07-03</td>
-                      <td>0 days</td>
+                      <td data-value="2023-07-03T10:30:29Z" data-col-type="date">2023-07-03</td>
+                      <td data-value="2023-07-03T10:58:54Z" data-col-type="date">2023-07-03</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </details>
+
             <details id="reviewed-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1918,14 +2191,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="reviewed-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1936,73 +2213,97 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Review <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Review <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Review Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add David to Preptember participants, David S on slack">
+                      <td
+                        data-value="Add David to Preptember participants, David S on slack"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/29"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add David to Preptember participants, David S on slack</a
                         >
                       </td>
-                      <td>2023-09-30</td>
-                      <td>2023-09-30</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-30T17:14:34Z" data-col-type="date">2023-09-30</td>
+                      <td data-value="2023-09-30T17:34:31Z" data-col-type="date">2023-09-30</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-30<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2013,25 +2314,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Added My Profile">
+                      <td data-value="Added My Profile" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/26"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Added My Profile</a
                         >
                       </td>
-                      <td>2023-09-27</td>
-                      <td>2023-09-29</td>
-                      <td>2 days</td>
-                      <td>
+                      <td data-value="2023-09-27T19:49:30Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-29T15:40:59Z" data-col-type="date">2023-09-29</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-29<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2042,25 +2346,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="shesharpnl/knowledge-hub">
+                      <td data-value="shesharpnl/knowledge-hub" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >shesharpnl/knowledge-hub</span
                         >
                       </td>
-                      <td data-value="docs: Support, Code of Conduct, Security, License">
+                      <td
+                        data-value="docs: Support, Code of Conduct, Security, License"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/shesharpnl/knowledge-hub/pull/11"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Support, Code of Conduct, Security, License</a
                         >
                       </td>
-                      <td>2023-09-28</td>
-                      <td>2023-09-29</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-28T20:57:17Z" data-col-type="date">2023-09-28</td>
+                      <td data-value="2023-09-29T05:59:29Z" data-col-type="date">2023-09-29</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-10-01<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2071,25 +2381,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Added memory-game to repositories list">
+                      <td
+                        data-value="Added memory-game to repositories list"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/24"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Added memory-game to repositories list</a
                         >
                       </td>
-                      <td>2023-09-26</td>
-                      <td>2023-09-27</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2023-09-26T23:36:24Z" data-col-type="date">2023-09-26</td>
+                      <td data-value="2023-09-27T17:30:52Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-27<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2100,25 +2416,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Christina as a Preptember participant">
+                      <td
+                        data-value="Add Christina as a Preptember participant"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/25"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Christina as a Preptember participant</a
                         >
                       </td>
-                      <td>2023-09-27</td>
-                      <td>2023-09-27</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-27T03:56:48Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="2023-09-27T10:46:31Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-27<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2129,25 +2451,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Adds Ross and Hacktoberfest HOWTO">
+                      <td data-value="Adds Ross and Hacktoberfest HOWTO" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/17"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Adds Ross and Hacktoberfest HOWTO</a
                         >
                       </td>
-                      <td>2023-09-23</td>
-                      <td>2023-09-27</td>
-                      <td>4 days</td>
-                      <td>
+                      <td data-value="2023-09-23T03:27:10Z" data-col-type="date">2023-09-23</td>
+                      <td data-value="2023-09-27T10:40:56Z" data-col-type="date">2023-09-27</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-27<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2158,25 +2483,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Tammy M to Preptember participants">
+                      <td
+                        data-value="Add Tammy M to Preptember participants"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/23"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Tammy M to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-25</td>
-                      <td>2023-09-26</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-25T22:16:37Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="2023-09-26T05:46:52Z" data-col-type="date">2023-09-26</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-26<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2187,25 +2518,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Added cris crawford">
+                      <td data-value="Added cris crawford" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/20"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Added cris crawford</a
                         >
                       </td>
-                      <td>2023-09-24</td>
-                      <td>2023-09-25</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2023-09-24T15:29:32Z" data-col-type="date">2023-09-24</td>
+                      <td data-value="2023-09-25T08:28:59Z" data-col-type="date">2023-09-25</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-25<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2216,25 +2550,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="feat: add BekahHW to participants and repos to opt in">
+                      <td
+                        data-value="feat: add BekahHW to participants and repos to opt in"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/11"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: add BekahHW to participants and repos to opt in</a
                         >
                       </td>
-                      <td>2023-09-14</td>
-                      <td>2023-09-20</td>
-                      <td>6 days</td>
-                      <td>
+                      <td data-value="2023-09-14T15:22:12Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="2023-09-20T17:56:12Z" data-col-type="date">2023-09-20</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-20<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2245,25 +2585,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Teri to Preptember participants">
+                      <td data-value="Add Teri to Preptember participants" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/14"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Teri to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-17</td>
-                      <td>2023-09-18</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2023-09-17T20:59:50Z" data-col-type="date">2023-09-17</td>
+                      <td data-value="2023-09-18T14:49:49Z" data-col-type="date">2023-09-18</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-18<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2274,25 +2617,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Update repositories-list.md">
+                      <td data-value="Update repositories-list.md" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/12"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update repositories-list.md</a
                         >
                       </td>
-                      <td>2023-09-15</td>
-                      <td>2023-09-15</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-15T18:13:21Z" data-col-type="date">2023-09-15</td>
+                      <td data-value="2023-09-15T19:13:46Z" data-col-type="date">2023-09-15</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-15<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2303,25 +2649,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add David to Preptember participants">
+                      <td data-value="Add David to Preptember participants" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/10"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add David to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-14</td>
-                      <td>2023-09-14</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-14T13:40:40Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="2023-09-14T15:48:02Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-14<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2332,25 +2681,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="docs: Add Preptember repo walkthrough video">
+                      <td
+                        data-value="docs: Add Preptember repo walkthrough video"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/9"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Add Preptember repo walkthrough video</a
                         >
                       </td>
-                      <td>2023-09-13</td>
-                      <td>2023-09-14</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2023-09-13T19:34:29Z" data-col-type="date">2023-09-13</td>
+                      <td data-value="2023-09-14T07:47:44Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-14<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2361,25 +2716,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="docs: adding fcc developer quiz site to repositories-list">
+                      <td
+                        data-value="docs: adding fcc developer quiz site to repositories-list"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/4"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: adding fcc developer quiz site to repositories-list</a
                         >
                       </td>
-                      <td>2023-09-07</td>
-                      <td>2023-09-08</td>
-                      <td>1 day</td>
-                      <td>
+                      <td data-value="2023-09-07T20:24:39Z" data-col-type="date">2023-09-07</td>
+                      <td data-value="2023-09-08T11:11:35Z" data-col-type="date">2023-09-08</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-08<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2390,25 +2751,28 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Revised grammar for PR template">
+                      <td data-value="Revised grammar for PR template" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/3"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Revised grammar for PR template</a
                         >
                       </td>
-                      <td>2023-09-06</td>
-                      <td>2023-09-06</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-06T19:08:56Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-06T19:31:14Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-06<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2419,25 +2783,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Dominic to Preptember participants">
+                      <td
+                        data-value="Add Dominic to Preptember participants"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/2"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Dominic to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-06</td>
-                      <td>2023-09-06</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2023-09-06T18:57:29Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="2023-09-06T19:14:09Z" data-col-type="date">2023-09-06</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-06<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2452,6 +2822,7 @@
                 </table>
               </div>
             </details>
+
             <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -2483,6 +2854,7 @@
                 No contributions of this type in this quarter.
               </div>
             </details>
+
             <details id="collaborations" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -2546,14 +2918,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="collaborations-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -2564,65 +2940,86 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Comment <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Comment <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Ignyita to Preptember participants">
+                      <td
+                        data-value="Add Ignyita to Preptember participants"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/13"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Ignyita to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-16</td>
-                      <td>2023-09-18</td>
-                      <td>
+                      <td data-value="2023-09-16T16:48:16Z" data-col-type="date">2023-09-16</td>
+                      <td data-value="2023-09-18T17:44:29Z" data-col-type="date">2023-09-18</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2024-03-27<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2630,24 +3027,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/vc-preptember">
+                      <td data-value="Virtual-Coffee/vc-preptember" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/vc-preptember</span
                         >
                       </td>
-                      <td data-value="Add Michael to Preptember participants">
+                      <td
+                        data-value="Add Michael to Preptember participants"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/vc-preptember/pull/8"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Michael to Preptember participants</a
                         >
                       </td>
-                      <td>2023-09-13</td>
-                      <td>2023-09-14</td>
-                      <td>
+                      <td data-value="2023-09-13T00:53:14Z" data-col-type="date">2023-09-13</td>
+                      <td data-value="2023-09-14T07:44:14Z" data-col-type="date">2023-09-14</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2023-09-24<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2658,24 +3061,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
-                      <td data-value="[Front-End] Implement Dark Mode">
+                      <td data-value="[Front-End] Implement Dark Mode" data-col-type="string">
                         <a
                           href="https://github.com/open-sauced/app/issues/56"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >[Front-End] Implement Dark Mode</a
                         >
                       </td>
-                      <td>2022-07-12</td>
-                      <td>2023-09-02</td>
-                      <td>
+                      <td data-value="2022-07-12T23:56:17Z" data-col-type="date">2022-07-12</td>
+                      <td data-value="2023-09-02T16:43:40Z" data-col-type="date">2023-09-02</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2024-03-18<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2686,24 +3092,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="Feature: Translate guestbook directions into other languages">
+                      <td
+                        data-value="Feature: Translate guestbook directions into other languages"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/issues/79"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature: Translate guestbook directions into other languages</a
                         >
                       </td>
-                      <td>2023-08-18</td>
-                      <td>2023-09-01</td>
-                      <td>
+                      <td data-value="2023-08-18T21:44:04Z" data-col-type="date">2023-08-18</td>
+                      <td data-value="2023-09-01T18:19:46Z" data-col-type="date">2023-09-01</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2023-10-26<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2711,24 +3123,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="open-sauced/app">
+                      <td data-value="open-sauced/app" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >open-sauced/app</span
                         >
                       </td>
-                      <td data-value="feat: add dark mode">
+                      <td data-value="feat: add dark mode" data-col-type="string">
                         <a
                           href="https://github.com/open-sauced/app/pull/1147"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: add dark mode</a
                         >
                       </td>
-                      <td>2023-05-07</td>
-                      <td>2023-08-28</td>
-                      <td>
+                      <td data-value="2023-05-07T22:16:46Z" data-col-type="date">2023-05-07</td>
+                      <td data-value="2023-08-28T14:26:10Z" data-col-type="date">2023-08-28</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2023-08-28<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2736,24 +3151,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add 301 redirects for content that has been relocated">
+                      <td
+                        data-value="Add 301 redirects for content that has been relocated"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/945"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add 301 redirects for content that has been relocated</a
                         >
                       </td>
-                      <td>2023-07-27</td>
-                      <td>2023-08-02</td>
-                      <td>
+                      <td data-value="2023-07-27T18:10:06Z" data-col-type="date">2023-07-27</td>
+                      <td data-value="2023-08-02T08:51:33Z" data-col-type="date">2023-08-02</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2023-10-26<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2761,24 +3182,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Update how to receive invite language">
+                      <td data-value="Update how to receive invite language" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/940"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update how to receive invite language</a
                         >
                       </td>
-                      <td>2023-07-23</td>
-                      <td>2023-07-25</td>
-                      <td>
+                      <td data-value="2023-07-23T14:48:44Z" data-col-type="date">2023-07-23</td>
+                      <td data-value="2023-07-25T18:40:03Z" data-col-type="date">2023-07-25</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2023-08-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -3114,13 +3538,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
-        const hash = window.location.hash || '#merged-prs';
-        const target = document.querySelector(hash);
-        if (target && target.tagName === 'DETAILS') {
-          document.querySelectorAll('details').forEach((d) => (d.open = false));
-          target.open = true;
-          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        const hash = window.location.hash;
+        if (hash) {
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
+            setTimeout(() => {
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }, 100);
+          }
+        } else {
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);

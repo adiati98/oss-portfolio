@@ -2,6 +2,9 @@
 
 A collection of articles that **adiati98** wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
 
+- **[From Helping Out to Taking Ownership: The Art of Sticking Around](https://dev.to/adiatiayu/from-helping-out-to-taking-ownership-the-art-of-sticking-around-55h1)**
+  - Published on **Dev.to** — April 8, 2026
+
 - **[The Curated, Automated Open Source Portfolio: How It’s Going](https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98)**
   - Published on **Dev.to** — April 1, 2026
 

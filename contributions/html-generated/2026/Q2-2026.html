@@ -501,6 +501,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -524,6 +525,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -546,6 +548,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -571,6 +574,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -653,6 +657,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -698,14 +703,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -716,736 +725,916 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Merged <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Merged <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Review Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.x'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/681"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-03</td>
-                      <td>4 days</td>
+                      <td data-value="2026-03-31T05:07:31Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-03T18:06:38Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "docs: Update README with the latest version" to 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/688"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "docs: Update README with the latest version" to 7.1</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-03</td>
-                      <td>3 days</td>
+                      <td data-value="2026-03-31T11:38:13Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-03T18:06:06Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Docs: Update and restructure "Viewing and exporting Contacts in a Segment" section branch 7.0'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/668"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Docs: Update and restructure "Viewing and exporting Contacts in a
                           Segment" section branch 7.0</a
                         >
                       </td>
-                      <td>2026-03-13</td>
-                      <td>2026-04-03</td>
-                      <td>22 days</td>
+                      <td data-value="2026-03-13T04:44:02Z" data-col-type="date">2026-03-13</td>
+                      <td data-value="2026-04-03T18:04:21Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="22" data-col-type="number">22 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 4.x'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/683"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 4.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-03</td>
-                      <td>4 days</td>
+                      <td data-value="2026-03-31T05:21:33Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-03T18:00:43Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="4" data-col-type="number">4 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Docs: Update and restructure "Viewing and exporting Contacts in a Segment" section'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/666"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Docs: Update and restructure "Viewing and exporting Contacts in a
                           Segment" section</a
                         >
                       </td>
-                      <td>2026-03-11</td>
-                      <td>2026-04-03</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-11T04:37:10Z" data-col-type="date">2026-03-11</td>
+                      <td data-value="2026-04-03T16:44:56Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="docs: Update README with the latest version">
+                      <td
+                        data-value="docs: Update README with the latest version"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/687"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Update README with the latest version</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-03</td>
-                      <td>3 days</td>
+                      <td data-value="2026-03-31T11:20:25Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-03T09:03:59Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="chore: Update &#96;.github&#96; folder">
+                      <td
+                        data-value="chore: Update &#96;.github&#96; folder"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/674"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >chore: Update `.github` folder</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-03</td>
-                      <td>3 days</td>
+                      <td data-value="2026-03-31T04:24:23Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-03T09:03:24Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="Chore: Remove &#96;assets/images&#96; folder">
+                      <td
+                        data-value="Chore: Remove &#96;assets/images&#96; folder"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/660"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Chore: Remove `assets/images` folder</a
                         >
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-03</td>
-                      <td>26 days</td>
+                      <td data-value="2026-03-08T07:22:29Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-03T09:02:18Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="26" data-col-type="number">26 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>9.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value='Cherry-pick: "Update how_to_update_mautic.rst" to 7.1'>
+                      <td
+                        data-value='Cherry-pick: "Update how_to_update_mautic.rst" to 7.1'
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/691"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Update how_to_update_mautic.rst" to 7.1</a
                         >
                       </td>
-                      <td>2026-04-02</td>
-                      <td>2026-04-02</td>
-                      <td>0 days</td>
+                      <td data-value="2026-04-02T18:24:14Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="2026-04-02T19:02:39Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>10.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "Moved Trusted Hosts and Proxies under correct section" to 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/690"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Moved Trusted Hosts and Proxies under correct section" to
                           7.1</a
                         >
                       </td>
-                      <td>2026-04-02</td>
-                      <td>2026-04-02</td>
-                      <td>0 days</td>
+                      <td data-value="2026-04-02T18:15:05Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="2026-04-02T18:46:59Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>11.</td>
-                      <td data-value="mautic/mautic-community-handbook">
+                      <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
                         >
                       </td>
-                      <td data-value="chore: Update Ubuntu version in &#96;.readthedocs.yaml&#96;">
+                      <td
+                        data-value="chore: Update Ubuntu version in &#96;.readthedocs.yaml&#96;"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/mautic-community-handbook/pull/443"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >chore: Update Ubuntu version in `.readthedocs.yaml`</a
                         >
                       </td>
-                      <td>2026-03-30</td>
-                      <td>2026-04-02</td>
-                      <td>3 days</td>
+                      <td data-value="2026-03-30T15:36:55Z" data-col-type="date">2026-03-30</td>
+                      <td data-value="2026-04-02T15:50:36Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="3" data-col-type="number">3 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>12.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="fix: Broken links in branch 4.x">
+                      <td data-value="fix: Broken links in branch 4.x" data-col-type="string">
                         <a
                           href="https://github.com/mautic/user-documentation/pull/685"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >fix: Broken links in branch 4.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-02</td>
-                      <td>2 days</td>
+                      <td data-value="2026-03-31T08:14:03Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-02T15:44:35Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>13.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 4.x'>
+                      <td
+                        data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 4.x'
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/684"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update `.github` folder" to 4.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-02</td>
-                      <td>2 days</td>
+                      <td data-value="2026-03-31T05:23:21Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-02T15:32:14Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="2" data-col-type="number">2 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>14.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="Fix: Broken links to SparkPost articles">
+                      <td
+                        data-value="Fix: Broken links to SparkPost articles"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/689"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix: Broken links to SparkPost articles</a
                         >
                       </td>
-                      <td>2026-04-01</td>
-                      <td>2026-04-02</td>
-                      <td>0 days</td>
+                      <td data-value="2026-04-01T19:58:36Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="2026-04-02T06:26:51Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>15.</td>
-                      <td data-value="mautic/mautic-community-handbook">
+                      <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
                         >
                       </td>
-                      <td data-value="Chore: Remove &#96;assets/images&#96; folder">
+                      <td
+                        data-value="Chore: Remove &#96;assets/images&#96; folder"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/mautic-community-handbook/pull/437"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Chore: Remove `assets/images` folder</a
                         >
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-01</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-08T06:55:19Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-01T14:59:33Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>16.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 6.0'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/677"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 6.0</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:51:46Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:51:55Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>17.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 5.x'>
+                      <td
+                        data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 5.x'
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/682"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update `.github` folder" to 5.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T05:09:29Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:50:27Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>18.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 6.0'>
+                      <td
+                        data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 6.0'
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/678"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update `.github` folder" to 6.0</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:54:24Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:50:15Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>19.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.2'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/679"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.2</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:57:52Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:47:25Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>20.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 7.1'>
+                      <td
+                        data-value='Cherry-pick: "chore: Update &#96;.github&#96; folder" to 7.1'
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/676"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update `.github` folder" to 7.1</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:40:31Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:46:18Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>21.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/675"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 7.1</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:35:40Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:40:18Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>22.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="chore: Update Ubuntu version to ubuntu-24.04">
+                      <td
+                        data-value="chore: Update Ubuntu version to ubuntu-24.04"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/673"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >chore: Update Ubuntu version to ubuntu-24.04</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T04:09:12Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T14:30:13Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>23.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "Chore: Remove &#96;assets/images&#96; folder" to 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/663"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Chore: Remove `assets/images` folder" to 7.1</a
                         >
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-01</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-08T07:55:43Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-01T14:17:23Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>24.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "Chore: Remove &#96;assets/images&#96; folder" to 7.0'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/662"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Chore: Remove `assets/images` folder" to 7.0</a
                         >
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-01</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-08T07:51:52Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-01T14:16:27Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>25.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "Chore: Remove &#96;assets/images&#96; folder" to 6.0'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/661"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Chore: Remove `assets/images` folder" to 6.0</a
                         >
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-01</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-08T07:46:12Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-01T13:26:34Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>26.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="Chores: Setup development environment in branch 5.x">
+                      <td
+                        data-value="Chores: Setup development environment in branch 5.x"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/659"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Chores: Setup development environment in branch 5.x
                         </a>
                       </td>
-                      <td>2026-03-08</td>
-                      <td>2026-04-01</td>
-                      <td>24 days</td>
+                      <td data-value="2026-03-08T06:36:19Z" data-col-type="date">2026-03-08</td>
+                      <td data-value="2026-04-01T11:13:36Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="24" data-col-type="number">24 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>27.</td>
-                      <td data-value="mautic/developer-documentation-new">
+                      <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.x'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/developer-documentation-new/pull/315"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.x</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T06:11:58Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T11:09:16Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>28.</td>
-                      <td data-value="mautic/developer-documentation-new">
+                      <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 6.0'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/developer-documentation-new/pull/314"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 6.0</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T06:09:02Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T11:09:01Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>29.</td>
-                      <td data-value="mautic/developer-documentation-new">
+                      <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to branch 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/developer-documentation-new/pull/313"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to branch
                           7.1</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T06:06:26Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T11:08:44Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>30.</td>
-                      <td data-value="mautic/developer-documentation-new">
+                      <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
                         >
                       </td>
-                      <td data-value="chore: Update Ubuntu version to ubuntu-24.04">
+                      <td
+                        data-value="chore: Update Ubuntu version to ubuntu-24.04"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/developer-documentation-new/pull/312"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >chore: Update Ubuntu version to ubuntu-24.04</a
                         >
                       </td>
-                      <td>2026-03-31</td>
-                      <td>2026-04-01</td>
-                      <td>1 day</td>
+                      <td data-value="2026-03-31T06:02:59Z" data-col-type="date">2026-03-31</td>
+                      <td data-value="2026-04-01T11:08:19Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>31.</td>
-                      <td data-value="mautic/mautic-community-handbook">
+                      <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
                         >
                       </td>
-                      <td data-value="Docs: Move writing style guide to its own page">
+                      <td
+                        data-value="Docs: Move writing style guide to its own page"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/mautic-community-handbook/pull/442"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Docs: Move writing style guide to its own page</a
                         >
                       </td>
-                      <td>2026-03-26</td>
-                      <td>2026-04-01</td>
-                      <td>6 days</td>
+                      <td data-value="2026-03-26T11:36:24Z" data-col-type="date">2026-03-26</td>
+                      <td data-value="2026-04-01T09:53:40Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="6" data-col-type="number">6 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>32.</td>
-                      <td data-value="mautic/low-no-code">
+                      <td data-value="mautic/low-no-code" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/low-no-code</span
                         >
                       </td>
-                      <td data-value="Chore: Remove GitHub workflows">
+                      <td data-value="Chore: Remove GitHub workflows" data-col-type="string">
                         <a
                           href="https://github.com/mautic/low-no-code/pull/221"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Chore: Remove GitHub workflows</a
                         >
                       </td>
-                      <td>2026-03-24</td>
-                      <td>2026-04-01</td>
-                      <td>8 days</td>
+                      <td data-value="2026-03-24T07:01:10Z" data-col-type="date">2026-03-24</td>
+                      <td data-value="2026-04-01T09:53:09Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="8" data-col-type="number">8 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>33.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value='Cherry-pick: "Added Tip to Variables for using Custom Company Fields" to 7.1'
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/631"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Cherry-pick: "Added Tip to Variables for using Custom Company Fields" to
                           7.1</a
                         >
                       </td>
-                      <td>2026-01-28</td>
-                      <td>2026-04-01</td>
-                      <td>63 days</td>
+                      <td data-value="2026-01-28T09:35:54Z" data-col-type="date">2026-01-28</td>
+                      <td data-value="2026-04-01T08:54:08Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="63" data-col-type="number">63 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>34.</td>
-                      <td data-value="mautic/low-no-code">
+                      <td data-value="mautic/low-no-code" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/low-no-code</span
                         >
                       </td>
                       <td
                         data-value="Docs: Add &#96;CONTRIBUTING.md&#96; and update &#96;2026.md&#96;"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/low-no-code/pull/219"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Docs: Add `CONTRIBUTING.md` and update `2026.md`</a
                         >
                       </td>
-                      <td>2026-03-23</td>
-                      <td>2026-04-01</td>
-                      <td>9 days</td>
+                      <td data-value="2026-03-23T15:13:42Z" data-col-type="date">2026-03-23</td>
+                      <td data-value="2026-04-01T08:51:49Z" data-col-type="date">2026-04-01</td>
+                      <td data-value="9" data-col-type="number">9 days</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </details>
+
             <details id="issues" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1491,14 +1680,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="issues-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1509,65 +1702,86 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closed <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closed <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closing Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closing Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="[DOCS]: Cherry-pick PR that closes issue #693 for branch 7.1">
+                      <td
+                        data-value="[DOCS]: Cherry-pick PR that closes issue #693 for branch 7.1"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/issues/696"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >[DOCS]: Cherry-pick PR that closes issue #693 for branch 7.1</a
                         >
                       </td>
-                      <td>2026-04-03</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2026-04-03T16:47:05Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1578,27 +1792,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="[DOCS]: Update images in docs/segments/manage_segments.rst in branch 5.2"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/issues/695"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >[DOCS]: Update images in docs/segments/manage_segments.rst in branch
                           5.2</a
                         >
                       </td>
-                      <td>2026-04-03</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2026-04-03T16:35:33Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1609,27 +1827,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="[DOCS]: Update images in docs/segments/manage_segments.rst in branch 6.0"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/issues/694"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >[DOCS]: Update images in docs/segments/manage_segments.rst in branch
                           6.0</a
                         >
                       </td>
-                      <td>2026-04-03</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2026-04-03T16:34:41Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1640,27 +1862,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="[DOCS]: Update images in docs/segments/manage_segments.rst in branch 7.0"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/issues/693"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >[DOCS]: Update images in docs/segments/manage_segments.rst in branch
                           7.0</a
                         >
                       </td>
-                      <td>2026-04-03</td>
-                      <td>N/A</td>
-                      <td>
+                      <td data-value="2026-04-03T16:32:40Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="null" data-col-type="date">N/A</td>
+                      <td data-value="N/A" data-col-type="number">
                         <span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1675,6 +1901,7 @@
                 </table>
               </div>
             </details>
+
             <details id="reviewed-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1719,14 +1946,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="reviewed-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Reviewed PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1737,73 +1968,97 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Review <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Review <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Review Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @aaronthomas-09 as a contributor">
+                      <td
+                        data-value="docs: add @aaronthomas-09 as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/937"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @aaronthomas-09 as a contributor</a
                         >
                       </td>
-                      <td>2026-03-24</td>
-                      <td>2026-04-05</td>
-                      <td>12 days</td>
-                      <td>
+                      <td data-value="2026-03-24T16:49:27Z" data-col-type="date">2026-03-24</td>
+                      <td data-value="2026-04-05T23:10:20Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="12" data-col-type="number">12 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1814,25 +2069,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="feat: Add ArunKumar235 as a contributor">
+                      <td
+                        data-value="feat: Add ArunKumar235 as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/943"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: Add ArunKumar235 as a contributor</a
                         >
                       </td>
-                      <td>2026-04-05</td>
-                      <td>2026-04-05</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2026-04-05T07:39:47Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="2026-04-05T12:37:16Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1843,25 +2104,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="feat: Add @rachelanchan as a contributor">
+                      <td
+                        data-value="feat: Add @rachelanchan as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/941"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: Add @rachelanchan as a contributor</a
                         >
                       </td>
-                      <td>2026-03-27</td>
-                      <td>2026-04-05</td>
-                      <td>9 days</td>
-                      <td>
+                      <td data-value="2026-03-27T08:35:46Z" data-col-type="date">2026-03-27</td>
+                      <td data-value="2026-04-05T12:35:54Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="9" data-col-type="number">9 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1872,25 +2139,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @anubhavbaghel as a contributor">
+                      <td
+                        data-value="docs: add @anubhavbaghel as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/946"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @anubhavbaghel as a contributor</a
                         >
                       </td>
-                      <td>2026-04-05</td>
-                      <td>2026-04-05</td>
-                      <td>0 days</td>
-                      <td>
+                      <td data-value="2026-04-05T11:48:03Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="2026-04-05T12:33:00Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1901,25 +2174,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @Yashrajsinh-Kanchva as a contributor">
+                      <td
+                        data-value="docs: add @Yashrajsinh-Kanchva as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/934"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @Yashrajsinh-Kanchva as a contributor</a
                         >
                       </td>
-                      <td>2026-03-22</td>
-                      <td>2026-04-05</td>
-                      <td>14 days</td>
-                      <td>
+                      <td data-value="2026-03-22T06:46:53Z" data-col-type="date">2026-03-22</td>
+                      <td data-value="2026-04-05T11:24:17Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="14" data-col-type="number">14 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1930,25 +2209,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @juancguerrerom13 as a contributor">
+                      <td
+                        data-value="docs: add @juancguerrerom13 as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/932"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @juancguerrerom13 as a contributor</a
                         >
                       </td>
-                      <td>2026-03-20</td>
-                      <td>2026-04-05</td>
-                      <td>16 days</td>
-                      <td>
+                      <td data-value="2026-03-20T19:46:57Z" data-col-type="date">2026-03-20</td>
+                      <td data-value="2026-04-05T11:23:24Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="16" data-col-type="number">16 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1959,25 +2244,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>7.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @julianandresdev as a contributor">
+                      <td
+                        data-value="docs: add @julianandresdev as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/930"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @julianandresdev as a contributor</a
                         >
                       </td>
-                      <td>2026-03-18</td>
-                      <td>2026-04-05</td>
-                      <td>18 days</td>
-                      <td>
+                      <td data-value="2026-03-18T23:11:38Z" data-col-type="date">2026-03-18</td>
+                      <td data-value="2026-04-05T11:19:54Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="18" data-col-type="number">18 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1988,25 +2279,31 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>8.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
-                      <td data-value="docs: Add Tags documentation for Contact management">
+                      <td
+                        data-value="docs: Add Tags documentation for Contact management"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/647"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: Add Tags documentation for Contact management</a
                         >
                       </td>
-                      <td>2026-02-24</td>
-                      <td>2026-04-03</td>
-                      <td>38 days</td>
-                      <td>
+                      <td data-value="2026-02-24T09:55:30Z" data-col-type="date">2026-02-24</td>
+                      <td data-value="2026-04-03T15:51:39Z" data-col-type="date">2026-04-03</td>
+                      <td data-value="38" data-col-type="number">38 days</td>
+                      <td data-value="OPEN" data-col-type="status">
                         2026-04-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2021,6 +2318,7 @@
                 </table>
               </div>
             </details>
+
             <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -2068,14 +2366,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="co-authored-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Co-Authored PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -2086,76 +2388,98 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Commit <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Commit <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Commit Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Commit Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="7.0 - Cherry-picked from #269 - Adds documentation for the Multiple Company"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/565"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >7.0 - Cherry-picked from #269 - Adds documentation for the Multiple
                           Company</a
                         >
                       </td>
-                      <td>2025-12-09</td>
-                      <td>2026-04-02</td>
-                      <td>115 days</td>
-                      <td>
+                      <td data-value="2025-12-09T02:14:03Z" data-col-type="date">2025-12-09</td>
+                      <td data-value="2026-04-02T19:42:57Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="115" data-col-type="number">115 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2026-04-02<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2166,28 +2490,32 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="6.0 - Cherry-picked from #269 - Adds documentation for the Multiple Company"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/564"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >6.0 - Cherry-picked from #269 - Adds documentation for the Multiple
                           Company</a
                         >
                       </td>
-                      <td>2025-12-09</td>
-                      <td>2026-04-02</td>
-                      <td>115 days</td>
-                      <td>
+                      <td data-value="2025-12-09T02:07:48Z" data-col-type="date">2025-12-09</td>
+                      <td data-value="2026-04-02T19:32:32Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="115" data-col-type="number">115 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2026-04-02<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2198,28 +2526,32 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="mautic/user-documentation">
+                      <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
                         >
                       </td>
                       <td
                         data-value="5.2 - cherry-picked from #269 - Adds documentation for the Multiple Company"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/mautic/user-documentation/pull/563"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >5.2 - cherry-picked from #269 - Adds documentation for the Multiple
                           Company</a
                         >
                       </td>
-                      <td>2025-12-09</td>
-                      <td>2026-04-02</td>
-                      <td>115 days</td>
-                      <td>
+                      <td data-value="2025-12-09T02:05:21Z" data-col-type="date">2025-12-09</td>
+                      <td data-value="2026-04-02T18:50:01Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="115" data-col-type="number">115 days</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2026-04-02<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -2234,6 +2566,7 @@
                 </table>
               </div>
             </details>
+
             <details id="collaborations" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -2297,14 +2630,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="collaborations-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -2315,65 +2652,86 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Comment <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Comment <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @anubhavbaghel as a contributor">
+                      <td
+                        data-value="docs: add @anubhavbaghel as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/945"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >docs: add @anubhavbaghel as a contributor</a
                         >
                       </td>
-                      <td>2026-04-05</td>
-                      <td>2026-04-05</td>
-                      <td>
+                      <td data-value="2026-04-05T11:26:55Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="2026-04-05T11:30:27Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2381,24 +2739,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="feat: add my guestbook entry">
+                      <td data-value="feat: add my guestbook entry" data-col-type="string">
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/935"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >feat: add my guestbook entry</a
                         >
                       </td>
-                      <td>2026-03-23</td>
-                      <td>2026-04-05</td>
-                      <td>
+                      <td data-value="2026-03-23T02:52:16Z" data-col-type="date">2026-03-23</td>
+                      <td data-value="2026-04-05T11:26:30Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2406,24 +2767,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="OpenSource-Communities/guestbook">
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="Update contributor section in README.md">
+                      <td
+                        data-value="Update contributor section in README.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/926"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Update contributor section in README.md</a
                         >
                       </td>
-                      <td>2026-03-17</td>
-                      <td>2026-04-05</td>
-                      <td>
+                      <td data-value="2026-03-17T15:34:31Z" data-col-type="date">2026-03-17</td>
+                      <td data-value="2026-04-05T11:07:33Z" data-col-type="date">2026-04-05</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2026-04-05<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -2730,13 +3097,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
-        const hash = window.location.hash || '#merged-prs';
-        const target = document.querySelector(hash);
-        if (target && target.tagName === 'DETAILS') {
-          document.querySelectorAll('details').forEach((d) => (d.open = false));
-          target.open = true;
-          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        const hash = window.location.hash;
+        if (hash) {
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
+            setTimeout(() => {
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }, 100);
+          }
+        } else {
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);

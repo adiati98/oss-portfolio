@@ -501,6 +501,7 @@
                   <span class="breakdown-label">Merged PRs</span>
                 </div>
               </a>
+
               <a
                 href="#issues"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -524,6 +525,7 @@
                   <span class="breakdown-label">Issues</span>
                 </div>
               </a>
+
               <a
                 href="#reviewed-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -546,6 +548,7 @@
                   <span class="breakdown-label">Reviewed PRs</span>
                 </div>
               </a>
+
               <a
                 href="#co-authored-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -571,6 +574,7 @@
                   <span class="breakdown-label">Co-Authored PRs</span>
                 </div>
               </a>
+
               <a
                 href="#collaborations"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
@@ -644,6 +648,7 @@
           </section>
 
           <hr class="my-8 border-gray-200" />
+
           <section class="space-y-6">
             <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
@@ -689,14 +694,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="merged-prs-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -707,165 +716,208 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Merged <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Merged <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Review Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Fix typo for YouTube link&#39;s markdown">
+                      <td
+                        data-value="Fix typo for YouTube link&#39;s markdown"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/348"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Fix typo for YouTube link's markdown</a
                         >
                       </td>
-                      <td>2021-09-27</td>
-                      <td>2021-09-27</td>
-                      <td>0 days</td>
+                      <td data-value="2021-09-27T20:20:41Z" data-col-type="date">2021-09-27</td>
+                      <td data-value="2021-09-27T22:26:55Z" data-col-type="date">2021-09-27</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Feature/add guide for VC prospective members">
+                      <td
+                        data-value="Feature/add guide for VC prospective members"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/336"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature/add guide for VC prospective members</a
                         >
                       </td>
-                      <td>2021-09-11</td>
-                      <td>2021-09-23</td>
-                      <td>13 days</td>
+                      <td data-value="2021-09-11T00:11:18Z" data-col-type="date">2021-09-11</td>
+                      <td data-value="2021-09-23T18:09:38Z" data-col-type="date">2021-09-23</td>
+                      <td data-value="13" data-col-type="number">13 days</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="Virtual-Coffee/VC-Community-Docs">
+                      <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/VC-Community-Docs</span
                         >
                       </td>
-                      <td data-value="Add tips to onboard volunteer notetaker">
+                      <td
+                        data-value="Add tips to onboard volunteer notetaker"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/203"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add tips to onboard volunteer notetaker</a
                         >
                       </td>
-                      <td>2021-09-13</td>
-                      <td>2021-09-22</td>
-                      <td>9 days</td>
+                      <td data-value="2021-09-13T22:46:43Z" data-col-type="date">2021-09-13</td>
+                      <td data-value="2021-09-22T13:43:17Z" data-col-type="date">2021-09-22</td>
+                      <td data-value="9" data-col-type="number">9 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add September newsletter">
+                      <td data-value="Add September newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/325"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add September newsletter</a
                         >
                       </td>
-                      <td>2021-09-06</td>
-                      <td>2021-09-07</td>
-                      <td>1 day</td>
+                      <td data-value="2021-09-06T22:30:38Z" data-col-type="date">2021-09-06</td>
+                      <td data-value="2021-09-07T18:00:43Z" data-col-type="date">2021-09-07</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add August newsletter">
+                      <td data-value="Add August newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/291"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add August newsletter</a
                         >
                       </td>
-                      <td>2021-08-12</td>
-                      <td>2021-08-12</td>
-                      <td>0 days</td>
+                      <td data-value="2021-08-12T22:27:11Z" data-col-type="date">2021-08-12</td>
+                      <td data-value="2021-08-12T23:45:17Z" data-col-type="date">2021-08-12</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add July newsletter">
+                      <td data-value="Add July newsletter" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/274"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add July newsletter</a
                         >
                       </td>
-                      <td>2021-07-05</td>
-                      <td>2021-07-06</td>
-                      <td>1 day</td>
+                      <td data-value="2021-07-05T22:45:18Z" data-col-type="date">2021-07-05</td>
+                      <td data-value="2021-07-06T12:39:40Z" data-col-type="date">2021-07-06</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </details>
+
             <details id="issues" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -911,14 +963,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="issues-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Issues"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -929,89 +985,114 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closed <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closed <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Closing Period <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Closing Period <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Typo of markdown in Guide To VC">
+                      <td data-value="Typo of markdown in Guide To VC" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/347"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Typo of markdown in Guide To VC</a
                         >
                       </td>
-                      <td>2021-09-27</td>
-                      <td>2021-09-27</td>
-                      <td>0 days</td>
+                      <td data-value="2021-09-27T20:04:58Z" data-col-type="date">2021-09-27</td>
+                      <td data-value="2021-09-27T22:26:55Z" data-col-type="date">2021-09-27</td>
+                      <td data-value="0" data-col-type="number">0 days</td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Install and Run link in CONTRIBUTING.md goes nowhere">
+                      <td
+                        data-value="Install and Run link in CONTRIBUTING.md goes nowhere"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/317"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Install and Run link in CONTRIBUTING.md goes nowhere
                         </a>
                       </td>
-                      <td>2021-09-04</td>
-                      <td>2021-10-04</td>
-                      <td>30 days</td>
+                      <td data-value="2021-09-04T14:01:58Z" data-col-type="date">2021-09-04</td>
+                      <td data-value="2021-10-04T17:55:20Z" data-col-type="date">2021-10-04</td>
+                      <td data-value="30" data-col-type="number">30 days</td>
                     </tr>
                   </tbody>
                 </table>
               </div>
             </details>
+
             <details id="reviewed-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1040,6 +1121,7 @@
                 No contributions of this type in this quarter.
               </div>
             </details>
+
             <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1071,6 +1153,7 @@
                 No contributions of this type in this quarter.
               </div>
             </details>
+
             <details id="collaborations" class="border border-gray-200 rounded-xl p-4 shadow-sm">
               <summary
                 style="color: rgb(67, 56, 202)"
@@ -1134,14 +1217,18 @@
                       />
                     </svg>
                   </div>
+
                   <input
                     type="text"
                     id="collaborations-search"
-                    placeholder="Search..."
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Collaborations"
+                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: rgb(67, 56, 202);
+              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
                   />
                 </div>
+
                 <button
                   class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
@@ -1152,67 +1239,86 @@
                 class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
               >
                 <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead>
+                  <thead class="bg-white">
                     <tr>
-                      <th class="py-3 px-4">No.</th>
-                      <th
-                        data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
-                      >
-                        Project <span class="sort-icon ml-1">↕</span>
+                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                        No.
                       </th>
                       <th
                         data-type="string"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Title <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Created At <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Created At <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        First Comment <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >First Comment <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="status"
-                        class="py-3 px-4 cursor-pointer"
-                        style="color: rgb(67, 56, 202)"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: rgb(67, 56, 202); cursor: pointer"
                       >
-                        Status <span class="sort-icon ml-1">↕</span>
+                        <span class="th-content"
+                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-100">
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
                       <td
                         data-value="Add &#39;How to write a Good Issue&#39; guide to Member Resources"
+                        data-col-type="string"
                       >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/331"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add 'How to write a Good Issue' guide to Member Resources</a
                         >
                       </td>
-                      <td>2021-09-08</td>
-                      <td>2021-09-10</td>
-                      <td>
+                      <td data-value="2021-09-08T22:56:27Z" data-col-type="date">2021-09-08</td>
+                      <td data-value="2021-09-10T18:17:45Z" data-col-type="date">2021-09-10</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2021-10-01<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1220,24 +1326,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>2.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Feature/add channel guide">
+                      <td data-value="Feature/add channel guide" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/329"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Feature/add channel guide</a
                         >
                       </td>
-                      <td>2021-09-07</td>
-                      <td>2021-09-07</td>
-                      <td>
+                      <td data-value="2021-09-07T20:17:02Z" data-col-type="date">2021-09-07</td>
+                      <td data-value="2021-09-07T20:55:49Z" data-col-type="date">2021-09-07</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2021-09-10<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1248,24 +1357,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>3.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add Slack channel guide to member resources">
+                      <td
+                        data-value="Add Slack channel guide to member resources"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/310"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add Slack channel guide to member resources</a
                         >
                       </td>
-                      <td>2021-09-03</td>
-                      <td>2021-09-07</td>
-                      <td>
+                      <td data-value="2021-09-03T14:03:53Z" data-col-type="date">2021-09-03</td>
+                      <td data-value="2021-09-07T19:12:07Z" data-col-type="date">2021-09-07</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2021-09-10<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1273,24 +1388,30 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>4.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add New/Prospective Member resource page">
+                      <td
+                        data-value="Add New/Prospective Member resource page"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/311"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Add New/Prospective Member resource page</a
                         >
                       </td>
-                      <td>2021-09-03</td>
-                      <td>2021-09-03</td>
-                      <td>
+                      <td data-value="2021-09-03T14:08:14Z" data-col-type="date">2021-09-03</td>
+                      <td data-value="2021-09-03T14:15:32Z" data-col-type="date">2021-09-03</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2021-10-01<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1298,24 +1419,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-white table-row-hover">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>5.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Member resources/guideto vc">
+                      <td data-value="Member resources/guideto vc" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/298"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Member resources/guideto vc</a
                         >
                       </td>
-                      <td>2021-08-20</td>
-                      <td>2021-09-02</td>
-                      <td>
+                      <td data-value="2021-08-20T21:03:30Z" data-col-type="date">2021-08-20</td>
+                      <td data-value="2021-09-02T18:01:34Z" data-col-type="date">2021-09-02</td>
+                      <td data-value="MERGED" data-col-type="status">
                         2021-09-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="
@@ -1326,24 +1450,27 @@
                         >
                       </td>
                     </tr>
-                    <tr class="bg-gray-50 table-row-hover">
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
                       <td>6.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io">
+                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Put August Newsletter on the site">
+                      <td data-value="Put August Newsletter on the site" data-col-type="string">
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/282"
                           target="_blank"
-                          class="text-blue-600 hover:underline"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
                           >Put August Newsletter on the site</a
                         >
                       </td>
-                      <td>2021-07-25</td>
-                      <td>2021-08-12</td>
-                      <td>
+                      <td data-value="2021-07-25T22:53:29Z" data-col-type="date">2021-07-25</td>
+                      <td data-value="2021-08-12T20:52:20Z" data-col-type="date">2021-08-12</td>
+                      <td data-value="CLOSED" data-col-type="status">
                         2021-08-12<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
@@ -1679,13 +1806,27 @@
         });
       });
 
+      // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
-        const hash = window.location.hash || '#merged-prs';
-        const target = document.querySelector(hash);
-        if (target && target.tagName === 'DETAILS') {
-          document.querySelectorAll('details').forEach((d) => (d.open = false));
-          target.open = true;
-          setTimeout(() => target.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+        const hash = window.location.hash;
+        if (hash) {
+          const targetDetails = document.querySelector(hash);
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+            // Close all other details tags before opening the target one
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            targetDetails.open = true;
+            // Scroll to the opened section with a slight delay
+            setTimeout(() => {
+              targetDetails.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start',
+              });
+            }, 100);
+          }
+        } else {
+          // Open 'Merged PRs' by default if no hash is present.
+          const defaultDetails = document.getElementById('merged-prs');
+          if (defaultDetails) defaultDetails.open = true;
         }
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
