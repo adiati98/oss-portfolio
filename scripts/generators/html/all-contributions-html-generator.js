@@ -213,14 +213,14 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                   <div class="relative z-10 grid grid-cols-2 gap-4">
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                       <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${totalUniqueRepos}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
+                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                       <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${articleCount}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
+                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
-                      <span class="text-sm uppercase tracking-widest text-white">Active Since</span>
+                      <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
                       <span class="text-xl font-black font-mono tracking-tighter">${SINCE_YEAR}</span>
                     </div>
                   </div>
