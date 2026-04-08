@@ -267,12 +267,12 @@ async function createAllTimeContributions(finalContributions = [], articles = []
 
               <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
-                  <h3 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4">Primary Focus Projects</h3>
+                  <h2 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4">Primary Focus Projects</h2>
                   <div class="divide-y divide-slate-100 min-w-0">${topReposHtml}</div>
                 </div>
                 
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-center">
-                  <h3 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4 flex items-center">
+                  <h2 class="text-xs uppercase tracking-widest font-black text-slate-500 mb-4 flex items-center">
                     Collaboration Profile
                     <span class="ml-2 cursor-help group relative">
                       ${INFO_ICON_SVG}
@@ -280,7 +280,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                         Identified by analyzing the highest contribution volume across categories.
                       </span>
                     </span>
-                  </h3>
+                  </h2>
                   <div>
                     <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
                     <p class="text-sm text-slate-600 font-bold leading-relaxed">${personaDesc}</p>
@@ -298,7 +298,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                         📊
                       </div>
                       <div>
-                        <h4 class="font-black text-slate-900">Reports</h4>
+                        <h3 class="font-black text-slate-900">Reports</h3>
                         <p class="text-xs text-slate-600 font-bold">Seasonal breakdown</p>
                       </div>
                     </div>
@@ -314,7 +314,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                         🤝
                       </div>
                       <div>
-                        <h4 class="font-black text-slate-900">Community</h4>
+                        <h3 class="font-black text-slate-900">Community</h3>
                         <p class="text-xs text-slate-600 font-bold">Roles & Active Tasks</p>
                       </div>
                     </div>
@@ -330,7 +330,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                         ✍️
                       </div>
                       <div>
-                        <h4 class="font-black text-slate-900">Articles</h4>
+                        <h3 class="font-black text-slate-900">Articles</h3>
                         <p class="text-xs text-slate-600 font-bold">${articleCount} Tutorials & Posts</p>
                       </div>
                     </div>
