@@ -212,16 +212,16 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                   <div class="relative z-10 h-px bg-white/20 my-8"></div>
                   <div class="relative z-10 grid grid-cols-2 gap-4">
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${totalUniqueRepos}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white font-black leading-tight mt-1">Impacted Repos</p>
+                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${totalUniqueRepos}</p></div>
+                      <p class="text-sm uppercase tracking-widest text-white leading-tight mt-1">Impacted Repos</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-bold leading-none">${articleCount}</p></div>
-                      <p class="text-sm uppercase tracking-widest text-white font-black leading-tight mt-1">Articles</p>
+                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${articleCount}</p></div>
+                      <p class="text-sm uppercase tracking-widest text-white leading-tight mt-1">Articles</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
-                      <span class="text-sm uppercase tracking-widest text-white font-black">Active Since</span>
-                      <span class="text-xl font-bold font-mono tracking-tighter">${SINCE_YEAR}</span>
+                      <span class="text-sm uppercase tracking-widest text-white">Active Since</span>
+                      <span class="text-xl font-black font-mono tracking-tighter">${SINCE_YEAR}</span>
                     </div>
                   </div>
                 </div>
@@ -250,7 +250,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                       <div class="flex justify-between items-end mb-2">
                         <span ${labelStyle} class="text-lg">${label}</span>
                         <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-black ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
+                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
                           <span class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold">${s.pctStr}</span>
                         </div>
                       </div>
