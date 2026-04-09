@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs/promises');
 
 // Import configuration
-const { SINCE_YEAR, BLOG } = require('../config/config');
+const { BLOG } = require('../config/config');
 
 // Import Leadership Metadata
 const leadershipData = require('../../metadata/leadership');
@@ -123,11 +123,12 @@ async function main() {
     const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null;
     const today = new Date();
 
-    let fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : today.getFullYear() - 1;
+    let fetchStartYear;
 
     if (!lastUpdate) {
-      fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : fetchStartYear;
-      console.log('First run - fetching all contributions');
+      // Pass undefined to trigger Auto-Discovery in the fetcher
+      fetchStartYear = undefined;
+      console.log('First run - triggering auto-discovery of GitHub join date');
     } else {
       const lastUpdateYear = lastUpdate.getFullYear();
       const lastUpdateMonth = lastUpdate.getMonth();
@@ -147,12 +148,11 @@ async function main() {
         fetchStartYear = currentYear - 1;
         console.log('Last month update - fetching last two years');
       } else {
-        fetchStartYear = typeof SINCE_YEAR !== 'undefined' ? SINCE_YEAR : fetchStartYear;
-        console.log('Older update - fetching all years');
+        // Fallback for older updates - start from the year before the last update for safety
+        fetchStartYear = lastUpdateYear - 1;
+        console.log(`Older update - fetching from: ${fetchStartYear}`);
       }
     }
-
-    console.log(`Fetching contributions from year: ${fetchStartYear}`);
 
     // If there is no existing contributions data (first run / full fetch), clear
     // the persistent PR cache so authored PRs are re-processed and repopulated.

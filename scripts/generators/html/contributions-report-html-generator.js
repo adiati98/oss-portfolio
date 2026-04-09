@@ -5,8 +5,8 @@ const prettier = require('prettier');
 // Import the dedent utility
 const { dedent } = require('../../utils/dedent');
 
-// Import configuration (SINCE_YEAR is needed for reporting)
-const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
+// Import configuration
+const { BASE_DIR } = require('../../config/config');
 
 // Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
@@ -24,7 +24,6 @@ const HTML_REPORTS_FILENAME = 'reports.html';
 /**
  * Calculates aggregate totals from all contribution data and writes the
  * all-time contributions HTML report file.
- * @param {object} finalContributions The object with all contributions, grouped by type.
  * @param {Array<string>} quarterlyFileLinks List of relative paths (e.g., ['2023/Q4-2023.html', ...])
  * to the generated quarterly files, provided by the quarterly generator.
  */

@@ -1,5 +1,5 @@
 const { dedent } = require('../utils/dedent');
-const { SINCE_YEAR, GITHUB_USERNAME } = require('../config/config');
+const { GITHUB_USERNAME } = require('../config/config');
 const { COLORS } = require('../config/constants');
 
 /**
@@ -9,17 +9,18 @@ const { COLORS } = require('../config/constants');
  */
 function createFooterHtml() {
   // Get dynamic date information for the footer context
-  const currentDate = new Date().toLocaleDateString('en-US', {
+  const now = new Date();
+  const currentDate = now.toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-  const currentYear = new Date().getFullYear();
+  const currentYear = now.getFullYear();
 
   return dedent`
     <footer style="border-top-color: ${COLORS.border.light}; color: ${COLORS.text.secondary};" class="mt-16 py-8 border-t text-center text-sm">
       <div class="mb-1">
-        &copy; ${SINCE_YEAR}-${currentYear} 
+        &copy; ${currentYear} 
         <a href="https://github.com/${GITHUB_USERNAME}" 
            target="_blank" 
            style="color: ${COLORS.primary.rgb};"
