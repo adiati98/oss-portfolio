@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 
 // Import configuration
-const { BASE_DIR, SINCE_YEAR, GITHUB_USERNAME } = require('../../config/config');
+const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';
@@ -172,10 +172,17 @@ async function createStatsReadme(finalContributions, articles = []) {
           .join('\n')
       : '_No activity recorded yet._';
 
-  // 5. Metadata
+  // 5. Dynamic year calculation
   const now = new Date();
   const currentYear = now.getFullYear();
-  const yearsTracked = currentYear - SINCE_YEAR + 1;
+
+  const yearsActive = allItems
+    .map((item) => new Date(item.date).getFullYear())
+    .filter((year) => !isNaN(year));
+
+  // Use the earliest year found in data, otherwise default to current year
+  const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
+  const yearsTracked = currentYear - earliestYear + 1;
   const generatedAt = now.toLocaleString();
 
   // 6. Generate Quarterly Links
@@ -210,7 +217,7 @@ async function createStatsReadme(finalContributions, articles = []) {
   // 7. Build Markdown Content
   let markdownContent = `# 📈 Open Source Contributions Report
 
-Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement since **${SINCE_YEAR}**. This portfolio aggregates key community activities and **technical writing** insights.
+Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement since **${earliestYear}**. This portfolio aggregates key community activities and **technical writing** insights.
 
 ---
 
@@ -221,7 +228,7 @@ Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](http
 | Context | Detail |
 | :--- | :--- |
 | 🏗️ **Unique Repositories** | **${totalUniqueRepos}** projects |
-| 📅 **Active Since** | **${SINCE_YEAR}** (${yearsTracked} years tracked) |
+| 📅 **Active Since** | **${earliestYear}** (${yearsTracked} years tracked) |
 | ✍️ **Articles Written** | **${articleCount}** published articles |
 
 ### 🧩 Contribution Distribution

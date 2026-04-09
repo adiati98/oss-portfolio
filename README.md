@@ -86,7 +86,6 @@ The system analyzes contribution patterns to automatically assign a persona titl
 
 - **Settings:** Update `scripts/config/config.js` to personalize your data fetching:
     - `GITHUB_USERNAME`: Set this to your GitHub handle.
-    - `SINCE_YEAR`: Define the starting year for your contribution history (e.g., `2019`).
     - `BLOG`: Configure your `devToUser` handle for automated article syncing.
 - **Leadership Metadata:** Update `metadata/leadership.js` to reflect your roles and achievements.
 - **Article Metadata:** Manually update `metadata/fcc-articles.js` to add new freeCodeCamp publications. 

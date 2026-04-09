@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
-const { BASE_DIR, SINCE_YEAR } = require('../../config/config');
+const { BASE_DIR } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const {
@@ -75,7 +75,7 @@ function determinePersona(counts) {
 /**
  * Added articles parameter to display writing impact alongside code.
  */
-async function createAllTimeContributions(finalContributions = [], articles = []) {
+async function createAllTimeContributions(finalContributions = {}, articles = []) {
   const htmlBaseDir = path.join(BASE_DIR, HTML_OUTPUT_DIR_NAME);
   const HTML_OUTPUT_PATH = path.join(htmlBaseDir, HTML_README_FILENAME);
 
@@ -94,6 +94,23 @@ async function createAllTimeContributions(finalContributions = [], articles = []
 
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
+
+  const allItems = [
+    ...(finalContributions.pullRequests || []),
+    ...(finalContributions.issues || []),
+    ...(finalContributions.reviewedPrs || []),
+    ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
+    ...(finalContributions.collaborations || []),
+  ];
+
+  // --- DYNAMIC YEAR CALCULATION ---
+  const yearsActive = allItems
+    .map((item) => new Date(item.date).getFullYear())
+    .filter((year) => !isNaN(year) && year >= 2008);
+
+  const currentYear = new Date().getFullYear();
+  const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
+
   const maxCount = Math.max(
     prCount,
     issueCount,
@@ -115,14 +132,6 @@ async function createAllTimeContributions(finalContributions = [], articles = []
     coauth: getStats(coAuthoredPrCount),
     collab: getStats(collaborationCount),
   };
-
-  const allItems = [
-    ...(finalContributions.pullRequests || []),
-    ...(finalContributions.issues || []),
-    ...(finalContributions.reviewedPrs || []),
-    ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
-    ...(finalContributions.collaborations || []),
-  ];
 
   const uniqueRepos = new Set(allItems.map((item) => item.repo));
   const totalUniqueRepos = uniqueRepos.size;
@@ -196,7 +205,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                 All-Time Impact
               </h1>
               <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
-                Aggregated lifetime metrics and high-level performance across all tracked repositories since ${SINCE_YEAR}.
+                Aggregated lifetime metrics and high-level performance across all tracked repositories.
               </p>
             </header>
 
@@ -221,7 +230,7 @@ async function createAllTimeContributions(finalContributions = [], articles = []
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                       <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
-                      <span class="text-xl font-black font-mono tracking-tighter">${SINCE_YEAR}</span>
+                      <span class="text-xl font-black font-mono tracking-tighter">${earliestYear}</span>
                     </div>
                   </div>
                 </div>
