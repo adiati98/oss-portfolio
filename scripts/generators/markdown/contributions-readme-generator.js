@@ -144,11 +144,11 @@ async function createStatsReadme(finalContributions, articles = []) {
 
   // 4. Aggregate Repository Activity
   const allItems = [
-    ...finalContributions.pullRequests,
-    ...finalContributions.issues,
-    ...finalContributions.reviewedPrs,
+    ...(finalContributions.pullRequests || []),
+    ...(finalContributions.issues || []),
+    ...(finalContributions.reviewedPrs || []),
     ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
-    ...finalContributions.collaborations,
+    ...(finalContributions.collaborations || []),
   ];
 
   const totalUniqueRepos = new Set(allItems.map((item) => item.repo)).size;
@@ -172,15 +172,14 @@ async function createStatsReadme(finalContributions, articles = []) {
           .join('\n')
       : '_No activity recorded yet._';
 
-  // 5. Dynamic year calculation
+  // 5. Dynamic year calculation (Safeguarded)
   const now = new Date();
   const currentYear = now.getFullYear();
 
   const yearsActive = allItems
     .map((item) => new Date(item.date).getFullYear())
-    .filter((year) => !isNaN(year));
+    .filter((year) => !isNaN(year) && year >= 2008);
 
-  // Use the earliest year found in data, otherwise default to current year
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
   const yearsTracked = currentYear - earliestYear + 1;
   const generatedAt = now.toLocaleString();
@@ -217,7 +216,7 @@ async function createStatsReadme(finalContributions, articles = []) {
   // 7. Build Markdown Content
   let markdownContent = `# 📈 Open Source Contributions Report
 
-Organized by calendar quarter, these reports track [**${GITHUB_USERNAME}**](https://github.com/${GITHUB_USERNAME})'s external open source involvement since **${earliestYear}**. This portfolio aggregates key community activities and **technical writing** insights.
+Organized by year and quarter, these reports track contributions made by **[${GITHUB_USERNAME}](https://github.com/${GITHUB_USERNAME})** to repositories owned by others since **${earliestYear}**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
 
 ---
 
