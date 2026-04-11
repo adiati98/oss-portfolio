@@ -29,6 +29,7 @@ const { createHtmlReports } = require('../generators/html/contributions-report-h
 const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
 const { createBlogHtml } = require('../generators/html/blog-html-generator');
 const { createCommunityHtml } = require('../generators/html/community-html-generator');
+const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 
 async function main() {
   // Define the data directory path.
@@ -311,11 +312,15 @@ async function main() {
     // 3. Generate quarterly reports (HTML)
     const quarterlyHtmlLinks = await writeHtmlFiles(grouped);
 
-    // 4. Generate aggregate README (Markdown)
+    // 4. Generate README and glossary files (Markdown)
     await createStatsReadme(finalContributions, articles);
 
     // 5. Generate landing page (index.html)
     await createIndexHtml();
+
+    // NEW: 5b. Generate the Glossary page
+    console.log('Generating Glossary...');
+    await createGlossaryHtml();
 
     // 6. Generate the Dashboard (All-Time Stats HTML)
     await createAllTimeContributions(finalContributions, articles);

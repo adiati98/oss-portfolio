@@ -29,6 +29,8 @@ function createNavHtml(relativePath = './') {
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Community & Activity</a>
             <a href="${base}blog.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Articles</a>
+            <a href="${base}glossary.html" style="background-color: ${COLORS.primary[10]};" 
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Glossary</a>
 
             <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer" 
               class="nav-link nav-desktop-link nav-github-link flex items-center"
@@ -52,6 +54,7 @@ function createNavHtml(relativePath = './') {
           <a href="${base}reports.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
           <a href="${base}community-activity.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Community & Activity</a>
           <a href="${base}blog.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Articles</a>
+          <a href="${base}glossary.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Glossary</a>
         </div>
         
         <div class="mt-3 pt-3" style="border-top-color: ${COLORS.nav.bg}; border-top-width: 1px;">

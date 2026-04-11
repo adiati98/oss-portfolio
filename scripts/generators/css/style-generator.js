@@ -428,10 +428,55 @@ function getReportStyleCss() {
   `;
 }
 
+/**
+ * Generates the CSS block for the Methodology page (methodology.html).
+ */
+function getGlossaryStyleCss() {
+  return dedent`
+    ${getCommonBaseCss()}
+    
+    .glossary-content {
+      line-height: 1.8;
+    }
+
+    .metric-section {
+      transition: transform 0.2s ease-in-out;
+    }
+
+    /* Styling for the logic code blocks */
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Add a subtle hover effect to the border indicators */
+    .group:hover .rounded-full, 
+    .group:hover .w-2 {
+      filter: brightness(1.1);
+      transform: scaleX(1.2);
+      transition: all 0.2s ease;
+    }
+
+    /* Style for the centered introduction */
+    .intro-text {
+      color: ${COLORS.text.secondary};
+      position: relative;
+      padding: 0 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .intro-text {
+        padding: 0;
+        font-size: 1.125rem;
+      }
+    }
+  `;
+}
+
 module.exports = {
   getReportStyleCss,
   getIndexStyleCss,
   getReportsListStyleCss,
   getBlogStyleCss,
   getCommunityStyleCss,
+  getGlossaryStyleCss,
 };
