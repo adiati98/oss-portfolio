@@ -23,15 +23,16 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_The workbench is sparkling clean._**
+> **_Zero tasks. The ecosystem is in good hands!_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (12)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (13)</h3></summary>
 
 | Repository                      | Task                                                                                                                                                 |
 | :------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **guestbook**                   | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)                                    |
 | **virtualcoffee.io**            | [Update existing member profile: abuna1985 → adam-abundis](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1484)                             |
 | **mautic-community-handbook**   | [Add statement about re-election (don't merge until approved at the General Assembly)](https://github.com/mautic/mautic-community-handbook/pull/418) |
 | **intro**                       | [Updated outdated screenshots and gifs (GitHub UI updated)](https://github.com/OpenSource-Communities/intro/pull/310)                                |
@@ -108,4 +109,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 10, 2026_
+_Last updated: April 11, 2026_
