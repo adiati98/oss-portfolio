@@ -23,7 +23,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_You've outpaced the tasks!_**
+> **_Zero tasks. The ecosystem is in good hands!_**
 
 </details>
 
