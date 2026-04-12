@@ -22,9 +22,27 @@ async function createGlossaryHtml() {
   const primaryColor = getColorValue(COLORS.primary);
 
   const processText = (text) => {
-    return text
-      .replace(/{{GITHUB_USERNAME}}/g, GITHUB_USERNAME)
-      .replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-800 font-black">$1</strong>');
+    return (
+      text
+        // 1. Bold labels: Use indigo-800 and font-black
+        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-800 font-black">$1</strong>')
+
+        // 2. List items: Wrap the whole line in indigo-600
+        // This ensures the non-bolded text (the description) is indigo
+        .replace(
+          /^\s*\*\s+(.*)$/gm,
+          '<li class="ml-4 list-disc list-inside text-indigo-600">$1</li>'
+        )
+
+        // 3. Wrap <li> groups in <ul>
+        .replace(/(<li.*?>.*?<\/li>)+/g, '<ul class="my-3 space-y-1 text-indigo-600">$1</ul>')
+
+        // 4. Cleanup space after <ul>
+        .replace(/<\/ul>\s+/g, '</ul>')
+
+        // 5. Convert remaining newlines to <br>
+        .replace(/\n(?!<ul|<li)/g, '<br>')
+    );
   };
 
   const sections = GLOSSARY_CONTENT.sections || [];
@@ -57,8 +75,8 @@ async function createGlossaryHtml() {
                   ${description}
                 </p>
                 
-                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 font-mono overflow-x-auto">
-                  <span class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black">
+                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto">
+                  <span class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono">
                     ${label}
                   </span>
                   <div class="text-sm text-indigo-600 leading-relaxed">

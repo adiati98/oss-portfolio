@@ -4,7 +4,7 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-const { BASE_DIR } = require('../../config/config');
+const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const {
   COLORS,
   FAVICON_SVG_ENCODED,
@@ -207,7 +207,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Community & Activity | Open Source Portfolio</title>
+      <title>Community & Activity | ${GITHUB_USERNAME} Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>

@@ -3,7 +3,7 @@
  */
 const GLOSSARY_CONTENT = {
   title: 'Glossary',
-  subtitle: `This page explains the numbers and categories used to track {{GITHUB_USERNAME}}'s open source impact. It shows how contribution data is collected, sorted, and calculated.`,
+  subtitle: `A comprehensive explanation of the terms and categories used to track open source impact, detailing how contribution data is collected, sorted, and calculated within Open Source Portfolio.`,
 
   sections: [
     {
@@ -16,9 +16,9 @@ const GLOSSARY_CONTENT = {
           id: 'totalImpact',
           title: 'Total Impact',
           description:
-            'The total number of all recorded contributions made by {{GITHUB_USERNAME}} since the portfolio started.',
+            'The total number of all recorded contributions made since the portfolio started.',
           howItIsCalculated:
-            'This value is the grand total of merged pull requests (PRs), issues, reviews, co-authored PRs, and community collaborations.',
+            'This value is the grand total of merged PRs, issues, reviews, co-authored PRs, and community collaborations.',
         },
         {
           id: 'activeSince',
@@ -31,7 +31,7 @@ const GLOSSARY_CONTENT = {
           id: 'totalImpactedRepos',
           title: 'Impacted Repos',
           description:
-            'The total number of different open source projects where {{GITHUB_USERNAME}} has made at least one contribution.',
+            'The total number of different open source projects with at least one contribution.',
           howItIsCalculated:
             'This counts every separate repository owned by others that has at least one tracked action.',
         },
@@ -39,9 +39,9 @@ const GLOSSARY_CONTENT = {
           id: 'persona',
           title: 'Collaboration Profile',
           description:
-            'A title given to {{GITHUB_USERNAME}} based on the main way of helping the community.',
+            'An identity assigned based on the primary way of contributing to the community.',
           howItIsCalculated:
-            'The system looks at which type of work is done most often. For example, doing many reviews results in a "Community Mentor" profile.',
+            'The system analyzes which type of work is performed most frequently. For example, a high volume of reviewed PRs results in a "Community Mentor" profile.',
         },
       ],
     },
@@ -84,8 +84,7 @@ const GLOSSARY_CONTENT = {
         {
           id: 'merged',
           title: 'Merged PRs',
-          description:
-            'A record of PRs created by {{GITHUB_USERNAME}} that were accepted and added to projects owned by others.',
+          description: 'A record of PRs that were accepted and added to projects owned by others.',
           howItIsCalculated:
             'This shows all work that was finalized (merged). The **Review Period** shows the time from the first proposal to the final acceptance.',
         },
@@ -93,7 +92,7 @@ const GLOSSARY_CONTENT = {
           id: 'issues',
           title: 'Issues',
           description:
-            'A record of technical discoveries, bug reports, and feature proposals created by {{GITHUB_USERNAME}} on projects owned by others.',
+            'A record of technical discoveries, bug reports, and feature proposals created on projects owned by others.',
           howItIsCalculated:
             'This includes all authored issue threads regardless of who is assigned to resolve them. The **Closing Period** shows the time from the opening of an issue until it is finished.',
         },
@@ -101,15 +100,14 @@ const GLOSSARY_CONTENT = {
           id: 'reviewed',
           title: 'Reviewed PRs',
           description:
-            'A record of PRs where {{GITHUB_USERNAME}} gave technical feedback or checked code quality on projects owned by others.',
+            'A record of formal reviews on PRs where technical feedback or code quality was evaluated on projects owned by others.',
           howItIsCalculated:
             'This tracks formal reviews. The **Review Period** shows the time from when the PR was created until it was finished. This highlights the speed and efficiency of the review process. The **Status** shows the current state, and **Last Update** shows the most recent activity.',
         },
         {
           id: 'coAuthored',
           title: 'Co-Authored PRs',
-          description:
-            'A record of PRs where {{GITHUB_USERNAME}} worked directly on the code with others.',
+          description: 'A record of PRs where work was performed directly on the code with others.',
           howItIsCalculated:
             'This identifies work credited via co-author commit information. The **Commit Period** shows the time from when the PR was created until the first code contribution, showing when the actual work started. The **Status** shows the standing of the work, and **Last Update** shows when it was last changed.',
         },
@@ -126,24 +124,35 @@ const GLOSSARY_CONTENT = {
     {
       id: 'communityLeadership',
       title: 'Community & Leadership',
-      description:
-        'Terms for ongoing roles and real-time community work led by {{GITHUB_USERNAME}}.',
+      description: 'A record of honors, active and past roles, alongside real-time community work.',
       items: [
+        {
+          id: 'milestonesAwards',
+          title: 'Milestones and Awards',
+          description:
+            'A showcase of ecosystem honors and significant achievements earned within the open source community.',
+          entryMethod:
+            'Entries are manually maintained in a metadata file. Each record includes the achievement title, the granting organization, and the year it was received.',
+        },
         {
           id: 'advocacyRoles',
           title: 'Ecosystem Advocacy & Roles',
-          description:
-            'A record of formal positions held by {{GITHUB_USERNAME}} within open source organizations.',
+          description: 'A record of formal positions held within open source organizations.',
           entryMethod:
             'Entries come from a manually maintained metadata file. Roles are marked as **Active** or **Past** based on the recorded dates.',
         },
         {
           id: 'activeWorkbench',
           title: 'Active Workbench',
-          description:
-            'A live dashboard of work currently in progress, showing active engagement with the community.',
-          entryMethod:
-            'Tasks come directly from GitHub and are sorted into four groups: **To do issues** (work in progress), **Request review** (PRs waiting for a review), **Review in progress** (reviews currently being done), and **Bot request review** (automated bot requests waiting for a review). Only **open** items are shown; they are removed once they are merged or closed.',
+          description: 'A live dashboard of work currently in progress.',
+          entryMethod: `Tasks are fetched from GitHub and sorted into groups:
+
+* **To do issues:** Assigned issues
+* **Request review:** PRs waiting for a review
+* **Review in progress:** Reviews currently being done
+* **Bot request review:** Automated bot requests waiting for a review
+
+Only **open** items are shown; they are removed once they are merged or closed.`,
         },
       ],
     },
@@ -157,7 +166,7 @@ const GLOSSARY_CONTENT = {
           id: 'articles',
           title: 'Articles Written',
           description:
-            'Blog posts and articles around open source that {{GITHUB_USERNAME}} wrote to support and advocate for the open source ecosystem.',
+            'Blog posts and articles around open source written to support and advocate for the open source ecosystem.',
           entryMethod:
             'Data is aggregated from Dev.to (via automated API fetches) and freeCodeCamp (via manual curation). All entries are combined and sorted chronologically.',
         },

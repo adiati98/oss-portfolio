@@ -6,7 +6,7 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 
 // Import configuration
-const { BASE_DIR } = require('../../config/config');
+const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 
 // Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
@@ -128,7 +128,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quarterly Reports | Open Source Portfolio</title>
+  <title>Quarterly Reports | ${GITHUB_USERNAME} Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
