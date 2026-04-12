@@ -3,9 +3,11 @@ const path = require('path');
 
 // Import configuration
 const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
+const { GLOSSARY_CONTENT } = require('../../../metadata/glossary');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';
+const MARKDOWN_GLOSSARY_FILENAME = 'glossary.md';
 
 /**
  * Determines the contributor's persona title and description.
@@ -78,7 +80,8 @@ function generateProgressBar(count, total, width) {
 
 async function createStatsReadme(finalContributions, articles = []) {
   const markdownBaseDir = path.join(BASE_DIR, MARKDOWN_OUTPUT_DIR_NAME);
-  const MARKDOWN_OUTPUT_PATH = path.join(markdownBaseDir, MARKDOWN_README_FILENAME);
+  const README_PATH = path.join(markdownBaseDir, MARKDOWN_README_FILENAME);
+  const GLOSSARY_PATH = path.join(markdownBaseDir, MARKDOWN_GLOSSARY_FILENAME);
 
   await fs.mkdir(markdownBaseDir, { recursive: true });
 
@@ -213,10 +216,52 @@ async function createStatsReadme(finalContributions, articles = []) {
     reportLinksContent += '_No detailed reports found._\n';
   }
 
-  // 7. Build Markdown Content
+  // 7. BUILD glossary.md CONTENT
+  const personalize = (text) => text.replace(/{{GITHUB_USERNAME}}/g, GITHUB_USERNAME);
+  const groups = GLOSSARY_CONTENT?.sections || [];
+
+  let glossarySectionsMd = '';
+
+  groups.forEach((group) => {
+    // Determine the label for the third column based on the items in this group
+    let noteHeader = 'Glossary Note';
+    const hasEntryMethod = group.items.some((i) => i.entryMethod);
+    const hasCalculation = group.items.some((i) => i.howItIsCalculated);
+    const hasSource = group.items.some((i) => i.source);
+
+    if (hasEntryMethod) noteHeader = 'Entry Method';
+    else if (hasCalculation) noteHeader = 'Calculation Logic';
+    else if (hasSource) noteHeader = 'Data Source';
+
+    glossarySectionsMd += `## ${group.title}\n\n`;
+    glossarySectionsMd += `_${personalize(group.description)}_\n\n`;
+    glossarySectionsMd += `| Metric | Description | ${noteHeader} |\n`;
+    glossarySectionsMd += `| :--- | :--- | :--- |\n`;
+
+    group.items.forEach((item) => {
+      const note = item.entryMethod || item.howItIsCalculated || item.source || '';
+      glossarySectionsMd += `| **${item.title}** | ${personalize(item.description)} | ${personalize(note)} |\n`;
+    });
+
+    glossarySectionsMd += '\n';
+  });
+
+  const glossaryContent = `# 📖 Glossary
+
+${personalize(GLOSSARY_CONTENT?.subtitle || 'Glossary details for contribution tracking.')}
+
+${glossarySectionsMd}
+---
+[← Back to Summary](./${MARKDOWN_README_FILENAME}) | *Last updated: ${generatedAt}*
+`;
+
+  // 8. Build Markdown Content for README.md
   let markdownContent = `# 📈 Open Source Contributions Report
 
 Organized by year and quarter, these reports track contributions made by **[${GITHUB_USERNAME}](https://github.com/${GITHUB_USERNAME})** to repositories owned by others since **${earliestYear}**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
+
+> [!IMPORTANT]
+> To understand the criteria used for these metrics or to see how specific categories are calculated, please refer to the [**Glossary**](./${MARKDOWN_GLOSSARY_FILENAME}).
 
 ---
 
@@ -259,32 +304,18 @@ Beyond code contributions, I maintain active roles in community leadership and t
 
 ---
 
-## 🛠️ Report Structure Breakdown
-
-Each quarterly report file (\`Qx-YYYY.md\` inside the year folders) provides a detailed log and summary for that period. Use the table below to understand the metrics tracked in those reports:
-
-| Section | Description | Key Metric Tracked |
-| :--- | :--- | :--- |
-| **Quarterly Statistics** | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter. | Total Count, Unique Repositories |
-| **Contribution Breakdown** | A table listing the count of contributions for each of the core categories within that quarter. | Category Counts |
-| **Top 3 Repositories** | The top three projects where contributions were made in that quarter, ranked by total count. | Contribution Frequency |
-| **Merged PRs** | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories. | **Review Period** |
-| **Issues** | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories. | **Closing Period** |
-| **Reviewed PRs** | **(Collapsible Section)** Detailed list of Pull Requests **reviewed or merged by me** on external repositories. | **My First Review Period** |
-| **Co-Authored PRs** | **(Collapsible Section)** Pull Requests where **I contributed commits** to other contributor's PRs. | **My First Commit Period** |
-| **Collaborations** | **(Collapsible Section)** Detailed list of open Issues or PRs where I have **commented** to participate in discussion. | **First Commented At** |
-
----
-
 ${reportLinksContent}
 
 ---
 *Report last generated on: ${generatedAt}*
 `;
 
-  // 8. Write the file
-  await fs.writeFile(MARKDOWN_OUTPUT_PATH, markdownContent, 'utf8');
-  console.log(`Written aggregate README: ${MARKDOWN_OUTPUT_PATH}`);
+  // 9. Write the files
+  await fs.writeFile(README_PATH, markdownContent, 'utf8');
+  await fs.writeFile(GLOSSARY_PATH, glossaryContent, 'utf8');
+
+  console.log(`Written aggregate README: ${README_PATH}`);
+  console.log(`Written glossary markdown: ${GLOSSARY_PATH}`);
 }
 
 module.exports = {
