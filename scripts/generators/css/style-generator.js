@@ -95,7 +95,6 @@ function getCommonBaseCss() {
 
 /**
  * Generates the CSS block for the Community & Activity page.
- * @returns {string} The CSS string.
  */
 function getCommunityStyleCss() {
   return dedent`
@@ -163,29 +162,38 @@ function getBlogStyleCss() {
 }
 
 /**
- * Generates the CSS block for the <style> tag in the All-Time Contributions and Landing Page head.
+ * Generates the CSS block for the Landing Page head.
+ * Consolidated All-Time Stats styles into the index.
  */
 function getIndexStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
-    /* Feature card specific overrides at landing page*/
-    .feature-card:hover { 
-      border-color: ${COLORS.primary.rgb} !important; 
-      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.1); 
+
+    /* All-Time Stats Metric Card Overrides */
+    .metric-card-hover {
+      transition: all 0.2s ease-in-out;
     }
-    .feature-card svg { 
-      width: 1.75rem; 
-      height: 1.75rem; 
-      display: block; 
+    .metric-card-hover:hover {
+      transform: translateY(-4px);
+      border-color: ${COLORS.primary.rgb} !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
 
-    /* Base styles for the link */
+    /* Table & Row Hovers for Activity Feed */
+    .table-row-hover {
+      transition: background-color 0.15s ease-in-out;
+    }
+    .table-row-hover:hover {
+      background-color: ${COLORS.primary[5]} !important;
+    }
+
+    /* Base styles for the report navigation link */
     a.browse-reports {
       color: ${COLORS.text.secondary};
       text-decoration: none;
     }
 
-    /* Hover state */
+    /* Hover state for report navigation link */
     a.browse-reports:hover {
       color: ${COLORS.text.primary};
       text-decoration: underline;
@@ -218,7 +226,7 @@ function getIndexStyleCss() {
 }
 
 /**
- * Generates the CSS block for the <style> tag in the Quarterly Reports List (reports.html) HTML head.
+ * Generates the CSS block for the Quarterly Reports List (reports.html) HTML head.
  */
 function getReportsListStyleCss() {
   return dedent`
@@ -281,7 +289,7 @@ function getReportsListStyleCss() {
 }
 
 /**
- * Generates the CSS block for the <style> tag in the Quarterly Report HTML head.
+ * Generates the CSS block for the Quarterly Report HTML head.
  */
 function getReportStyleCss() {
   return dedent`
@@ -301,7 +309,6 @@ function getReportStyleCss() {
       outline-offset: 2px;
     }
 
-    /* Keeps icon and text aligned horizontally inside summary */
     summary .inline-flex {
       display: inline-flex;
       align-items: center;
@@ -370,7 +377,6 @@ function getReportStyleCss() {
     .report-table tbody tr.bg-white { background-color: #ffffff; }
     .report-table tbody tr.bg-gray-50 { background-color: #f9fafb; }
 
-    /* Table Header Sorting Alignment */
     .th-content {
       display: inline-flex;
       align-items: center;
@@ -386,7 +392,6 @@ function getReportStyleCss() {
       line-height: 1;
     }
 
-    /* Highlight the arrow for standard and custom status sorts */
     th.sort-asc .sort-icon,
     th.sort-desc .sort-icon,
     th.sort-custom1 .sort-icon,
@@ -396,7 +401,6 @@ function getReportStyleCss() {
       font-weight: bold;
     }
 
-    /* Search Bar Icon Positioning */
     .icon-input-container {
       position: relative;
     }
@@ -411,7 +415,6 @@ function getReportStyleCss() {
       pointer-events: none;
     }
 
-    /* Mobile Screen Optimization (320px screens) */
     @media (max-width: 400px) {
       summary .text-xl {
         font-size: 1.1rem !important;
@@ -429,7 +432,7 @@ function getReportStyleCss() {
 }
 
 /**
- * Generates the CSS block for the Methodology page (methodology.html).
+ * Generates the CSS block for the Glossary page (glossary.html).
  */
 function getGlossaryStyleCss() {
   return dedent`
@@ -443,12 +446,10 @@ function getGlossaryStyleCss() {
       transition: transform 0.2s ease-in-out;
     }
 
-    /* Styling for the logic code blocks */
     code {
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
     }
 
-    /* Add a subtle hover effect to the border indicators */
     .group:hover .rounded-full, 
     .group:hover .w-2 {
       filter: brightness(1.1);
@@ -456,7 +457,6 @@ function getGlossaryStyleCss() {
       transition: all 0.2s ease;
     }
 
-    /* Style for the centered introduction */
     .intro-text {
       color: ${COLORS.text.secondary};
       position: relative;

@@ -21,8 +21,6 @@ function createNavHtml(relativePath = './') {
         
         <div class="flex items-center">
           <div class="hidden min-[1025px]:flex items-center space-x-3">
-            <a href="${base}all-contributions.html" style="background-color: ${COLORS.primary[10]};" 
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">All-Time Stats</a>
             <a href="${base}reports.html" style="background-color: ${COLORS.primary[10]};" 
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Quarterly Reports</a>
             <a href="${base}community-activity.html" style="background-color: ${COLORS.primary[10]};" 
@@ -50,7 +48,6 @@ function createNavHtml(relativePath = './') {
       
       <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden min-[1025px]:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
         <div class="flex flex-col space-y-2">          
-          <a href="${base}all-contributions.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">All-Time Stats</a>
           <a href="${base}reports.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
           <a href="${base}community-activity.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Community & Activity</a>
           <a href="${base}blog.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Articles</a>

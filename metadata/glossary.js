@@ -2,7 +2,7 @@
  * Metadata for the Glossary page.
  */
 const GLOSSARY_CONTENT = {
-  title: 'OSS Portfolio Glossary',
+  title: 'Glossary',
   subtitle: `This page explains the numbers and categories used to track {{GITHUB_USERNAME}}'s open source impact. It shows how contribution data is collected, sorted, and calculated.`,
 
   sections: [
@@ -10,7 +10,7 @@ const GLOSSARY_CONTENT = {
       id: 'portfolioWide',
       title: 'Portfolio-wide Metrics',
       description:
-        'Terms used on the main page and README to show the total work done over the entire project history.',
+        'Terms used on the main page and README to show the total work done across the full span of open source activity.',
       items: [
         {
           id: 'totalImpact',
