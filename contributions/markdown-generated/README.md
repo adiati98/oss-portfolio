@@ -1,12 +1,15 @@
 # 📈 Open Source Contributions Report
 
-Organized by calendar quarter, these reports track [**adiati98**](https://github.com/adiati98)'s external open source involvement since **2019**. This portfolio aggregates key community activities and **technical writing** insights.
+Organized by year and quarter, these reports track contributions made by **[adiati98](https://github.com/adiati98)** to repositories owned by others since **2019**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
+
+> [!IMPORTANT]
+> To understand the criteria used for these metrics or to see how specific categories are calculated, please refer to the [**Glossary**](./glossary.md).
 
 ---
 
 ## 📊 All-Time Impact Summary
 
-### 🚀 Total Contributions: **2259**
+### 🚀 Total Contributions: **2263**
 
 | Context                    | Detail                     |
 | :------------------------- | :------------------------- |
@@ -18,16 +21,16 @@ Organized by calendar quarter, these reports track [**adiati98**](https://github
 
 | Category            | Progress                         | Count   | Percentage |
 | :------------------ | :------------------------------- | :------ | :--------- |
-| **Merged PRs**      | `■■■■■■■□□□□□□□□□□□□□□□□□□□□□□□` | 508     | 22.5%      |
+| **Merged PRs**      | `■■■■■■■□□□□□□□□□□□□□□□□□□□□□□□` | 510     | 22.5%      |
 | **Issues**          | `■■■■■■■□□□□□□□□□□□□□□□□□□□□□□□` | 500     | 22.1%      |
-| **Reviewed PRs**    | `■■■■■■■■■□□□□□□□□□□□□□□□□□□□□□` | **642** | **28.4%**  |
+| **Reviewed PRs**    | `■■■■■■■■■□□□□□□□□□□□□□□□□□□□□□` | **643** | **28.4%**  |
 | **Co-Authored PRs** | `■■■■□□□□□□□□□□□□□□□□□□□□□□□□□□` | 266     | 11.8%      |
-| **Collaborations**  | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 343     | 15.2%      |
+| **Collaborations**  | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 344     | 15.2%      |
 
 ### 🎯 Primary Focus Projects
 
-1. [**OpenSource-Communities/guestbook**](https://github.com/OpenSource-Communities/guestbook) (642 contributions)
-2. [**mautic/user-documentation**](https://github.com/mautic/user-documentation) (300 contributions)
+1. [**OpenSource-Communities/guestbook**](https://github.com/OpenSource-Communities/guestbook) (643 contributions)
+2. [**mautic/user-documentation**](https://github.com/mautic/user-documentation) (303 contributions)
 3. [**Virtual-Coffee/virtualcoffee.io**](https://github.com/Virtual-Coffee/virtualcoffee.io) (262 contributions)
 
 ### 🎭 Collaboration Profile: Community Mentor
@@ -42,23 +45,6 @@ Beyond code contributions, I maintain active roles in community leadership and t
 
 - ✍️ **Technical Writing:** [**View full articles list (47)**](./blog.md)
 - 🏗️ **Roles & Impact:** [**View community leadership & activity**](./community-activity.md)
-
----
-
-## 🛠️ Report Structure Breakdown
-
-Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a detailed log and summary for that period. Use the table below to understand the metrics tracked in those reports:
-
-| Section                    | Description                                                                                                            | Key Metric Tracked               |
-| :------------------------- | :--------------------------------------------------------------------------------------------------------------------- | :------------------------------- |
-| **Quarterly Statistics**   | A high-level summary showing the **Total Contributions** and **Total Repositories** involved in during the quarter.    | Total Count, Unique Repositories |
-| **Contribution Breakdown** | A table listing the count of contributions for each of the core categories within that quarter.                        | Category Counts                  |
-| **Top 3 Repositories**     | The top three projects where contributions were made in that quarter, ranked by total count.                           | Contribution Frequency           |
-| **Merged PRs**             | **(Collapsible Section)** Detailed list of Pull Requests **authored by me** and merged into external repositories.     | **Review Period**                |
-| **Issues**                 | **(Collapsible Section)** Detailed list of Issues **authored by me** on external repositories.                         | **Closing Period**               |
-| **Reviewed PRs**           | **(Collapsible Section)** Detailed list of Pull Requests **reviewed or merged by me** on external repositories.        | **My First Review Period**       |
-| **Co-Authored PRs**        | **(Collapsible Section)** Pull Requests where **I contributed commits** to other contributor's PRs.                    | **My First Commit Period**       |
-| **Collaborations**         | **(Collapsible Section)** Detailed list of open Issues or PRs where I have **commented** to participate in discussion. | **First Commented At**           |
 
 ---
 
@@ -114,4 +100,4 @@ Each quarterly report file (`Qx-YYYY.md` inside the year folders) provides a det
 
 ---
 
-_Report last generated on: 4/11/2026, 1:41:02 AM_
+_Report last generated on: 4/12/2026, 12:30:06 AM_

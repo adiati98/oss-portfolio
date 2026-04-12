@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,7 +11,7 @@
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
       html,
       body {
         margin: 0;
@@ -22,7 +22,7 @@
         position: relative;
       }
       body {
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -96,14 +96,12 @@
         transition: transform 0.2s ease-in-out;
       }
 
-      /* Styling for the logic code blocks */
       code {
         font-family:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-          "Liberation Mono", "Courier New", monospace;
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+          monospace;
       }
 
-      /* Add a subtle hover effect to the border indicators */
       .group:hover .rounded-full,
       .group:hover .w-2 {
         filter: brightness(1.1);
@@ -111,7 +109,6 @@
         transition: all 0.2s ease;
       }
 
-      /* Style for the centered introduction */
       .intro-text {
         color: rgb(55, 65, 81);
         position: relative;
@@ -131,9 +128,7 @@
       style="background-color: rgb(67, 56, 202)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="./index.html"
@@ -146,12 +141,6 @@
 
         <div class="flex items-center">
           <div class="hidden min-[1025px]:flex items-center space-x-3">
-            <a
-              href="./all-contributions.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >All-Time Stats</a
-            >
             <a
               href="./reports.html"
               style="background-color: rgba(67, 56, 202, 0.1)"
@@ -185,11 +174,7 @@
               title="View Repository"
             >
               <span class="w-7 h-7 inline-block"
-                ><svg
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
+                ><svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
                   /></svg
@@ -240,11 +225,6 @@
       >
         <div class="flex flex-col space-y-2">
           <a
-            href="./all-contributions.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            >All-Time Stats</a
-          >
-          <a
             href="./reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
             >Quarterly Reports</a
@@ -266,10 +246,7 @@
           >
         </div>
 
-        <div
-          class="mt-3 pt-3"
-          style="border-top-color: rgb(67, 56, 202); border-top-width: 1px"
-        >
+        <div class="mt-3 pt-3" style="border-top-color: rgb(67, 56, 202); border-top-width: 1px">
           <a
             href="https://github.com/adiati98/oss-portfolio"
             target="_blank"
@@ -278,11 +255,7 @@
             title="View Repository"
           >
             <span class="w-6 h-6 inline-block"
-              ><svg
-                viewBox="0 0 16 16"
-                fill="currentColor"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              ><svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
                 /></svg
@@ -292,20 +265,19 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
         });
@@ -357,16 +329,12 @@
             style="border-bottom-color: rgba(67, 56, 202, 0.15)"
             class="text-center mt-16 mb-16 pb-12 border-b-2"
           >
-            <h1
-              style="color: rgb(67, 56, 202)"
-              class="text-4xl sm:text-6xl font-black mb-6 pt-8"
-            >
-              OSS Portfolio Glossary
+            <h1 style="color: rgb(67, 56, 202)" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+              Glossary
             </h1>
             <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600">
-              This page explains the numbers and categories used to track
-              adiati98's open source impact. It shows how contribution data is
-              collected, sorted, and calculated.
+              This page explains the numbers and categories used to track adiati98's open source
+              impact. It shows how contribution data is collected, sorted, and calculated.
             </p>
           </header>
           <div class="max-w-[90ch] mx-auto">
@@ -381,8 +349,8 @@
                       Portfolio-wide Metrics
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      Terms used on the main page and README to show the total
-                      work done over the entire project history.
+                      Terms used on the main page and README to show the total work done across the
+                      full span of open source activity.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -399,8 +367,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The total number of all recorded contributions made by
-                          adiati98 since the portfolio started.
+                          The total number of all recorded contributions made by adiati98 since the
+                          portfolio started.
                         </p>
 
                         <div
@@ -412,9 +380,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This value is the grand total of merged pull
-                            requests (PRs), issues, reviews, co-authored PRs,
-                            and community collaborations.
+                            This value is the grand total of merged pull requests (PRs), issues,
+                            reviews, co-authored PRs, and community collaborations.
                           </div>
                         </div>
                       </div>
@@ -432,8 +399,7 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The year of the first recorded contribution in this
-                          portfolio.
+                          The year of the first recorded contribution in this portfolio.
                         </p>
 
                         <div
@@ -445,9 +411,8 @@
                             Data Source
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This shows the date of the very first event found in
-                            the data, setting the starting point for the
-                            history.
+                            This shows the date of the very first event found in the data, setting
+                            the starting point for the history.
                           </div>
                         </div>
                       </div>
@@ -465,8 +430,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The total number of different open source projects
-                          where adiati98 has made at least one contribution.
+                          The total number of different open source projects where adiati98 has made
+                          at least one contribution.
                         </p>
 
                         <div
@@ -478,8 +443,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This counts every separate repository owned by
-                            others that has at least one tracked action.
+                            This counts every separate repository owned by others that has at least
+                            one tracked action.
                           </div>
                         </div>
                       </div>
@@ -497,8 +462,7 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A title given to adiati98 based on the main way of
-                          helping the community.
+                          A title given to adiati98 based on the main way of helping the community.
                         </p>
 
                         <div
@@ -510,9 +474,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system looks at which type of work is done most
-                            often. For example, doing many reviews results in a
-                            "Community Mentor" profile.
+                            The system looks at which type of work is done most often. For example,
+                            doing many reviews results in a "Community Mentor" profile.
                           </div>
                         </div>
                       </div>
@@ -528,8 +491,7 @@
                       Quarterly Reports
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      How the data is organized into seasons to make it easy to
-                      find and read.
+                      How the data is organized into seasons to make it easy to find and read.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -546,9 +508,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The main list of the portfolio. It organizes all work
-                          into separate pages grouped by year and three-month
-                          periods (quarters).
+                          The main list of the portfolio. It organizes all work into separate pages
+                          grouped by year and three-month periods (quarters).
                         </p>
 
                         <div
@@ -561,12 +522,9 @@
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
                             The
-                            <strong class="text-indigo-800 font-black"
-                              >Quarterly Reports</strong
-                            >
-                            page works like a folder, displaying the total
-                            activity for each year and its corresponding
-                            three-month periods.
+                            <strong class="text-indigo-800 font-black">Quarterly Reports</strong>
+                            page works like a folder, displaying the total activity for each year
+                            and its corresponding three-month periods.
                           </div>
                         </div>
                       </div>
@@ -582,8 +540,8 @@
                       Quarterly Report Metrics
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      Terms used inside individual reports to explain work done
-                      during a specific three-month window.
+                      Terms used inside individual reports to explain work done during a specific
+                      three-month window.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -600,9 +558,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A short summary that shows the total work and the
-                          projects involved during a specific three-month
-                          period.
+                          A short summary that shows the total work and the projects involved during
+                          a specific three-month period.
                         </p>
 
                         <div
@@ -614,9 +571,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system adds up all types of work and the number
-                            of repositories involved to show the total amount of
-                            activity for that quarter.
+                            The system adds up all types of work and the number of repositories
+                            involved to show the total amount of activity for that quarter.
                           </div>
                         </div>
                       </div>
@@ -634,8 +590,7 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The projects that received the most work and
-                          attention.
+                          The projects that received the most work and attention.
                         </p>
 
                         <div
@@ -647,8 +602,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system ranks repositories by the amount of
-                            activity to show where the most effort was spent.
+                            The system ranks repositories by the amount of activity to show where
+                            the most effort was spent.
                           </div>
                         </div>
                       </div>
@@ -666,8 +621,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of PRs created by adiati98 that were accepted
-                          and added to projects owned by others.
+                          A record of PRs created by adiati98 that were accepted and added to
+                          projects owned by others.
                         </p>
 
                         <div
@@ -680,11 +635,8 @@
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
                             This shows all work that was finalized (merged). The
-                            <strong class="text-indigo-800 font-black"
-                              >Review Period</strong
-                            >
-                            shows the time from the first proposal to the final
-                            acceptance.
+                            <strong class="text-indigo-800 font-black">Review Period</strong>
+                            shows the time from the first proposal to the final acceptance.
                           </div>
                         </div>
                       </div>
@@ -702,9 +654,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of technical discoveries, bug reports, and
-                          feature proposals created by adiati98 on projects
-                          owned by others.
+                          A record of technical discoveries, bug reports, and feature proposals
+                          created by adiati98 on projects owned by others.
                         </p>
 
                         <div
@@ -716,13 +667,10 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This includes all authored issue threads regardless
-                            of who is assigned to resolve them. The
-                            <strong class="text-indigo-800 font-black"
-                              >Closing Period</strong
-                            >
-                            shows the time from the opening of an issue until it
-                            is finished.
+                            This includes all authored issue threads regardless of who is assigned
+                            to resolve them. The
+                            <strong class="text-indigo-800 font-black">Closing Period</strong>
+                            shows the time from the opening of an issue until it is finished.
                           </div>
                         </div>
                       </div>
@@ -740,8 +688,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of PRs where adiati98 gave technical feedback
-                          or checked code quality on projects owned by others.
+                          A record of PRs where adiati98 gave technical feedback or checked code
+                          quality on projects owned by others.
                         </p>
 
                         <div
@@ -754,19 +702,12 @@
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
                             This tracks formal reviews. The
-                            <strong class="text-indigo-800 font-black"
-                              >Review Period</strong
-                            >
-                            shows the time from when the PR was created until it
-                            was finished. This highlights the speed and
-                            efficiency of the review process. The
-                            <strong class="text-indigo-800 font-black"
-                              >Status</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Review Period</strong>
+                            shows the time from when the PR was created until it was finished. This
+                            highlights the speed and efficiency of the review process. The
+                            <strong class="text-indigo-800 font-black">Status</strong>
                             shows the current state, and
-                            <strong class="text-indigo-800 font-black"
-                              >Last Update</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Last Update</strong>
                             shows the most recent activity.
                           </div>
                         </div>
@@ -785,8 +726,7 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of PRs where adiati98 worked directly on the
-                          code with others.
+                          A record of PRs where adiati98 worked directly on the code with others.
                         </p>
 
                         <div
@@ -798,21 +738,13 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This identifies work credited via co-author commit
-                            information. The
-                            <strong class="text-indigo-800 font-black"
-                              >Commit Period</strong
-                            >
-                            shows the time from when the PR was created until
-                            the first code contribution, showing when the actual
-                            work started. The
-                            <strong class="text-indigo-800 font-black"
-                              >Status</strong
-                            >
+                            This identifies work credited via co-author commit information. The
+                            <strong class="text-indigo-800 font-black">Commit Period</strong>
+                            shows the time from when the PR was created until the first code
+                            contribution, showing when the actual work started. The
+                            <strong class="text-indigo-800 font-black">Status</strong>
                             shows the standing of the work, and
-                            <strong class="text-indigo-800 font-black"
-                              >Last Update</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Last Update</strong>
                             shows when it was last changed.
                           </div>
                         </div>
@@ -831,8 +763,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of joining discussions and conversations
-                          within issues or PRs owned by others.
+                          A record of joining discussions and conversations within issues or PRs
+                          owned by others.
                         </p>
 
                         <div
@@ -844,8 +776,8 @@
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This tracks talking with other contributors and
-                            maintainers to help move a task toward completion.
+                            This tracks talking with other contributors and maintainers to help move
+                            a task toward completion.
                           </div>
                         </div>
                       </div>
@@ -861,8 +793,7 @@
                       Community & Leadership
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      Terms for ongoing roles and real-time community work led
-                      by adiati98.
+                      Terms for ongoing roles and real-time community work led by adiati98.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -879,8 +810,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of formal positions held by adiati98 within
-                          open source organizations.
+                          A record of formal positions held by adiati98 within open source
+                          organizations.
                         </p>
 
                         <div
@@ -892,15 +823,11 @@
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Entries come from a manually maintained metadata
-                            file. Roles are marked as
-                            <strong class="text-indigo-800 font-black"
-                              >Active</strong
-                            >
+                            Entries come from a manually maintained metadata file. Roles are marked
+                            as
+                            <strong class="text-indigo-800 font-black">Active</strong>
                             or
-                            <strong class="text-indigo-800 font-black"
-                              >Past</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Past</strong>
                             based on the recorded dates.
                           </div>
                         </div>
@@ -919,8 +846,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A live dashboard of work currently in progress,
-                          showing active engagement with the community.
+                          A live dashboard of work currently in progress, showing active engagement
+                          with the community.
                         </p>
 
                         <div
@@ -932,29 +859,17 @@
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Tasks come directly from GitHub and are sorted into
-                            four groups:
-                            <strong class="text-indigo-800 font-black"
-                              >To do issues</strong
-                            >
+                            Tasks come directly from GitHub and are sorted into four groups:
+                            <strong class="text-indigo-800 font-black">To do issues</strong>
                             (work in progress),
-                            <strong class="text-indigo-800 font-black"
-                              >Request review</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Request review</strong>
                             (PRs waiting for a review),
-                            <strong class="text-indigo-800 font-black"
-                              >Review in progress</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Review in progress</strong>
                             (reviews currently being done), and
-                            <strong class="text-indigo-800 font-black"
-                              >Bot request review</strong
-                            >
+                            <strong class="text-indigo-800 font-black">Bot request review</strong>
                             (automated bot requests waiting for a review). Only
-                            <strong class="text-indigo-800 font-black"
-                              >open</strong
-                            >
-                            items are shown; they are removed once they are
-                            merged or closed.
+                            <strong class="text-indigo-800 font-black">open</strong>
+                            items are shown; they are removed once they are merged or closed.
                           </div>
                         </div>
                       </div>
@@ -970,8 +885,8 @@
                       Community Engagement
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      Work that supports the growth and leadership of the open
-                      source community outside of writing code.
+                      Work that supports the growth and leadership of the open source community
+                      outside of writing code.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -988,9 +903,8 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          Blog posts and articles around open source that
-                          adiati98 wrote to support and advocate for the open
-                          source ecosystem.
+                          Blog posts and articles around open source that adiati98 wrote to support
+                          and advocate for the open source ecosystem.
                         </p>
 
                         <div
@@ -1002,9 +916,9 @@
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Data is aggregated from Dev.to (via automated API
-                            fetches) and freeCodeCamp (via manual curation). All
-                            entries are combined and sorted chronologically.
+                            Data is aggregated from Dev.to (via automated API fetches) and
+                            freeCodeCamp (via manual curation). All entries are combined and sorted
+                            chronologically.
                           </div>
                         </div>
                       </div>
@@ -1030,7 +944,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on April 11, 2026.
+        >'s open source contributions, generated on April 12, 2026.
       </div>
 
       <div class="text-xs mt-1">

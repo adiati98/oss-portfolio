@@ -102,7 +102,6 @@
         outline-offset: 2px;
       }
 
-      /* Keeps icon and text aligned horizontally inside summary */
       summary .inline-flex {
         display: inline-flex;
         align-items: center;
@@ -175,7 +174,6 @@
         background-color: #f9fafb;
       }
 
-      /* Table Header Sorting Alignment */
       .th-content {
         display: inline-flex;
         align-items: center;
@@ -191,7 +189,6 @@
         line-height: 1;
       }
 
-      /* Highlight the arrow for standard and custom status sorts */
       th.sort-asc .sort-icon,
       th.sort-desc .sort-icon,
       th.sort-custom1 .sort-icon,
@@ -201,7 +198,6 @@
         font-weight: bold;
       }
 
-      /* Search Bar Icon Positioning */
       .icon-input-container {
         position: relative;
       }
@@ -216,7 +212,6 @@
         pointer-events: none;
       }
 
-      /* Mobile Screen Optimization (320px screens) */
       @media (max-width: 400px) {
         summary .text-xl {
           font-size: 1.1rem !important;
@@ -251,12 +246,6 @@
         <div class="flex items-center">
           <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a
-              href="../all-contributions.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >All-Time Stats</a
-            >
-            <a
               href="../reports.html"
               style="background-color: rgba(67, 56, 202, 0.1)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
@@ -273,6 +262,12 @@
               style="background-color: rgba(67, 56, 202, 0.1)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Articles</a
+            >
+            <a
+              href="../glossary.html"
+              style="background-color: rgba(67, 56, 202, 0.1)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Glossary</a
             >
 
             <a
@@ -334,11 +329,6 @@
       >
         <div class="flex flex-col space-y-2">
           <a
-            href="../all-contributions.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            >All-Time Stats</a
-          >
-          <a
             href="../reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
             >Quarterly Reports</a
@@ -352,6 +342,11 @@
             href="../blog.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
             >Articles</a
+          >
+          <a
+            href="../glossary.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Glossary</a
           >
         </div>
 
@@ -459,7 +454,7 @@
                 style="background-color: rgb(67, 56, 202)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">52</p>
+                <p class="text-4xl font-extrabold">56</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -484,7 +479,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">34</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">36</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -531,7 +526,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">8</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">9</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -580,7 +575,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: rgb(67, 56, 202)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">3</span>
+                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">4</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
@@ -632,7 +627,7 @@
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >mautic/user-documentation</a
                   >
-                  (33 contributions)
+                  (36 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -641,7 +636,7 @@
                     class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
                     >OpenSource-Communities/guestbook</a
                   >
-                  (10 contributions)
+                  (11 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -680,7 +675,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (34)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (36)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -792,6 +787,58 @@
                         >
                       </td>
                       <td
+                        data-value='Cherry-pick: "7.0 - Cherry-picked from #269 - Adds documentation for the Multiple Company" to 7.1'
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/692"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Cherry-pick: "7.0 - Cherry-picked from #269 - Adds documentation for the
+                          Multiple Company" to 7.1</a
+                        >
+                      </td>
+                      <td data-value="2026-04-02T19:48:03Z" data-col-type="date">2026-04-02</td>
+                      <td data-value="2026-04-11T09:11:34Z" data-col-type="date">2026-04-11</td>
+                      <td data-value="9" data-col-type="number">9 days</td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>2.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value='Cherry-pick: "Docs: Update and restructure "Viewing and exporting Contacts in a Segment" to 7.1'
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/669"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Cherry-pick: "Docs: Update and restructure "Viewing and exporting
+                          Contacts in a Segment" to 7.1</a
+                        >
+                      </td>
+                      <td data-value="2026-03-13T04:56:13Z" data-col-type="date">2026-03-13</td>
+                      <td data-value="2026-04-11T09:04:22Z" data-col-type="date">2026-04-11</td>
+                      <td data-value="29" data-col-type="number">29 days</td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>3.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
                         data-value='Cherry-pick: "chore: Update Ubuntu version to ubuntu-24.04" to 5.x'
                         data-col-type="string"
                       >
@@ -810,7 +857,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>2.</td>
+                      <td>4.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -835,7 +882,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>3.</td>
+                      <td>5.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -861,7 +908,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>4.</td>
+                      <td>6.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -886,7 +933,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>5.</td>
+                      <td>7.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -912,7 +959,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>6.</td>
+                      <td>8.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -937,7 +984,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>7.</td>
+                      <td>9.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -962,7 +1009,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>8.</td>
+                      <td>10.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -987,7 +1034,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>9.</td>
+                      <td>11.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1012,7 +1059,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>10.</td>
+                      <td>12.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1038,7 +1085,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>11.</td>
+                      <td>13.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -1063,7 +1110,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>12.</td>
+                      <td>14.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1085,7 +1132,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>13.</td>
+                      <td>15.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1110,7 +1157,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>14.</td>
+                      <td>16.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1135,7 +1182,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>15.</td>
+                      <td>17.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -1160,7 +1207,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>16.</td>
+                      <td>18.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1185,7 +1232,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>17.</td>
+                      <td>19.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1210,7 +1257,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>18.</td>
+                      <td>20.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1235,7 +1282,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>19.</td>
+                      <td>21.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1260,7 +1307,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>20.</td>
+                      <td>22.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1285,7 +1332,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>21.</td>
+                      <td>23.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1310,7 +1357,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>22.</td>
+                      <td>24.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1335,7 +1382,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>23.</td>
+                      <td>25.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1360,7 +1407,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>24.</td>
+                      <td>26.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1385,7 +1432,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>25.</td>
+                      <td>27.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1410,7 +1457,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>26.</td>
+                      <td>28.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1435,7 +1482,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>27.</td>
+                      <td>29.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
@@ -1460,7 +1507,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>28.</td>
+                      <td>30.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
@@ -1485,7 +1532,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>29.</td>
+                      <td>31.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
@@ -1511,7 +1558,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>30.</td>
+                      <td>32.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/developer-documentation-new</span
@@ -1536,7 +1583,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>31.</td>
+                      <td>33.</td>
                       <td data-value="mautic/mautic-community-handbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/mautic-community-handbook</span
@@ -1561,7 +1608,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>32.</td>
+                      <td>34.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/low-no-code</span
@@ -1583,7 +1630,7 @@
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>33.</td>
+                      <td>35.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -1609,7 +1656,7 @@
                       class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>34.</td>
+                      <td>36.</td>
                       <td data-value="mautic/low-no-code" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/low-no-code</span
@@ -1923,7 +1970,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (8)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (9)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2045,6 +2092,41 @@
                         >
                       </td>
                       <td
+                        data-value="Add Aakash Neupane to contributors list in README"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/OpenSource-Communities/guestbook/pull/947"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add Aakash Neupane to contributors list in README</a
+                        >
+                      </td>
+                      <td data-value="2026-04-10T18:12:03Z" data-col-type="date">2026-04-10</td>
+                      <td data-value="2026-04-11T08:48:53Z" data-col-type="date">2026-04-11</td>
+                      <td data-value="1" data-col-type="number">1 day</td>
+                      <td data-value="OPEN" data-col-type="status">
+                        2026-04-11<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
+                          >OPEN</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>2.</td>
+                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >OpenSource-Communities/guestbook</span
+                        >
+                      </td>
+                      <td
                         data-value="docs: add @aaronthomas-09 as a contributor"
                         data-col-type="string"
                       >
@@ -2070,10 +2152,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>2.</td>
+                      <td>3.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2105,10 +2187,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>3.</td>
+                      <td>4.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2140,10 +2222,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>4.</td>
+                      <td>5.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2175,10 +2257,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>5.</td>
+                      <td>6.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2210,10 +2292,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>6.</td>
+                      <td>7.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2245,10 +2327,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>7.</td>
+                      <td>8.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2280,10 +2362,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>8.</td>
+                      <td>9.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >mautic/user-documentation</span
@@ -2607,7 +2689,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (3)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (4)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2713,6 +2795,40 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>1.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="Add introduction for Zapier plugin documentation"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/600"
+                          target="_blank"
+                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          >Add introduction for Zapier plugin documentation</a
+                        >
+                      </td>
+                      <td data-value="2026-01-15T18:13:35Z" data-col-type="date">2026-01-15</td>
+                      <td data-value="2026-04-11T09:15:21Z" data-col-type="date">2026-04-11</td>
+                      <td data-value="OPEN" data-col-type="status">
+                        2026-04-11<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="
+                            background-color: rgba(16, 185, 129, 0.1);
+                            color: rgb(16, 185, 129);
+                          "
+                          >OPEN</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td>2.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2740,10 +2856,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>2.</td>
+                      <td>3.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -2768,10 +2884,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td>3.</td>
+                      <td>4.</td>
                       <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
                         <span class="font-mono text-xs bg-gray-100 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
@@ -3136,7 +3252,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on April 11, 2026.
+        >'s open source contributions, generated on April 12, 2026.
       </div>
 
       <div class="text-xs mt-1">
