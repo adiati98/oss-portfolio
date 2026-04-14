@@ -1,6 +1,6 @@
 # 📈 Open Source Contributions Report
 
-Organized by year and quarter, these reports track contributions made by **[adiati98](https://github.com/adiati98)** to repositories owned by others since **2019**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
+Organized by year and quarter, these reports track contributions made by **[adiati98](https://github.com/adiati98)** to external repositories since **2019**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
 
 > [!IMPORTANT]
 > To understand the criteria used for these metrics or to see how specific categories are calculated, please refer to the [**Glossary**](./glossary.md).
@@ -100,4 +100,4 @@ Beyond code contributions, I maintain active roles in community leadership and t
 
 ---
 
-_Report last generated on: 4/14/2026, 1:41:39 AM_
+_Report last generated on: 4/14/2026, 8:18:20 AM_
