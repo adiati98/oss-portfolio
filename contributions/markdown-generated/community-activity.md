@@ -23,7 +23,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Looks like the code is behaving itself... for now._**
+> **_All quiet on this front. Well done!_**
 
 </details>
 
@@ -71,10 +71,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (29)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (30)</h3></summary>
 
 | Repository                      | Task                                                                                                                           |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| **virtualcoffee.io**            | [Bump next from 15.5.9 to 15.5.15](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1495)                               |
+| **developer-documentation-new** | [Bump esbonio from 1.1.0 to 2.0.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/323)                    |
 | **developer-documentation-new** | [Bump sphinxcontrib-phpdomain from 0.13.2 to 0.15.1 in /docs](https://github.com/mautic/developer-documentation-new/pull/308)  |
 | **developer-documentation-new** | [Bump attrs from 25.4.0 to 26.1.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/309)                    |
 | **developer-documentation-new** | [Bump sphinx from 8.0.2 to 9.1.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/301)                     |
@@ -84,7 +86,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
 | **virtualcoffee.io**            | [Bump node-forge from 1.3.3 to 1.4.0](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1491)                            |
 | **virtualcoffee.io**            | [Bump yaml from 2.8.2 to 2.8.3](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1490)                                  |
 | **virtualcoffee.io**            | [Bump picomatch from 2.3.1 to 2.3.2](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1489)                             |
-| **virtualcoffee.io**            | [Bump next from 15.5.9 to 15.5.14](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1488)                               |
 | **virtualcoffee.io**            | [Bump flatted from 3.3.3 to 3.4.2](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1487)                               |
 | **virtualcoffee.io**            | [Bump h3 from 1.15.4 to 1.15.9](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1486)                                  |
 | **virtualcoffee.io**            | [Bump tar from 7.5.2 to 7.5.11](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1480)                                  |
@@ -109,4 +110,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 13, 2026_
+_Last updated: April 14, 2026_
