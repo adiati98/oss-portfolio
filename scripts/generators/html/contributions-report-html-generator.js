@@ -1,21 +1,11 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-
-// Import the dedent utility
 const { dedent } = require('../../utils/dedent');
-
-// Import configuration
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-
-// Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-
-// Import favicon svg
 const { FAVICON_SVG_ENCODED, COLORS } = require('../../config/constants');
-
-// Import the new style generator function
 const { getReportsListStyleCss } = require('../css/style-generator');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';

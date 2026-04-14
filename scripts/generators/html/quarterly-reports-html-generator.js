@@ -9,11 +9,8 @@ const {
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
-
-// Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-
 const { getReportStyleCss } = require('../css/style-generator');
 const {
   LEFT_ARROW_SVG,
