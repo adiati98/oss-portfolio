@@ -1,9 +1,8 @@
 const fs = require('fs/promises');
 const path = require('path');
-
-// Import configuration
 const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
 const { GLOSSARY_CONTENT } = require('../../../metadata/glossary');
+const { personaCategories, DEFAULT_PERSONA } = require('../../../metadata/personas');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';
@@ -18,47 +17,26 @@ function determinePersona(counts) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + coAuthoredPrCount + collaborationCount;
 
-  const personaCategories = [
+  if (grandTotal === 0) {
+    return DEFAULT_PERSONA;
+  }
+
+  // Map the dynamic counts to the static metadata categories imported from personas.js
+  const categoriesWithCounts = [
+    { ...personaCategories.find((p) => p.title === 'Community Mentor'), count: reviewedPrCount },
+    { ...personaCategories.find((p) => p.title === 'Core Contributor'), count: prCount },
+    { ...personaCategories.find((p) => p.title === 'Project Architect'), count: issueCount },
     {
-      title: 'Community Mentor',
-      desc: 'Expert advocate for code quality and peer development. Code review and technical guidance ensure high standards across the community.',
-      count: reviewedPrCount,
-      priority: 1,
-    },
-    {
-      title: 'Core Contributor',
-      desc: 'Main driver of project development. Responsible for moving features from concept to production through robust code and resolving complex bugs to ensure software stability.',
-      count: prCount,
-      priority: 2,
-    },
-    {
-      title: 'Project Architect',
-      desc: 'Strategic problem-solver focused on technical discovery. Skilled at identifying critical system issues and defining feature planning that shapes the long-term technical roadmap.',
-      count: issueCount,
-      priority: 3,
-    },
-    {
-      title: 'Collaborative Partner',
-      desc: 'Focused on shared project success. Pair programming and co-authoring code delivers high-impact value through collective development effort.',
+      ...personaCategories.find((p) => p.title === 'Collaborative Partner'),
       count: coAuthoredPrCount,
-      priority: 4,
     },
     {
-      title: 'Ecosystem Partner',
-      desc: 'Community builder focused on technical discussion and engagement. Facilitates collaboration through project discussions to ensure the open source ecosystem remains vibrant and interconnected.',
+      ...personaCategories.find((p) => p.title === 'Ecosystem Partner'),
       count: collaborationCount,
-      priority: 5,
     },
   ];
 
-  if (grandTotal === 0) {
-    return {
-      title: 'Open Source Contributor',
-      desc: 'Active member of the global open source community.',
-    };
-  }
-
-  return personaCategories.reduce((prev, curr) => {
+  return categoriesWithCounts.reduce((prev, curr) => {
     if (curr.count > prev.count) return curr;
     if (curr.count === prev.count && curr.priority < prev.priority) return curr;
     return prev;
@@ -223,7 +201,6 @@ async function createStatsReadme(finalContributions, articles = []) {
   let glossarySectionsMd = '';
 
   groups.forEach((group) => {
-    // Determine the label for the third column based on the items in this group
     let noteHeader = 'Glossary Note';
     const hasEntryMethod = group.items.some((i) => i.entryMethod);
     const hasCalculation = group.items.some((i) => i.howItIsCalculated);
@@ -258,7 +235,7 @@ ${glossarySectionsMd}
   // 8. Build Markdown Content for README.md
   let markdownContent = `# 📈 Open Source Contributions Report
 
-Organized by year and quarter, these reports track contributions made by **[${GITHUB_USERNAME}](https://github.com/${GITHUB_USERNAME})** to repositories owned by others since **${earliestYear}**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
+Organized by year and quarter, these reports track contributions made by **[${GITHUB_USERNAME}](https://github.com/${GITHUB_USERNAME})** to external repositories since **${earliestYear}**. This portfolio summarizes all community activity—including merged, reviewed, and co-authored PRs, issues, and collaborations—alongside formal leadership roles, blog posts, and live tasks on the active workbench.
 
 > [!IMPORTANT]
 > To understand the criteria used for these metrics or to see how specific categories are calculated, please refer to the [**Glossary**](./${MARKDOWN_GLOSSARY_FILENAME}).

@@ -1,18 +1,11 @@
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
-
-// Import the dedent utility
 const { dedent } = require('../../utils/dedent');
-
-// Import configuration
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-
-// Import navbar and footer
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-
-// Import constants and SVGs
+const { personaCategories, DEFAULT_PERSONA } = require('../../../metadata/personas');
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
@@ -20,8 +13,6 @@ const {
   PULL_REQUEST_LARGE_SVG,
   INFO_ICON_SVG,
 } = require('../../config/constants');
-
-// Import style generators and helpers
 const { getIndexStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 
@@ -39,48 +30,21 @@ function determinePersona(counts) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + coAuthoredPrCount + collaborationCount;
 
-  const personaCategories = [
-    {
-      title: 'Community Mentor',
-      desc: 'Expert advocate for code quality and peer development. Code review and technical guidance ensure high standards across the community.',
-      count: reviewedPrCount,
-      priority: 1,
-    },
-    {
-      title: 'Core Contributor',
-      desc: 'Main driver of project development. Responsible for moving features from concept to production through robust code and resolving complex bugs to ensure software stability.',
-      count: prCount,
-      priority: 2,
-    },
-    {
-      title: 'Project Architect',
-      desc: 'Strategic problem-solver focused on technical discovery. Skilled at identifying critical system issues and defining feature planning that shapes the long-term technical roadmap.',
-      count: issueCount,
-      priority: 3,
-    },
-    {
-      title: 'Collaborative Partner',
-      desc: 'Focused on shared project success. Pair programming and co-authoring code delivers high-impact value through collective development effort.',
-      count: coAuthoredPrCount,
-      priority: 4,
-    },
-    {
-      title: 'Ecosystem Partner',
-      desc: 'Community builder focused on technical discussion and engagement. Facilitates collaboration through project discussions to ensure the open source ecosystem remains vibrant and interconnected.',
-      count: collaborationCount,
-      priority: 5,
-    },
-  ];
-
   // Default fallback for new users
   if (grandTotal === 0) {
-    return {
-      title: 'Open Source Contributor',
-      desc: 'Active member of the global open source community.',
-    };
+    return DEFAULT_PERSONA;
   }
 
-  return personaCategories.reduce((prev, curr) => {
+  // Map the dynamic counts to the static metadata categories
+  const categoriesWithCounts = [
+    { ...personaCategories.find(p => p.title === 'Community Mentor'), count: reviewedPrCount },
+    { ...personaCategories.find(p => p.title === 'Core Contributor'), count: prCount },
+    { ...personaCategories.find(p => p.title === 'Project Architect'), count: issueCount },
+    { ...personaCategories.find(p => p.title === 'Collaborative Partner'), count: coAuthoredPrCount },
+    { ...personaCategories.find(p => p.title === 'Ecosystem Partner'), count: collaborationCount },
+  ];
+
+  return categoriesWithCounts.reduce((prev, curr) => {
     if (curr.count > prev.count) return curr;
     if (curr.count === prev.count && curr.priority < prev.priority) return curr;
     return prev;
@@ -402,4 +366,4 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   console.log('Generated landing page successfully at: ' + HTML_OUTPUT_PATH);
 }
 
-module.exports = { createIndexHtml };
+module.exports = { createIndexHtml, determinePersona };
