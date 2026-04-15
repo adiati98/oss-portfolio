@@ -114,7 +114,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   // Build HTML Content
   const htmlContent = dedent`
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -125,10 +125,10 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     ${reportsListCss}
   </style>
 </head>
-<body class="bg-white antialiased">
+<body class="bg-white antialiased flex flex-col h-full min-h-full">
 ${navHtml}
   <main class="grow w-full">
-    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+    <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
           <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">

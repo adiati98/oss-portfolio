@@ -310,7 +310,7 @@ async function writeHtmlFiles(groupedContributions) {
     // Begin HTML structure for the report page.
     let htmlContent = dedent`
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -321,10 +321,10 @@ async function writeHtmlFiles(groupedContributions) {
     ${dynamicCss}
   </style>
 </head>
-<body>
+<body class="bg-white antialiased flex flex-col h-full min-h-full">
 ${navHtmlForReports}
   <main class="grow w-full">
-    <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+    <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-12 pb-4 border-b-2">
           <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>

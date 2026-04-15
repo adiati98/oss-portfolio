@@ -107,7 +107,7 @@ async function createGlossaryHtml() {
 
   const htmlContent = dedent`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" class="h-full">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -116,10 +116,10 @@ async function createGlossaryHtml() {
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>${glossaryCss}</style>
     </head>
-    <body class="bg-white antialiased flex flex-col min-h-screen">
+    <body class="bg-white antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
-        <div class="min-h-full px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
+        <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
               <h1 style="color: ${primaryColor};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
