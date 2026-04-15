@@ -442,32 +442,39 @@ function getGlossaryStyleCss() {
       line-height: 1.8;
     }
 
-    .metric-section {
-      transition: transform 0.2s ease-in-out;
+    /* The Block Code Look */
+    .glossary-code-block {
+      display: block;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
     }
 
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    /* Target the text inside to ensure monospace inheritance */
+    .glossary-code-block .text-sm {
+      font-family: inherit;
     }
 
-    .group:hover .rounded-full, 
-    .group:hover .w-2 {
-      filter: brightness(1.1);
-      transform: scaleX(1.2);
-      transition: all 0.2s ease;
+    /* Bold text: Clean, high-contrast, no background color */
+    .glossary-content strong {
+      color: #3730a3; /* text-indigo-800 */
+      font-weight: 900;
+      background-color: transparent !important;
+      padding: 0;
     }
 
-    .intro-text {
-      color: ${COLORS.text.secondary};
-      position: relative;
-      padding: 0 2rem;
+    /* Highlight the section when navigating via URL hash (#) */
+    :target {
+      background-color: ${COLORS.primary[5]};
+      border-radius: 1rem;
+      transition: background-color 0.5s ease;
+      padding: 1rem;
+      margin: -1rem;
+      scroll-margin-top: 100px;
     }
 
-    @media (max-width: 640px) {
-      .intro-text {
-        padding: 0;
-        font-size: 1.125rem;
-      }
+    :target h3 {
+      color: ${COLORS.primary.rgb} !important;
     }
   `;
 }

@@ -5,7 +5,7 @@ const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-const { personaCategories, DEFAULT_PERSONA } = require('../../../metadata/personas');
+const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,
@@ -171,7 +171,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   // Build the final HTML string
   const htmlContent = dedent`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" class="h-full">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -180,12 +180,12 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>${indexCss}</style>
     </head>
-    <body class="bg-white antialiased">
+    <body class="bg-white antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
-        <header class="pt-32 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
+        <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
           <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
               Open Source Portfolio
             </h1>
             <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75]}";>@${GITHUB_USERNAME}</h2>
@@ -195,7 +195,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
           </div>
         </header>
 
-        <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+        <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
           <div class="max-w-[120ch] mx-auto">
 
             <section>
@@ -265,13 +265,13 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
 
               <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
-                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-500 mb-4">Primary Focus Projects</h2>
+                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">Primary Focus Projects</h2>
                   <div class="divide-y divide-slate-100 min-w-0">${topReposHtml}</div>
                 </div>
                 
                 <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
                   <div>
-                    <h2 class="text-sm uppercase tracking-widest font-black text-slate-500 mb-4">
+                    <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">
                       Collaboration Profile
                     </h2>
                     <div>
@@ -295,7 +295,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
               </div>
 
               <section class="mt-16 pt-12 border-t border-slate-100">
-                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-500 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
+                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   
                   <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">

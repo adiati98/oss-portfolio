@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { BASE_DIR } = require('../../config/config');
-const { WORKBENCH_SUCCESS_MESSAGES } = require('../../../metadata/workbench-messages');
+const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 
 /**
  * Generates the Community & Activity Markdown report.
