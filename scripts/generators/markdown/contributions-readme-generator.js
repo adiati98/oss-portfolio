@@ -21,7 +21,6 @@ function determinePersona(counts) {
     return DEFAULT_PERSONA;
   }
 
-  // Map the dynamic counts to the static metadata categories imported from personas.js
   const categoriesWithCounts = [
     { ...personaCategories.find((p) => p.title === 'Community Mentor'), count: reviewedPrCount },
     { ...personaCategories.find((p) => p.title === 'Core Contributor'), count: prCount },
@@ -153,10 +152,9 @@ async function createStatsReadme(finalContributions, articles = []) {
           .join('\n')
       : '_No activity recorded yet._';
 
-  // 5. Dynamic year calculation (Safeguarded)
+  // 5. Dynamic year calculation
   const now = new Date();
   const currentYear = now.getFullYear();
-
   const yearsActive = allItems
     .map((item) => new Date(item.date).getFullYear())
     .filter((year) => !isNaN(year) && year >= 2008);
@@ -216,8 +214,14 @@ async function createStatsReadme(finalContributions, articles = []) {
     glossarySectionsMd += `| :--- | :--- | :--- |\n`;
 
     group.items.forEach((item) => {
-      const note = item.entryMethod || item.howItIsCalculated || item.source || '';
-      glossarySectionsMd += `| **${item.title}** | ${personalize(item.description)} | ${personalize(note)} |\n`;
+      const rawNote = item.entryMethod || item.howItIsCalculated || item.source || '';
+      
+      const tableSafeNote = personalize(rawNote)
+        .trim()
+        .replace(/\n/g, '<br>')
+        .replace(/(^|<br>)\s*\*\s+/g, '$1• ');
+
+      glossarySectionsMd += `| **${item.title}** | ${personalize(item.description)} | ${tableSafeNote} |\n`;
     });
 
     glossarySectionsMd += '\n';
