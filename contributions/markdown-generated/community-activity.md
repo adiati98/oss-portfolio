@@ -23,7 +23,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Mission accomplished. No tasks found._**
+> **_All quiet on this front. Well done!_**
 
 </details>
 
@@ -52,12 +52,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 | Repository                      | Task                                                                                                               |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------- |
+| **guestbook**                   | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)           |
 | **guestbook**                   | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)  |
 | **guestbook**                   | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)         |
 | **user-documentation**          | [Campaign import export user docs](https://github.com/mautic/user-documentation/pull/361)                          |
 | **developer-documentation-new** | [Documenting "withContactCounts" for campaign API](https://github.com/mautic/developer-documentation-new/pull/293) |
 | **guestbook**                   | [feat: Add ArunKumar235 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/943)            |
-| **guestbook**                   | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)           |
 | **guestbook**                   | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934)    |
 | **guestbook**                   | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)       |
 | **user-documentation**          | [docs: Add Tags documentation for Contact management](https://github.com/mautic/user-documentation/pull/647)       |
@@ -110,4 +110,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 14, 2026_
+_Last updated: April 15, 2026_
