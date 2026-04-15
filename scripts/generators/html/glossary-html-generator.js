@@ -6,7 +6,7 @@ const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { COLORS, FAVICON_SVG_ENCODED } = require('../../config/constants');
-const { GLOSSARY_CONTENT } = require('../../../metadata/glossary');
+const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
 const { getColorValue } = require('../../utils/color-helpers');
 const { getGlossaryStyleCss } = require('../css/style-generator');
 

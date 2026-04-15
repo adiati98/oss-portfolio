@@ -5,7 +5,7 @@ const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-const { personaCategories, DEFAULT_PERSONA } = require('../../../metadata/personas');
+const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
 const {
   RIGHT_ARROW_SVG,
   FAVICON_SVG_ENCODED,

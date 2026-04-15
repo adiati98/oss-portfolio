@@ -1,8 +1,8 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
-const { GLOSSARY_CONTENT } = require('../../../metadata/glossary');
-const { personaCategories, DEFAULT_PERSONA } = require('../../../metadata/personas');
+const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
+const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';

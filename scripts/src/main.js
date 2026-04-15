@@ -5,7 +5,7 @@ const fs = require('fs/promises');
 const { BLOG } = require('../config/config');
 
 // Import Leadership Metadata
-const leadershipData = require('../../metadata/leadership');
+const leadershipData = require('../../contents/leadership');
 
 // Import core fetching logic
 const { fetchContributions, fetchOngoingReviews } = require('../api/github-api-fetchers');

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { BLOG } = require('../config/config');
-const fccStaticArticles = require('../../metadata/fcc-articles');
+const fccStaticArticles = require('../../contents/fcc-articles');
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

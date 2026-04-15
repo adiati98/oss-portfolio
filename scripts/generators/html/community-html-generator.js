@@ -11,7 +11,7 @@ const {
   SPARKLES_SVG,
   WORKBENCH_STATUS_COLORS,
 } = require('../../config/constants');
-const { WORKBENCH_SUCCESS_MESSAGES } = require('../../../metadata/workbench-messages');
+const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
