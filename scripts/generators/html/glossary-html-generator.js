@@ -19,28 +19,31 @@ async function createGlossaryHtml() {
   const glossaryCss = getGlossaryStyleCss();
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
-  const primaryColor = getColorValue(COLORS.primary);
+  const primaryColor = COLORS.primary.rgb;
 
   const processText = (text) => {
+    if (!text) return '';
     return (
       text
-        // 1. Bold labels: Use indigo-800 and font-black
-        .replace(/\*\*(.*?)\*\*/g, '<strong class="text-indigo-800 font-black">$1</strong>')
+        // 1. Transform backticks into a styled span
+        .replace(/`(.*?)`/g, '<span class="glossary-inline-code">$1</span>')
 
-        // 2. List items: Wrap the whole line in indigo-600
-        // This ensures the non-bolded text (the description) is indigo
+        // 2. Bold labels
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+
+        // 3. List items: Wrap lines starting with '*' or '-' in <li>
         .replace(
-          /^\s*\*\s+(.*)$/gm,
+          /^\s*[*|-]\s+(.*)$/gm,
           '<li class="ml-4 list-disc list-inside text-indigo-600">$1</li>'
         )
 
-        // 3. Wrap <li> groups in <ul>
+        // 4. Wrap <li> groups in <ul>
         .replace(/(<li.*?>.*?<\/li>)+/g, '<ul class="my-3 space-y-1 text-indigo-600">$1</ul>')
 
-        // 4. Cleanup space after <ul>
+        // 5. Cleanup
         .replace(/<\/ul>\s+/g, '</ul>')
 
-        // 5. Convert remaining newlines to <br>
+        // 6. Convert remaining newlines to <br>
         .replace(/\n(?!<ul|<li)/g, '<br>')
     );
   };
@@ -50,15 +53,14 @@ async function createGlossaryHtml() {
     .map((group) => {
       const itemsHtml = group.items
         .map((item) => {
-          // Inside the itemsHtml.map function
           const description = processText(item.description);
 
-          // 1. Find the content from any of the three possible keys
+          // Find the content from possible keys
           const rawNote = item.entryMethod || item.howItIsCalculated || item.source || '';
           const processedNote = processText(rawNote);
 
-          // 2. Determine the Label dynamically
-          let label = 'Glossary Note'; // The "middle ground" fallback
+          // Determine the Label dynamically
+          let label = 'Glossary Note';
           if (item.entryMethod) label = 'Entry Method';
           if (item.howItIsCalculated) label = 'Calculation Logic';
           if (item.source) label = 'Data Source';
@@ -75,7 +77,7 @@ async function createGlossaryHtml() {
                   ${description}
                 </p>
                 
-                <div class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto">
+                <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                   <span class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono">
                     ${label}
                   </span>
@@ -111,7 +113,7 @@ async function createGlossaryHtml() {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Glossary | ${GITHUB_USERNAME} Portfolio</title>
+      <title>Glossary | ${GITHUB_USERNAME} OSS Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>${glossaryCss}</style>
@@ -146,6 +148,8 @@ async function createGlossaryHtml() {
 
   const formattedContent = await prettier.format(htmlContent, { parser: 'html' });
   await fs.writeFile(outputPath, formattedContent, 'utf8');
+
+  console.log('Generated glossary page successfully at: ' + outputPath);
 }
 
 module.exports = { createGlossaryHtml };
