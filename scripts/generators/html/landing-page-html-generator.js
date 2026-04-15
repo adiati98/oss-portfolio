@@ -171,7 +171,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   // Build the final HTML string
   const htmlContent = dedent`
     <!DOCTYPE html>
-    <html lang="en">
+    <html lang="en" class="h-full">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -180,12 +180,12 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       <style>${indexCss}</style>
     </head>
-    <body class="bg-white antialiased">
+    <body class="bg-white antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
-        <header class="pt-32 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
+        <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
           <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-black mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
               Open Source Portfolio
             </h1>
             <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75]}";>@${GITHUB_USERNAME}</h2>
@@ -195,7 +195,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
           </div>
         </header>
 
-        <div class="min-h-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+        <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
           <div class="max-w-[120ch] mx-auto">
 
             <section>
