@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Glossary | adiati98 Portfolio</title>
+    <title>Glossary | adiati98 OSS Portfolio</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -92,38 +92,43 @@
         line-height: 1.8;
       }
 
-      .metric-section {
-        transition: transform 0.2s ease-in-out;
+      /* The Block Code Look */
+      .glossary-code-block {
+        display: block;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
       }
 
-      code {
-        font-family:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
-          monospace;
+      /* Target the text inside to ensure monospace inheritance */
+      .glossary-code-block .text-sm {
+        font-family: inherit;
       }
 
-      .group:hover .rounded-full,
-      .group:hover .w-2 {
-        filter: brightness(1.1);
-        transform: scaleX(1.2);
-        transition: all 0.2s ease;
+      /* Bold text: Clean, high-contrast, no background color */
+      .glossary-content strong {
+        color: #3730a3; /* text-indigo-800 */
+        font-weight: 900;
+        background-color: transparent !important;
+        padding: 0;
       }
 
-      .intro-text {
-        color: rgb(55, 65, 81);
-        position: relative;
-        padding: 0 2rem;
+      /* Highlight the section when navigating via URL hash (#) */
+      :target {
+        background-color: rgba(67, 56, 202, 0.05);
+        border-radius: 1rem;
+        transition: background-color 0.5s ease;
+        padding: 1rem;
+        margin: -1rem;
+        scroll-margin-top: 100px;
       }
 
-      @media (max-width: 640px) {
-        .intro-text {
-          padding: 0;
-          font-size: 1.125rem;
-        }
+      :target h3 {
+        color: rgb(67, 56, 202) !important;
       }
     </style>
   </head>
-  <body class="bg-white antialiased flex flex-col min-h-screen">
+  <body class="bg-white antialiased flex flex-col h-full min-h-full">
     <nav
       style="background-color: rgb(67, 56, 202)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
@@ -323,7 +328,7 @@
       }
     </style>
     <main class="grow w-full">
-      <div class="min-h-full px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
+      <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
         <div class="max-w-7xl mx-auto">
           <header
             style="border-bottom-color: rgba(67, 56, 202, 0.15)"
@@ -368,21 +373,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The total number of all recorded contributions made since the portfolio
-                          started.
+                          The total number of all recorded contributions since the very first
+                          activity on GitHub.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This value is the grand total of merged PRs, issues, reviews,
-                            co-authored PRs, and community collaborations.
+                            Adds the grand total of merged PRs, issues, reviewed PRs, co-authored
+                            PRs, and community collaborations.
                           </div>
                         </div>
                       </div>
@@ -400,20 +403,18 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The year of the first recorded contribution in this portfolio.
+                          The year of the first recorded contribution found on GitHub.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
-                            Data Source
+                            Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This shows the date of the very first event found in the data, setting
-                            the starting point for the history.
+                            Identifies the date of the very first contribution found in the data to
+                            set the starting point for the history.
                           </div>
                         </div>
                       </div>
@@ -431,21 +432,48 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The total number of different open source projects with at least one
-                          contribution.
+                          The total number of open source projects with at least one contribution.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This counts every separate repository owned by others that has at least
-                            one tracked action.
+                            Identifies every unique external repository containing at least one
+                            recorded contribution.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="primaryFocusProjects" class="mb-16 last:mb-0">
+                      <h3
+                        style="
+                          color: rgb(67, 56, 202);
+                          border-bottom: 2px solid rgba(67, 56, 202, 0.15);
+                        "
+                        class="text-xl font-extrabold mb-6 pb-2 inline-block"
+                      >
+                        Primary Focus Projects
+                      </h3>
+
+                      <div class="space-y-6">
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                          The top three repositories where the highest contributions have occurred
+                          since the first year of contribution.
+                        </p>
+
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
+                          <span
+                            class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
+                          >
+                            Calculation Logic
+                          </span>
+                          <div class="text-sm text-indigo-600 leading-relaxed">
+                            Ranks all tracked repositories by lifetime contribution volume and
+                            selects the top three.
                           </div>
                         </div>
                       </div>
@@ -463,22 +491,18 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          An identity assigned based on the primary way of contributing to the
-                          community.
+                          A role assigned based on the primary way of contributing to the community.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system analyzes which type of work is performed most frequently. For
-                            example, a high volume of reviewed PRs results in a "Community Mentor"
-                            profile.
+                            Analyzes contribution frequency across all categories to assign a role,
+                            such as "Community Mentor" for high review volumes.
                           </div>
                         </div>
                       </div>
@@ -494,7 +518,7 @@
                       Quarterly Reports
                     </h2>
                     <p class="text-slate-500 text-lg font-medium italic">
-                      How the data is organized into seasons to make it easy to find and read.
+                      How the data is organized into quarters to make it easy to find and read.
                     </p>
                   </div>
                   <div class="space-y-2">
@@ -515,19 +539,16 @@
                           grouped by year and three-month periods (quarters).
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Data Source
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The
-                            <strong class="text-indigo-800 font-black">Quarterly Reports</strong>
-                            page works like a folder, displaying the total activity for each year
-                            and its corresponding three-month periods.
+                            The <strong>Quarterly Reports</strong> page works like a folder,
+                            displaying the total contributions for each year and its corresponding
+                            three-month periods.
                           </div>
                         </div>
                       </div>
@@ -561,21 +582,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A short summary that shows the total work and the projects involved during
-                          a specific three-month period.
+                          A summary that shows the total work and the projects involved during a
+                          specific three-month period.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system adds up all types of work and the number of repositories
-                            involved to show the total amount of activity for that quarter.
+                            Aggregates all contribution types and unique repositories involved
+                            within a specific three-month window.
                           </div>
                         </div>
                       </div>
@@ -593,20 +612,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          The projects that received the most work and attention.
+                          The projects that received the most work and attention within each
+                          quarter.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            The system ranks repositories by the amount of activity to show where
-                            the most effort was spent.
+                            Ranks repositories by the volume of contributions performed during the
+                            quarter.
                           </div>
                         </div>
                       </div>
@@ -624,21 +642,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of PRs that were accepted and added to projects owned by others.
+                          A record of PRs that were accepted and added to external repositories.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This shows all work that was finalized (merged). The
-                            <strong class="text-indigo-800 font-black">Review Period</strong>
-                            shows the time from the first proposal to the final acceptance.
+                            Identifies PRs with a merged status and calculates the
+                            <strong>Review Period</strong> as the time from the first proposal to
+                            final acceptance.
                           </div>
                         </div>
                       </div>
@@ -657,22 +673,19 @@
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
                           A record of technical discoveries, bug reports, and feature proposals
-                          created on projects owned by others.
+                          created on external repositories.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This includes all authored issue threads regardless of who is assigned
-                            to resolve them. The
-                            <strong class="text-indigo-800 font-black">Closing Period</strong>
-                            shows the time from the opening of an issue until it is finished.
+                            Collects all authored issues regardless of assignment. It calculates the
+                            <strong>Closing Period</strong> as the time from the initial opening
+                            until the issue is finished.
                           </div>
                         </div>
                       </div>
@@ -690,27 +703,20 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of formal reviews on PRs where technical feedback or code quality
-                          was evaluated on projects owned by others.
+                          A record of formal reviews provided on PRs within external repositories.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This tracks formal reviews. The
-                            <strong class="text-indigo-800 font-black">Review Period</strong>
-                            shows the time from when the PR was created until it was finished. This
-                            highlights the speed and efficiency of the review process. The
-                            <strong class="text-indigo-800 font-black">Status</strong>
-                            shows the current state, and
-                            <strong class="text-indigo-800 font-black">Last Update</strong>
-                            shows the most recent activity.
+                            Measures the <strong>Review Period</strong> from the creation of the PR
+                            to the submission of the formal review, while tracking the
+                            <strong>Status</strong> and <strong>Last Update</strong> columns for the
+                            current state and the most recent activity.
                           </div>
                         </div>
                       </div>
@@ -728,26 +734,22 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of PRs where work was performed directly on the code with others.
+                          A record of PRs where contributions were made directly to the code
+                          alongside other developers.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This identifies work credited via co-author commit information. The
-                            <strong class="text-indigo-800 font-black">Commit Period</strong>
-                            shows the time from when the PR was created until the first code
-                            contribution, showing when the actual work started. The
-                            <strong class="text-indigo-800 font-black">Status</strong>
-                            shows the standing of the work, and
-                            <strong class="text-indigo-800 font-black">Last Update</strong>
-                            shows when it was last changed.
+                            Identifies credit via co-author commit information. The
+                            <strong>Commit Period</strong> spans from the creation of the PR to the
+                            first code contribution to indicate when the collaboration started. The
+                            <strong>Status</strong> and <strong>Last Update</strong> columns track
+                            the current state and the most recent activity.
                           </div>
                         </div>
                       </div>
@@ -765,21 +767,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg text-slate-600 leading-relaxed">
-                          A record of joining discussions and conversations within issues or PRs
-                          owned by others.
+                          A record of participation in discussions within issues or PRs authored by
+                          others in external repositories.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Calculation Logic
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            This tracks talking with other contributors and maintainers to help move
-                            a task toward completion.
+                            Tracks comments on PRs and issues unless or until they are officially
+                            reviewed.
                           </div>
                         </div>
                       </div>
@@ -816,18 +816,16 @@
                           the open source community.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Entries are manually maintained in a metadata file. Each record includes
-                            the achievement title, the granting organization, and the year it was
-                            received.
+                            Entries are manually maintained in files within the contents folder.
+                            Each record includes the achievement title, the granting organization,
+                            and the year it was received.
                           </div>
                         </div>
                       </div>
@@ -848,21 +846,17 @@
                           A record of formal positions held within open source organizations.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Entries come from a manually maintained metadata file. Roles are marked
-                            as
-                            <strong class="text-indigo-800 font-black">Active</strong>
-                            or
-                            <strong class="text-indigo-800 font-black">Past</strong>
-                            based on the recorded dates.
+                            Entries originate from files within the contents folder. Roles are
+                            marked as
+                            <strong>Active</strong> or <strong>Past</strong> based on the recorded
+                            dates.
                           </div>
                         </div>
                       </div>
@@ -883,47 +877,39 @@
                           A live dashboard of work currently in progress.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Tasks are fetched from GitHub and sorted into groups:
+                            Fetches open tasks from GitHub and filters for active priorities,
+                            excluding legacy projects where maintenance is no longer performed.
+                            Tasks are sorted into groups:
                             <ul class="my-3 space-y-1 text-indigo-600">
                               <li class="ml-4 list-disc list-inside text-indigo-600">
-                                <strong class="text-indigo-800 font-black">To do issues:</strong>
-                                Assigned issues
+                                <strong>To do issues:</strong> Assigned issues
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 text-indigo-600">
                               <li class="ml-4 list-disc list-inside text-indigo-600">
-                                <strong class="text-indigo-800 font-black">Request review:</strong>
-                                PRs waiting for a review
+                                <strong>Request review:</strong> PRs waiting for a review
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 text-indigo-600">
                               <li class="ml-4 list-disc list-inside text-indigo-600">
-                                <strong class="text-indigo-800 font-black"
-                                  >Review in progress:</strong
-                                >
-                                Reviews currently being done
+                                <strong>Review in progress:</strong> Reviews currently being done
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 text-indigo-600">
                               <li class="ml-4 list-disc list-inside text-indigo-600">
-                                <strong class="text-indigo-800 font-black"
-                                  >Bot request review:</strong
-                                >
-                                Automated bot requests waiting for a review
+                                <strong>Bot request review:</strong> Automated bot requests waiting
+                                for a review
                               </li>
                             </ul>
-                            Only
-                            <strong class="text-indigo-800 font-black">open</strong>
-                            items are shown; they are removed once they are merged or closed.
+                            Only open items are shown; they are removed once they are merged or
+                            closed.
                           </div>
                         </div>
                       </div>
@@ -961,18 +947,16 @@
                           for the open source ecosystem.
                         </p>
 
-                        <div
-                          class="bg-slate-50 border border-slate-200 rounded-2xl p-6 overflow-x-auto"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
                           >
                             Entry Method
                           </span>
                           <div class="text-sm text-indigo-600 leading-relaxed">
-                            Data is aggregated from Dev.to (via automated API fetches) and
-                            freeCodeCamp (via manual curation). All entries are combined and sorted
-                            chronologically.
+                            Data is aggregated from Dev.to via automated API fetches and combined
+                            with manual entries (such as freeCodeCamp) maintained in the contents
+                            folder. All entries are combined and sorted chronologically.
                           </div>
                         </div>
                       </div>
