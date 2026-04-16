@@ -23,7 +23,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Mission accomplished. No tasks found._**
+> **_Zero tasks. The ecosystem is in good hands!_**
 
 </details>
 
@@ -71,10 +71,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (30)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (31)</h3></summary>
 
 | Repository                      | Task                                                                                                                           |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| **virtualcoffee.io**            | [Bump follow-redirects from 1.15.11 to 1.16.0](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1496)                   |
 | **virtualcoffee.io**            | [Bump next from 15.5.9 to 15.5.15](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1495)                               |
 | **developer-documentation-new** | [Bump esbonio from 1.1.0 to 2.0.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/323)                    |
 | **developer-documentation-new** | [Bump sphinxcontrib-phpdomain from 0.13.2 to 0.15.1 in /docs](https://github.com/mautic/developer-documentation-new/pull/308)  |
@@ -110,4 +111,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 15, 2026_
+_Last updated: April 16, 2026_
