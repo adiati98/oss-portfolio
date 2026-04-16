@@ -22,7 +22,6 @@ const rightArrowSvg = RIGHT_ARROW_SVG;
 
 /**
  * Determines the persona title and description based on contribution counts.
- * Logic ranks based on volume and specific priority weights.
  */
 function determinePersona(counts) {
   const { prCount, issueCount, reviewedPrCount, coAuthoredPrCount, collaborationCount } = counts;
@@ -30,36 +29,28 @@ function determinePersona(counts) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + coAuthoredPrCount + collaborationCount;
 
-  // Default fallback for new users
   if (grandTotal === 0) {
     return DEFAULT_PERSONA;
   }
 
-  // Map the dynamic counts to the static metadata categories
-  const categoriesWithCounts = [
-    { ...personaCategories.find(p => p.title === 'Community Mentor'), count: reviewedPrCount },
-    { ...personaCategories.find(p => p.title === 'Core Contributor'), count: prCount },
-    { ...personaCategories.find(p => p.title === 'Project Architect'), count: issueCount },
-    { ...personaCategories.find(p => p.title === 'Collaborative Partner'), count: coAuthoredPrCount },
-    { ...personaCategories.find(p => p.title === 'Ecosystem Partner'), count: collaborationCount },
-  ];
+  // Use the categories metadata directly with the counts dictionary
+  return personaCategories.reduce((prev, curr) => {
+    const currentCount = counts[curr.key] || 0;
+    const prevCount = counts[prev.key] || 0;
 
-  return categoriesWithCounts.reduce((prev, curr) => {
-    if (curr.count > prev.count) return curr;
-    if (curr.count === prev.count && curr.priority < prev.priority) return curr;
+    if (currentCount > prevCount) return curr;
+    if (currentCount === prevCount && curr.priority < prev.priority) return curr;
+
     return prev;
   });
 }
 
 /**
  * Generates the main landing page for the portfolio.
- * Aggregates lifetime stats and displays the collaboration persona.
  */
 async function createIndexHtml(finalContributions = {}, articles = []) {
-  // Ensure the output directory exists
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  // Calculate high-level counts
   const prCount = finalContributions.pullRequests?.length || 0;
   const issueCount = finalContributions.issues?.length || 0;
   const reviewedPrCount = finalContributions.reviewedPrs?.length || 0;
@@ -73,7 +64,15 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
 
-  // Flatten all items to find date ranges
+  // Group counts for the persona determiner
+  const countsDict = {
+    prCount,
+    issueCount,
+    reviewedPrCount,
+    coAuthoredPrCount,
+    collaborationCount,
+  };
+
   const allItems = [
     ...(finalContributions.pullRequests || []),
     ...(finalContributions.issues || []),
@@ -82,13 +81,16 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     ...(finalContributions.collaborations || []),
   ];
 
-  // Determine active years for the "Active Since" badge
   const yearsActive = allItems
     .map((item) => new Date(item.date).getFullYear())
     .filter((year) => !isNaN(year) && year >= 2008);
 
   const currentYear = new Date().getFullYear();
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
+
+  // Yearly Average calculation
+  const yearSpan = Math.max(1, currentYear - earliestYear + 1);
+  const yearlyAverage = (grandTotal / yearSpan).toFixed(0);
 
   const maxCount = Math.max(
     prCount,
@@ -98,7 +100,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     collaborationCount
   );
 
-  // Helper for percentage calculations
   const getStats = (count) => {
     if (grandTotal === 0) return { pct: 0, pctStr: '0%' };
     const pct = (count / grandTotal) * 100;
@@ -113,7 +114,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     collab: getStats(collaborationCount),
   };
 
-  // Identify top repositories for the focus section
   const uniqueRepos = new Set(allItems.map((item) => item.repo));
   const totalUniqueRepos = uniqueRepos.size;
 
@@ -126,7 +126,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3);
 
-  // Generate HTML for the repository list
   const topReposHtml =
     topThreeRepos.length > 0
       ? topThreeRepos
@@ -154,21 +153,12 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
           .join('')
       : '<p class="text-sm text-slate-500 font-medium italic">No activity recorded yet.</p>';
 
-  // Determine the Persona
-  const { title: personaTitle, desc: personaDesc } = determinePersona({
-    prCount,
-    issueCount,
-    reviewedPrCount,
-    coAuthoredPrCount,
-    collaborationCount,
-  });
+  const { title: personaTitle, desc: personaDesc } = determinePersona(countsDict);
 
-  // Generate standard components
   const footerHtml = createFooterHtml();
   const indexCss = getIndexStyleCss();
   const navHtml = createNavHtml('./');
 
-  // Build the final HTML string
   const htmlContent = dedent`
     <!DOCTYPE html>
     <html lang="en" class="h-full">
@@ -183,13 +173,13 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     <body class="bg-white antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
-        <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${COLORS.border.light};">
+        <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${getColorValue(COLORS.border.light)};">
           <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${COLORS.primary.rgb};">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${getColorValue(COLORS.primary)};">
               Open Source Portfolio
             </h1>
-            <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${COLORS.primary[75]}";>@${GITHUB_USERNAME}</h2>
-            <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${COLORS.text.secondary};">
+            <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${getColorValue(COLORS.primary[75])}";>@${GITHUB_USERNAME}</h2>
+            <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${getColorValue(COLORS.text.secondary)};">
               A comprehensive visualization of open source contributions, from high-level impact to granular quarterly details.
             </p>
           </div>
@@ -214,8 +204,8 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                       <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${articleCount}</p></div>
-                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
+                      <div class="h-8 flex items-end"><p class="text-2xl sm:text-3xl font-black leading-none">${yearlyAverage}</p></div>
+                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Yearly Average</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                       <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
@@ -245,10 +235,10 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
 
                       return `
                     <div class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
-                      <div class="flex justify-between items-end mb-2">
-                        <span ${labelStyle} class="text-lg">${label}</span>
+                      <div class="flex justify-between items-center mb-2">
+                        <span ${labelStyle} class="text-lg leading-tight mt-1">${label}</span>
                         <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'}">${count}</span>
+                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-bold ${isHighest ? 'text-2xl sm:text-3xl' : 'text-xl sm:text-2xl'} leading-none">${count}</span>
                           <span class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold">${s.pctStr}</span>
                         </div>
                       </div>
@@ -281,7 +271,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                   </div>
                   
                   <div class="mt-6 pt-4 border-t border-slate-100 flex items-start">
-                    <span style="color: ${COLORS.primary.rgb};" class="mr-3 mt-0.5 shrink-0">
+                    <span style="color: ${getColorValue(COLORS.primary)};" class="mr-3 mt-0.5 shrink-0">
                       ${INFO_ICON_SVG}
                     </span>
                     <p class="text-xs text-slate-500 leading-snug">
@@ -357,10 +347,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
     </html>
   `;
 
-  // Format the HTML content using Prettier
   const formattedContent = await prettier.format(htmlContent, { parser: 'html' });
-
-  // Write the formatted file to disk
   await fs.writeFile(HTML_OUTPUT_PATH, formattedContent, 'utf8');
 
   console.log('Generated landing page successfully at: ' + HTML_OUTPUT_PATH);
