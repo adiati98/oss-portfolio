@@ -31,7 +31,9 @@ async function createBlogHtml(articles) {
       return dedent`
       <div class="article-card group py-10 border-b border-slate-100 last:border-0 transition-colors hover:bg-indigo-50/50">
         <h2 class="text-xl sm:text-2xl font-bold mb-3 pl-4">
-          <a href="${article.link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 group-hover:text-indigo-800 transition-colors block">
+          <a href="${article.link}" target="_blank" rel="noopener noreferrer" 
+             style="color: ${getColorValue(COLORS.primary)};" 
+             class="group-hover:text-indigo-800 transition-colors block">
             ${article.title}
           </a>
         </h2>
@@ -58,11 +60,11 @@ async function createBlogHtml(articles) {
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+            <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
               <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Open Source and GitHub Articles
               </h1>
-              <p style="color: ${COLORS.text?.secondary || '#374151'};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+              <p style="color: ${getColorValue(COLORS.text.secondary)};" class="text-xl max-w-3xl mx-auto leading-relaxed">
                 A collection of articles that <strong>${GITHUB_USERNAME}</strong> wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
               </p>
             </header>

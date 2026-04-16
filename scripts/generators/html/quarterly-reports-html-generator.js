@@ -382,8 +382,8 @@ ${navHtmlForReports}
             ]
               .map(
                 (item) => `
-              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${COLORS.primary.rgb};">
-                <span class="text-2xl font-bold" style="color: ${COLORS.primary.rgb};">${item.count}</span>
+              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${getColorValue(COLORS.primary)};">
+                <span class="text-2xl font-bold" style="color: ${getColorValue(COLORS.primary)};">${item.count}</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     ${item.icon}

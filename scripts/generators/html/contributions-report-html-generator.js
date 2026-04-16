@@ -7,6 +7,7 @@ const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { FAVICON_SVG_ENCODED, COLORS } = require('../../config/constants');
 const { getReportsListStyleCss } = require('../css/style-generator');
+const { getColorValue } = require('../../utils/color-helpers');
 
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';
@@ -78,8 +79,8 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     for (const year of sortedYears) {
       // Start a new year section with a dedicated heading
       linkHtml += dedent`
-            <details ${openAttribute} class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300" style="border-color: ${COLORS.border.light};">
-                <summary style="color: ${COLORS.text.primary};" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50">
+            <details ${openAttribute} class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300" style="border-color: ${getColorValue(COLORS.border.light)};">
+                <summary style="color: ${getColorValue(COLORS.text.primary)};" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
@@ -89,11 +90,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       for (const link of linksByYear[year]) {
         linkHtml += dedent`
                 <a href="./${link.relativePath}" 
-                   style="border-color: ${COLORS.border.light};" 
+                   style="border-color: ${getColorValue(COLORS.border.light)};" 
                    class="report-card-link bg-white border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6">
-                    <p style="color: ${COLORS.primary.rgb};" class="text-sm font-semibold">${link.quarterText}</p>
-                    <p style="color: ${COLORS.text.primary};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
-                    <p style="color: ${COLORS.text.muted};" class="text-xs">Total Contributions</p>
+                    <p style="color: ${getColorValue(COLORS.primary)};" class="text-sm font-semibold">${link.quarterText}</p>
+                    <p style="color: ${getColorValue(COLORS.text.primary)};" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
+                    <p style="color: ${getColorValue(COLORS.text.muted)};" class="text-xs">Total Contributions</p>
                 </a>
                 `;
       }
@@ -108,7 +109,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     }
   } else {
     // Fallback for no reports generated
-    linkHtml = `<p style="color: ${COLORS.text.secondary};" class="p-12 text-center italic border-2 border-dashed rounded-2xl">No quarterly reports have been generated yet.</p>`;
+    linkHtml = `<p style="color: ${getColorValue(COLORS.text.secondary)};" class="p-12 text-center italic border-2 border-dashed rounded-2xl">No quarterly reports have been generated yet.</p>`;
   }
 
   // Build HTML Content
@@ -130,11 +131,11 @@ ${navHtml}
   <main class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15]};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-          <h1 style="color: ${COLORS.primary.rgb};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+        <header style="border-bottom-color: ${getColorValue(COLORS.primary[15])};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+          <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
             Quarterly Reports
           </h1>
-          <p style="color: ${COLORS.text.secondary};" class="text-xl max-w-3xl mx-auto leading-relaxed">
+          <p style="color: ${getColorValue(COLORS.text.secondary)};" class="text-xl max-w-3xl mx-auto leading-relaxed">
             Organized by calendar quarter, these reports track external open source involvement,
             aggregating key community activities across all tracked repositories.
           </p>
