@@ -33,7 +33,6 @@ function determinePersona(counts) {
     return DEFAULT_PERSONA;
   }
 
-  // Use the categories metadata directly with the counts dictionary
   return personaCategories.reduce((prev, curr) => {
     const currentCount = counts[curr.key] || 0;
     const prevCount = counts[prev.key] || 0;
@@ -64,7 +63,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
 
-  // Group counts for the persona determiner
   const countsDict = {
     prCount,
     issueCount,
@@ -88,7 +86,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   const currentYear = new Date().getFullYear();
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
 
-  // Yearly Average calculation
   const yearSpan = Math.max(1, currentYear - earliestYear + 1);
   const yearlyAverage = (grandTotal / yearSpan).toFixed(0);
 
@@ -229,12 +226,16 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                       const isHighest = grandTotal > 0 && count === maxCount;
                       const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
 
+                      const rowBg = isHighest
+                        ? `style="background-color: ${getColorValue(COLORS.primary[5])};"`
+                        : '';
+
                       const labelStyle = isHighest
                         ? `style="color: ${getColorValue(COLORS.primary)}; font-weight: 900;" class="text-xl"`
                         : 'class="text-slate-800 font-bold text-lg"';
 
                       return `
-                    <div class="flex-1 flex flex-col justify-center px-8 py-5 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative">
+                    <div ${rowBg} class="flex-1 flex flex-col justify-center px-8 py-5 border-b border-slate-100 last:border-0 relative">
                       <div class="flex justify-between items-center mb-2">
                         <span ${labelStyle} class="leading-tight mt-1 tracking-tight">${label}</span>
                         <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
