@@ -86,9 +86,6 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
   const currentYear = new Date().getFullYear();
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
 
-  const yearSpan = Math.max(1, currentYear - earliestYear + 1);
-  const yearlyAverage = (grandTotal / yearSpan).toFixed(0);
-
   const maxCount = Math.max(
     prCount,
     issueCount,
@@ -201,8 +198,8 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                       <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">${yearlyAverage}</p></div>
-                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Yearly Average</p>
+                      <div class="h-8 flex items-end"><p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">${articleCount}</p></div>
+                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
                     </div>
                     <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
                       <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
@@ -224,30 +221,35 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                       ][idx];
                       const s = stats[key];
                       const isHighest = grandTotal > 0 && count === maxCount;
-                      const barOpacity = isHighest ? 'opacity-100' : 'opacity-60';
 
-                      const rowBg = isHighest
-                        ? `style="background-color: ${getColorValue(COLORS.primary[5])};"`
+                      const rowStyle = isHighest
+                        ? `style="background-color: ${getColorValue(COLORS.primary[10] || '#f5f3ff')};"`
                         : '';
 
-                      const labelStyle = isHighest
-                        ? `style="color: ${getColorValue(COLORS.primary)}; font-weight: 900;" class="text-xl"`
-                        : 'class="text-slate-800 font-bold text-lg"';
+                      const labelClass = isHighest
+                        ? 'text-lg font-black self-center'
+                        : 'text-slate-800 font-bold text-lg self-center';
+
+                      const labelInlineStyle = isHighest
+                        ? `style="color: ${getColorValue(COLORS.primary)};"`
+                        : '';
+
+                      const trackClass = isHighest ? 'bg-white' : 'bg-slate-100';
 
                       return `
-                    <div ${rowBg} class="flex-1 flex flex-col justify-center px-8 py-5 border-b border-slate-100 last:border-0 relative">
+                    <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative">
                       <div class="flex justify-between items-center mb-2">
-                        <span ${labelStyle} class="leading-tight mt-1 tracking-tight">${label}</span>
-                        <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                        <span class="${labelClass}" ${labelInlineStyle}>${label}</span>
+                        <div class="flex flex-col sm:flex-row items-center sm:items-baseline">
                           <span style="color: ${getColorValue(COLORS.primary)};" class="font-black tracking-tighter ${
                             isHighest ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-3xl'
                           } leading-none">${count}</span>
                           <span class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-2 font-mono font-bold">${s.pctStr}</span>
                         </div>
                       </div>
-                      <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden flex">
+                      <div class="w-full ${trackClass} rounded-full h-3 overflow-hidden flex">
                         <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${getColorValue(COLORS.primary)}; ${s.pct === 0 ? 'display: none;' : ''}" 
-                             class="progress-bar h-2.5 rounded-full ${barOpacity} transition-all duration-300">
+                             class="progress-bar h-3 rounded-full ${isHighest ? 'opacity-100' : 'opacity-60'} transition-all duration-300">
                         </div>
                       </div>
                     </div>`;
