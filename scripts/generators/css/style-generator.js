@@ -163,59 +163,25 @@ function getBlogStyleCss() {
 
 /**
  * Generates the CSS block for the Landing Page head.
- * Consolidated All-Time Stats styles into the index.
  */
 function getIndexStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
 
-    /* All-Time Stats Metric Card Overrides */
-    .metric-card-hover {
-      transition: all 0.2s ease-in-out;
-    }
-    .metric-card-hover:hover {
-      transform: translateY(-4px);
-      border-color: ${COLORS.primary.rgb} !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+    /* Custom font size between md and lg */
+    .text-md-lg {
+      font-size: 1.0625rem;
+      line-height: 1.625rem;
     }
 
-    /* Table & Row Hovers for Activity Feed */
-    .table-row-hover {
-      transition: background-color 0.15s ease-in-out;
-    }
-    .table-row-hover:hover {
-      background-color: ${COLORS.primary[5]} !important;
-    }
-
-    /* Base styles for the report navigation link */
-    a.browse-reports {
-      color: ${COLORS.text.secondary};
-      text-decoration: none;
-    }
-
-    /* Hover state for report navigation link */
-    a.browse-reports:hover {
-      color: ${COLORS.text.primary};
+    /* Hover state for links using the secondary text color */
+    .hover-underline-primary:hover {
       text-decoration: underline;
+      text-underline-offset: 4px;
       text-decoration-color: ${COLORS.primary.rgb};
-      transition: color 0.2s ease-in-out, text-decoration-color 0.2s ease-in-out;
     }
 
-    .index-report-link {
-      border: 1px solid ${COLORS.border.light} !important;
-      transition: border-color 0.15s ease-in-out, box-shadow 0.2s;
-    }
-    .index-report-link:hover {
-      border-color: ${COLORS.primary.rgb} !important;
-    }
-
-    .index-report-link svg { 
-      transition: transform 0.2s; 
-    }
-    .index-report-link:hover svg { 
-      transform: translateX(4px); 
-    }
-
+    /* Animation for the Contribution Bars */
     @keyframes loadBar {
       from { width: 0; }
     }

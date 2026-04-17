@@ -29,19 +29,16 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
   const footerHtml = createFooterHtml();
   const communityCss = getCommunityStyleCss();
 
-  const mainAccentColor = COLORS.primary.hex;
-  const softBg = COLORS.primary[10] || '#eef2ff';
-
   // --- 1. Honors & Recognition Cards ---
   const achievementCards = rolesData.achievements
     .map(
       (ach) => dedent`
         <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 transition-colors duration-200 flex flex-col items-center text-center">
-          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${COLORS.primary[10] || '#f0f7ff'}; color: ${mainAccentColor};">
+          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${getColorValue(COLORS.primary[10]) || '#f0f7ff'}; color: ${getColorValue(COLORS.primary)};">
             ${SPARKLES_SVG}
           </div>
           <div class="flex flex-col items-center gap-3">
-            <h3 class="text-lg font-black leading-tight text-center" style="color: ${mainAccentColor};">
+            <h3 class="text-lg font-black leading-tight text-center" style="color: ${getColorValue(COLORS.primary)};">
               ${ach.title}
             </h3>
             <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 text-center">
@@ -57,9 +54,15 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
   const rolesItems = rolesData.roles
     .map((role) => {
       const isActive = role.active;
-      const statusBg = isActive ? COLORS.status.green.bg : COLORS.status.gray.bg;
-      const statusColor = isActive ? COLORS.status.green.text : COLORS.status.gray.text;
-      const bulletColor = isActive ? COLORS.status.green.text : COLORS.text.muted;
+      const statusBg = isActive
+        ? getColorValue(COLORS.status.green.bg)
+        : getColorValue(COLORS.status.gray.bg);
+      const statusColor = isActive
+        ? getColorValue(COLORS.status.green.text)
+        : getColorValue(COLORS.status.gray.text);
+      const bulletColor = isActive
+        ? getColorValue(COLORS.status.green.text)
+        : getColorValue(COLORS.text.muted);
 
       return dedent`
         <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
@@ -105,7 +108,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     const displayCount = String(count);
     const openAttribute = index === 0 ? 'open' : '';
     const statusStyle = WORKBENCH_STATUS_COLORS[type] || WORKBENCH_STATUS_COLORS.manual;
-    const redText = WORKBENCH_STATUS_COLORS.emptyMessage.text;
+    const redText = getColorValue(WORKBENCH_STATUS_COLORS.emptyMessage.text);
 
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
@@ -122,7 +125,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
               <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
               <td class="px-6 py-4">
-                <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${mainAccentColor};">
+                <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${getColorValue(COLORS.primary)};">
                   <span>${task.title}</span>
                 </a>
               </td>
@@ -164,8 +167,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
         <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
           <div class="flex items-center gap-3">
              <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
-                  style="background-color: ${statusStyle.bg}; color: ${statusStyle.text}; border-color: ${statusStyle.border};">
-              <span class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]" style="border-color: ${statusStyle.border};">
+                  style="background-color: ${getColorValue(statusStyle.bg)}; color: ${getColorValue(statusStyle.text)}; border-color: ${getColorValue(statusStyle.border)};">
+              <span class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]" style="border-color: ${getColorValue(statusStyle.border)};">
                 ${displayCount}
               </span>
               <span>${label}</span>
@@ -198,8 +201,12 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
   const taskCount = ongoingTasks.length;
   const hasTasks = taskCount > 0;
 
-  const badgeBg = hasTasks ? COLORS.status.green.bg : COLORS.status.red.bg;
-  const badgeTextColor = hasTasks ? COLORS.status.green.text : COLORS.status.red.text;
+  const badgeBg = hasTasks
+    ? getColorValue(COLORS.status.green.bg)
+    : getColorValue(COLORS.status.red.bg);
+  const badgeTextColor = hasTasks
+    ? getColorValue(COLORS.status.green.text)
+    : getColorValue(COLORS.status.red.text);
 
   const fullHtml = dedent`
     <!DOCTYPE html>
@@ -220,7 +227,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
+            <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
               <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Community & Activity
               </h1>
@@ -232,7 +239,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
             <section class="mb-20" aria-labelledby="milestones-heading">
               <div class="flex flex-col items-center mb-10">
                 <h2 id="milestones-heading" class="text-sm font-black uppercase tracking-[0.4em] text-slate-600 mb-3 text-center">Milestones and Awards</h2>
-                <div class="w-16 h-1.5 rounded-full" style="background-color: ${mainAccentColor};" aria-hidden="true"></div>
+                <div class="w-16 h-1.5 rounded-full" style="background-color: ${getColorValue(COLORS.primary)};" aria-hidden="true"></div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 ${achievementCards}
@@ -241,8 +248,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
               <section class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100" style="background-color: ${softBg};">
-                  <h2 class="text-xl font-bold" style="color: ${mainAccentColor};">Ecosystem Advocacy & Roles</h2>
+                <div class="p-6 border-b border-slate-100" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
+                  <h2 class="text-xl font-bold" style="color: ${getColorValue(COLORS.primary)};">Ecosystem Advocacy & Roles</h2>
                 </div>
                 <div class="divide-y divide-slate-100">
                   ${rolesItems}
@@ -250,8 +257,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
               </section>
 
               <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${softBg};">
-                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${mainAccentColor};">
+                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
+                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${getColorValue(COLORS.primary)};">
                     Active Workbench
                   </h2>
                   <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
