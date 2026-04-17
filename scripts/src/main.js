@@ -7,6 +7,15 @@ const { BLOG } = require('../config/config');
 // Import Leadership Metadata
 const leadershipData = require('../../contents/leadership');
 
+// Import Repository Exclusions with safeguard
+let excludedRepos = [];
+try {
+  const repoExclusions = require('../../contents/repo-exclusions');
+  excludedRepos = repoExclusions.excludedRepos || [];
+} catch (e) {
+  // If the file doesn't exist, we proceed with an empty exclusion list
+}
+
 // Import core fetching logic
 const { fetchContributions, fetchOngoingReviews } = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
@@ -78,9 +87,11 @@ async function main() {
 
     const ongoingTasks = rawOngoingTasks.filter((task) => {
       const repoName = task.repo.toLowerCase();
-      const isOpenSauced = repoName.startsWith('open-sauced/');
-      const isAstroStarter = repoName.includes('astro-partykit-starter');
-      return !isOpenSauced && !isAstroStarter;
+      // Dynamically exclude repos based on the exclusions list
+      const isExcluded = excludedRepos.some((excluded) =>
+        repoName.includes(excluded.toLowerCase())
+      );
+      return !isExcluded;
     });
 
     await fs.writeFile(ongoingTasksFile, JSON.stringify(ongoingTasks, null, 2), 'utf8');
