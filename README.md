@@ -36,10 +36,10 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 #### 1. Data Fetching & Processing
 
 - **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
-- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility.
+- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility. Additionally, it supports dynamic repository exclusions to filter out specified organizations or projects.
 - **Personal Technical Writing:**
     - **Automated Sync:** Fetches my latest articles from **Dev.to** via their API.
-    - **Curated Content:** Integrates long-form technical guides authored for **freeCodeCamp**, managed through manual metadata in `metadata/fcc-articles.js`.
+    - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
 - **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
 - **Hierarchical Caching:** Maintains `pr-cache.json` and `commit-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
 
@@ -84,16 +84,18 @@ The system analyzes contribution patterns to automatically assign a persona titl
 
 ### 3. Configuration
 
+Manual data and preferences are managed within the `scripts/config/` and `contents/` directories:
+
 - **Settings:** Update `scripts/config/config.js` to personalize your data fetching:
     - `GITHUB_USERNAME`: Set this to your GitHub handle.
     - `BLOG`: Configure your `devToUser` handle for automated article syncing.
-- **Leadership Metadata:** Update `metadata/leadership.js` to reflect your roles and achievements.
-- **Article Metadata:** Manually update `metadata/fcc-articles.js` to add new freeCodeCamp publications. 
+- **Leadership Metadata:** Update `contents/leadership.js` to reflect your roles and achievements.
+- **Article Metadata:** Update `contents/fcc-articles.js` to add new freeCodeCamp publications.
+- **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from your Active Workbench.
+- **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
 
 > [!TIP]
-> If you do not have articles on freeCodeCamp, leave this file as an empty array: `module.exports = [];` to ensure the generator runs smoothly.
-
-- **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
+> If you do not have articles on freeCodeCamp, leave `contents/fcc-articles.js` as an empty array: `module.exports = [];` to ensure the generator runs smoothly.
 
 ### 4. Deployment
 
