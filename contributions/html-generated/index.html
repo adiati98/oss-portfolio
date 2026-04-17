@@ -88,57 +88,20 @@
         }
       }
 
-      /* All-Time Stats Metric Card Overrides */
-      .metric-card-hover {
-        transition: all 0.2s ease-in-out;
-      }
-      .metric-card-hover:hover {
-        transform: translateY(-4px);
-        border-color: rgb(67, 56, 202) !important;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+      /* Custom font size between md and lg */
+      .text-md-lg {
+        font-size: 1.0625rem;
+        line-height: 1.625rem;
       }
 
-      /* Table & Row Hovers for Activity Feed */
-      .table-row-hover {
-        transition: background-color 0.15s ease-in-out;
-      }
-      .table-row-hover:hover {
-        background-color: rgba(67, 56, 202, 0.05) !important;
-      }
-
-      /* Base styles for the report navigation link */
-      a.browse-reports {
-        color: rgb(55, 65, 81);
-        text-decoration: none;
-      }
-
-      /* Hover state for report navigation link */
-      a.browse-reports:hover {
-        color: rgb(31, 41, 55);
+      /* Hover state for links using the secondary text color */
+      .hover-underline-primary:hover {
         text-decoration: underline;
+        text-underline-offset: 4px;
         text-decoration-color: rgb(67, 56, 202);
-        transition:
-          color 0.2s ease-in-out,
-          text-decoration-color 0.2s ease-in-out;
       }
 
-      .index-report-link {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
-        transition:
-          border-color 0.15s ease-in-out,
-          box-shadow 0.2s;
-      }
-      .index-report-link:hover {
-        border-color: rgb(67, 56, 202) !important;
-      }
-
-      .index-report-link svg {
-        transition: transform 0.2s;
-      }
-      .index-report-link:hover svg {
-        transform: translateX(4px);
-      }
-
+      /* Animation for the Contribution Bars */
       @keyframes loadBar {
         from {
           width: 0;
@@ -374,7 +337,7 @@
         </div>
       </header>
 
-      <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+      <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-10 sm:py-14">
         <div class="max-w-[120ch] mx-auto">
           <section>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
@@ -396,14 +359,16 @@
                 </div>
                 <div class="relative z-10 space-y-2">
                   <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
-                  <p class="text-7xl font-black tracking-tight">2263</p>
-                  <p class="text-lg opacity-100 font-bold">Lifetime Contributions on GitHub</p>
+                  <p class="text-7xl font-black tracking-tight">2264</p>
+                  <p class="text-lg opacity-90 font-semibold">Lifetime Contributions on GitHub</p>
                 </div>
                 <div class="relative z-10 h-px bg-white/20 my-8"></div>
                 <div class="relative z-10 grid grid-cols-2 gap-4">
                   <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                     <div class="h-8 flex items-end">
-                      <p class="text-2xl sm:text-3xl font-black leading-none">52</p>
+                      <p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">
+                        52
+                      </p>
                     </div>
                     <p
                       class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2"
@@ -413,7 +378,9 @@
                   </div>
                   <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
                     <div class="h-8 flex items-end">
-                      <p class="text-2xl sm:text-3xl font-black leading-none">47</p>
+                      <p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">
+                        47
+                      </p>
                     </div>
                     <p
                       class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2"
@@ -425,7 +392,7 @@
                     class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center"
                   >
                     <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
-                    <span class="text-xl font-black font-mono tracking-tighter">2019</span>
+                    <span class="text-2xl font-black font-mono tracking-tighter">2019</span>
                   </div>
                 </div>
               </div>
@@ -434,16 +401,21 @@
                 class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
               >
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
                 >
-                  <div class="flex justify-between items-end mb-2">
-                    <span class="text-slate-800 font-bold" class="text-lg">Merged PRs</span>
+                  <div class="flex justify-between items-center mb-2">
+                    <span
+                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      >Merged PRs</span
+                    >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: rgb(67, 56, 202)" class="font-bold text-xl sm:text-2xl"
+                      <span
+                        style="color: rgb(67, 56, 202)"
+                        class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >510</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold"
+                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >22.5%</span
                       >
                     </div>
@@ -451,8 +423,8 @@
                   <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
                     <div
                       style="
-                        width: 22.536456031816172%;
-                        max-width: 22.536456031816172%;
+                        width: 22.526501766784452%;
+                        max-width: 22.526501766784452%;
                         background-color: rgb(67, 56, 202);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
@@ -460,16 +432,21 @@
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
                 >
-                  <div class="flex justify-between items-end mb-2">
-                    <span class="text-slate-800 font-bold" class="text-lg">Issues</span>
+                  <div class="flex justify-between items-center mb-2">
+                    <span
+                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      >Issues</span
+                    >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: rgb(67, 56, 202)" class="font-bold text-xl sm:text-2xl"
+                      <span
+                        style="color: rgb(67, 56, 202)"
+                        class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >500</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold"
+                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >22.1%</span
                       >
                     </div>
@@ -477,8 +454,8 @@
                   <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
                     <div
                       style="
-                        width: 22.09456473707468%;
-                        max-width: 22.09456473707468%;
+                        width: 22.084805653710244%;
+                        max-width: 22.084805653710244%;
                         background-color: rgb(67, 56, 202);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
@@ -486,27 +463,32 @@
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative"
+                  style="background-color: rgba(67, 56, 202, 0.1)"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
                 >
-                  <div class="flex justify-between items-end mb-2">
-                    <span style="color: rgb(67, 56, 202); font-weight: 900" class="text-lg"
+                  <div class="flex justify-between items-center mb-2">
+                    <span
+                      class="text-lg sm:text-xl font-black self-start tracking-tighter"
+                      style="color: rgb(67, 56, 202)"
                       >Reviewed PRs</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: rgb(67, 56, 202)" class="font-bold text-2xl sm:text-3xl"
+                      <span
+                        style="color: rgb(67, 56, 202)"
+                        class="tracking-tighter font-black text-3xl sm:text-4xl leading-none"
                         >643</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold"
+                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >28.4%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div class="w-full bg-white rounded-full h-3 overflow-hidden flex">
                     <div
                       style="
-                        width: 28.413610251878037%;
-                        max-width: 28.413610251878037%;
+                        width: 28.40106007067138%;
+                        max-width: 28.40106007067138%;
                         background-color: rgb(67, 56, 202);
                       "
                       class="progress-bar h-3 rounded-full opacity-100 transition-all duration-300"
@@ -514,25 +496,30 @@
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
                 >
-                  <div class="flex justify-between items-end mb-2">
-                    <span class="text-slate-800 font-bold" class="text-lg">Co-Authored PRs</span>
+                  <div class="flex justify-between items-center mb-2">
+                    <span
+                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      >Co-Authored PRs</span
+                    >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: rgb(67, 56, 202)" class="font-bold text-xl sm:text-2xl"
+                      <span
+                        style="color: rgb(67, 56, 202)"
+                        class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >266</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold"
-                        >11.8%</span
+                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        >11.7%</span
                       >
                     </div>
                   </div>
                   <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
                     <div
                       style="
-                        width: 11.75430844012373%;
-                        max-width: 11.75430844012373%;
+                        width: 11.749116607773852%;
+                        max-width: 11.749116607773852%;
                         background-color: rgb(67, 56, 202);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
@@ -540,16 +527,21 @@
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:bg-slate-50 transition-colors last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
                 >
-                  <div class="flex justify-between items-end mb-2">
-                    <span class="text-slate-800 font-bold" class="text-lg">Collaborations</span>
+                  <div class="flex justify-between items-center mb-2">
+                    <span
+                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      >Collaborations</span
+                    >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                      <span style="color: rgb(67, 56, 202)" class="font-bold text-xl sm:text-2xl"
-                        >344</span
+                      <span
+                        style="color: rgb(67, 56, 202)"
+                        class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
+                        >345</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-1 font-mono font-bold"
+                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >15.2%</span
                       >
                     </div>
@@ -557,8 +549,8 @@
                   <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
                     <div
                       style="
-                        width: 15.201060539107381%;
-                        max-width: 15.201060539107381%;
+                        width: 15.23851590106007%;
+                        max-width: 15.23851590106007%;
                         background-color: rgb(67, 56, 202);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
@@ -594,7 +586,7 @@
                         guestbook
                       </a>
                     </div>
-                    <div class="shrink-0 mt-1 sm:mt-0">
+                    <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
                         class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
                       >
@@ -620,7 +612,7 @@
                         user-documentation
                       </a>
                     </div>
-                    <div class="shrink-0 mt-1 sm:mt-0">
+                    <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
                         class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
                       >
@@ -646,7 +638,7 @@
                         virtualcoffee.io
                       </a>
                     </div>
-                    <div class="shrink-0 mt-1 sm:mt-0">
+                    <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
                         class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
                       >

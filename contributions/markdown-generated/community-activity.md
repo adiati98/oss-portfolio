@@ -23,7 +23,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Mission accomplished. No tasks found._**
+> **_Inbox Zero achieved! Time for a coffee?_**
 
 </details>
 
