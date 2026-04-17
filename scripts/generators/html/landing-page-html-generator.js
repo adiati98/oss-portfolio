@@ -137,7 +137,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
               ${name}
             </a>
           </div>
-          <div class="shrink-0 mt-1 sm:mt-0">
+          <div class="shrink-0 mt-1 sm:mt-0 self-center">
             <span class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200">
               ${count} contributions
             </span>
@@ -179,7 +179,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
           </div>
         </header>
 
-        <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
+        <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-10 sm:py-14">
           <div class="max-w-[120ch] mx-auto">
 
             <section>
@@ -189,7 +189,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                   <div class="relative z-10 space-y-2">
                     <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
                     <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
-                    <p class="text-lg opacity-100 font-bold">Lifetime Contributions on GitHub</p>
+                    <p class="text-lg opacity-90 font-semibold">Lifetime Contributions on GitHub</p>
                   </div>
                   <div class="relative z-10 h-px bg-white/20 my-8"></div>
                   <div class="relative z-10 grid grid-cols-2 gap-4">
@@ -227,8 +227,8 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                         : '';
 
                       const labelClass = isHighest
-                        ? 'text-lg font-black self-center'
-                        : 'text-slate-800 font-bold text-lg self-center';
+                        ? 'text-lg font-black self-center tracking-tight'
+                        : 'text-slate-800 font-bold text-lg self-center tracking-tight';
 
                       const labelInlineStyle = isHighest
                         ? `style="color: ${getColorValue(COLORS.primary)};"`
@@ -240,11 +240,13 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                     <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative">
                       <div class="flex justify-between items-center mb-2">
                         <span class="${labelClass}" ${labelInlineStyle}>${label}</span>
-                        <div class="flex flex-col sm:flex-row items-center sm:items-baseline">
-                          <span style="color: ${getColorValue(COLORS.primary)};" class="font-black tracking-tighter ${
-                            isHighest ? 'text-3xl sm:text-4xl' : 'text-2xl sm:text-3xl'
+                        <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
+                          <span style="color: ${getColorValue(COLORS.primary)};" class="tracking-tighter ${
+                            isHighest
+                              ? 'font-black text-3xl sm:text-4xl'
+                              : 'font-bold text-2xl sm:text-3xl'
                           } leading-none">${count}</span>
-                          <span class="text-xs sm:text-sm text-slate-600 ml-0 sm:ml-2 font-mono font-bold">${s.pctStr}</span>
+                          <span class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold">${s.pctStr}</span>
                         </div>
                       </div>
                       <div class="w-full ${trackClass} rounded-full h-3 overflow-hidden flex">
