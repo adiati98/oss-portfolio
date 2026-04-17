@@ -168,6 +168,12 @@ function getIndexStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
 
+    /* Custom font size between md and lg */
+    .text-md-lg {
+      font-size: 1.0625rem;
+      line-height: 1.625rem;
+    }
+
     /* Hover state for links using the secondary text color */
     .hover-underline-primary:hover {
       text-decoration: underline;

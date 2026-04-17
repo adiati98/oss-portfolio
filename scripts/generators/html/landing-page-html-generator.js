@@ -227,8 +227,8 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                         : '';
 
                       const labelClass = isHighest
-                        ? 'text-lg font-black self-center tracking-tight'
-                        : 'text-slate-800 font-bold text-lg self-center tracking-tight';
+                        ? 'text-lg sm:text-xl font-black self-start tracking-tighter'
+                        : 'text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter';
 
                       const labelInlineStyle = isHighest
                         ? `style="color: ${getColorValue(COLORS.primary)};"`
