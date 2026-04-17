@@ -36,10 +36,10 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 #### 1. Data Fetching & Processing
 
 - **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
-- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables and supports **dynamic repository exclusions** to hide notifications from specific organizations or projects you no longer maintain.
+- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility. Additionally, it supports dynamic repository exclusions to filter out specified organizations or projects.
 - **Personal Technical Writing:**
     - **Automated Sync:** Fetches my latest articles from **Dev.to** via their API.
-    - **Curated Content:** Integrates long-form technical guides authored for **freeCodeCamp**, managed through manual metadata in `contents/fcc-articles.js`.
+    - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
 - **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
 - **Hierarchical Caching:** Maintains `pr-cache.json` and `commit-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
 
