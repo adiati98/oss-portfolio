@@ -137,7 +137,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
               ${name}
             </a>
           </div>
-          <div class="shrink-0 mt-1 sm:mt-0 self-center">
+          <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
             <span class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200">
               ${count} contributions
             </span>
