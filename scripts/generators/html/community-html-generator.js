@@ -23,7 +23,8 @@ async function createCommunityHtml(
   contributions,
   rolesData,
   ongoingTasks = [],
-  ongoingIssues = []
+  ongoingIssues = [],
+  ongoingPRs = []
 ) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'community-activity.html');
@@ -104,6 +105,7 @@ async function createCommunityHtml(
   };
 
   const todoTasks = ongoingIssues;
+  const submittedPRs = ongoingPRs;
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
@@ -192,6 +194,7 @@ async function createCommunityHtml(
 
   const sections = [
     { tasks: todoTasks, label: 'To do issues', type: 'todo' },
+    { tasks: submittedPRs, label: 'Ongoing PRs', type: 'ongoing' },
     { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
@@ -203,7 +206,7 @@ async function createCommunityHtml(
     )
     .join('');
 
-  const taskCount = ongoingTasks.length + ongoingIssues.length;
+  const taskCount = ongoingTasks.length + ongoingIssues.length + ongoingPRs.length;
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks

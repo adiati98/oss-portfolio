@@ -10,7 +10,8 @@ async function createCommunityMarkdown(
   contributions,
   rolesData,
   ongoingTasks = [],
-  ongoingIssues = []
+  ongoingIssues = [],
+  ongoingPRs = []
 ) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
   const outputPath = path.join(mdBaseDir, 'community-activity.md');
@@ -56,17 +57,20 @@ async function createCommunityMarkdown(
   // 1. To do issues
   const todoTasks = ongoingIssues.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 2. Manual Request Review (Exclude Bots)
+  // 2. Ongoing PRs
+  const submittedPRs = ongoingPRs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 3. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 3. Review in progress
+  // 4. Review in progress
   const inProgressTasks = ongoingTasks
     .filter((t) => t.status === 'Review in progress')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 4. Bot Request Review
+  // 5. Bot Request Review
   const botRequestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -101,6 +105,7 @@ async function createCommunityMarkdown(
   };
 
   md += buildCollapsibleSection('To do issues', '📝', todoTasks);
+  md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
   md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
