@@ -15,8 +15,5 @@ module.exports = {
    * (This matches: 'user/my-sandbox-project', 'sandbox-org/docs')
    * Note: This is case-insensitive. 'MY-ORG' is the same as 'my-org'.
    */
-  excludedRepos: [
-    'open-sauced/',
-    'astro-partykit-starter'
-  ],
+  excludedRepos: ['open-sauced/', 'astro-partykit-starter', 'career-lab-fall-2021'],
 };
