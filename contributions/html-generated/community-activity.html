@@ -627,10 +627,14 @@
                   Active Workbench
                 </h2>
                 <span
-                  class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
-                  style="background-color: rgba(16, 185, 129, 0.1); color: rgb(16, 185, 129)"
+                  class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border text-center transition-all shadow-sm"
+                  style="
+                    background-color: rgba(16, 185, 129, 0.1);
+                    color: rgb(16, 185, 129);
+                    border-color: rgb(16, 185, 129);
+                  "
                 >
-                  58 Ongoing Tasks
+                  61 Ongoing Tasks
                 </span>
               </div>
 
@@ -645,15 +649,15 @@
                     <div class="flex items-center gap-3">
                       <span
                         class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border"
-                        style="background-color: #ecfeff; color: #0891b2; border-color: #cffafe"
+                        style="background-color: #eff6ff; color: #1e40af; border-color: #bfdbfe"
                       >
                         <span
                           class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]"
-                          style="border-color: #cffafe"
+                          style="border-color: #bfdbfe"
                         >
                           0
                         </span>
-                        <span>To do issues</span>
+                        <span>Ongoing PRs</span>
                       </span>
                       <span
                         class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200"
@@ -680,290 +684,8 @@
                         class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md"
                         style="color: #991b1b"
                       >
-                        Nothing to see here. You've cleared the deck!
+                        All quiet on this front. Well done!
                       </p>
-                    </div>
-                  </div>
-                </details>
-                <details
-                  class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white"
-                >
-                  <summary
-                    class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none"
-                  >
-                    <div class="flex items-center gap-3">
-                      <span
-                        class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border"
-                        style="background-color: #fffbeb; color: #92400e; border-color: #fde68a"
-                      >
-                        <span
-                          class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]"
-                          style="border-color: #fde68a"
-                        >
-                          12
-                        </span>
-                        <span>Request review</span>
-                      </span>
-                      <span
-                        class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </span>
-                    </div>
-                  </summary>
-                  <div class="bg-white border-t border-slate-100">
-                    <div class="overflow-x-auto">
-                      <div class="min-w-[600px]">
-                        <table class="min-w-full">
-                          <thead class="bg-slate-50/80 border-b border-slate-100">
-                            <tr>
-                              <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
-                              >
-                                Repository
-                              </th>
-                              <th
-                                scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
-                              >
-                                Task
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody class="divide-y divide-slate-100">
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                user-documentation
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/mautic/user-documentation/pull/542"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>Update Stages.png image</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                user-documentation
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/mautic/user-documentation/pull/600"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>Add introduction for Zapier plugin documentation</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                user-documentation
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/mautic/user-documentation/pull/670"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span
-                                    >docs(email): document global defaults for preference center and
-                                    UTM tracking</span
-                                  >
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                virtualcoffee.io
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1484"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span
-                                    >Update existing member profile: abuna1985 → adam-abundis</span
-                                  >
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                mautic-community-handbook
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/mautic/mautic-community-handbook/pull/418"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span
-                                    >Add statement about re-election (don't merge until approved at
-                                    the General Assembly)</span
-                                  >
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                intro
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/OpenSource-Communities/intro/pull/310"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span
-                                    >Updated outdated screenshots and gifs (GitHub UI updated)</span
-                                  >
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                intro
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/OpenSource-Communities/intro/pull/309"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>feat: improve accessibility for course progress bars</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                intro
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/OpenSource-Communities/intro/pull/307"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span
-                                    >fix(docs): audit and replace broken external links across
-                                    docs</span
-                                  >
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                developer-documentation-new
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/mautic/developer-documentation-new/pull/296"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>docs: Document Companies REST API with tags support</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                virtualcoffee.io
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1456"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>feat: Add hachemite to members file list</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                virtualcoffee.io
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1451"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>New: member file for nadine pesso</span>
-                                </a>
-                              </td>
-                            </tr>
-                            <tr
-                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
-                            >
-                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
-                                RepoReady
-                              </td>
-                              <td class="px-6 py-4">
-                                <a
-                                  href="https://github.com/OpenSource-Communities/RepoReady/pull/20"
-                                  target="_blank"
-                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
-                                  style="color: rgb(67, 56, 202)"
-                                >
-                                  <span>test</span>
-                                </a>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
                     </div>
                   </div>
                 </details>
@@ -1278,6 +1000,410 @@
                                   style="color: rgb(67, 56, 202)"
                                 >
                                   <span>Process Docs for Virtual Coffee Newsletter</span>
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details
+                  class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white"
+                >
+                  <summary
+                    class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none"
+                  >
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border"
+                        style="background-color: #ecfeff; color: #086788; border-color: #a5f3fc"
+                      >
+                        <span
+                          class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]"
+                          style="border-color: #a5f3fc"
+                        >
+                          3
+                        </span>
+                        <span>To do issues</span>
+                      </span>
+                      <span
+                        class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </summary>
+                  <div class="bg-white border-t border-slate-100">
+                    <div class="overflow-x-auto">
+                      <div class="min-w-[600px]">
+                        <table class="min-w-full">
+                          <thead class="bg-slate-50/80 border-b border-slate-100">
+                            <tr>
+                              <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                              >
+                                Repository
+                              </th>
+                              <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                              >
+                                Task
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-slate-100">
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                mautic-community-handbook
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/mautic-community-handbook/issues/441"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>[DOCS]: Update the "Current leadership team" section</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                user-documentation
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/user-documentation/issues/636"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >[DOCS]: Update the "Viewing and exporting Contacts in a
+                                    Segment" section in the `segments/manage_segments.rst` for
+                                    branch 6.0</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                podcast-transcripts
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/103"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >Improve previous edited episodes to follow new guidelines</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </details>
+                <details
+                  class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white"
+                >
+                  <summary
+                    class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none"
+                  >
+                    <div class="flex items-center gap-3">
+                      <span
+                        class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border"
+                        style="background-color: #fffbeb; color: #92400e; border-color: #fde68a"
+                      >
+                        <span
+                          class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]"
+                          style="border-color: #fde68a"
+                        >
+                          12
+                        </span>
+                        <span>Request review</span>
+                      </span>
+                      <span
+                        class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path d="m6 9 6 6 6-6" />
+                        </svg>
+                      </span>
+                    </div>
+                  </summary>
+                  <div class="bg-white border-t border-slate-100">
+                    <div class="overflow-x-auto">
+                      <div class="min-w-[600px]">
+                        <table class="min-w-full">
+                          <thead class="bg-slate-50/80 border-b border-slate-100">
+                            <tr>
+                              <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                              >
+                                Repository
+                              </th>
+                              <th
+                                scope="col"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                              >
+                                Task
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody class="divide-y divide-slate-100">
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                user-documentation
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/user-documentation/pull/542"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>Update Stages.png image</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                user-documentation
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/user-documentation/pull/600"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>Add introduction for Zapier plugin documentation</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                user-documentation
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/user-documentation/pull/670"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >docs(email): document global defaults for preference center and
+                                    UTM tracking</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                virtualcoffee.io
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1484"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >Update existing member profile: abuna1985 → adam-abundis</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                mautic-community-handbook
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/mautic-community-handbook/pull/418"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >Add statement about re-election (don't merge until approved at
+                                    the General Assembly)</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                intro
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/OpenSource-Communities/intro/pull/310"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >Updated outdated screenshots and gifs (GitHub UI updated)</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                intro
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/OpenSource-Communities/intro/pull/309"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>feat: improve accessibility for course progress bars</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                intro
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/OpenSource-Communities/intro/pull/307"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span
+                                    >fix(docs): audit and replace broken external links across
+                                    docs</span
+                                  >
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                developer-documentation-new
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/mautic/developer-documentation-new/pull/296"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>docs: Document Companies REST API with tags support</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                virtualcoffee.io
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1456"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>feat: Add hachemite to members file list</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                virtualcoffee.io
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1451"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>New: member file for nadine pesso</span>
+                                </a>
+                              </td>
+                            </tr>
+                            <tr
+                              class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                            >
+                              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">
+                                RepoReady
+                              </td>
+                              <td class="px-6 py-4">
+                                <a
+                                  href="https://github.com/OpenSource-Communities/RepoReady/pull/20"
+                                  target="_blank"
+                                  class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug"
+                                  style="color: rgb(67, 56, 202)"
+                                >
+                                  <span>test</span>
                                 </a>
                               </td>
                             </tr>
