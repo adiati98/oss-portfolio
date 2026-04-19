@@ -40,6 +40,8 @@ jobs:
             rm -f data/pr-cache.json
             rm -f data/all-articles.json
             rm -f data/ongoing-tasks.json
+            rm -f data/ongoing-issues.json
+            rm -f data/ongoing-prs.json
             node scripts/src/main.js
           else
             echo "Running daily update..."
