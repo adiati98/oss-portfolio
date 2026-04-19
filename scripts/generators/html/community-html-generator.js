@@ -193,10 +193,10 @@ async function createCommunityHtml(
   }
 
   const sections = [
-    { tasks: todoTasks, label: 'To do issues', type: 'todo' },
     { tasks: submittedPRs, label: 'Ongoing PRs', type: 'ongoing' },
-    { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
+    { tasks: todoTasks, label: 'To do issues', type: 'todo' },
+    { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
     { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 

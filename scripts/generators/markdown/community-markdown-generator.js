@@ -104,10 +104,21 @@ async function createCommunityMarkdown(
     return section;
   };
 
-  md += buildCollapsibleSection('To do issues', '📝', todoTasks);
+  // --- Render Sections in Priority Order ---
+
+  // 1. Initiative: Things you started
   md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
-  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
+
+  // 2. Collaboration: Things you are currently helping with
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
+
+  // 3. Intent: Things you have committed to doing
+  md += buildCollapsibleSection('To do issues', '📝', todoTasks);
+
+  // 4. Inbox: Things people are asking you to look at
+  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
+
+  // 5. Maintenance: Automated team-wide tasks
   md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
 
   md += `---\n`;
