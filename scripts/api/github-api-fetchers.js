@@ -568,7 +568,69 @@ async function fetchOngoingReviews() {
   return ongoingTasks;
 }
 
+/**
+ * Fetches all open issues assigned to the user in external repositories.
+ */
+async function fetchOngoingIssues() {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+
+  async function searchAll(query) {
+    let results = [];
+    let page = 1;
+    while (true) {
+      try {
+        const response = await axiosInstance.get(
+          `/search/issues?q=${query}&per_page=100&page=${page}`
+        );
+        results.push(...response.data.items);
+        const link = response.headers.link;
+        if (link && link.includes('rel="next"')) {
+          page++;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        } else {
+          break;
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 403) {
+          console.log('Rate limit hit in fetchOngoingIssues. Waiting for 60 seconds...');
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          continue;
+        }
+        throw err;
+      }
+    }
+    return results;
+  }
+
+  // Query: open issues, assigned to you, excluding your own repositories
+  const query = `is:issue is:open assignee:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
+  const rawIssues = await searchAll(query);
+
+  return rawIssues.map((issue) => {
+    const repoParts = new URL(issue.repository_url).pathname.split('/');
+    return {
+      title: issue.title,
+      url: issue.html_url,
+      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+      createdAt: issue.created_at,
+      updatedAt: issue.updated_at,
+      labels: issue.labels.map(l => l.name),
+      number: issue.number
+    };
+  });
+}
+
 module.exports = {
   fetchContributions,
   fetchOngoingReviews,
+  fetchOngoingIssues,
 };

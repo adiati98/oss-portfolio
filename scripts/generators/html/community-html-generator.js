@@ -19,7 +19,13 @@ const { sanitizeAttribute } = require('../../utils/html-helpers');
 /**
  * Generates the Community & Activity HTML page.
  */
-async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) {
+async function createCommunityHtml(
+  contributions,
+  rolesData,
+  ongoingTasks = [],
+  ongoingIssues = [],
+  ongoingPRs = []
+) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'community-activity.html');
 
@@ -98,7 +104,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     );
   };
 
-  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
+  const todoTasks = ongoingIssues;
+  const submittedPRs = ongoingPRs;
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
@@ -186,9 +193,10 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
   }
 
   const sections = [
+    { tasks: submittedPRs, label: 'Ongoing PRs', type: 'ongoing' },
+    { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: todoTasks, label: 'To do issues', type: 'todo' },
     { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
-    { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 
@@ -198,13 +206,16 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     )
     .join('');
 
-  const taskCount = ongoingTasks.length;
+  const taskCount = ongoingTasks.length + ongoingIssues.length + ongoingPRs.length;
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks
     ? getColorValue(COLORS.status.green.bg)
     : getColorValue(COLORS.status.red.bg);
   const badgeTextColor = hasTasks
+    ? getColorValue(COLORS.status.green.text)
+    : getColorValue(COLORS.status.red.text);
+  const badgeBorderColor = hasTasks
     ? getColorValue(COLORS.status.green.text)
     : getColorValue(COLORS.status.red.text);
 
@@ -261,8 +272,8 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
                   <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${getColorValue(COLORS.primary)};">
                     Active Workbench
                   </h2>
-                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
-                        style="background-color: ${badgeBg}; color: ${badgeTextColor};">
+                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border text-center transition-all shadow-sm"
+                        style="background-color: ${badgeBg}; color: ${badgeTextColor}; border-color: ${badgeBorderColor};">
                     ${taskCount} Ongoing Tasks
                   </span>
                 </div>

@@ -6,7 +6,13 @@ const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-message
 /**
  * Generates the Community & Activity Markdown report.
  */
-async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = []) {
+async function createCommunityMarkdown(
+  contributions,
+  rolesData,
+  ongoingTasks = [],
+  ongoingIssues = [],
+  ongoingPRs = []
+) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
   const outputPath = path.join(mdBaseDir, 'community-activity.md');
 
@@ -49,19 +55,22 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   };
 
   // 1. To do issues
-  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
+  const todoTasks = ongoingIssues.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 2. Manual Request Review (Exclude Bots)
+  // 2. Ongoing PRs
+  const submittedPRs = ongoingPRs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 3. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 3. Review in progress
+  // 4. Review in progress
   const inProgressTasks = ongoingTasks
     .filter((t) => t.status === 'Review in progress')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 4. Bot Request Review
+  // 5. Bot Request Review
   const botRequestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -71,10 +80,8 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
-    // Explicitly show 0 as a string
     const displayCount = String(count);
 
-    // Pick a random success message for empty states
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
@@ -97,9 +104,21 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
     return section;
   };
 
-  md += buildCollapsibleSection('To do issues', '📝', todoTasks);
-  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
+  // --- Render Sections in Priority Order ---
+
+  // 1. Initiative: Things you started
+  md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
+
+  // 2. Collaboration: Things you are currently helping with
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
+
+  // 3. Intent: Things you have committed to doing
+  md += buildCollapsibleSection('To do issues', '📝', todoTasks);
+
+  // 4. Inbox: Things people are asking you to look at
+  md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
+
+  // 5. Maintenance: Automated team-wide tasks
   md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
 
   md += `---\n`;
