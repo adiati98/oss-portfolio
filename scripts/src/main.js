@@ -17,7 +17,11 @@ try {
 }
 
 // Import core fetching logic
-const { fetchContributions, fetchOngoingReviews } = require('../api/github-api-fetchers');
+const {
+  fetchContributions,
+  fetchOngoingReviews,
+  fetchOngoingIssues
+} = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
 // Import grouping logic
@@ -48,6 +52,7 @@ async function main() {
   const dataFile = path.join(dataDir, 'all-contributions.json');
   const articlesFile = path.join(dataDir, 'all-articles.json');
   const ongoingTasksFile = path.join(dataDir, 'ongoing-tasks.json');
+  const ongoingIssuesFile = path.join(dataDir, 'ongoing-issues.json');
 
   let prCache = new Set();
 
@@ -98,6 +103,21 @@ async function main() {
     console.log(
       `Saved ${ongoingTasks.length} ongoing tasks to ${ongoingTasksFile} (after exclusions).`
     );
+
+    // --- Fetch Ongoing Issues (Assigned to you) ---
+    console.log('Fetching ongoing issues for the Active Workbench...');
+    const rawOngoingIssues = await fetchOngoingIssues();
+
+    const ongoingIssues = rawOngoingIssues.filter((issue) => {
+      const repoName = issue.repo.toLowerCase();
+      const isExcluded = excludedRepos.some((excluded) =>
+        repoName.includes(excluded.toLowerCase())
+      );
+      return !isExcluded;
+    });
+
+    await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
+    console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
 
     // --- Fetch Articles ---
     console.log('Fetching Open Source Software articles from external platforms...');
@@ -307,8 +327,8 @@ async function main() {
 
     // 8. Generate Community & Activity Reports
     console.log('Generating Community & Activity reports...');
-    await createCommunityHtml(finalContributions, leadershipData, ongoingTasks);
-    await createCommunityMarkdown(finalContributions, leadershipData, ongoingTasks);
+    await createCommunityHtml(finalContributions, leadershipData, ongoingTasks, ongoingIssues);
+    await createCommunityMarkdown(finalContributions, leadershipData, ongoingTasks, ongoingIssues);
 
     // Save the updated PR cache to a file for future runs.
     await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');

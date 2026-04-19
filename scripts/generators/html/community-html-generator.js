@@ -19,7 +19,12 @@ const { sanitizeAttribute } = require('../../utils/html-helpers');
 /**
  * Generates the Community & Activity HTML page.
  */
-async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) {
+async function createCommunityHtml(
+  contributions,
+  rolesData,
+  ongoingTasks = [],
+  ongoingIssues = []
+) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'community-activity.html');
 
@@ -98,7 +103,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     );
   };
 
-  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
+  const todoTasks = ongoingIssues;
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
@@ -198,7 +203,7 @@ async function createCommunityHtml(contributions, rolesData, ongoingTasks = []) 
     )
     .join('');
 
-  const taskCount = ongoingTasks.length;
+  const taskCount = ongoingTasks.length + ongoingIssues.length;
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks

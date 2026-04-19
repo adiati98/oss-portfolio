@@ -6,7 +6,12 @@ const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-message
 /**
  * Generates the Community & Activity Markdown report.
  */
-async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = []) {
+async function createCommunityMarkdown(
+  contributions,
+  rolesData,
+  ongoingTasks = [],
+  ongoingIssues = []
+) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
   const outputPath = path.join(mdBaseDir, 'community-activity.md');
 
@@ -49,7 +54,7 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
   };
 
   // 1. To do issues
-  const todoTasks = ongoingTasks.filter((t) => t.status === 'To do');
+  const todoTasks = ongoingIssues.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   // 2. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
@@ -71,10 +76,8 @@ async function createCommunityMarkdown(contributions, rolesData, ongoingTasks = 
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
-    // Explicitly show 0 as a string
     const displayCount = String(count);
 
-    // Pick a random success message for empty states
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
