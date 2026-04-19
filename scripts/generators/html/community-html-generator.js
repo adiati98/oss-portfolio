@@ -215,6 +215,9 @@ async function createCommunityHtml(
   const badgeTextColor = hasTasks
     ? getColorValue(COLORS.status.green.text)
     : getColorValue(COLORS.status.red.text);
+  const badgeBorderColor = hasTasks
+    ? getColorValue(COLORS.status.green.text)
+    : getColorValue(COLORS.status.red.text);
 
   const fullHtml = dedent`
     <!DOCTYPE html>
@@ -269,8 +272,8 @@ async function createCommunityHtml(
                   <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${getColorValue(COLORS.primary)};">
                     Active Workbench
                   </h2>
-                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border border-slate-200 text-center transition-all shadow-sm"
-                        style="background-color: ${badgeBg}; color: ${badgeTextColor};">
+                  <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border text-center transition-all shadow-sm"
+                        style="background-color: ${badgeBg}; color: ${badgeTextColor}; border-color: ${badgeBorderColor};">
                     ${taskCount} Ongoing Tasks
                   </span>
                 </div>

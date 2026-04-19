@@ -65,7 +65,7 @@ const WORKBENCH_STATUS_COLORS = {
   todo: {
     bg: '#ecfeff',
     text: '#086788',
-    border: '#0e7490',
+    border: '#a5f3fc',
   },
   manual: {
     bg: '#fffbeb',
