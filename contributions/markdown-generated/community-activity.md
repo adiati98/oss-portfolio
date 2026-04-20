@@ -11,7 +11,9 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 - 🟢 **Active** | **Education Team Lead** at Mautic (January 2026 - Present)
 - 🟢 **Active** | **Documentation Team Lead** at Virtual Coffee (December 2021 - Present)
-- 🟢 **Active** | **Co-Maintainer** at Open Source Communities (October 2025 - Present)
+- 🟢 **Active** | **Co-Maintainer** at Open Source Communities (June 2025 - Present)
+- 🟢 **Active** | **Monthly Challenge Team Lead** at Virtual Coffee (December 2023 - Present)
+- 🟢 **Active** | **Community Advisor** at Virtual Coffee (April 2022 - Present)
 - ⚪ _Past_ | **Assistant Team Lead, Education Team** at Mautic (June 2025 - December 2025)
 - ⚪ _Past_ | **Docs Maintainer** at OpenSauced (October 2023 - November 2024)
 - ⚪ _Past_ | **Hacktoberfest Support** at SheSharp (September 2023 - November 2023)
@@ -23,15 +25,16 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (0)</h3></summary>
 
-> **_Nothing to see here. You've cleared the deck!_**
+> **_404: Tasks not found (and that's a good thing!)_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (15)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (16)</h3></summary>
 
 | Repository                      | Task                                                                                                               |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------- |
+| **virtualcoffee.io**            | [feat: Add hachemite to members file list](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1456)           |
 | **guestbook**                   | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)           |
 | **guestbook**                   | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)  |
 | **guestbook**                   | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)         |
@@ -62,21 +65,18 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (12)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (9)</h3></summary>
 
 | Repository                      | Task                                                                                                                                                 |
 | :------------------------------ | :--------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **user-documentation**          | [docs(email): document global defaults for preference center and UTM tracking](https://github.com/mautic/user-documentation/pull/670)                |
 | **user-documentation**          | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
 | **user-documentation**          | [Add introduction for Zapier plugin documentation](https://github.com/mautic/user-documentation/pull/600)                                            |
-| **user-documentation**          | [docs(email): document global defaults for preference center and UTM tracking](https://github.com/mautic/user-documentation/pull/670)                |
-| **virtualcoffee.io**            | [Update existing member profile: abuna1985 → adam-abundis](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1484)                             |
 | **mautic-community-handbook**   | [Add statement about re-election (don't merge until approved at the General Assembly)](https://github.com/mautic/mautic-community-handbook/pull/418) |
 | **intro**                       | [Updated outdated screenshots and gifs (GitHub UI updated)](https://github.com/OpenSource-Communities/intro/pull/310)                                |
 | **intro**                       | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
 | **intro**                       | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)                           |
 | **developer-documentation-new** | [docs: Document Companies REST API with tags support](https://github.com/mautic/developer-documentation-new/pull/296)                                |
-| **virtualcoffee.io**            | [feat: Add hachemite to members file list](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1456)                                             |
-| **virtualcoffee.io**            | [New: member file for nadine pesso](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1451)                                                    |
 | **RepoReady**                   | [test](https://github.com/OpenSource-Communities/RepoReady/pull/20)                                                                                  |
 
 </details>
