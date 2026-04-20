@@ -70,24 +70,35 @@ async function createCommunityHtml(
         ? getColorValue(COLORS.status.green.text)
         : getColorValue(COLORS.text.muted);
 
+      const brandColor = getColorValue(COLORS.primary);
+
+      const orgDisplay = role.orgUrl
+        ? dedent`
+          <a href="${role.orgUrl}" target="_blank" rel="noopener noreferrer" 
+             class="hover:underline underline-offset-2 transition-colors" 
+             style="color: ${brandColor}; text-decoration-color: ${brandColor};">
+            ${sanitizeAttribute(role.org)}
+          </a>`
+        : `<span class="text-slate-700">${sanitizeAttribute(role.org)}</span>`;
+
       return dedent`
-        <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
-          <div class="flex items-start xl:items-center space-x-3 pr-2">
-            <div class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 xl:mt-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
-            <div>
-              <h3 class="font-bold text-slate-900 leading-tight text-base">${role.title}</h3>
-              <p class="text-sm text-slate-700 font-medium">${role.org}</p>
-            </div>
-          </div>
-          <div class="flex flex-col items-start xl:items-end justify-center shrink-0 mt-1 xl:mt-0">
-            <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-widest mb-1" 
-                  style="background-color: ${statusBg}; color: ${statusColor};">
-              ${isActive ? 'Active' : 'Past'}
-            </span>
-            <span class="text-sm font-mono text-slate-500 leading-tight">${role.period}</span>
+      <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
+        <div class="flex items-start xl:items-center space-x-3 pr-2">
+          <div class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 xl:mt-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
+          <div>
+            <h3 class="font-bold text-slate-900 leading-tight text-base sm:text-lg">${role.title}</h3>
+            <p class="text-sm sm:text-base font-medium">${orgDisplay}</p>
           </div>
         </div>
-      `;
+        <div class="flex flex-col items-start xl:items-end justify-center shrink-0 mt-1 xl:mt-0 ml-6 xl:ml-0">
+          <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-widest mb-1" 
+                style="background-color: ${statusBg}; color: ${statusColor};">
+            ${isActive ? 'Active' : 'Past'}
+          </span>
+          <span class="text-sm font-mono text-slate-500 leading-tight">${role.period}</span>
+        </div>
+      </div>
+    `;
     })
     .join('');
 
