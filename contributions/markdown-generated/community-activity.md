@@ -23,9 +23,18 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (0)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (8)</h3></summary>
 
-> **_Hooray! You're all caught up._**
+| Repository                      | Task                                                                                                                           |
+| :------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| **mautic-community-handbook**   | [Docs: Update community leaderships ](https://github.com/mautic/mautic-community-handbook/pull/444)                            |
+| **developer-documentation-new** | [Docs: Add API v2 page](https://github.com/mautic/developer-documentation-new/pull/311)                                        |
+| **user-documentation**          | [Cherry-pick: "add rating field " to 7.1](https://github.com/mautic/user-documentation/pull/604)                               |
+| **user-documentation**          | [Cherry-pick: "add rating field " to 7.0](https://github.com/mautic/user-documentation/pull/603)                               |
+| **user-documentation**          | [Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.0](https://github.com/mautic/user-documentation/pull/621) |
+| **user-documentation**          | [Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.1](https://github.com/mautic/user-documentation/pull/622) |
+| **oss-communities**             | [Chores: Restructure website](https://github.com/OpenSource-Communities/oss-communities/pull/2)                                |
+| **podcast-transcripts**         | [Edit Older Episodes to Follow New Guidelines](https://github.com/Virtual-Coffee/podcast-transcripts/pull/106)                 |
 
 </details>
 
@@ -34,17 +43,17 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 | Repository                      | Task                                                                                                               |
 | :------------------------------ | :----------------------------------------------------------------------------------------------------------------- |
+| **user-documentation**          | [Campaign import export user docs](https://github.com/mautic/user-documentation/pull/361)                          |
+| **developer-documentation-new** | [Navigating UI resources](https://github.com/mautic/developer-documentation-new/pull/250)                          |
 | **virtualcoffee.io**            | [feat: Add hachemite to members file list](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1456)           |
 | **guestbook**                   | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)           |
 | **guestbook**                   | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)  |
 | **guestbook**                   | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)         |
-| **user-documentation**          | [Campaign import export user docs](https://github.com/mautic/user-documentation/pull/361)                          |
 | **developer-documentation-new** | [Documenting "withContactCounts" for campaign API](https://github.com/mautic/developer-documentation-new/pull/293) |
 | **guestbook**                   | [feat: Add ArunKumar235 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/943)            |
 | **guestbook**                   | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934)    |
 | **guestbook**                   | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)       |
 | **user-documentation**          | [docs: Add Tags documentation for Contact management](https://github.com/mautic/user-documentation/pull/647)       |
-| **developer-documentation-new** | [Navigating UI resources](https://github.com/mautic/developer-documentation-new/pull/250)                          |
 | **VC-Community-Docs**           | [docs: add mermaid diagrams redo ](https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521)                   |
 | **virtualcoffee.io**            | [Create a networking guide for Programmers](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399)          |
 | **virtualcoffee.io**            | [Add TypeScript — Getting Started Resource Page](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1430)     |
