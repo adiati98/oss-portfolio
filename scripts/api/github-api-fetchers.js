@@ -559,6 +559,8 @@ async function fetchOngoingReviews() {
       updatedAt: pr.updated_at,
       number: pr.number,
       user: pr.user,
+      isDraft: pr.draft,
+      labels: pr.labels ? pr.labels.map((l) => l.name) : [],
     };
   };
 
@@ -629,8 +631,78 @@ async function fetchOngoingIssues() {
   });
 }
 
+/**
+ * Fetches all open Pull Requests authored by the user in external repositories.
+ * Includes both Draft and ready-for-review PRs.
+ */
+async function fetchOngoingAuthoredPrs() {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+
+  async function searchAll(query) {
+    let results = [];
+    let page = 1;
+    while (true) {
+      try {
+        const response = await axiosInstance.get(
+          `/search/issues?q=${query}&per_page=100&page=${page}`
+        );
+        results.push(...response.data.items);
+        const link = response.headers.link;
+        if (link && link.includes('rel="next"')) {
+          page++;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        } else {
+          break;
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 403) {
+          console.log('Rate limit hit in fetchOngoingAuthorPrs. Waiting for 60 seconds...');
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          continue;
+        }
+        throw err;
+      }
+    }
+    return results;
+  }
+
+  // 1. Fetch all open PRs
+  const query = `is:pr is:open author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
+  const rawPrs = await searchAll(query);
+
+  // 2. Fetch only APPROVED open PRs
+  const approvedQuery = `${query} review:approved`;
+  const approvedPrs = await searchAll(approvedQuery);
+  const approvedUrls = new Set(approvedPrs.map((pr) => pr.html_url));
+
+  return rawPrs.map((pr) => {
+    const repoParts = new URL(pr.repository_url).pathname.split('/');
+    return {
+      title: pr.title,
+      url: pr.html_url,
+      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+      createdAt: pr.created_at,
+      updatedAt: pr.updated_at,
+      number: pr.number,
+      isDraft: pr.draft,
+      labels: pr.labels.map((l) => l.name),
+      isApproved: approvedUrls.has(pr.html_url),
+    };
+  });
+}
+
 module.exports = {
   fetchContributions,
   fetchOngoingReviews,
   fetchOngoingIssues,
+  fetchOngoingAuthoredPrs,
 };

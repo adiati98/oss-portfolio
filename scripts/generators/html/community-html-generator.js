@@ -131,7 +131,6 @@ async function createCommunityHtml(
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
-    // Define the content based on whether tasks exist
     let sectionContent;
 
     if (count > 0) {
@@ -139,16 +138,63 @@ async function createCommunityHtml(
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
         .map((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
+          const labels = (task.labels || []).map((l) => l.toLowerCase());
+
+          const isDraft = task.isDraft === true;
+          const isPendingMerge = task.isApproved && labels.includes('pending-pr-merge');
+          const isBlocked =
+            !isPendingMerge &&
+            labels.some(
+              (l) => l.includes('blocked') || l.includes('stalled') || l.includes('wait')
+            );
+
+          let rowBgStyle = '';
+          let statusIndicator = '';
+
+          // Logic for Row Backgrounds and Indicators
+          if (isDraft) {
+            rowBgStyle = 'background-color: #f8fafc;';
+            statusIndicator = renderStatusIndicator('slate', 'Draft');
+          } else if (isPendingMerge) {
+            rowBgStyle = 'background-color: #f0fdf4;';
+            statusIndicator = renderStatusIndicator('emerald', 'Pending Merge');
+          } else if (isBlocked) {
+            rowBgStyle = 'background-color: #fff1f2;';
+            statusIndicator = renderStatusIndicator('rose', 'Blocked');
+          }
+
+          function renderStatusIndicator(color, text) {
+            const colors = {
+              slate: { dot: 'bg-slate-400', text: 'text-slate-500' },
+              emerald: { dot: 'bg-emerald-500', text: 'text-emerald-700' },
+              rose: { dot: 'bg-rose-500', text: 'text-rose-700' },
+            };
+            const theme = colors[color];
+
+            return `
+        <div class="flex items-center ${theme.text} mt-1">
+          <span class="w-1.5 h-1.5 rounded-full ${theme.dot} mr-2"></span>
+          <span class="text-[11px] font-semibold uppercase tracking-wider whitespace-nowrap">${text}</span>
+        </div>`;
+          }
+
           return dedent`
-            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
-              <td class="px-6 py-4">
-                <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${getColorValue(COLORS.primary)};">
-                  <span>${task.title}</span>
-                </a>
-              </td>
-            </tr>
-          `;
+      <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" style="${rowBgStyle}">
+        <td class="px-6 py-4 vertical-align-top w-1/3">
+          <div class="flex flex-col">
+            <span class="text-sm font-semibold text-slate-500">${repoName}</span>
+            ${statusIndicator}
+          </div>
+        </td>
+        <td class="px-6 py-4 vertical-align-top">
+          <div class="flex flex-col">
+            <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primary)};">
+              ${task.title}
+            </a>
+          </div>
+        </td>
+      </tr>
+    `;
         })
         .join('');
 
@@ -170,7 +216,6 @@ async function createCommunityHtml(
         </div>
       `;
     } else {
-      // Empty State: No table, just a wrapping div
       sectionContent = dedent`
         <div class="px-6 py-12 text-center">
           <p class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md" style="color: ${redText};">
