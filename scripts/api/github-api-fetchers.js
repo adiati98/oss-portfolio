@@ -560,6 +560,7 @@ async function fetchOngoingReviews() {
       number: pr.number,
       user: pr.user,
       isDraft: pr.draft,
+      labels: pr.labels ? pr.labels.map((l) => l.name) : [],
     };
   };
 
@@ -674,10 +675,14 @@ async function fetchOngoingAuthoredPrs() {
     return results;
   }
 
-  // Query: open PRs, authored by you, excluding your own repositories
-  // Note: GitHub search 'is:pr is:open' includes drafts by default.
+  // 1. Fetch all open PRs
   const query = `is:pr is:open author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawPrs = await searchAll(query);
+
+  // 2. Fetch only APPROVED open PRs
+  const approvedQuery = `${query} review:approved`;
+  const approvedPrs = await searchAll(approvedQuery);
+  const approvedUrls = new Set(approvedPrs.map((pr) => pr.html_url));
 
   return rawPrs.map((pr) => {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
@@ -689,7 +694,8 @@ async function fetchOngoingAuthoredPrs() {
       updatedAt: pr.updated_at,
       number: pr.number,
       isDraft: pr.draft,
-      labels: pr.labels.map(l => l.name)
+      labels: pr.labels.map((l) => l.name),
+      isApproved: approvedUrls.has(pr.html_url),
     };
   });
 }
