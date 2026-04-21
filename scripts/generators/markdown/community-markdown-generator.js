@@ -81,20 +81,29 @@ async function createCommunityMarkdown(
     );
   };
 
+  // 1. To do issues
   const todoTasks = ongoingIssues.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 2. Ongoing PRs
   const submittedPRs = ongoingPRs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 3. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 4. Review in progress
   const inProgressTasks = ongoingTasks
     .filter((t) => t.status === 'Review in progress')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+  // 5. Bot Request Review
   const botRequestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
   /**
-   * Helper function to build a collapsible HTML table section.
+   * Helper function to build a collapsible table section.
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
@@ -130,7 +139,7 @@ async function createCommunityMarkdown(
     return section;
   };
 
-  // --- Render Sections ---
+  // --- Render Sections in Priority Order ---
   md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
   md += buildCollapsibleSection('To do issues', '📝', todoTasks);
