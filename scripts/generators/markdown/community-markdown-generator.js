@@ -107,11 +107,13 @@ async function createCommunityMarkdown(
    */
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
+    const displayCount = String(count);
+    
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
     let section = `<details>\n`;
-    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${count})</h3></summary>\n\n`;
+    section += `  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">${icon} ${title} (${displayCount})</h3></summary>\n\n`;
 
     if (count === 0) {
       section += `> ***${randomMsg}***\n`;
