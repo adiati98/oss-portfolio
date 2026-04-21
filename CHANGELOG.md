@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-04-21
+
+### Added
+
+- **Authored Pull Request Tracking**: Introduced `fetchOngoingAuthoredPrs` to monitor open Pull Requests authored by the user in external repositories.
+- **Workbench UI Hierarchy**: Implemented a new layout for the Active Workbench, positioning status indicators under the repository name.
+- **Draft Support**: Added logic to `fetchOngoingReviews` and authored Pull Requests to detect and display "Draft" status.
+- **Pending Merge Status**: Added logic to detect and display "Pending Merge" status for approved Pull Requests with the specific `pending-pr-merge` label.
+- **Blocked State Tracking**: Introduced detection for "Blocked" or "Stalled" work based on repository labels.
+- **Status Indicators**: Added visual indicators (Status Dots) and conditional row highlighting for Draft, Pending Merge, and Blocked states.
+
 ## [2.1.1] - 2026-04-20
 
 ### Added
