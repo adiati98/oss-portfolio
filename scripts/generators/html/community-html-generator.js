@@ -131,7 +131,6 @@ async function createCommunityHtml(
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
-    // Define the content based on whether tasks exist
     let sectionContent;
 
     if (count > 0) {
@@ -139,16 +138,33 @@ async function createCommunityHtml(
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
         .map((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
+
+          // Distinguish drafts
+          const isDraft = task.isDraft === true || task.draft === true;
+
+          // Row background: Very light gray if draft, transparent (white) if not
+          const rowBgStyle = isDraft ? `background-color: #f8fafc;` : '';
+
+          const draftBadge = isDraft
+            ? dedent`
+            <span class="px-1.5 py-0.5 text-xs font-black uppercase tracking-wider rounded border border-slate-300 bg-slate-200 text-slate-600 shadow-sm ml-4 shrink-0">
+              Draft
+            </span>`
+            : '';
+
           return dedent`
-            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-              <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
-              <td class="px-6 py-4">
-                <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base inline-flex items-center leading-snug" style="color: ${getColorValue(COLORS.primary)};">
-                  <span>${task.title}</span>
-                </a>
-              </td>
-            </tr>
-          `;
+        <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" style="${rowBgStyle}">
+          <td class="px-6 py-4 text-sm font-semibold text-slate-500 w-1/3">${repoName}</td>
+          <td class="px-6 py-4">
+            <div class="flex items-center justify-between w-full">
+              <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primary)};">
+                ${task.title}
+              </a>
+              ${draftBadge}
+            </div>
+          </td>
+        </tr>
+      `;
         })
         .join('');
 
@@ -170,7 +186,6 @@ async function createCommunityHtml(
         </div>
       `;
     } else {
-      // Empty State: No table, just a wrapping div
       sectionContent = dedent`
         <div class="px-6 py-12 text-center">
           <p class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md" style="color: ${redText};">

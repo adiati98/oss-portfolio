@@ -20,7 +20,8 @@ try {
 const {
   fetchContributions,
   fetchOngoingReviews,
-  fetchOngoingIssues
+  fetchOngoingIssues,
+  fetchOngoingAuthoredPrs
 } = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
@@ -100,14 +101,11 @@ async function main() {
 
     await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
     console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
-    
-    // --- Fetch Ongoing Pull Requests (Submitted by you) ---
-    // TODO: Implement fetchOngoingPRs in github-api-fetchers.js
-    console.log('Fetching ongoing submitted PRs (Placeholder)...');
 
-    // Placeholder for when you implement the fetcher:
-    // const rawOngoingPRs = await fetchOngoingPRs();
-    const rawOngoingPRs = []; // Temporary empty array
+    // --- Fetch Ongoing Pull Requests (Submitted by you) ---
+    console.log('Fetching ongoing submitted PRs...');
+
+    const rawOngoingPRs = await fetchOngoingAuthoredPrs();
 
     const ongoingPRs = rawOngoingPRs.filter((pr) => {
       const repoName = pr.repo.toLowerCase();
