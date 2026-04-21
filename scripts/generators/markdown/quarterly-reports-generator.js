@@ -9,6 +9,34 @@ const {
 } = require('../../utils/contribution-formatters');
 
 /**
+ * Helper to render status labels as HTML badges.
+ */
+function getGitHubStatusBadge(status) {
+  if (!status) return '&nbsp;';
+
+  const s = status.toLowerCase();
+  const label = status.toUpperCase().replace(/\s+/g, '%20');
+  let color = '6b7280'; // Default Gray
+
+  if (s.includes('merged')) {
+    color = '8957e5'; // GitHub Purple
+  } else if (s.includes('open')) {
+    color = '238636'; // GitHub Green
+  } else if (s.includes('closed')) {
+    color = 'da3633'; // GitHub Red
+  }
+
+  return `<img src="https://img.shields.io/badge/${label}-${color}?style=flat-square" alt="${status}">`;
+}
+
+function formatStatusWithBadge(content) {
+  if (!content) return '&nbsp;';
+  return content.replace(/<strong>(.*?)<\/strong>/gi, (match, statusText) => {
+    return `<strong>${getGitHubStatusBadge(statusText)}</strong>`;
+  });
+}
+
+/**
  * Generates and writes a separate Markdown file for each quarter's contributions.
  * @param {object} groupedContributions An object where keys are "YYYY-QX" and values are the contributions for that quarter.
  */
@@ -172,8 +200,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
         for (let i = 0; i < sectionInfo.headers.length; i++) {
           tableContent += `      <th style='width:${sectionInfo.widths[i]};'>${sectionInfo.headers[i]}</th>\n`;
         }
-        tableContent += `    </tr>\n`;
-        tableContent += `  </thead>\n`;
+        tableContent += `    </tr>\n  </thead>\n`;
         tableContent += `  <tbody>\n`;
 
         let counter = 1;
@@ -215,7 +242,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
               item.myFirstReviewDate
             );
             // Get the current status of the PR (Merged, Closed, Open, etc.)
-            const lastUpdateContent = getPrStatusContent(item);
+            const lastUpdateContent = formatStatusWithBadge(getPrStatusContent(item));
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
@@ -228,7 +255,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
             // Calculate time between PR creation and my first commit
             const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
             // Get the current status of the PR (Merged, Closed, Open, etc.)
-            const lastUpdateContent = getPrStatusContent(item);
+            const lastUpdateContent = formatStatusWithBadge(getPrStatusContent(item));
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${firstCommitAt}</td>\n`;
@@ -238,7 +265,7 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
-            const statusContent = getCollaborationStatusContent(item);
+            const statusContent = formatStatusWithBadge(getCollaborationStatusContent(item));
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
