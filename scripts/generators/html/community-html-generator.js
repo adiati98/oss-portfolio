@@ -139,12 +139,11 @@ async function createCommunityHtml(
         .map((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
 
-          // Distinguish drafts
+          // Check for draft status (handling both 'isDraft' and 'draft' keys)
           const isDraft = task.isDraft === true || task.draft === true;
 
-          // Row background: Very light gray if draft, transparent (white) if not
+          // Conditional styling
           const rowBgStyle = isDraft ? `background-color: #f8fafc;` : '';
-
           const draftBadge = isDraft
             ? dedent`
             <span class="px-1.5 py-0.5 text-xs font-black uppercase tracking-wider rounded border border-slate-300 bg-slate-200 text-slate-600 shadow-sm ml-4 shrink-0">

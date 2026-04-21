@@ -559,6 +559,7 @@ async function fetchOngoingReviews() {
       updatedAt: pr.updated_at,
       number: pr.number,
       user: pr.user,
+      isDraft: pr.draft,
     };
   };
 
