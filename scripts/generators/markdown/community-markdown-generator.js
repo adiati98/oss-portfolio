@@ -4,6 +4,34 @@ const { BASE_DIR } = require('../../config/config');
 const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 
 /**
+ * Helper to render status labels as HTML badges.
+ */
+function getStatusBadge(task) {
+  if (!task.labels && !task.isDraft) return '';
+
+  const labels = (task.labels || []).map((l) => (typeof l === 'string' ? l : l.name).toLowerCase());
+  const isDraft = task.isDraft === true;
+  const isPendingMerge = task.isApproved && labels.includes('pending-pr-merge');
+  const isBlocked =
+    !isPendingMerge &&
+    labels.some((l) => l.includes('blocked') || l.includes('stalled') || l.includes('wait'));
+
+  let badge = '';
+  const baseStyle =
+    'padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 8px; color: white; vertical-align: middle; display: inline-block;';
+
+  if (isDraft) {
+    badge = `<span style='${baseStyle} background-color: #64748b;'>DRAFT</span>`;
+  } else if (isPendingMerge) {
+    badge = `<span style='${baseStyle} background-color: #10b981;'>PENDING MERGE</span>`;
+  } else if (isBlocked) {
+    badge = `<span style='${baseStyle} background-color: #f43f5e;'>BLOCKED</span>`;
+  }
+
+  return badge;
+}
+
+/**
  * Generates the Community & Activity Markdown report.
  */
 async function createCommunityMarkdown(
@@ -42,7 +70,6 @@ async function createCommunityMarkdown(
   md += `*A live list of open pull requests and ongoing maintenance tasks.*\n\n`;
 
   // --- Filtering Logic ---
-
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
     const userStr = String(username || '').toLowerCase();
@@ -81,7 +108,7 @@ async function createCommunityMarkdown(
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
     const displayCount = String(count);
-
+    
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
@@ -91,13 +118,23 @@ async function createCommunityMarkdown(
     if (count === 0) {
       section += `> ***${randomMsg}***\n`;
     } else {
-      section += `| Repository | Task |\n`;
-      section += `| :--- | :--- |\n`;
+      section += `<table style='width:100%; table-layout:fixed;'>\n`;
+      section += `  <thead>\n    <tr>\n`;
+      section += `      <th style='width:25%; text-align:left;'>Repository</th>\n`;
+      section += `      <th style='width:75%; text-align:left;'>Task</th>\n`;
+      section += `    </tr>\n  </thead>\n  <tbody>\n`;
+
       tasks.forEach((task) => {
         const repoName = task.repo.split('/')[1] || task.repo;
-        const taskLink = `[${task.title}](${task.url})`;
-        section += `| **${repoName}** | ${taskLink} |\n`;
+        const statusBadge = getStatusBadge(task);
+
+        section += `    <tr>\n`;
+        section += `      <td style='vertical-align: top;'><strong>${repoName}</strong><br />${statusBadge}</td>\n`;
+        section += `      <td style='vertical-align: top;'><a href='${task.url}'>${task.title}</a></td>\n`;
+        section += `    </tr>\n`;
       });
+
+      section += `  </tbody>\n</table>\n`;
     }
 
     section += `\n</details>\n\n`;
@@ -105,20 +142,10 @@ async function createCommunityMarkdown(
   };
 
   // --- Render Sections in Priority Order ---
-
-  // 1. Initiative: Things you started
   md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
-
-  // 2. Collaboration: Things you are currently helping with
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
-
-  // 3. Intent: Things you have committed to doing
   md += buildCollapsibleSection('To do issues', '📝', todoTasks);
-
-  // 4. Inbox: Things people are asking you to look at
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
-
-  // 5. Maintenance: Automated team-wide tasks
   md += buildCollapsibleSection('Bot request review', '🤖', botRequestReviewTasks);
 
   md += `---\n`;
