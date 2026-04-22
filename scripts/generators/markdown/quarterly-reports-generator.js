@@ -230,7 +230,6 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
               const closingPeriod = calculatePeriodInDays(item.date, item.closedAt);
               tableContent += `      <td>${closingPeriod}</td>\n`;
             } else {
-              // Changed 'Open' to 'OPEN' for consistency
               tableContent += `      <td>${getGitHubStatusBadge('OPEN')}</td>\n`;
             }
             // Logic for Reviewed PRs table structure
@@ -244,7 +243,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
 
             // Separate the last updated date from the status badge
             const lastUpdatedDate = formatDate(item.date);
-            const statusBadge = getGitHubStatusBadge(item.state || 'Open');
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
@@ -258,7 +259,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
 
             // Separate the last updated date from the status badge
             const lastUpdatedDate = formatDate(item.date);
-            const statusBadge = getGitHubStatusBadge(item.state || 'Open');
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${firstCommitAt}</td>\n`;
@@ -271,7 +274,9 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
 
             // Separate the last updated date from the status badge
             const lastUpdatedDate = formatDate(item.date);
-            const statusBadge = getGitHubStatusBadge(item.state || 'Open');
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
