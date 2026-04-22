@@ -9,6 +9,29 @@ const {
 } = require('../../utils/contribution-formatters');
 
 /**
+ * Helper to render status labels as HTML badges.
+ * Strictly uses the label-color format from the workbench to prevent 404s.
+ */
+function getGitHubStatusBadge(status) {
+  if (!status) return '&nbsp;';
+
+  const s = status.toLowerCase();
+  // Ensure the label is clean for the URL and lacks the "status" prefix
+  const label = status.replace(/\s+/g, '%20');
+  let color = '6b7280'; // Default Gray
+
+  if (s.includes('merged')) {
+    color = '8957e5'; // GitHub Purple
+  } else if (s.includes('open')) {
+    color = '238636'; // GitHub Green
+  } else if (s.includes('closed')) {
+    color = 'da3633'; // GitHub Red
+  }
+
+  return `<img src="https://img.shields.io/badge/${label}-${color}?style=flat-square" alt="${status}">`;
+}
+
+/**
  * Generates and writes a separate Markdown file for each quarter's contributions.
  * @param {object} groupedContributions An object where keys are "YYYY-QX" and values are the contributions for that quarter.
  */
@@ -199,50 +222,65 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
-            // Calculate the time elapsed until closing (or show "Open")
-            const closingPeriod = calculatePeriodInDays(item.date, item.closedAt, 'open');
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${closedAt}</td>\n`;
-            tableContent += `      <td>${closingPeriod}</td>\n`;
+
+            if (item.closedAt) {
+              const closingPeriod = calculatePeriodInDays(item.date, item.closedAt);
+              tableContent += `      <td>${closingPeriod}</td>\n`;
+            } else {
+              tableContent += `      <td>${getGitHubStatusBadge('OPEN')}</td>\n`;
+            }
             // Logic for Reviewed PRs table structure
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
             const myFirstReviewAt = formatDate(item.myFirstReviewDate);
-            // Calculate time between PR creation and my first review
             const myFirstReviewPeriod = calculatePeriodInDays(
               item.createdAt,
               item.myFirstReviewDate
             );
-            // Get the current status of the PR (Merged, Closed, Open, etc.)
-            const lastUpdateContent = getPrStatusContent(item);
+
+            // Separate the last updated date from the status badge
+            const lastUpdatedDate = formatDate(item.date);
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
             // Logic for Co-Authored PRs table structure
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
-            // Calculate time between PR creation and my first commit
             const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
-            // Get the current status of the PR (Merged, Closed, Open, etc.)
-            const lastUpdateContent = getPrStatusContent(item);
+
+            // Separate the last updated date from the status badge
+            const lastUpdatedDate = formatDate(item.date);
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${firstCommitAt}</td>\n`;
             tableContent += `      <td>${firstCommitPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdateContent}</td>\n`;
+            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
             // Logic for Collaborations table structure
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
-            const statusContent = getCollaborationStatusContent(item);
+
+            // Separate the last updated date from the status badge
+            const lastUpdatedDate = formatDate(item.date);
+            // Fix: Check for mergedAt to ensure purple MERGED badge
+            const statusBadgeText = item.mergedAt ? 'MERGED' : item.state || 'OPEN';
+            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
-            tableContent += `      <td>${statusContent}</td>\n`;
+            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
           }
 
           tableContent += `    </tr>\n`;

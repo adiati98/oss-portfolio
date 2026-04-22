@@ -7,7 +7,7 @@ const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-message
  * Helper to render status labels as HTML badges.
  */
 function getStatusBadge(task) {
-  if (!task.labels && !task.isDraft) return '';
+  if (!task.labels && !task.isDraft) return '&nbsp;';
 
   const labels = (task.labels || []).map((l) => (typeof l === 'string' ? l : l.name).toLowerCase());
   const isDraft = task.isDraft === true;
@@ -16,19 +16,23 @@ function getStatusBadge(task) {
     !isPendingMerge &&
     labels.some((l) => l.includes('blocked') || l.includes('stalled') || l.includes('wait'));
 
-  let badge = '';
-  const baseStyle =
-    'padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 8px; color: white; vertical-align: middle; display: inline-block;';
+  let text = '';
+  let color = '';
 
   if (isDraft) {
-    badge = `<span style='${baseStyle} background-color: #64748b;'>DRAFT</span>`;
+    text = 'DRAFT';
+    color = '64748b';
   } else if (isPendingMerge) {
-    badge = `<span style='${baseStyle} background-color: #10b981;'>PENDING MERGE</span>`;
+    text = 'PENDING%20MERGE';
+    color = '10b981';
   } else if (isBlocked) {
-    badge = `<span style='${baseStyle} background-color: #f43f5e;'>BLOCKED</span>`;
+    text = 'BLOCKED';
+    color = 'f43f5e';
   }
 
-  return badge;
+  if (!text) return '&nbsp;';
+
+  return `<img src="https://img.shields.io/badge/${text}-${color}?style=flat-square" alt="${text}">`;
 }
 
 /**
@@ -108,7 +112,6 @@ async function createCommunityMarkdown(
   const buildCollapsibleSection = (title, icon, tasks) => {
     const count = tasks.length;
     const displayCount = String(count);
-    
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
@@ -120,8 +123,9 @@ async function createCommunityMarkdown(
     } else {
       section += `<table style='width:100%; table-layout:fixed;'>\n`;
       section += `  <thead>\n    <tr>\n`;
-      section += `      <th style='width:25%; text-align:left;'>Repository</th>\n`;
-      section += `      <th style='width:75%; text-align:left;'>Task</th>\n`;
+      section += `      <th style='width:20%; text-align:left;'>Repository</th>\n`;
+      section += `      <th style='width:15%; text-align:left;'>Status</th>\n`; // New Column
+      section += `      <th style='width:65%; text-align:left;'>Task</th>\n`;
       section += `    </tr>\n  </thead>\n  <tbody>\n`;
 
       tasks.forEach((task) => {
@@ -129,7 +133,8 @@ async function createCommunityMarkdown(
         const statusBadge = getStatusBadge(task);
 
         section += `    <tr>\n`;
-        section += `      <td style='vertical-align: top;'><strong>${repoName}</strong><br />${statusBadge}</td>\n`;
+        section += `      <td style='vertical-align: top;'><strong>${repoName}</strong></td>\n`;
+        section += `      <td style='vertical-align: top; text-align: center;'>${statusBadge}</td>\n`;
         section += `      <td style='vertical-align: top;'><a href='${task.url}'>${task.title}</a></td>\n`;
         section += `    </tr>\n`;
       });
