@@ -23,7 +23,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (8)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (7)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -36,10 +36,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>mautic-community-handbook</strong><br /></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/mautic-community-handbook/pull/444'>Docs: Update community leaderships </a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong><br /></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/311'>Docs: Add API v2 page</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong><br /><span style='padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 8px; color: white; vertical-align: middle; display: inline-block; background-color: #10b981;'>PENDING MERGE</span></td>
@@ -86,6 +82,10 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/697'>docs: Document PostgreSQL database support for Mautic 7.x</a></td>
     </tr>
     <tr>
+      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong><br /></td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
+    </tr>
+    <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong><br /></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/361'>Campaign import export user docs</a></td>
     </tr>
@@ -130,10 +130,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/647'>docs: Add Tags documentation for Contact management</a></td>
     </tr>
     <tr>
-      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong><br /></td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong><br /></td>
       <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399'>Create a networking guide for Programmers</a></td>
     </tr>
@@ -155,7 +151,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (3)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (2)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -168,10 +164,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>mautic-community-handbook</strong><br /></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/mautic-community-handbook/issues/441'>[DOCS]: Update the "Current leadership team" section</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong><br /></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/issues/636'>[DOCS]: Update the "Viewing and exporting Contacts in a Segment" section in the `segments/manage_segments.rst` for branch 6.0</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>podcast-transcripts</strong><br /></td>
@@ -376,4 +368,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 21, 2026_
+_Last updated: April 22, 2026_
