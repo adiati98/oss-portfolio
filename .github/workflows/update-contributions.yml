@@ -69,8 +69,12 @@ jobs:
 
             if [ "${{ github.repository }}" = "adiati98/oss-portfolio" ]; then
                 echo "Applying optimized deployment and updating live branch."
+                # 1. Update main branch
                 git commit -m "$MSG [skip ci]"
                 git push origin main
+                
+                # 2. Update live branch
+                git commit --amend -m "$MSG"
                 git push origin main:live --force
             else
                 echo "Executing deployment update."
