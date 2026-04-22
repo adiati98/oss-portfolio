@@ -17,24 +17,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Fetch full history to properly determine the last update date.
           fetch-depth: 0 
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'  # Automatically handles node_modules caching
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci  # Uses package-lock.json for exact versions
+        run: npm ci
 
       - name: Conditionally run full sync or daily update
         run: |
-          # Check if the triggering schedule is the monthly cron
           if [ "$SCHEDULE" = "1 0 1 * *" ]; then
             echo "Running monthly full sync..."
-            # Force the script to do a full run by deleting the cache files and articles data
             rm -f data/all-contributions.json
             rm -f data/commit-cache.json
             rm -f data/pr-cache.json
@@ -45,7 +42,6 @@ jobs:
             node scripts/src/main.js
           else
             echo "Running daily update..."
-            # Run the script incrementally, relying on existing data files
             node scripts/src/main.js
           fi
         env:
@@ -61,35 +57,19 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Add the generated files to the staging area
           git add contributions/markdown-generated/ contributions/html-generated/ data/
           
-          # Check if there are any changes to commit
           if ! git diff --staged --quiet; then
-            # Use a different commit message based on the update type
             if [ "$SCHEDULE" = "1 0 1 * *" ]; then
                 git commit -m "docs: Monthly full sync [skip ci]"
             else
                 git commit -m "docs: Daily contributions update [skip ci]"
             fi
             git push
-            # Signal that a push occurred
             echo "pushed=true" >> $GITHUB_OUTPUT 
           else
             echo "No changes to commit"
-            # Signal no push occurred
             echo "pushed=false" >> $GITHUB_OUTPUT
           fi
         env:
           SCHEDULE: ${{ github.event.schedule }}
-
-      # Triggers the Netlify build only if new content was committed and pushed
-      - name: Trigger Netlify Deployment
-        # Check the output from the previous step
-        if: steps.commit.outputs.pushed == 'true'
-        run: |
-          echo "Content updated. Triggering Netlify deployment via Build Hook..."
-          curl -s -X POST -d {} "$NETLIFY_BUILD_HOOK" -o /dev/null
-        env:
-          # Reference the Build Hook URL secret securely via env mapping
-          NETLIFY_BUILD_HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
