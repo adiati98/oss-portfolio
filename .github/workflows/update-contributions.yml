@@ -60,15 +60,24 @@ jobs:
           git add contributions/markdown-generated/ contributions/html-generated/ data/
           
           if ! git diff --staged --quiet; then
+            # Determine the commit message based on schedule
             if [ "$SCHEDULE" = "1 0 1 * *" ]; then
-                git commit -m "docs: Monthly full sync [skip ci]"
+                MSG="docs: Monthly full sync"
             else
-                git commit -m "docs: Daily contributions update [skip ci]"
+                MSG="docs: Daily contributions update"
             fi
 
-            git push origin main
-            git push origin main:live --force
-            
+            if [ "${{ github.repository }}" = "adiati98/oss-portfolio" ]; then
+                echo "Applying optimized deployment and updating live branch."
+                git commit -m "$MSG [skip ci]"
+                git push origin main
+                git push origin main:live --force
+            else
+                echo "Executing deployment update."
+                git commit -m "$MSG"
+                git push origin main
+            fi
+
             echo "pushed=true" >> $GITHUB_OUTPUT 
           else
             echo "No changes to commit"
