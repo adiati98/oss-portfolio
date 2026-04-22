@@ -65,7 +65,10 @@ jobs:
             else
                 git commit -m "docs: Daily contributions update [skip ci]"
             fi
-            git push
+
+            git push origin main
+            git push origin main:live --force
+            
             echo "pushed=true" >> $GITHUB_OUTPUT 
           else
             echo "No changes to commit"
