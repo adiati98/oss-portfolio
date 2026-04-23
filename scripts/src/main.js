@@ -21,7 +21,8 @@ const {
   fetchContributions,
   fetchOngoingReviews,
   fetchOngoingIssues,
-  fetchOngoingAuthoredPrs
+  fetchOngoingAuthoredPrs,
+  fetchOngoingCoAuthoredPrs
 } = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
@@ -54,6 +55,7 @@ async function main() {
   const articlesFile = path.join(dataDir, 'all-articles.json');
   const ongoingTasksFile = path.join(dataDir, 'ongoing-tasks.json');
   const ongoingIssuesFile = path.join(dataDir, 'ongoing-issues.json');
+  const ongoingCoAuthoredPRsFile = path.join(dataDir, 'ongoing-coauthored-prs.json');
 
   let prCache = new Set();
 
@@ -118,6 +120,27 @@ async function main() {
     const ongoingPRsFile = path.join(dataDir, 'ongoing-prs.json');
     await fs.writeFile(ongoingPRsFile, JSON.stringify(ongoingPRs, null, 2), 'utf8');
     console.log(`Saved ${ongoingPRs.length} ongoing PRs to ${ongoingPRsFile}.`);
+
+    // --- Fetch Ongoing Co-authored PRs (Workbench) ---
+    console.log('Fetching ongoing co-authored PRs for the Active Workbench...');
+    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(commitCacheFromDisk);
+
+    const ongoingCoAuthoredPRs = rawOngoingCoAuthoredPRs.filter((pr) => {
+      const repoName = pr.repo.toLowerCase();
+      const isExcluded = excludedRepos.some((excluded) =>
+        repoName.includes(excluded.toLowerCase())
+      );
+      return !isExcluded;
+    });
+
+    await fs.writeFile(
+      ongoingCoAuthoredPRsFile,
+      JSON.stringify(ongoingCoAuthoredPRs, null, 2),
+      'utf8'
+    );
+    console.log(
+      `Saved ${ongoingCoAuthoredPRs.length} ongoing co-authored PRs to ${ongoingCoAuthoredPRsFile}.`
+    );
 
     // --- Fetch Ongoing Reviews (Workbench) ---
     console.log('Fetching ongoing review tasks for the Active Workbench...');
@@ -350,14 +373,16 @@ async function main() {
       leadershipData,
       ongoingTasks,
       ongoingIssues,
-      ongoingPRs
+      ongoingPRs,
+      ongoingCoAuthoredPRs
     );
     await createCommunityMarkdown(
       finalContributions,
       leadershipData,
       ongoingTasks,
       ongoingIssues,
-      ongoingPRs
+      ongoingPRs,
+      ongoingCoAuthoredPRs
     );
 
     // Save the updated PR cache to a file for future runs.
