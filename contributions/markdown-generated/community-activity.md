@@ -70,7 +70,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (19)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (11)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -83,13 +83,90 @@ _A live list of open pull requests and ongoing maintenance tasks._
   <tbody>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/698'>docs: Document global defaults for Preference Center and UTM tracking</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/697'>docs: Document PostgreSQL database support for Mautic 7.x</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/700'>docs: Clarify relative date filter behavior across languages</a></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/361'>Campaign import export user docs</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/250'>Navigating UI resources</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/293'>Documenting "withContactCounts" for campaign API</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399'>Create a networking guide for Programmers</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/138'>Add an overview of local.php for mautic 4 documentation</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1430'>Add TypeScript — Getting Started Resource Page</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>guestbook</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/828'>feat: Add new process and move contributors</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/412'>Process Docs for Virtual Coffee Newsletter</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>podcast-transcripts</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/podcast-transcripts/pull/111'>Cljarvis 4 7 transcript</a></td>
+    </tr>
+  </tbody>
+</table>
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (20)</h3></summary>
+
+<table style='width:100%; table-layout:fixed;'>
+  <thead>
+    <tr>
+      <th style='width:20%; text-align:left;'>Repository</th>
+      <th style='width:15%; text-align:left;'>Status</th>
+      <th style='width:65%; text-align:left;'>Task</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style='vertical-align: top;'><strong>guestbook</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/699'>docs: Document Trusted Hosts validation and input formats</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/700'>docs: Clarify relative date filter behavior across languages</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
