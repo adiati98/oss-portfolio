@@ -95,7 +95,7 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 - **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
 
 > [!TIP]
-> If you do not have articles on freeCodeCamp, leave `contents/fcc-articles.js` as an empty array: `module.exports = [];` to ensure the generator runs smoothly.
+> If you do not have articles on freeCodeCamp or do not wish to exclude any repositories from the Active Workbench, ensure the respective files (`contents/fcc-articles.js` or `contents/repo-exclusions.js`) export an empty array: `module.exports = [];`. This ensures the generator runs smoothly.
 
 ### 4. Deployment
 
