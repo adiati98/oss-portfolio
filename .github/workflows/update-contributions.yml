@@ -39,6 +39,7 @@ jobs:
             rm -f data/ongoing-tasks.json
             rm -f data/ongoing-issues.json
             rm -f data/ongoing-prs.json
+            rm -f data/ongoing-coauthored-prs.json
             node scripts/src/main.js
           else
             echo "Running daily update..."
