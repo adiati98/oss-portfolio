@@ -256,7 +256,7 @@ async function createCommunityHtml(
     { tasks: coAuthoredPRs, label: 'Moving co-authored PRs forward', type: 'ongoing' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: todoTasks, label: 'To do issues', type: 'todo' },
-    { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
+    { tasks: manualRequestTasks, label: 'Request review', type: 'todo' },
     { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 

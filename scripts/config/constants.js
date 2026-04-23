@@ -62,20 +62,15 @@ function getHoverStyles() {
  * Specific color pairs for the Active Workbench dashboard
  */
 const WORKBENCH_STATUS_COLORS = {
-  todo: {
+  ongoing: {
     bg: '#ecfeff',
     text: '#086788',
     border: '#a5f3fc',
   },
-  manual: {
-    bg: '#fffbeb',
-    text: '#92400e',
-    border: '#fde68a',
-  },
-  ongoing: {
-    bg: '#eff6ff',
-    text: '#1e40af',
-    border: '#bfdbfe',
+  todo: {
+    bg: '#fff7ed',
+    text: '#c2410c',
+    border: '#fdba74',
   },
   bot: {
     bg: '#f8fafc',
