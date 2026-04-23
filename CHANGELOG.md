@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2026-04-23
+
+### Added
+
+- **Co-authored Pull Request Tracking**: Introduced logic to detect and display ongoing Pull Requests in external repositories where the user is a co-author, ensuring collaborative contributions are visible.
+- **Task Prioritization UI**: Standardized the Active Workbench color scheme to improve visual hierarchy. All ongoing work now uses a clean **Cyan** theme, while manual actions (Issues and Review Requests) utilize a high-contrast **Orange** "To Do" theme.
+
+### Changed
+
+- **Consolidated Categories**: Merged manual "Request review" tasks into the `todo` category to unify the "Action Required" workflow.
+
 # [2.3.0] - 2026-04-22
 
 ### Added
