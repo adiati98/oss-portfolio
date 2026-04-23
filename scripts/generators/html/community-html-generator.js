@@ -24,7 +24,8 @@ async function createCommunityHtml(
   rolesData,
   ongoingTasks = [],
   ongoingIssues = [],
-  ongoingPRs = []
+  ongoingPRs = [],
+  ongoingCoAuthoredPRs = []
 ) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'community-activity.html');
@@ -117,6 +118,7 @@ async function createCommunityHtml(
 
   const todoTasks = ongoingIssues;
   const submittedPRs = ongoingPRs;
+  const coAuthoredPRs = ongoingCoAuthoredPRs;
   const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
   const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
@@ -191,6 +193,7 @@ async function createCommunityHtml(
             <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primary)};">
               ${task.title}
             </a>
+            ${task.commitCount ? `<span class="text-[10px] text-slate-400 mt-1 font-mono uppercase tracking-tighter">${task.commitCount} contributions</span>` : ''}
           </div>
         </td>
       </tr>
@@ -250,6 +253,7 @@ async function createCommunityHtml(
 
   const sections = [
     { tasks: submittedPRs, label: 'Ongoing PRs', type: 'ongoing' },
+    { tasks: coAuthoredPRs, label: 'Moving co-authored PRs forward', type: 'ongoing' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
     { tasks: todoTasks, label: 'To do issues', type: 'todo' },
     { tasks: manualRequestTasks, label: 'Request review', type: 'manual' },
@@ -262,7 +266,8 @@ async function createCommunityHtml(
     )
     .join('');
 
-  const taskCount = ongoingTasks.length + ongoingIssues.length + ongoingPRs.length;
+  const taskCount =
+    ongoingTasks.length + ongoingIssues.length + ongoingPRs.length + ongoingCoAuthoredPRs.length;
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks

@@ -6,6 +6,98 @@ const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
 
 /**
+ * Fetches the very first commit of a PR to check the original author.
+ */
+async function getFirstCommitDetails(
+  owner,
+  repo,
+  prNumber,
+  username,
+  commitCache,
+  axiosInstance,
+  prUpdatedAt = null
+) {
+  const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
+
+  if (commitCache.has(prUrlKey)) {
+    const cached = commitCache.get(prUrlKey);
+    if (
+      cached &&
+      typeof cached === 'object' &&
+      cached.prUpdatedAt &&
+      prUpdatedAt &&
+      cached.prUpdatedAt === prUpdatedAt
+    ) {
+      return cached;
+    }
+  }
+
+  let result = null;
+  try {
+    let page = 1;
+    let allCommits = [];
+    while (true) {
+      const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
+      allCommits.push(...resp.data);
+      const linkHeader = resp.headers.link;
+      if (linkHeader && linkHeader.includes('rel="next"')) {
+        page++;
+        await new Promise((r) => setTimeout(r, 200));
+      } else {
+        break;
+      }
+    }
+
+    function isCommitByUser(c) {
+      try {
+        const lowerUsername = username.toLowerCase();
+        const commitMessage = c.commit?.message || '';
+        const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
+        if (isBranchUpdate) return false;
+        if (c.author?.login === username) return true;
+        const authorEmail = c.commit?.author?.email?.toLowerCase();
+        if (authorEmail) {
+          if (
+            authorEmail.endsWith('@users.noreply.github.com') &&
+            authorEmail.includes(`+${lowerUsername}@`)
+          )
+            return true;
+          if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
+          if (authorEmail.includes(lowerUsername)) return true;
+        }
+        if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
+          return true;
+        if (
+          /Co-authored-by:/i.test(commitMessage) &&
+          commitMessage.toLowerCase().includes(lowerUsername)
+        )
+          return true;
+      } catch (e) {
+        return false;
+      }
+      return false;
+    }
+
+    const userCommits = allCommits.filter(isCommitByUser);
+    if (userCommits.length > 0) {
+      userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
+      result = {
+        firstCommitDate: userCommits[0].commit.author.date,
+        commitCount: userCommits.length,
+        prUpdatedAt,
+      };
+    } else {
+      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
+    }
+  } catch (err) {
+    result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
+  }
+
+  commitCache.set(prUrlKey, result);
+  return result;
+}
+
+/**
  * Fetches the year the user joined GitHub to set the baseline for discovery.
  */
 async function getGitHubJoinYear(axiosInstance) {
@@ -21,11 +113,6 @@ async function getGitHubJoinYear(axiosInstance) {
 
 /**
  * Fetches all contribution data from the GitHub API.
- * This includes Pull Requests, Issues, Reviewed PRs, and Collaborations.
- * It handles pagination and API rate limiting.
- * @param {number|null} requestedStartYear Optional year to begin fetching. If null, auto-discovers join year.
- * @param {Set<string>} prCache A set of PR URLs that have already been processed.
- * @returns {Promise<{contributions: object, prCache: Set<string>}>}
  */
 async function fetchContributions(requestedStartYear, prCache, persistentCommitCache) {
   const token = process.env.GITHUB_TOKEN;
@@ -140,94 +227,6 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     }
   }
 
-  async function getFirstCommitDetails(
-    owner,
-    repo,
-    prNumber,
-    username,
-    commitCache,
-    prUpdatedAt = null
-  ) {
-    const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
-
-    if (commitCache.has(prUrlKey)) {
-      const cached = commitCache.get(prUrlKey);
-      if (
-        cached &&
-        typeof cached === 'object' &&
-        cached.prUpdatedAt &&
-        prUpdatedAt &&
-        cached.prUpdatedAt === prUpdatedAt
-      ) {
-        return cached;
-      }
-    }
-
-    let result = null;
-    try {
-      let page = 1;
-      let allCommits = [];
-      while (true) {
-        const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
-        allCommits.push(...resp.data);
-        const linkHeader = resp.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-          await new Promise((r) => setTimeout(r, 200));
-        } else {
-          break;
-        }
-      }
-
-      function isCommitByUser(c) {
-        try {
-          const lowerUsername = username.toLowerCase();
-          const commitMessage = c.commit?.message || '';
-          const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
-          if (isBranchUpdate) return false;
-          if (c.author?.login === username) return true;
-          const authorEmail = c.commit?.author?.email?.toLowerCase();
-          if (authorEmail) {
-            if (
-              authorEmail.endsWith('@users.noreply.github.com') &&
-              authorEmail.includes(`+${lowerUsername}@`)
-            )
-              return true;
-            if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
-            if (authorEmail.includes(lowerUsername)) return true;
-          }
-          if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-            return true;
-          if (
-            /Co-authored-by:/i.test(commitMessage) &&
-            commitMessage.toLowerCase().includes(lowerUsername)
-          )
-            return true;
-        } catch (e) {
-          return false;
-        }
-        return false;
-      }
-
-      const userCommits = allCommits.filter(isCommitByUser);
-      if (userCommits.length > 0) {
-        userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
-        result = {
-          firstCommitDate: userCommits[0].commit.author.date,
-          commitCount: userCommits.length,
-          prUpdatedAt,
-        };
-      } else {
-        result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
-      }
-    } catch (err) {
-      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
-    }
-
-    commitCache.set(prUrlKey, result);
-    return result;
-  }
-
   for (let year = startYear; year <= currentYear; year++) {
     console.log(`Fetching contributions for year: ${year}...`);
     const yearStart = `${year}-01-01T00:00:00Z`;
@@ -340,6 +339,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           pr.number,
           GITHUB_USERNAME,
           commitCache,
+          axiosInstance,
           pr.updated_at
         );
 
@@ -414,6 +414,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           item.number,
           GITHUB_USERNAME,
           commitCache,
+          axiosInstance,
           item.updated_at
         );
         if (commitDetails && commitDetails.firstCommitDate) {
@@ -625,15 +626,14 @@ async function fetchOngoingIssues() {
       repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
       createdAt: issue.created_at,
       updatedAt: issue.updated_at,
-      labels: issue.labels.map(l => l.name),
-      number: issue.number
+      labels: issue.labels.map((l) => l.name),
+      number: issue.number,
     };
   });
 }
 
 /**
  * Fetches all open Pull Requests authored by the user in external repositories.
- * Includes both Draft and ready-for-review PRs.
  */
 async function fetchOngoingAuthoredPrs() {
   const token = process.env.GITHUB_TOKEN;
@@ -700,9 +700,97 @@ async function fetchOngoingAuthoredPrs() {
   });
 }
 
+/**
+ * Fetches all open Pull Requests in external repositories where the user
+ * is a co-author. Address ongoing PRs only, excluding "commitCount" logic.
+ */
+async function fetchOngoingCoAuthoredPrs(commitCache) {
+  const token = process.env.GITHUB_TOKEN;
+  if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+  const axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      Authorization: `token ${token}`,
+      Accept: 'application/vnd.github.v3+json',
+    },
+  });
+
+  async function searchAll(query) {
+    let results = [];
+    let page = 1;
+    while (true) {
+      try {
+        const response = await axiosInstance.get(
+          `/search/issues?q=${query}&per_page=100&page=${page}`
+        );
+        results.push(...response.data.items);
+        const link = response.headers.link;
+        if (link && link.includes('rel="next"')) {
+          page++;
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        } else {
+          break;
+        }
+      } catch (err) {
+        if (err.response && err.response.status === 403) {
+          console.log('Rate limit hit in fetchOngoingCoAuthoredPrs. Waiting...');
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          continue;
+        }
+        throw err;
+      }
+    }
+    return results;
+  }
+
+  // Query: open PRs where you commented/pushed, but did not author.
+  const query = `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
+  const rawPrs = await searchAll(query);
+
+  const coAuthoredResults = [];
+
+  for (const pr of rawPrs) {
+    const repoParts = new URL(pr.repository_url).pathname.split('/');
+    const owner = repoParts[repoParts.length - 2];
+    const repoName = repoParts[repoParts.length - 1];
+
+    if (owner === GITHUB_USERNAME) continue;
+
+    // Verify commit authorship using the moved helper
+    const commitDetails = await getFirstCommitDetails(
+      owner,
+      repoName,
+      pr.number,
+      GITHUB_USERNAME,
+      commitCache,
+      axiosInstance,
+      pr.updated_at
+    );
+
+    // Only include if user has commits, but don't return the commitCount
+    if (commitDetails && commitDetails.firstCommitDate) {
+      coAuthoredResults.push({
+        title: pr.title,
+        url: pr.html_url,
+        repo: `${owner}/${repoName}`,
+        number: pr.number,
+        status: 'Co-authoring',
+        createdAt: pr.created_at,
+        updatedAt: pr.updated_at,
+        labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+        isDraft: pr.draft,
+      });
+    }
+  }
+
+  return coAuthoredResults;
+}
+
 module.exports = {
   fetchContributions,
   fetchOngoingReviews,
   fetchOngoingIssues,
   fetchOngoingAuthoredPrs,
+  fetchOngoingCoAuthoredPrs,
 };

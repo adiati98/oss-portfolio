@@ -43,7 +43,8 @@ async function createCommunityMarkdown(
   rolesData,
   ongoingTasks = [],
   ongoingIssues = [],
-  ongoingPRs = []
+  ongoingPRs = [],
+  ongoingCoAuthoredPRs = [] // ADDED
 ) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
   const outputPath = path.join(mdBaseDir, 'community-activity.md');
@@ -91,17 +92,22 @@ async function createCommunityMarkdown(
   // 2. Ongoing PRs
   const submittedPRs = ongoingPRs.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 3. Manual Request Review (Exclude Bots)
+  // 3. Co-authored PRs
+  const coAuthoredPRs = ongoingCoAuthoredPRs.sort(
+    (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+  );
+
+  // 4. Manual Request Review (Exclude Bots)
   const requestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && !isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 4. Review in progress
+  // 5. Review in progress
   const inProgressTasks = ongoingTasks
     .filter((t) => t.status === 'Review in progress')
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-  // 5. Bot Request Review
+  // 6. Bot Request Review
   const botRequestReviewTasks = ongoingTasks
     .filter((t) => t.status === 'Request review' && isBot(t))
     .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -124,7 +130,7 @@ async function createCommunityMarkdown(
       section += `<table style='width:100%; table-layout:fixed;'>\n`;
       section += `  <thead>\n    <tr>\n`;
       section += `      <th style='width:20%; text-align:left;'>Repository</th>\n`;
-      section += `      <th style='width:15%; text-align:left;'>Status</th>\n`; // New Column
+      section += `      <th style='width:15%; text-align:left;'>Status</th>\n`;
       section += `      <th style='width:65%; text-align:left;'>Task</th>\n`;
       section += `    </tr>\n  </thead>\n  <tbody>\n`;
 
@@ -148,6 +154,7 @@ async function createCommunityMarkdown(
 
   // --- Render Sections in Priority Order ---
   md += buildCollapsibleSection('Ongoing PRs', '📤', submittedPRs);
+  md += buildCollapsibleSection('Moving Co-authored PRs Forward', '🤝', coAuthoredPRs);
   md += buildCollapsibleSection('Review in progress', '🔄', inProgressTasks);
   md += buildCollapsibleSection('To do issues', '📝', todoTasks);
   md += buildCollapsibleSection('Request review', '📥', requestReviewTasks);
