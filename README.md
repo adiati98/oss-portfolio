@@ -99,4 +99,4 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 
 ### 4. Deployment
 
-The GitHub Action automatically triggers a deployment to **Netlify** via a Build Hook after committing new data. Ensure the `NETLIFY_BUILD_HOOK` secret remains active in the repository settings.
+This project is host-agnostic. Connect your repository to a service like Netlify, Vercel, or GitHub Pages to deploy your portfolio.
