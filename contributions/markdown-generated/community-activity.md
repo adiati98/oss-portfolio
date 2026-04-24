@@ -23,7 +23,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (6)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (5)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -59,18 +59,13 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/oss-communities/pull/2'>Chores: Restructure website</a></td>
     </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>podcast-transcripts</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/podcast-transcripts/pull/106'>Edit Older Episodes to Follow New Guidelines</a></td>
-    </tr>
   </tbody>
 </table>
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (11)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (10)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -83,7 +78,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
   <tbody>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/698'>docs: Document global defaults for Preference Center and UTM tracking</a></td>
     </tr>
     <tr>
@@ -131,18 +126,13 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/412'>Process Docs for Virtual Coffee Newsletter</a></td>
     </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>podcast-transcripts</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/podcast-transcripts/pull/111'>Cljarvis 4 7 transcript</a></td>
-    </tr>
   </tbody>
 </table>
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (20)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (19)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -154,6 +144,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
   </thead>
   <tbody>
     <tr>
+      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
+    </tr>
+    <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
@@ -161,22 +156,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/699'>docs: Document Trusted Hosts validation and input formats</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/700'>docs: Clarify relative date filter behavior across languages</a></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/698'>docs: Document global defaults for Preference Center and UTM tracking</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/697'>docs: Document PostgreSQL database support for Mautic 7.x</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
@@ -259,24 +244,9 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (1)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-<table style='width:100%; table-layout:fixed;'>
-  <thead>
-    <tr>
-      <th style='width:20%; text-align:left;'>Repository</th>
-      <th style='width:15%; text-align:left;'>Status</th>
-      <th style='width:65%; text-align:left;'>Task</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style='vertical-align: top;'><strong>podcast-transcripts</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/podcast-transcripts/issues/103'>Improve previous edited episodes to follow new guidelines</a></td>
-    </tr>
-  </tbody>
-</table>
+> **_Nothing to see here. You've cleared the deck!_**
 
 </details>
 
@@ -516,4 +486,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 23, 2026_
+_Last updated: April 24, 2026_
