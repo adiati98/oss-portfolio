@@ -144,6 +144,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
   </thead>
   <tbody>
     <tr>
+      <td style='vertical-align: top;'><strong>guestbook</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
+    </tr>
+    <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/697'>docs: Document PostgreSQL database support for Mautic 7.x</a></td>
@@ -157,11 +162,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>guestbook</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
@@ -251,7 +251,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Inbox Zero achieved! Time for a coffee?_**
+> **_Zero tasks. The ecosystem is in good hands!_**
 
 </details>
 
@@ -501,4 +501,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 25, 2026_
+_Last updated: April 26, 2026_
