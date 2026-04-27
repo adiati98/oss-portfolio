@@ -146,6 +146,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/943'>feat: Add ArunKumar235 as a contributor</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>guestbook</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
     </tr>
     <tr>
@@ -206,11 +211,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/943'>feat: Add ArunKumar235 as a contributor</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>guestbook</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/934'>docs: add @Yashrajsinh-Kanchva as a contributor</a></td>
     </tr>
     <tr>
@@ -251,12 +251,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Zero tasks. The ecosystem is in good hands!_**
+> **_Nothing to see here. You've cleared the deck!_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (11)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (12)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -267,6 +267,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/341'>[DOCS]: Add "Cookie helper" page</a></td>
+    </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
@@ -501,4 +506,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 26, 2026_
+_Last updated: April 27, 2026_
