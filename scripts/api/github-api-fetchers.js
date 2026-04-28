@@ -634,6 +634,7 @@ async function fetchOngoingIssues() {
 
 /**
  * Fetches all open Pull Requests authored by the user in external repositories.
+ * Uses the Issues API, which includes Pull Requests (even standalone ones).
  */
 async function fetchOngoingAuthoredPrs() {
   const token = process.env.GITHUB_TOKEN;
@@ -647,57 +648,59 @@ async function fetchOngoingAuthoredPrs() {
     },
   });
 
-  async function searchAll(query) {
-    let results = [];
-    let page = 1;
+  let allAuthoredItems = [];
+  let page = 1;
+
+  try {
     while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const link = response.headers.link;
-        if (link && link.includes('rel="next"')) {
-          page++;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        } else {
-          break;
+      const response = await axiosInstance.get(`/issues`, {
+        params: {
+          filter: 'created',
+          state: 'open',
+          per_page: 100,
+          page: page,
+          pulls: true // Encourages the API to include PR-specific metadata
         }
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit in fetchOngoingAuthorPrs. Waiting for 60 seconds...');
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        }
-        throw err;
+      });
+
+      if (response.data.length === 0) break;
+      allAuthoredItems.push(...response.data);
+      
+      const link = response.headers.link;
+      if (link && link.includes('rel="next"')) {
+        page++;
+      } else {
+        break;
       }
     }
-    return results;
+  } catch (err) {
+    console.error('❌ Error fetching from Issues API:', err.message);
+    return [];
   }
 
-  // 1. Fetch all open PRs
-  const query = `is:pr is:open author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
-  const rawPrs = await searchAll(query);
-
-  // 2. Fetch only APPROVED open PRs
-  const approvedQuery = `${query} review:approved`;
-  const approvedPrs = await searchAll(approvedQuery);
-  const approvedUrls = new Set(approvedPrs.map((pr) => pr.html_url));
-
-  return rawPrs.map((pr) => {
-    const repoParts = new URL(pr.repository_url).pathname.split('/');
-    return {
-      title: pr.title,
-      url: pr.html_url,
-      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
-      createdAt: pr.created_at,
-      updatedAt: pr.updated_at,
-      number: pr.number,
-      isDraft: pr.draft,
-      labels: pr.labels.map((l) => l.name),
-      isApproved: approvedUrls.has(pr.html_url),
-    };
-  });
+  // Filter the results
+  return allAuthoredItems
+    .filter(item => {
+      // 1. Must be a Pull Request (GitHub returns PRs in the /issues endpoint)
+      const isPr = !!item.pull_request;
+      // 2. Must be in an external repository
+      const isExternal = !item.repository_url.includes(`repos/${GITHUB_USERNAME}/`);
+      return isPr && isExternal;
+    })
+    .map((pr) => {
+      const repoParts = new URL(pr.repository_url).pathname.split('/');
+      
+      return {
+        title: pr.title,
+        url: pr.html_url,
+        repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+        createdAt: pr.created_at,
+        updatedAt: pr.updated_at,
+        number: pr.number,
+        isDraft: pr.draft === true || !!(pr.pull_request && pr.pull_request.draft),
+        labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+      };
+    });
 }
 
 /**
