@@ -171,7 +171,7 @@ async function createCommunityHtml(
           const labels = (task.labels || []).map((l) => l.toLowerCase());
 
           const isDraft = task.isDraft === true;
-          const isPendingMerge = task.isApproved && labels.includes('pending-pr-merge');
+          const isPendingMerge = labels.some((l) => l.includes('pending') && l.includes('merge'));
           const isBlocked =
             !isPendingMerge &&
             labels.some(
