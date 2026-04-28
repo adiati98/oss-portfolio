@@ -65,7 +65,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (10)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (7)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -97,19 +97,9 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/250'>Navigating UI resources</a></td>
     </tr>
     <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/293'>Documenting "withContactCounts" for campaign API</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399'>Create a networking guide for Programmers</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/138'>Add an overview of local.php for mautic 4 documentation</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
@@ -121,18 +111,13 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/828'>feat: Add new process and move contributors</a></td>
     </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/412'>Process Docs for Virtual Coffee Newsletter</a></td>
-    </tr>
   </tbody>
 </table>
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (20)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (17)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -146,12 +131,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/943'>feat: Add ArunKumar235 as a contributor</a></td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/943'>feat: Add ArunKumar235 as a contributor</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
@@ -162,11 +147,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/701'>docs: Document Tag Manager with enhanced search capability</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521'>docs: add mermaid diagrams redo </a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
@@ -204,11 +184,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/937'>docs: add @aaronthomas-09 as a contributor</a></td>
     </tr>
     <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/293'>Documenting "withContactCounts" for campaign API</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/934'>docs: add @Yashrajsinh-Kanchva as a contributor</a></td>
@@ -238,11 +213,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/828'>feat: Add new process and move contributors</a></td>
     </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>VC-Community-Docs</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/VC-Community-Docs/pull/412'>Process Docs for Virtual Coffee Newsletter</a></td>
-    </tr>
   </tbody>
 </table>
 
@@ -251,12 +221,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Nothing to see here. You've cleared the deck!_**
+> **_Zero tasks. The ecosystem is in good hands!_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (12)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (11)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -268,14 +238,14 @@ _A live list of open pull requests and ongoing maintenance tasks._
   </thead>
   <tbody>
     <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/341'>[DOCS]: Add "Cookie helper" page</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/702'>docs: Document Unsubscribe-to-Open Ratio stat for Email reports</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/341'>[DOCS]: Add "Cookie helper" page</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
@@ -286,11 +256,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/670'>docs(email): document global defaults for preference center and UTM tracking</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/296'>docs: Document Companies REST API with tags support</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
@@ -333,7 +298,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (31)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤖 Bot request review (27)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -363,16 +328,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
       <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/BLOCKED-f43f5e?style=flat-square" alt="BLOCKED"></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/308'>Bump sphinxcontrib-phpdomain from 0.13.2 to 0.15.1 in /docs</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/309'>Bump attrs from 25.4.0 to 26.1.0 in /docs</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/BLOCKED-f43f5e?style=flat-square" alt="BLOCKED"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/301'>Bump sphinx from 8.0.2 to 9.1.0 in /docs</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
@@ -447,16 +402,6 @@ _A live list of open pull requests and ongoing maintenance tasks._
     <tr>
       <td style='vertical-align: top;'><strong>oss-communities</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/oss-communities/pull/13'>[Snyk] Security upgrade astro from 5.10.1 to 5.16.10</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1463'>Bump diff from 4.0.2 to 4.0.4</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>oss-communities</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/oss-communities/pull/12'>[Snyk] Security upgrade astro from 5.10.1 to 5.16.3</a></td>
     </tr>
     <tr>
@@ -506,4 +451,4 @@ _A live list of open pull requests and ongoing maintenance tasks._
 
 ---
 
-_Last updated: April 27, 2026_
+_Last updated: April 28, 2026_
