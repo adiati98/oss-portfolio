@@ -283,13 +283,15 @@ async function createCommunityHtml(
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks
-    ? getColorValue(COLORS.status.green.bg)
+    ? getColorValue(COLORS.primary[10]) || '#eef2ff'
     : getColorValue(COLORS.status.red.bg);
+
   const badgeTextColor = hasTasks
-    ? getColorValue(COLORS.status.green.text)
+    ? getColorValue(COLORS.primary)
     : getColorValue(COLORS.status.red.text);
+
   const badgeBorderColor = hasTasks
-    ? getColorValue(COLORS.status.green.text)
+    ? getColorValue(COLORS.primary)
     : getColorValue(COLORS.status.red.text);
 
   const fullHtml = dedent`
