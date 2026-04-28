@@ -145,7 +145,7 @@ async function createCommunityHtml(
     if (!config) return '';
 
     return dedent`
-      <div class="inline-flex items-center px-2 py-0.5 mt-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider border" 
+      <div class="inline-flex items-center px-2 py-0.5 mt-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border" 
            style="background-color: ${config.bg}; color: ${config.text}; border-color: ${config.border}33;">
         ${config.label}
       </div>`;
@@ -200,7 +200,7 @@ async function createCommunityHtml(
                   <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primary)};">
                     ${task.title}
                   </a>
-                  ${task.commitCount ? `<span class="text-[10px] text-slate-400 mt-1 font-mono uppercase tracking-tighter">${task.commitCount} contributions</span>` : ''}
+                  ${task.commitCount ? `<span class="text-[11px] text-slate-400 mt-1 font-mono uppercase tracking-tighter">${task.commitCount} contributions</span>` : ''}
                 </div>
               </td>
             </tr>
