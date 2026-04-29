@@ -152,7 +152,11 @@ async function createCommunityMarkdown(
       }
 
       tasks
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        .sort((a, b) => {
+          const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
+          const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
+          return dateB - dateA;
+        })
         .forEach((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
           const extraBadge = getStatusBadge(task);

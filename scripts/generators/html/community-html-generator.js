@@ -133,7 +133,8 @@ async function createCommunityHtml(
     }
 
     // 2. Substantive Date Calculation
-    const lastUpdate = new Date(task.updatedAt);
+    const effectiveDate = task.lastSubstantiveDate || task.updatedAt;
+    const lastUpdate = new Date(effectiveDate);
     const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
 
     // 3. Stale Check - Updated to show dynamic day count
@@ -206,7 +207,11 @@ async function createCommunityHtml(
 
     if (count > 0) {
       const rows = tasks
-        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt))
+        .sort((a, b) => {
+          const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
+          const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
+          return dateB - dateA;
+        })
         .map((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
           const labels = (task.labels || []).map((l) => l.toLowerCase());

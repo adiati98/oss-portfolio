@@ -519,7 +519,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 /**
  * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
  */
-async function getPrActivityMeta(owner, repo, prNumber, axiosInstance) {
+async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpdatedAt) {
   try {
     const [timelineResp, reviewsResp] = await Promise.all([
       axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/timeline?per_page=100`),
@@ -531,10 +531,29 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance) {
 
     const substantiveEvents = timeline.filter((e) => {
       const type = e.event;
-      if (type === 'commented' || type === 'reviewed') return true;
-      if (type === 'committed') {
-        return !e.message?.startsWith('Merge branch');
+
+      // 1. ALWAYS IGNORE: review requests, assignments, and locking
+      if (
+        [
+          'review_requested',
+          'review_request_removed',
+          'assigned',
+          'unassigned',
+          'labeled',
+          'unlabeled',
+        ].includes(type)
+      ) {
+        return false;
       }
+
+      // 2. INCLUDE: Real comments or reviews
+      if (type === 'commented' || type === 'reviewed') return true;
+
+      // 3. INCLUDE: Commits (but ignore base-branch merges)
+      if (type === 'committed') {
+        return !/Merge (branch|remote-tracking|pull request)|#\d+ from/i.test(e.message || '');
+      }
+
       return false;
     });
 
@@ -543,12 +562,30 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance) {
     const isLastActorBot =
       lastEvent?.actor?.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(lastActor || '');
 
-    // Capture the timestamp of the last REAL interaction
-    const lastSubstantiveDate = lastEvent
-      ? lastEvent.created_at || lastEvent.submitted_at || lastEvent.author?.date
-      : null;
+    // --- Calculate the TRUE last activity date ---
 
-    // Find the latest formal review state
+    let timestamps = [];
+
+    substantiveEvents.forEach((e) => {
+      const d = e.created_at || e.submitted_at || e.author?.date;
+      if (d) timestamps.push(new Date(d));
+    });
+
+    reviews.forEach((r) => {
+      if (r.submitted_at) timestamps.push(new Date(r.submitted_at));
+    });
+
+    // FALLBACK: If no substantive actions yet, use creation date, not updatedAt
+    // This prevents "Updated at" from counting meta-actions as activity.
+    let lastSubstantiveDate;
+    if (timestamps.length > 0) {
+      lastSubstantiveDate = new Date(Math.max(...timestamps)).toISOString();
+    } else {
+      // If nothing has happened yet, we'll use the current PR's updated_at
+      // but only as a last resort.
+      lastSubstantiveDate = prMainUpdatedAt;
+    }
+
     const latestReview = reviews
       .filter((r) => r.state !== 'COMMENTED')
       .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0];
@@ -557,7 +594,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance) {
       lastActor,
       isLastActorBot,
       hasFormalReview: reviews.length > 0,
-      reviewState: latestReview ? latestReview.state : null, // Crucial for the "Never Idle" logic
+      reviewState: latestReview ? latestReview.state : null,
       lastSubstantiveDate,
     };
   } catch (e) {
@@ -566,7 +603,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance) {
       isLastActorBot: false,
       hasFormalReview: false,
       reviewState: null,
-      lastSubstantiveDate: null,
+      lastSubstantiveDate: prMainUpdatedAt,
     };
   }
 }
@@ -662,7 +699,7 @@ async function fetchOngoingReviews() {
     const owner = repoParts[repoParts.length - 2];
     const repo = repoParts[repoParts.length - 1];
 
-    const activity = await getPrActivityMeta(owner, repo, pr.number, axiosInstance);
+    const activity = await getPrActivityMeta(owner, repo, pr.number, axiosInstance, pr.updated_at);
 
     return {
       title: pr.title,
@@ -831,7 +868,13 @@ async function fetchOngoingAuthoredPrs() {
       const owner = repoParts[repoParts.length - 2];
       const repo = repoParts[repoParts.length - 1];
 
-      const activity = await getPrActivityMeta(owner, repo, item.number, axiosInstance);
+      const activity = await getPrActivityMeta(
+        owner,
+        repo,
+        item.number,
+        axiosInstance,
+        item.updated_at
+      );
 
       results.push({
         title: item.title,
@@ -846,8 +889,8 @@ async function fetchOngoingAuthoredPrs() {
         lastActor: activity.lastActor,
         isLastActorBot: activity.isLastActorBot,
         hasFormalReview: activity.hasFormalReview,
-        reviewState: activity.reviewState, // Added for "Never Idle" logic
-        lastSubstantiveDate: activity.lastSubstantiveDate, // Added for "Never Idle" logic
+        reviewState: activity.reviewState,
+        lastSubstantiveDate: activity.lastSubstantiveDate,
         author: GITHUB_USERNAME,
       });
     }
@@ -921,7 +964,13 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
     );
 
     if (commitDetails && commitDetails.firstCommitDate) {
-      const activity = await getPrActivityMeta(owner, repoName, pr.number, axiosInstance);
+      const activity = await getPrActivityMeta(
+        owner,
+        repoName,
+        pr.number,
+        axiosInstance,
+        pr.updated_at
+      );
 
       coAuthoredResults.push({
         title: pr.title,
@@ -937,8 +986,8 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
         lastActor: activity.lastActor,
         isLastActorBot: activity.isLastActorBot,
         hasFormalReview: activity.hasFormalReview,
-        reviewState: activity.reviewState, // Added for "Never Idle" logic
-        lastSubstantiveDate: activity.lastSubstantiveDate, // Added for "Never Idle" logic
+        reviewState: activity.reviewState,
+        lastSubstantiveDate: activity.lastSubstantiveDate,
         author: pr.user.login,
       });
     }
