@@ -5,6 +5,20 @@ const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
 
 /**
+ * HELPER: Extracts linked issue numbers from PR descriptions.
+ */
+function getLinkedIssueNumbers(prBody) {
+  if (!prBody) return [];
+  const regex = /(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)/gi;
+  const matches = [];
+  let match;
+  while ((match = regex.exec(prBody)) !== null) {
+    matches.push(parseInt(match[1], 10));
+  }
+  return matches;
+}
+
+/**
  * HELPER: Determines if a commit was physically authored by the user.
  * This is the gatekeeper for the "Co-authored" category.
  */
@@ -640,7 +654,7 @@ async function fetchOngoingReviews() {
 /**
  * Fetches all open issues assigned to the user.
  */
-async function fetchOngoingIssues() {
+async function fetchOngoingIssues(ongoingPrs = []) {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error('GITHUB_TOKEN is not set.');
 
@@ -650,6 +664,12 @@ async function fetchOngoingIssues() {
       Authorization: `token ${token}`,
       Accept: 'application/vnd.github.v3+json',
     },
+  });
+
+  const linkedIssueNumbers = new Set();
+  ongoingPrs.forEach((pr) => {
+    const numbers = getLinkedIssueNumbers(pr.body);
+    numbers.forEach((num) => linkedIssueNumbers.add(num));
   });
 
   async function searchAll(query) {
@@ -683,18 +703,20 @@ async function fetchOngoingIssues() {
   const query = `is:issue is:open assignee:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawIssues = await searchAll(query);
 
-  return rawIssues.map((issue) => {
-    const repoParts = new URL(issue.repository_url).pathname.split('/');
-    return {
-      title: issue.title,
-      url: issue.html_url,
-      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
-      createdAt: issue.created_at,
-      updatedAt: issue.updated_at,
-      labels: issue.labels.map((l) => l.name),
-      number: issue.number,
-    };
-  });
+  return rawIssues
+    .filter((issue) => !linkedIssueNumbers.has(issue.number))
+    .map((issue) => {
+      const repoParts = new URL(issue.repository_url).pathname.split('/');
+      return {
+        title: issue.title,
+        url: issue.html_url,
+        repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+        createdAt: issue.created_at,
+        updatedAt: issue.updated_at,
+        labels: issue.labels.map((l) => l.name),
+        number: issue.number,
+      };
+    });
 }
 
 /**
@@ -758,6 +780,7 @@ async function fetchOngoingAuthoredPrs() {
         number: pr.number,
         isDraft: pr.draft === true || !!(pr.pull_request && pr.pull_request.draft),
         labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+        body: pr.body,
       };
     });
 }
@@ -838,6 +861,7 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
         updatedAt: pr.updated_at,
         labels: pr.labels ? pr.labels.map((l) => l.name) : [],
         isDraft: pr.draft,
+        body: pr.body,
       });
     }
   }

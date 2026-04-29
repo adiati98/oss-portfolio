@@ -89,21 +89,6 @@ async function main() {
   }
 
   try {
-    // --- Fetch Ongoing Issues (Assigned to you) ---
-    console.log('Fetching ongoing issues for the Active Workbench...');
-    const rawOngoingIssues = await fetchOngoingIssues();
-
-    const ongoingIssues = rawOngoingIssues.filter((issue) => {
-      const repoName = issue.repo.toLowerCase();
-      const isExcluded = excludedRepos.some((excluded) =>
-        repoName.includes(excluded.toLowerCase())
-      );
-      return !isExcluded;
-    });
-
-    await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
-    console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
-
     // --- Fetch Ongoing Pull Requests (Submitted by you) ---
     console.log('Fetching ongoing submitted PRs...');
 
@@ -120,6 +105,21 @@ async function main() {
     const ongoingPRsFile = path.join(dataDir, 'ongoing-prs.json');
     await fs.writeFile(ongoingPRsFile, JSON.stringify(ongoingPRs, null, 2), 'utf8');
     console.log(`Saved ${ongoingPRs.length} ongoing PRs to ${ongoingPRsFile}.`);
+
+    // --- Fetch Ongoing Issues (Assigned to you) ---
+    console.log('Fetching ongoing issues for the Active Workbench...');
+    const rawOngoingIssues = await fetchOngoingIssues(ongoingPRs);
+
+    const ongoingIssues = rawOngoingIssues.filter((issue) => {
+      const repoName = issue.repo.toLowerCase();
+      const isExcluded = excludedRepos.some((excluded) =>
+        repoName.includes(excluded.toLowerCase())
+      );
+      return !isExcluded;
+    });
+
+    await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
+    console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
 
     // --- Fetch Ongoing Co-authored PRs (Workbench) ---
     console.log('Fetching ongoing co-authored PRs for the Active Workbench...');
