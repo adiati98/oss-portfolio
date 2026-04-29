@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.1] - 2026-04-29
+
+### Added
+
+- **Linked Issue Deduplication**: Implemented logic to parse Pull Request descriptions for "closes/fixes" keywords. Issues linked to open PRs are now automatically removed from the "To do issues" section to prevent redundancy in the Workbench.
+- **Priority-Based Sorting**: Reorganized the Active Workbench layout to prioritize "To-do" tasks (Issues and Manual Reviews) at the top, followed by "Ongoing" work and "Bot" requests.
+
+### Changed
+
+- **Transitioned to Issues API**: Switched authored PR fetching to the direct `/issues` endpoint to ensure Draft PRs and unindexed external contributions are accurately captured.
+- **Human-Centric Review Logic**: Updated review tracking to only move tasks to "Review in progress" if a human maintainer (not a bot or the author) has interacted with the PR.
+- **Refined Commit Attribution**: Updated attribution logic to ignore `web-flow` commits, ensuring Web UI suggestions or edits do not incorrectly trigger "Co-authored" status.
+- **Dynamic Brand Alignment**: Refactored Workbench headers and labels to utilize centralized brand colors (`COLORS.primary`) instead of static CSS values.
+
+### Fixed
+
+- **Review Deduplication**: Implemented a priority check to ensure "Review in progress" takes precedence over "Request review" if both statuses are returned by the GitHub API.
+- **Execution Order**: Adjusted the main data orchestration sequence to ensure Pull Request data is available before processing issue exclusions.
+
 ## [2.4.0] - 2026-04-23
 
 ### Added
