@@ -46,7 +46,7 @@ jobs:
             node scripts/src/main.js
           fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           SCHEDULE: ${{ github.event.schedule }}
 
       - name: Format generated files
