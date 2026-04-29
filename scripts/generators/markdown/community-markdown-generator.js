@@ -11,7 +11,7 @@ function getStatusBadge(task) {
 
   const labels = (task.labels || []).map((l) => (typeof l === 'string' ? l : l.name).toLowerCase());
   const isDraft = task.isDraft === true;
-  const isPendingMerge = task.isApproved && labels.includes('pending-pr-merge');
+  const isPendingMerge = labels.some((l) => l.includes('pending') && l.includes('merge'));
   const isBlocked =
     !isPendingMerge &&
     labels.some((l) => l.includes('blocked') || l.includes('stalled') || l.includes('wait'));

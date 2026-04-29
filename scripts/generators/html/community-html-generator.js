@@ -171,7 +171,7 @@ async function createCommunityHtml(
           const labels = (task.labels || []).map((l) => l.toLowerCase());
 
           const isDraft = task.isDraft === true;
-          const isPendingMerge = task.isApproved && labels.includes('pending-pr-merge');
+          const isPendingMerge = labels.some((l) => l.includes('pending') && l.includes('merge'));
           const isBlocked =
             !isPendingMerge &&
             labels.some(
@@ -264,12 +264,12 @@ async function createCommunityHtml(
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
 
   const sections = [
+    { tasks: ongoingIssues, label: 'To do issues', type: 'todo' },
+    { tasks: manualRequestTasks, label: 'Request review', type: 'todo' },
     { tasks: ongoingPRs, label: 'Ongoing PRs', type: 'ongoing' },
     { tasks: ongoingCoAuthoredPRs, label: 'Moving co-authored PRs forward', type: 'ongoing' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
-    { tasks: ongoingIssues, label: 'To do issues', type: 'todo' },
-    { tasks: manualRequestTasks, label: 'Request review', type: 'todo' },
-    { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
+   { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 
   const workbenchHtml = sections
@@ -283,13 +283,15 @@ async function createCommunityHtml(
   const hasTasks = taskCount > 0;
 
   const badgeBg = hasTasks
-    ? getColorValue(COLORS.status.green.bg)
+    ? getColorValue(COLORS.primary[10]) || '#eef2ff'
     : getColorValue(COLORS.status.red.bg);
+
   const badgeTextColor = hasTasks
-    ? getColorValue(COLORS.status.green.text)
+    ? getColorValue(COLORS.primary)
     : getColorValue(COLORS.status.red.text);
+
   const badgeBorderColor = hasTasks
-    ? getColorValue(COLORS.status.green.text)
+    ? getColorValue(COLORS.primary)
     : getColorValue(COLORS.status.red.text);
 
   const fullHtml = dedent`

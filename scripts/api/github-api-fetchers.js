@@ -1,9 +1,73 @@
 require('dotenv').config();
-
 const axios = require('axios');
 
 // Import configuration
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
+
+/**
+ * HELPER: Extracts linked issue numbers from PR descriptions.
+ */
+function getLinkedIssueNumbers(prBody) {
+  if (!prBody) return [];
+  const regex = /(?:close|closes|closed|fix|fixes|fixed|resolve|resolves|resolved)\s+#(\d+)/gi;
+  const matches = [];
+  let match;
+  while ((match = regex.exec(prBody)) !== null) {
+    matches.push(parseInt(match[1], 10));
+  }
+  return matches;
+}
+
+/**
+ * HELPER: Determines if a commit was physically authored by the user.
+ * This is the gatekeeper for the "Co-authored" category.
+ */
+function isCommitByUser(c, username) {
+  try {
+    const lowerUsername = username.toLowerCase();
+    const commitMessage = c.commit?.message || '';
+
+    // 1. STAGE 1: WEB-UI GATEKEEPER
+    // GitHub uses 'web-flow' as the committer for all Web UI actions.
+    // If you committed a suggestion, the AUTHOR is you, but the COMMITTER is web-flow.
+    const isGitHubWebUI = c.committer?.login === 'web-flow';
+    if (isGitHubWebUI) return false;
+
+    // 2. STAGE 2: MESSAGE-BASED EXCLUSIONS
+    // Catch-all for any variation of suggestions or merges not caught by web-flow.
+    const isExcludedMessage = /suggestion|Merge branch|Merge remote-tracking/i.test(commitMessage);
+    if (isExcludedMessage) return false;
+
+    // 3. STAGE 3: LOCAL AUTHOR CHECK
+    // If we reached here, the commit was pushed via CLI/Local Git.
+    const authorLogin = c.author?.login || '';
+    const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
+    const authorName = c.commit?.author?.name?.toLowerCase() || '';
+
+    const isAuthorMatch =
+      authorLogin === username ||
+      (authorEmail.endsWith('@users.noreply.github.com') &&
+        authorEmail.includes(`+${lowerUsername}@`)) ||
+      authorEmail === `${lowerUsername}@users.noreply.github.com` ||
+      authorEmail.includes(lowerUsername) ||
+      (authorName && authorName.includes(lowerUsername));
+
+    if (isAuthorMatch) return true;
+
+    // 4. STAGE 4: CO-AUTHORED TRAILER CHECK
+    // This handles pair programming where your peer pushes local commits with your credit.
+    if (
+      /Co-authored-by:/i.test(commitMessage) &&
+      commitMessage.toLowerCase().includes(lowerUsername)
+    ) {
+      return true;
+    }
+
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
 
 /**
  * Fetches the very first commit of a PR to check the original author.
@@ -48,37 +112,9 @@ async function getFirstCommitDetails(
       }
     }
 
-    function isCommitByUser(c) {
-      try {
-        const lowerUsername = username.toLowerCase();
-        const commitMessage = c.commit?.message || '';
-        const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
-        if (isBranchUpdate) return false;
-        if (c.author?.login === username) return true;
-        const authorEmail = c.commit?.author?.email?.toLowerCase();
-        if (authorEmail) {
-          if (
-            authorEmail.endsWith('@users.noreply.github.com') &&
-            authorEmail.includes(`+${lowerUsername}@`)
-          )
-            return true;
-          if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
-          if (authorEmail.includes(lowerUsername)) return true;
-        }
-        if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-          return true;
-        if (
-          /Co-authored-by:/i.test(commitMessage) &&
-          commitMessage.toLowerCase().includes(lowerUsername)
-        )
-          return true;
-      } catch (e) {
-        return false;
-      }
-      return false;
-    }
+    // Filter commits using the helper logic
+    const userCommits = allCommits.filter((c) => isCommitByUser(c, username));
 
-    const userCommits = allCommits.filter(isCommitByUser);
     if (userCommits.length > 0) {
       userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
       result = {
@@ -116,9 +152,7 @@ async function getGitHubJoinYear(axiosInstance) {
  */
 async function fetchContributions(requestedStartYear, prCache, persistentCommitCache) {
   const token = process.env.GITHUB_TOKEN;
-  if (!token) {
-    throw new Error('GITHUB_TOKEN is not set.');
-  }
+  if (!token) throw new Error('GITHUB_TOKEN is not set.');
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
@@ -128,7 +162,6 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     },
   });
 
-  // --- AUTO-DISCOVERY START YEAR ---
   let startYear = requestedStartYear;
   if (!startYear) {
     console.log(`🔍 No start year provided. Discovering first year for ${GITHUB_USERNAME}...`);
@@ -164,7 +197,6 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           `/search/issues?q=${query}&per_page=100&page=${page}`
         );
         results.push(...response.data.items);
-
         const linkHeader = response.headers.link;
         if (linkHeader && linkHeader.includes('rel="next"')) {
           page++;
@@ -191,14 +223,10 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       const myReviews = response.data
         .filter((review) => review.user?.login === username)
         .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
-      if (myReviews.length > 0) {
-        return myReviews[0].submitted_at;
-      }
+      if (myReviews.length > 0) return myReviews[0].submitted_at;
       return null;
     } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) {
-        return null;
-      }
+      if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
       throw err;
     }
   }
@@ -209,9 +237,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       while (true) {
         const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
         const myFirstComment = response.data.find((comment) => comment.user?.login === username);
-        if (myFirstComment) {
-          return myFirstComment.created_at;
-        }
+        if (myFirstComment) return myFirstComment.created_at;
         const linkHeader = response.headers.link;
         if (linkHeader && linkHeader.includes('rel="next"')) {
           page++;
@@ -220,9 +246,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         }
       }
     } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) {
-        return null;
-      }
+      if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
       throw err;
     }
   }
@@ -500,6 +524,9 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
   return { contributions, prCache, commitCache };
 }
 
+/**
+ * FETCH ONGOING REVIEWS
+ */
 async function fetchOngoingReviews() {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error('GITHUB_TOKEN is not set.');
@@ -530,7 +557,7 @@ async function fetchOngoingReviews() {
         }
       } catch (err) {
         if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit in fetchOngoingReviews. Waiting for 60 seconds...');
+          console.log('Rate limit hit. Waiting...');
           await new Promise((resolve) => setTimeout(resolve, 60000));
           continue;
         }
@@ -540,8 +567,40 @@ async function fetchOngoingReviews() {
     return results;
   }
 
-  const requestedQuery = `is:pr is:open review-requested:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
-  const underReviewQuery = `is:pr is:open reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
+  // Helper to check if a PR has human activity from someone other than the author
+  async function checkHumanActivity(pr) {
+    const repoParts = new URL(pr.repository_url).pathname.split('/');
+    const owner = repoParts[repoParts.length - 2];
+    const repo = repoParts[repoParts.length - 1];
+    const author = pr.user.login;
+
+    try {
+      // 1. Fetch Reviews
+      const reviewsResp = await axiosInstance.get(
+        `/repos/${owner}/${repo}/pulls/${pr.number}/reviews`
+      );
+      const hasHumanReview = reviewsResp.data.some(
+        (review) => review.user.type === 'User' && review.user.login !== author
+      );
+      if (hasHumanReview) return true;
+
+      // 2. Fetch Comments (Issue comments/Top-level)
+      const commentsResp = await axiosInstance.get(
+        `/repos/${owner}/${repo}/issues/${pr.number}/comments`
+      );
+      const hasHumanComment = commentsResp.data.some(
+        (comment) => comment.user.type === 'User' && comment.user.login !== author
+      );
+      if (hasHumanComment) return true;
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const requestedQuery = `is:pr is:open review-requested:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
+  const underReviewQuery = `is:pr is:open reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
 
   const [requestedPrs, underReviewPrs] = await Promise.all([
     searchAll(requestedQuery),
@@ -549,6 +608,8 @@ async function fetchOngoingReviews() {
   ]);
 
   const ongoingTasks = [];
+  const seenUrls = new Set();
+
   const formatTask = (pr, status) => {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
     return {
@@ -565,16 +626,35 @@ async function fetchOngoingReviews() {
     };
   };
 
-  requestedPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Request review')));
-  underReviewPrs.forEach((pr) => ongoingTasks.push(formatTask(pr, 'Review in progress')));
+  // 1. "Review in progress": already explicitly reviewed by you
+  underReviewPrs.forEach((pr) => {
+    if (!seenUrls.has(pr.html_url)) {
+      ongoingTasks.push(formatTask(pr, 'Review in progress'));
+      seenUrls.add(pr.html_url);
+    }
+  });
+
+  // 2. "Request review" vs "Review in progress" for the remaining requested PRs
+  for (const pr of requestedPrs) {
+    if (seenUrls.has(pr.html_url)) continue;
+
+    const isEngaged = await checkHumanActivity(pr);
+
+    if (isEngaged) {
+      ongoingTasks.push(formatTask(pr, 'Review in progress'));
+    } else {
+      ongoingTasks.push(formatTask(pr, 'Request review'));
+    }
+    seenUrls.add(pr.html_url);
+  }
 
   return ongoingTasks;
 }
 
 /**
- * Fetches all open issues assigned to the user in external repositories.
+ * Fetches all open issues assigned to the user.
  */
-async function fetchOngoingIssues() {
+async function fetchOngoingIssues(ongoingPrs = []) {
   const token = process.env.GITHUB_TOKEN;
   if (!token) throw new Error('GITHUB_TOKEN is not set.');
 
@@ -584,6 +664,12 @@ async function fetchOngoingIssues() {
       Authorization: `token ${token}`,
       Accept: 'application/vnd.github.v3+json',
     },
+  });
+
+  const linkedIssueNumbers = new Set();
+  ongoingPrs.forEach((pr) => {
+    const numbers = getLinkedIssueNumbers(pr.body);
+    numbers.forEach((num) => linkedIssueNumbers.add(num));
   });
 
   async function searchAll(query) {
@@ -614,26 +700,27 @@ async function fetchOngoingIssues() {
     return results;
   }
 
-  // Query: open issues, assigned to you, excluding your own repositories
   const query = `is:issue is:open assignee:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawIssues = await searchAll(query);
 
-  return rawIssues.map((issue) => {
-    const repoParts = new URL(issue.repository_url).pathname.split('/');
-    return {
-      title: issue.title,
-      url: issue.html_url,
-      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
-      createdAt: issue.created_at,
-      updatedAt: issue.updated_at,
-      labels: issue.labels.map((l) => l.name),
-      number: issue.number,
-    };
-  });
+  return rawIssues
+    .filter((issue) => !linkedIssueNumbers.has(issue.number))
+    .map((issue) => {
+      const repoParts = new URL(issue.repository_url).pathname.split('/');
+      return {
+        title: issue.title,
+        url: issue.html_url,
+        repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+        createdAt: issue.created_at,
+        updatedAt: issue.updated_at,
+        labels: issue.labels.map((l) => l.name),
+        number: issue.number,
+      };
+    });
 }
 
 /**
- * Fetches all open Pull Requests authored by the user in external repositories.
+ * FETCH ONGOING AUTHORED PRS
  */
 async function fetchOngoingAuthoredPrs() {
   const token = process.env.GITHUB_TOKEN;
@@ -647,62 +734,59 @@ async function fetchOngoingAuthoredPrs() {
     },
   });
 
-  async function searchAll(query) {
-    let results = [];
-    let page = 1;
+  let allAuthoredItems = [];
+  let page = 1;
+
+  try {
     while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const link = response.headers.link;
-        if (link && link.includes('rel="next"')) {
-          page++;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        } else {
-          break;
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit in fetchOngoingAuthorPrs. Waiting for 60 seconds...');
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        }
-        throw err;
+      const response = await axiosInstance.get(`/issues`, {
+        params: {
+          filter: 'created',
+          state: 'open',
+          per_page: 100,
+          page: page,
+        },
+      });
+
+      if (response.data.length === 0) break;
+      allAuthoredItems.push(...response.data);
+
+      const link = response.headers.link;
+      if (link && link.includes('rel="next"')) {
+        page++;
+      } else {
+        break;
       }
     }
-    return results;
+  } catch (err) {
+    console.error('❌ Error fetching from Issues API:', err.message);
+    return [];
   }
 
-  // 1. Fetch all open PRs
-  const query = `is:pr is:open author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
-  const rawPrs = await searchAll(query);
-
-  // 2. Fetch only APPROVED open PRs
-  const approvedQuery = `${query} review:approved`;
-  const approvedPrs = await searchAll(approvedQuery);
-  const approvedUrls = new Set(approvedPrs.map((pr) => pr.html_url));
-
-  return rawPrs.map((pr) => {
-    const repoParts = new URL(pr.repository_url).pathname.split('/');
-    return {
-      title: pr.title,
-      url: pr.html_url,
-      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
-      createdAt: pr.created_at,
-      updatedAt: pr.updated_at,
-      number: pr.number,
-      isDraft: pr.draft,
-      labels: pr.labels.map((l) => l.name),
-      isApproved: approvedUrls.has(pr.html_url),
-    };
-  });
+  return allAuthoredItems
+    .filter((item) => {
+      const isPr = !!item.pull_request;
+      const isExternal = !item.repository_url.includes(`repos/${GITHUB_USERNAME}/`);
+      return isPr && isExternal;
+    })
+    .map((pr) => {
+      const repoParts = new URL(pr.repository_url).pathname.split('/');
+      return {
+        title: pr.title,
+        url: pr.html_url,
+        repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+        createdAt: pr.created_at,
+        updatedAt: pr.updated_at,
+        number: pr.number,
+        isDraft: pr.draft === true || !!(pr.pull_request && pr.pull_request.draft),
+        labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+        body: pr.body,
+      };
+    });
 }
 
 /**
- * Fetches all open Pull Requests in external repositories where the user
- * is a co-author. Address ongoing PRs only, excluding "commitCount" logic.
+ * FETCH ONGOING CO-AUTHORED PRS
  */
 async function fetchOngoingCoAuthoredPrs(commitCache) {
   const token = process.env.GITHUB_TOKEN;
@@ -744,8 +828,7 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
     return results;
   }
 
-  // Query: open PRs where you commented/pushed, but did not author.
-  const query = `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME}`;
+  const query = `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawPrs = await searchAll(query);
 
   const coAuthoredResults = [];
@@ -757,7 +840,6 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
 
     if (owner === GITHUB_USERNAME) continue;
 
-    // Verify commit authorship using the moved helper
     const commitDetails = await getFirstCommitDetails(
       owner,
       repoName,
@@ -768,7 +850,6 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
       pr.updated_at
     );
 
-    // Only include if user has commits, but don't return the commitCount
     if (commitDetails && commitDetails.firstCommitDate) {
       coAuthoredResults.push({
         title: pr.title,
@@ -780,6 +861,7 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
         updatedAt: pr.updated_at,
         labels: pr.labels ? pr.labels.map((l) => l.name) : [],
         isDraft: pr.draft,
+        body: pr.body,
       });
     }
   }

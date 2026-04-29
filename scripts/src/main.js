@@ -22,7 +22,7 @@ const {
   fetchOngoingReviews,
   fetchOngoingIssues,
   fetchOngoingAuthoredPrs,
-  fetchOngoingCoAuthoredPrs
+  fetchOngoingCoAuthoredPrs,
 } = require('../api/github-api-fetchers');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
@@ -89,21 +89,6 @@ async function main() {
   }
 
   try {
-    // --- Fetch Ongoing Issues (Assigned to you) ---
-    console.log('Fetching ongoing issues for the Active Workbench...');
-    const rawOngoingIssues = await fetchOngoingIssues();
-
-    const ongoingIssues = rawOngoingIssues.filter((issue) => {
-      const repoName = issue.repo.toLowerCase();
-      const isExcluded = excludedRepos.some((excluded) =>
-        repoName.includes(excluded.toLowerCase())
-      );
-      return !isExcluded;
-    });
-
-    await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
-    console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
-
     // --- Fetch Ongoing Pull Requests (Submitted by you) ---
     console.log('Fetching ongoing submitted PRs...');
 
@@ -121,9 +106,28 @@ async function main() {
     await fs.writeFile(ongoingPRsFile, JSON.stringify(ongoingPRs, null, 2), 'utf8');
     console.log(`Saved ${ongoingPRs.length} ongoing PRs to ${ongoingPRsFile}.`);
 
+    // --- Fetch Ongoing Issues (Assigned to you) ---
+    console.log('Fetching ongoing issues for the Active Workbench...');
+    const rawOngoingIssues = await fetchOngoingIssues(ongoingPRs);
+
+    const ongoingIssues = rawOngoingIssues.filter((issue) => {
+      const repoName = issue.repo.toLowerCase();
+      const isExcluded = excludedRepos.some((excluded) =>
+        repoName.includes(excluded.toLowerCase())
+      );
+      return !isExcluded;
+    });
+
+    await fs.writeFile(ongoingIssuesFile, JSON.stringify(ongoingIssues, null, 2), 'utf8');
+    console.log(`Saved ${ongoingIssues.length} ongoing issues to ${ongoingIssuesFile}.`);
+
     // --- Fetch Ongoing Co-authored PRs (Workbench) ---
     console.log('Fetching ongoing co-authored PRs for the Active Workbench...');
-    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(commitCacheFromDisk);
+
+    // Pass a fresh Map() instead of commitCacheFromDisk.
+    // This forces a fresh look at the commits for OPEN PRs only,
+    // ensuring the 'web-flow' fix is applied to the Workbench without affecting historical data.
+    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(new Map());
 
     const ongoingCoAuthoredPRs = rawOngoingCoAuthoredPRs.filter((pr) => {
       const repoName = pr.repo.toLowerCase();
@@ -146,18 +150,25 @@ async function main() {
     console.log('Fetching ongoing review tasks for the Active Workbench...');
     const rawOngoingTasks = await fetchOngoingReviews();
 
+    // Only remove from the Workbench "Reviews" if it's already in the "Co-authored" list
+    const coAuthoredUrls = new Set(ongoingCoAuthoredPRs.map((pr) => pr.url));
+
     const ongoingTasks = rawOngoingTasks.filter((task) => {
       const repoName = task.repo.toLowerCase();
       // Dynamically exclude repos based on the exclusions list
       const isExcluded = excludedRepos.some((excluded) =>
         repoName.includes(excluded.toLowerCase())
       );
-      return !isExcluded;
+
+      // Check for duplication in the Workbench
+      const isAlreadyCoAuthored = coAuthoredUrls.has(task.url);
+
+      return !isExcluded && !isAlreadyCoAuthored;
     });
 
     await fs.writeFile(ongoingTasksFile, JSON.stringify(ongoingTasks, null, 2), 'utf8');
     console.log(
-      `Saved ${ongoingTasks.length} ongoing tasks to ${ongoingTasksFile} (after exclusions).`
+      `Saved ${ongoingTasks.length} ongoing tasks to ${ongoingTasksFile} (after exclusions and workbench deduplication).`
     );
 
     // --- Fetch Articles ---
