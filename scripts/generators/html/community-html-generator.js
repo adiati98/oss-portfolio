@@ -264,12 +264,12 @@ async function createCommunityHtml(
   const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
 
   const sections = [
+    { tasks: ongoingIssues, label: 'To do issues', type: 'todo' },
+    { tasks: manualRequestTasks, label: 'Request review', type: 'todo' },
     { tasks: ongoingPRs, label: 'Ongoing PRs', type: 'ongoing' },
     { tasks: ongoingCoAuthoredPRs, label: 'Moving co-authored PRs forward', type: 'ongoing' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
-    { tasks: ongoingIssues, label: 'To do issues', type: 'todo' },
-    { tasks: manualRequestTasks, label: 'Request review', type: 'todo' },
-    { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
+   { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 
   const workbenchHtml = sections
