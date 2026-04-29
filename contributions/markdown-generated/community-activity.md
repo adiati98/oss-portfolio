@@ -23,49 +23,14 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (5)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (0)</h3></summary>
 
-<table style='width:100%; table-layout:fixed;'>
-  <thead>
-    <tr>
-      <th style='width:20%; text-align:left;'>Repository</th>
-      <th style='width:15%; text-align:left;'>Status</th>
-      <th style='width:65%; text-align:left;'>Task</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/604'>Cherry-pick: "add rating field " to 7.1</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/603'>Cherry-pick: "add rating field " to 7.0</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/621'>Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.0</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/622'>Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.1</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>oss-communities</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/oss-communities/pull/2'>Chores: Restructure website</a></td>
-    </tr>
-  </tbody>
-</table>
+> **_Hooray! You're all caught up._**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (7)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🤝 Moving Co-authored PRs Forward (3)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -78,12 +43,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
   <tbody>
     <tr>
       <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/697'>docs: Document PostgreSQL database support for Mautic 7.x</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/698'>docs: Document global defaults for Preference Center and UTM tracking</a></td>
     </tr>
     <tr>
@@ -96,28 +56,13 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/250'>Navigating UI resources</a></td>
     </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399'>Create a networking guide for Programmers</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1430'>Add TypeScript — Getting Started Resource Page</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>guestbook</strong></td>
-      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/828'>feat: Add new process and move contributors</a></td>
-    </tr>
   </tbody>
 </table>
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (17)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">🔄 Review in progress (22)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -132,6 +77,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/951'>feat: add @Logicrithm as a contributor</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/702'>docs: Document Unsubscribe-to-Open Ratio stat for Email reports</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
@@ -149,19 +99,14 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/701'>docs: Document Tag Manager with enhanced search capability</a></td>
     </tr>
     <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/698'>docs: Document global defaults for Preference Center and UTM tracking</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/361'>Campaign import export user docs</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/250'>Navigating UI resources</a></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/340'>docs: Document Tags API with enhanced search behavior</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/670'>docs(email): document global defaults for preference center and UTM tracking</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
@@ -174,6 +119,16 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/941'>feat: Add @rachelanchan as a contributor</a></td>
     </tr>
     <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/542'>Update Stages.png image</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/600'>Add introduction for Zapier plugin documentation</a></td>
+    </tr>
+    <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/947'>Add Aakash Neupane to contributors list in README</a></td>
@@ -182,6 +137,11 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/guestbook/pull/937'>docs: add @aaronthomas-09 as a contributor</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>mautic-community-handbook</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/mautic-community-handbook/pull/418'>Add statement about re-election (don't merge until approved at the General Assembly)</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>guestbook</strong></td>
@@ -199,9 +159,19 @@ _A live list of open pull requests and ongoing maintenance tasks._
       <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/647'>docs: Add Tags documentation for Contact management</a></td>
     </tr>
     <tr>
+      <td style='vertical-align: top;'><strong>intro</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/intro/pull/309'>feat: improve accessibility for course progress bars</a></td>
+    </tr>
+    <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399'>Create a networking guide for Programmers</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>intro</strong></td>
+      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/intro/pull/307'>fix(docs): audit and replace broken external links across docs</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>virtualcoffee.io</strong></td>
@@ -221,12 +191,12 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_Hooray! You're all caught up._**
+> **_All quiet on this front. Well done!_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (11)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📥 Request review (3)</h3></summary>
 
 <table style='width:100%; table-layout:fixed;'>
   <thead>
@@ -238,54 +208,14 @@ _A live list of open pull requests and ongoing maintenance tasks._
   </thead>
   <tbody>
     <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/702'>docs: Document Unsubscribe-to-Open Ratio stat for Email reports</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/341'>[DOCS]: Add "Cookie helper" page</a></td>
     </tr>
     <tr>
-      <td style='vertical-align: top;'><strong>developer-documentation-new</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/developer-documentation-new/pull/340'>docs: Document Tags API with enhanced search behavior</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/670'>docs(email): document global defaults for preference center and UTM tracking</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/542'>Update Stages.png image</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/600'>Add introduction for Zapier plugin documentation</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>mautic-community-handbook</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/mautic/mautic-community-handbook/pull/418'>Add statement about re-election (don't merge until approved at the General Assembly)</a></td>
-    </tr>
-    <tr>
       <td style='vertical-align: top;'><strong>intro</strong></td>
       <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
       <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/intro/pull/310'>Updated outdated screenshots and gifs (GitHub UI updated)</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>intro</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/intro/pull/309'>feat: improve accessibility for course progress bars</a></td>
-    </tr>
-    <tr>
-      <td style='vertical-align: top;'><strong>intro</strong></td>
-      <td style='vertical-align: top; text-align: center;'>&nbsp;</td>
-      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/intro/pull/307'>fix(docs): audit and replace broken external links across docs</a></td>
     </tr>
     <tr>
       <td style='vertical-align: top;'><strong>RepoReady</strong></td>
