@@ -10,6 +10,7 @@ const {
   FAVICON_SVG_ENCODED,
   SPARKLES_SVG,
   WORKBENCH_STATUS_COLORS,
+  WORKBENCH_BALL_STATUS,
 } = require('../../config/constants');
 const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 const { getCommunityStyleCss } = require('../css/style-generator');
@@ -112,13 +113,53 @@ async function createCommunityHtml(
     return (
       userStr.includes('dependabot') ||
       titleStr.startsWith('[snyk]') ||
-      (titleStr.startsWith('bump') && userStr.includes('dependabot'))
+      (titleStr.startsWith('bump') && userStr.includes('dependabot')) ||
+      userStr.includes('[bot]')
     );
   };
 
   /**
-   * Renders a pill badge using centralized constants.
+   * Logic to determine ball-tracking status for ongoing tasks
    */
+  function getWorkbenchStatus(task) {
+    const now = new Date();
+
+    // 1. APPROVED SHIELD - Priority Override
+    if (task.reviewState === 'APPROVED' || task.status === 'APPROVED') {
+      return {
+        ...WORKBENCH_BALL_STATUS.approved,
+        child: '',
+      };
+    }
+
+    // 2. Substantive Date Calculation
+    const lastUpdate = new Date(task.updatedAt);
+    const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
+
+    // 3. Stale Check - Updated to show dynamic day count
+    if (diffDays >= 21) {
+      return {
+        ...WORKBENCH_BALL_STATUS.stale,
+        child: `${Math.floor(diffDays)} days`,
+      };
+    }
+
+    // 4. Responsibility Logic
+    const lastActor = task.lastActor;
+    const isMe = lastActor === GITHUB_USERNAME;
+    const isAuthor = lastActor === task.author;
+
+    const isFormalReview = task.hasFormalReview === true;
+    const childBase = isFormalReview ? 'Review' : 'Discussion';
+    const isBotActor = task.isLastActorBot || isBot({ user: lastActor, title: '' });
+    const childStatus = isBotActor ? `${childBase} + BOT` : childBase;
+
+    if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
+    if (isAuthor) return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
+
+    return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+  }
+
   function renderStatusIndicator(type) {
     const configs = {
       draft: {
@@ -187,9 +228,31 @@ async function createCommunityHtml(
             statusIndicator = renderStatusIndicator('blocked');
           }
 
+          // New ball-tracking logic only for "ongoing" task types
+          const ballStatus = type === 'ongoing' ? getWorkbenchStatus(task) : null;
+
           return dedent`
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
-              <td class="px-6 py-4 vertical-align-top w-1/3">
+              ${
+                ballStatus
+                  ? dedent`
+                <td class="px-6 py-4 vertical-align-top w-[180px]">
+                  <div class="flex flex-col">
+                    <div class="flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full shrink-0" style="background-color: ${ballStatus.dot};"></div>
+                      <span class="text-[11px] font-black uppercase tracking-wider whitespace-nowrap" style="color: ${ballStatus.text};">
+                        ${ballStatus.label}
+                      </span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-bold ml-4 mt-0.5 uppercase tracking-tight">
+                      ${ballStatus.child}
+                    </span>
+                  </div>
+                </td>
+              `
+                  : ''
+              }
+              <td class="px-6 py-4 vertical-align-top ${ballStatus ? 'w-1/4' : 'w-1/3'}">
                 <div class="flex flex-col items-start">
                   <span class="text-sm font-semibold text-slate-500">${repoName}</span>
                   ${statusIndicator}
@@ -214,6 +277,7 @@ async function createCommunityHtml(
             <table class="min-w-full">
               <thead class="bg-slate-50/80 border-b border-slate-100">
                 <tr>
+                  ${type === 'ongoing' ? '<th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Status</th>' : ''}
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                 </tr>
@@ -259,9 +323,13 @@ async function createCommunityHtml(
   }
 
   // --- Filtering logic  ---
-  const manualRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && !isBot(t));
-  const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
-  const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
+  const botTasks = ongoingTasks.filter((t) => isBot(t));
+  const humanTasks = ongoingTasks.filter((t) => !isBot(t));
+
+  const manualRequestTasks = humanTasks.filter((t) => t.status === 'Request review');
+  const inProgressTasks = humanTasks.filter((t) => t.status === 'Review in progress');
+
+  const botRequestTasks = botTasks;
 
   const sections = [
     { tasks: ongoingIssues, label: 'To do issues', type: 'todo' },
@@ -269,7 +337,7 @@ async function createCommunityHtml(
     { tasks: ongoingPRs, label: 'Ongoing PRs', type: 'ongoing' },
     { tasks: ongoingCoAuthoredPRs, label: 'Moving co-authored PRs forward', type: 'ongoing' },
     { tasks: inProgressTasks, label: 'Review in progress', type: 'ongoing' },
-   { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
+    { tasks: botRequestTasks, label: 'Bot request review', type: 'bot' },
   ];
 
   const workbenchHtml = sections
