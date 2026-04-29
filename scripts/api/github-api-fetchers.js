@@ -543,7 +543,7 @@ async function fetchOngoingReviews() {
         }
       } catch (err) {
         if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit in fetchOngoingReviews. Waiting for 60 seconds...');
+          console.log('Rate limit hit. Waiting...');
           await new Promise((resolve) => setTimeout(resolve, 60000));
           continue;
         }
@@ -551,6 +551,38 @@ async function fetchOngoingReviews() {
       }
     }
     return results;
+  }
+
+  // Helper to check if a PR has human activity from someone other than the author
+  async function checkHumanActivity(pr) {
+    const repoParts = new URL(pr.repository_url).pathname.split('/');
+    const owner = repoParts[repoParts.length - 2];
+    const repo = repoParts[repoParts.length - 1];
+    const author = pr.user.login;
+
+    try {
+      // 1. Fetch Reviews
+      const reviewsResp = await axiosInstance.get(
+        `/repos/${owner}/${repo}/pulls/${pr.number}/reviews`
+      );
+      const hasHumanReview = reviewsResp.data.some(
+        (review) => review.user.type === 'User' && review.user.login !== author
+      );
+      if (hasHumanReview) return true;
+
+      // 2. Fetch Comments (Issue comments/Top-level)
+      const commentsResp = await axiosInstance.get(
+        `/repos/${owner}/${repo}/issues/${pr.number}/comments`
+      );
+      const hasHumanComment = commentsResp.data.some(
+        (comment) => comment.user.type === 'User' && comment.user.login !== author
+      );
+      if (hasHumanComment) return true;
+
+      return false;
+    } catch (e) {
+      return false;
+    }
   }
 
   const requestedQuery = `is:pr is:open review-requested:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
@@ -562,7 +594,7 @@ async function fetchOngoingReviews() {
   ]);
 
   const ongoingTasks = [];
-  const seenUrls = new Set(); // This is the fix: tracks processed PRs
+  const seenUrls = new Set();
 
   const formatTask = (pr, status) => {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
@@ -580,8 +612,7 @@ async function fetchOngoingReviews() {
     };
   };
 
-  // 1. Process "Review in progress" FIRST.
-  // If a PR is here, it means you've already interacted with it.
+  // 1. "Review in progress": already explicitly reviewed by you
   underReviewPrs.forEach((pr) => {
     if (!seenUrls.has(pr.html_url)) {
       ongoingTasks.push(formatTask(pr, 'Review in progress'));
@@ -589,14 +620,19 @@ async function fetchOngoingReviews() {
     }
   });
 
-  // 2. Process "Request review" SECOND.
-  // The 'seenUrls' check prevents it from being added if it was already marked as "Review in progress".
-  requestedPrs.forEach((pr) => {
-    if (!seenUrls.has(pr.html_url)) {
+  // 2. "Request review" vs "Review in progress" for the remaining requested PRs
+  for (const pr of requestedPrs) {
+    if (seenUrls.has(pr.html_url)) continue;
+
+    const isEngaged = await checkHumanActivity(pr);
+
+    if (isEngaged) {
+      ongoingTasks.push(formatTask(pr, 'Review in progress'));
+    } else {
       ongoingTasks.push(formatTask(pr, 'Request review'));
-      seenUrls.add(pr.html_url);
     }
-  });
+    seenUrls.add(pr.html_url);
+  }
 
   return ongoingTasks;
 }
