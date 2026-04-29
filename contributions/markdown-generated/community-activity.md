@@ -23,9 +23,44 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 _A live list of open pull requests and ongoing maintenance tasks._
 
 <details>
-  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (0)</h3></summary>
+  <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📤 Ongoing PRs (5)</h3></summary>
 
-> **_Hooray! You're all caught up._**
+<table style='width:100%; table-layout:fixed;'>
+  <thead>
+    <tr>
+      <th style='width:20%; text-align:left;'>Repository</th>
+      <th style='width:15%; text-align:left;'>Status</th>
+      <th style='width:65%; text-align:left;'>Task</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/604'>Cherry-pick: "add rating field " to 7.1</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/603'>Cherry-pick: "add rating field " to 7.0</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/621'>Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.0</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>user-documentation</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/PENDING%20MERGE-10b981?style=flat-square" alt="PENDING%20MERGE"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/mautic/user-documentation/pull/622'>Cherry-pick: "Adds documentation for mautic/mautic/pull/14100" to 7.1</a></td>
+    </tr>
+    <tr>
+      <td style='vertical-align: top;'><strong>oss-communities</strong></td>
+      <td style='vertical-align: top; text-align: center;'><img src="https://img.shields.io/badge/DRAFT-64748b?style=flat-square" alt="DRAFT"></td>
+      <td style='vertical-align: top;'><a href='https://github.com/OpenSource-Communities/oss-communities/pull/2'>Chores: Restructure website</a></td>
+    </tr>
+  </tbody>
+</table>
 
 </details>
 
@@ -191,7 +226,7 @@ _A live list of open pull requests and ongoing maintenance tasks._
 <details>
   <summary><h3 style="display: inline-block; padding-bottom: 20px; cursor: pointer; margin: 0;">📝 To do issues (0)</h3></summary>
 
-> **_All quiet on this front. Well done!_**
+> **_Inbox Zero achieved! Time for a coffee?_**
 
 </details>
 
