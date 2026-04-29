@@ -22,7 +22,7 @@ This project uses **GitHub Actions** as an automated engine to run a custom **No
 
 ### 🤖 The Automation: GitHub Actions
 
-The workflow file in `.github/workflows/` orchestrates the entire process. It handles environment setup, security authentication via the `GITHUB_TOKEN`, and the final commit of updated data back to the repository.
+The workflow file in `.github/workflows/` orchestrates the entire process. It handles environment setup, authentication, and the final commit of updated data back to the repository.
 
 | Event | Schedule | Sync Type | Automation Purpose |
 | :--- | :--- | :--- | :--- |
@@ -38,7 +38,7 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 - **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
 - **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility. Additionally, it supports dynamic repository exclusions to filter out specified organizations or projects.
 - **Personal Technical Writing:**
-    - **Automated Sync:** Fetches my latest articles from **Dev.to** via their API.
+    - **Automated Sync:** Fetches latest articles from **Dev.to** via their API.
     - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
 - **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
 - **Hierarchical Caching:** Maintains `pr-cache.json` and `commit-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
@@ -48,7 +48,7 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 The script transforms raw JSON data into a suite of high-fidelity reports:
 
 - **Quarterly & All-Time Stats:** Detailed logs and interactive dashboards built with Tailwind CSS.
-- **Authored Technical Blog:** A dedicated showcase of my technical writing, documentation, and Open Source Software (OSS) articles.
+- **Authored Technical Blog:** A dedicated showcase of technical writing, documentation, and Open Source Software (OSS) articles.
 - **Community & Activity:** A high-level overview of leadership roles, major milestones, and the **Active Workbench (Current Tasks)**.
 - **Markdown Ecosystem:** Generates a summary `README.md` and quarterly reports for native GitHub viewing.
 
@@ -75,23 +75,49 @@ The system analyzes contribution patterns to automatically assign a persona titl
 
 - [Node.js](https://nodejs.org/en) installed.
 - Install dependencies: `npm ci`
-- A `.env` file containing a `GITHUB_TOKEN` with `public_repo` scope.
+- **GitHub Personal Access Token (PAT):**
+  - **Create the Token:** Go to [Personal Access Tokens (Classic)](https://github.com/settings/tokens) and generate a token with the `public_repo` scope. This identity is required for both local runs and the GitHub Action to ensure standalone PRs and external contributions are correctly fetched.
+  - **Setup Locally:** Create a `.env` file in the root directory and add: `GITHUB_TOKEN=your_pat_token_here`.
+  - **Setup for GitHub Actions:**
+    1. In your repository, go to **Settings > Secrets and variables > Actions**.
+    2. Click **New repository secret**.
+    3. Name it `GH_PAT` and paste your token as the value.
+    4. Ensure your workflow `.yml` file maps this secret: `GITHUB_TOKEN: ${{ secrets.GH_PAT }}`.
 
-### 2. Common Commands
+### 2. Execution Commands
 
-- **Clear data and cache:** `npm run clean`
-- **Run script locally:** `npm start`
+Once configured, use the following commands to manage and generate your portfolio data:
+
+1. **Install the dependencies**
+
+   ```bash
+   npm ci
+   ```
+2. **Perform a clean sync**
+
+   Run the following command to wipe the local cache and stored data for a fresh start:
+
+   ```bash
+   npm run clean
+   ```
+3. **Generate your portfolio**
+
+   Run this to fetch data and generate your open source contribution reports:
+
+   ```bash
+   npm start
+   ```
 
 ### 3. Configuration
 
 Manual data and preferences are managed within the `scripts/config/` and `contents/` directories:
 
-- **Settings:** Update `scripts/config/config.js` to personalize your data fetching:
+- **Settings:** Update `scripts/config/config.js` to personalize data fetching:
     - `GITHUB_USERNAME`: Set this to your GitHub handle.
     - `BLOG`: Configure your `devToUser` handle for automated article syncing.
-- **Leadership Metadata:** Update `contents/leadership.js` to reflect your roles and achievements.
+- **Leadership Metadata:** Update `contents/leadership.js` to reflect roles and achievements.
 - **Article Metadata:** Update `contents/fcc-articles.js` to add new freeCodeCamp publications.
-- **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from your Active Workbench.
+- **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from the Active Workbench.
 - **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
 
 > [!TIP]
