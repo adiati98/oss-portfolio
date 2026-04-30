@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] - 2026-04-30
+
+### Added
+
+- **Ball Tracking Logic**: Introduced a sophisticated status system for ongoing tasks to identify responsibility. Added badges for **TAKE ACTION** (response required), **WAITING** (awaiting PR author or maintainer), **WATCHING** (monitoring discussions or progress), **APPROVED** (ready for merge), and **STALE** (no substantive activity for 21 days).
+- **Substantive Activity Filtering**: Implemented a "noise-filtering" activity clock that only resets on new commits, code reviews (human or bot), or discussion comments, explicitly ignoring metadata changes like labels or pings.
+- **Idle Detection**: Add stale/idle timer to utilize the new **Last Substantive Date** logic. Tasks display a day count since the last meaningful contribution instead of the raw GitHub update timestamp.
+- **Hybrid Review Logic**: Integrated bot reviews (e.g., copilot reviews) into the activity calculation, ensuring they are recognized as substantive events that reset the activity clock.
+- **Enhanced Glossary Reference**: - **Glossary Expansion**: Expanded the **Community & Leadership** section with detailed definitions for Workbench categories, Ball Tracking states, and the specific logic governing activity timers.
+
 ## [2.4.2] - 2026-04-29
 
 ### Added
