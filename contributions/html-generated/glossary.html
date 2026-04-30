@@ -914,6 +914,74 @@
                         </div>
                       </div>
                     </div>
+                    <div id="workbenchStatus" class="mb-16 last:mb-0">
+                      <h3
+                        style="
+                          color: rgb(67, 56, 202);
+                          border-bottom: 2px solid rgba(67, 56, 202, 0.15);
+                        "
+                        class="text-xl font-extrabold mb-6 pb-2 inline-block"
+                      >
+                        Workbench Status & Ball Tracking
+                      </h3>
+
+                      <div class="space-y-6">
+                        <p class="text-lg text-slate-600 leading-relaxed">
+                          Visual indicators used to track responsibility and activity.
+                        </p>
+
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
+                          <span
+                            class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono"
+                          >
+                            Entry Method
+                          </span>
+                          <div class="text-sm text-indigo-600 leading-relaxed">
+                            Each task features a "Ball Tracking" badge to show the current state of
+                            responsibility:
+                            <ul class="my-3 space-y-1 text-indigo-600">
+                              <li class="ml-4 list-disc list-inside text-indigo-600">
+                                <strong>TAKE ACTION:</strong> Indicates a response is required
+                                following the most recent substantive activity from another
+                                maintainer, contributor, or a bot review.
+                              </li>
+                            </ul>
+                            <ul class="my-3 space-y-1 text-indigo-600">
+                              <li class="ml-4 list-disc list-inside text-indigo-600">
+                                <strong>WAITING:</strong> Confirms the last substantive action was
+                                performed by the user; awaiting a response from the PR author or a
+                                maintainer.
+                              </li>
+                            </ul>
+                            <ul class="my-3 space-y-1 text-indigo-600">
+                              <li class="ml-4 list-disc list-inside text-indigo-600">
+                                <strong>WATCHING:</strong> Participation exists, but the current
+                                interaction is primarily between other maintainers or contributors.
+                              </li>
+                            </ul>
+                            <ul class="my-3 space-y-1 text-indigo-600">
+                              <li class="ml-4 list-disc list-inside text-indigo-600">
+                                <strong>APPROVED:</strong> The PR has received a formal approval and
+                                is ready for the final merge process.
+                              </li>
+                            </ul>
+                            <ul class="my-3 space-y-1 text-indigo-600">
+                              <li class="ml-4 list-disc list-inside text-indigo-600">
+                                <strong>STALE:</strong> No substantive activity (comments, code, or
+                                reviews) has occurred for 21 days. <strong>The day count</strong> on
+                                this badge reflects the time elapsed since the last substantive
+                                update, identifying tasks that may require a follow-up or a "nudge"
+                                to resume progress.
+                              </li>
+                            </ul>
+                            <strong>Note on Timers:</strong> The "Last Update" date ignores "noise"
+                            such as labels, reviewer pings, or base-branch merges. The activity
+                            clock only resets when a new commit, a code review (performed by a human
+                            or a bot), or a discussion comment is provided.
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </section>
                 <section id="engagement" class="mb-24 last:mb-0">
@@ -982,7 +1050,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on April 29, 2026.
+        >'s open source contributions, generated on April 30, 2026.
       </div>
 
       <div class="text-xs mt-1">
