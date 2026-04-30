@@ -23,7 +23,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_404: Tasks not found (and that's a good thing!)_**
+> **_Nothing to see here. You've cleared the deck!_**
 
 </details>
 
