@@ -24,38 +24,30 @@ function getLinkedIssueNumbers(prBody) {
  */
 function isCommitByUser(c, username) {
   try {
-    const lowerUsername = username.toLowerCase();
     const commitMessage = c.commit?.message || '';
 
-    // 1. STAGE 1: WEB-UI GATEKEEPER
-    // GitHub uses 'web-flow' as the committer for all Web UI actions.
-    // If you committed a suggestion, the AUTHOR is you, but the COMMITTER is web-flow.
-    const isGitHubWebUI = c.committer?.login === 'web-flow';
-    if (isGitHubWebUI) return false;
+    // 1. GATEKEEPER: If the committer is web-flow, it's a GitHub UI action (like a suggestion)
+    // We return false because this is NOT a physical local commit by the user.
+    if (c.committer?.login === 'web-flow') return false;
 
-    // 2. STAGE 2: MESSAGE-BASED EXCLUSIONS
-    // Catch-all for any variation of suggestions or merges not caught by web-flow.
-    const isExcludedMessage = /suggestion|Merge branch|Merge remote-tracking/i.test(commitMessage);
-    if (isExcludedMessage) return false;
+    // 2. EXCLUSION: Explicitly catch "suggestion" or "merge" strings
+    if (/suggestion|Merge branch|Merge remote-tracking/i.test(commitMessage)) return false;
 
-    // 3. STAGE 3: LOCAL AUTHOR CHECK
-    // If we reached here, the commit was pushed via CLI/Local Git.
+    // 3. LOCAL AUTHOR CHECK: Verify it's actually you via CLI
     const authorLogin = c.author?.login || '';
     const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
     const authorName = c.commit?.author?.name?.toLowerCase() || '';
+    const lowerUsername = username.toLowerCase();
 
     const isAuthorMatch =
       authorLogin === username ||
-      (authorEmail.endsWith('@users.noreply.github.com') &&
-        authorEmail.includes(`+${lowerUsername}@`)) ||
       authorEmail === `${lowerUsername}@users.noreply.github.com` ||
-      authorEmail.includes(lowerUsername) ||
-      (authorName && authorName.includes(lowerUsername));
+      (authorEmail.endsWith('@users.noreply.github.com') &&
+        authorEmail.includes(`+${lowerUsername}@`));
 
     if (isAuthorMatch) return true;
 
-    // 4. STAGE 4: CO-AUTHORED TRAILER CHECK
-    // This handles pair programming where your peer pushes local commits with your credit.
+    // 4. CO-AUTHORED TRAILER: Handle Git "Co-authored-by" trailers
     if (
       /Co-authored-by:/i.test(commitMessage) &&
       commitMessage.toLowerCase().includes(lowerUsername)
@@ -525,6 +517,98 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 }
 
 /**
+ * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
+ */
+async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpdatedAt) {
+  try {
+    const [timelineResp, reviewsResp] = await Promise.all([
+      axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/timeline?per_page=100`),
+      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`),
+    ]);
+
+    const timeline = timelineResp.data;
+    const reviews = reviewsResp.data;
+
+    const substantiveEvents = timeline.filter((e) => {
+      const type = e.event;
+
+      // 1. ALWAYS IGNORE: review requests, assignments, and locking
+      if (
+        [
+          'review_requested',
+          'review_request_removed',
+          'assigned',
+          'unassigned',
+          'labeled',
+          'unlabeled',
+        ].includes(type)
+      ) {
+        return false;
+      }
+
+      // 2. INCLUDE: Real comments or reviews
+      if (type === 'commented' || type === 'reviewed') return true;
+
+      // 3. INCLUDE: Commits (but ignore base-branch merges)
+      if (type === 'committed') {
+        return !/Merge (branch|remote-tracking|pull request)|#\d+ from/i.test(e.message || '');
+      }
+
+      return false;
+    });
+
+    const lastEvent = substantiveEvents[substantiveEvents.length - 1];
+    const lastActor = lastEvent?.actor?.login || lastEvent?.user?.login || lastEvent?.author?.login;
+    const isLastActorBot =
+      lastEvent?.actor?.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(lastActor || '');
+
+    // --- Calculate the TRUE last activity date ---
+
+    let timestamps = [];
+
+    substantiveEvents.forEach((e) => {
+      const d = e.created_at || e.submitted_at || e.author?.date;
+      if (d) timestamps.push(new Date(d));
+    });
+
+    reviews.forEach((r) => {
+      if (r.submitted_at) timestamps.push(new Date(r.submitted_at));
+    });
+
+    // FALLBACK: If no substantive actions yet, use creation date, not updatedAt
+    // This prevents "Updated at" from counting meta-actions as activity.
+    let lastSubstantiveDate;
+    if (timestamps.length > 0) {
+      lastSubstantiveDate = new Date(Math.max(...timestamps)).toISOString();
+    } else {
+      // If nothing has happened yet, we'll use the current PR's updated_at
+      // but only as a last resort.
+      lastSubstantiveDate = prMainUpdatedAt;
+    }
+
+    const latestReview = reviews
+      .filter((r) => r.state !== 'COMMENTED')
+      .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0];
+
+    return {
+      lastActor,
+      isLastActorBot,
+      hasFormalReview: reviews.length > 0,
+      reviewState: latestReview ? latestReview.state : null,
+      lastSubstantiveDate,
+    };
+  } catch (e) {
+    return {
+      lastActor: null,
+      isLastActorBot: false,
+      hasFormalReview: false,
+      reviewState: null,
+      lastSubstantiveDate: prMainUpdatedAt,
+    };
+  }
+}
+
+/**
  * FETCH ONGOING REVIEWS
  */
 async function fetchOngoingReviews() {
@@ -610,12 +694,17 @@ async function fetchOngoingReviews() {
   const ongoingTasks = [];
   const seenUrls = new Set();
 
-  const formatTask = (pr, status) => {
+  const formatTask = async (pr, status) => {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
+    const owner = repoParts[repoParts.length - 2];
+    const repo = repoParts[repoParts.length - 1];
+
+    const activity = await getPrActivityMeta(owner, repo, pr.number, axiosInstance, pr.updated_at);
+
     return {
       title: pr.title,
       url: pr.html_url,
-      repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
+      repo: `${owner}/${repo}`,
       status: status,
       createdAt: pr.created_at,
       updatedAt: pr.updated_at,
@@ -623,16 +712,22 @@ async function fetchOngoingReviews() {
       user: pr.user,
       isDraft: pr.draft,
       labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+      lastActor: activity.lastActor,
+      isLastActorBot: activity.isLastActorBot,
+      hasFormalReview: activity.hasFormalReview,
+      reviewState: activity.reviewState,
+      lastSubstantiveDate: activity.lastSubstantiveDate,
+      author: pr.user.login,
     };
   };
 
   // 1. "Review in progress": already explicitly reviewed by you
-  underReviewPrs.forEach((pr) => {
+  for (const pr of underReviewPrs) {
     if (!seenUrls.has(pr.html_url)) {
-      ongoingTasks.push(formatTask(pr, 'Review in progress'));
+      ongoingTasks.push(await formatTask(pr, 'Review in progress'));
       seenUrls.add(pr.html_url);
     }
-  });
+  }
 
   // 2. "Request review" vs "Review in progress" for the remaining requested PRs
   for (const pr of requestedPrs) {
@@ -641,9 +736,9 @@ async function fetchOngoingReviews() {
     const isEngaged = await checkHumanActivity(pr);
 
     if (isEngaged) {
-      ongoingTasks.push(formatTask(pr, 'Review in progress'));
+      ongoingTasks.push(await formatTask(pr, 'Review in progress'));
     } else {
-      ongoingTasks.push(formatTask(pr, 'Request review'));
+      ongoingTasks.push(await formatTask(pr, 'Request review'));
     }
     seenUrls.add(pr.html_url);
   }
@@ -763,26 +858,44 @@ async function fetchOngoingAuthoredPrs() {
     return [];
   }
 
-  return allAuthoredItems
-    .filter((item) => {
-      const isPr = !!item.pull_request;
-      const isExternal = !item.repository_url.includes(`repos/${GITHUB_USERNAME}/`);
-      return isPr && isExternal;
-    })
-    .map((pr) => {
-      const repoParts = new URL(pr.repository_url).pathname.split('/');
-      return {
-        title: pr.title,
-        url: pr.html_url,
-        repo: `${repoParts[repoParts.length - 2]}/${repoParts[repoParts.length - 1]}`,
-        createdAt: pr.created_at,
-        updatedAt: pr.updated_at,
-        number: pr.number,
-        isDraft: pr.draft === true || !!(pr.pull_request && pr.pull_request.draft),
-        labels: pr.labels ? pr.labels.map((l) => l.name) : [],
-        body: pr.body,
-      };
-    });
+  const results = [];
+  for (const item of allAuthoredItems) {
+    const isPr = !!item.pull_request;
+    const isExternal = !item.repository_url.includes(`repos/${GITHUB_USERNAME}/`);
+
+    if (isPr && isExternal) {
+      const repoParts = new URL(item.repository_url).pathname.split('/');
+      const owner = repoParts[repoParts.length - 2];
+      const repo = repoParts[repoParts.length - 1];
+
+      const activity = await getPrActivityMeta(
+        owner,
+        repo,
+        item.number,
+        axiosInstance,
+        item.updated_at
+      );
+
+      results.push({
+        title: item.title,
+        url: item.html_url,
+        repo: `${owner}/${repo}`,
+        createdAt: item.created_at,
+        updatedAt: item.updated_at,
+        number: item.number,
+        isDraft: item.draft === true || !!(item.pull_request && item.pull_request.draft),
+        labels: item.labels ? item.labels.map((l) => l.name) : [],
+        body: item.body,
+        lastActor: activity.lastActor,
+        isLastActorBot: activity.isLastActorBot,
+        hasFormalReview: activity.hasFormalReview,
+        reviewState: activity.reviewState,
+        lastSubstantiveDate: activity.lastSubstantiveDate,
+        author: GITHUB_USERNAME,
+      });
+    }
+  }
+  return results;
 }
 
 /**
@@ -851,6 +964,14 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
     );
 
     if (commitDetails && commitDetails.firstCommitDate) {
+      const activity = await getPrActivityMeta(
+        owner,
+        repoName,
+        pr.number,
+        axiosInstance,
+        pr.updated_at
+      );
+
       coAuthoredResults.push({
         title: pr.title,
         url: pr.html_url,
@@ -862,6 +983,12 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
         labels: pr.labels ? pr.labels.map((l) => l.name) : [],
         isDraft: pr.draft,
         body: pr.body,
+        lastActor: activity.lastActor,
+        isLastActorBot: activity.isLastActorBot,
+        hasFormalReview: activity.hasFormalReview,
+        reviewState: activity.reviewState,
+        lastSubstantiveDate: activity.lastSubstantiveDate,
+        author: pr.user.login,
       });
     }
   }

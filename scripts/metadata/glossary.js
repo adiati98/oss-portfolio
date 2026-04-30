@@ -161,6 +161,19 @@ const GLOSSARY_CONTENT = {
 
 Only open items are shown; they are removed once they are merged or closed.`,
         },
+        {
+          id: 'workbenchStatus',
+          title: 'Workbench Status & Ball Tracking',
+          description: 'Visual indicators used to track responsibility and activity.',
+          entryMethod: `Each task features a "Ball Tracking" badge to show the current state of responsibility:
+* **TAKE ACTION:** Indicates a response is required following the most recent substantive activity from another maintainer, contributor, or a bot review.
+* **WAITING:** Confirms the last substantive action was performed by the user; awaiting a response from the PR author or a maintainer.
+* **WATCHING:** Participation exists, but the current interaction is primarily between other maintainers or contributors.
+* **APPROVED:** The PR has received a formal approval and is ready for the final merge process.
+* **STALE:** No substantive activity (comments, code, or reviews) has occurred for 21 days. **The day count** on this badge reflects the time elapsed since the last substantive update, identifying tasks that may require a follow-up or a "nudge" to resume progress.
+
+**Note on Timers:** The "Last Update" date ignores "noise" such as labels, reviewer pings, or base-branch merges. The activity clock only resets when a new commit, a code review (performed by a human or a bot), or a discussion comment is provided.`,
+        },
       ],
     },
     {

@@ -82,6 +82,37 @@ const WORKBENCH_STATUS_COLORS = {
   },
 };
 
+/**
+ * WORKBENCH BALL-TRACKING CONFIGURATION
+ */
+const WORKBENCH_BALL_STATUS = {
+  waiting: {
+    dot: '#84cc16',
+    text: '#4d7c0f',
+    label: 'Waiting',
+  },
+  takeAction: {
+    dot: '#d946ef',
+    text: '#a21caf',
+    label: 'Take Action',
+  },
+  watching: {
+    dot: '#0ea5e9',
+    text: '#0369a1',
+    label: 'Watching',
+  },
+  approved: {
+    dot: COLORS.primary[500],
+    text: COLORS.primary[700],
+    label: 'Approved',
+  },
+  stale: {
+    dot: '#94a3b8',
+    text: '#64748b',
+    label: 'Stale',
+  },
+};
+
 module.exports = {
   LANDING_PAGE_ICONS,
   SPARKLES_SVG,
@@ -95,4 +126,5 @@ module.exports = {
   getHoverStyles,
   COLOR_PALETTE,
   WORKBENCH_STATUS_COLORS,
+  WORKBENCH_BALL_STATUS,
 };

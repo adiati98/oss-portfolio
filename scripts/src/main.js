@@ -377,8 +377,28 @@ async function main() {
     await createBlogHtml(articles);
     await writeArticlesMarkdown(articles);
 
-    // 8. Generate Community & Activity Reports
+    // --- 8. Generate Community & Activity Reports ---
     console.log('Generating Community & Activity reports...');
+
+    const isBot = (t) => {
+      const username = typeof t.user === 'object' ? t.user?.login : t.user;
+      const userStr = String(username || '').toLowerCase();
+      const titleStr = String(t.title || '').toLowerCase();
+      return (
+        userStr.includes('dependabot') ||
+        userStr.includes('[bot]') ||
+        titleStr.startsWith('[snyk]') ||
+        (titleStr.startsWith('bump') && userStr.includes('dependabot'))
+      );
+    };
+
+    // Use the logic to filter for the report generation
+    const manualRequestTasks = ongoingTasks.filter(
+      (t) => t.status === 'Request review' && !isBot(t)
+    );
+    const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
+    const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
+
     await createCommunityHtml(
       finalContributions,
       leadershipData,
@@ -387,6 +407,7 @@ async function main() {
       ongoingPRs,
       ongoingCoAuthoredPRs
     );
+
     await createCommunityMarkdown(
       finalContributions,
       leadershipData,
