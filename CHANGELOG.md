@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2026-05-01
+
+### Fixed
+
+- **Persona Calculation Mapping**: Resolved a bug in the landing page generator where the **Collaboration Profile** incorrectly defaulted to "Community Mentor." Added missing data keys to the persona categories to ensure that contribution counts for Issues, Merged PRs, and Reviews are accurately compared.
+
 ## [2.5.0] - 2026-04-30
 
 ### Added
