@@ -23,18 +23,20 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_404: Tasks not found (and that's a good thing!)_**
+> **_All quiet on this front. Well done!_**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (3)</h3></summary>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (5)</h3></summary>
 
-| Repository             | Task                                                                                                                  |
-| :--------------------- | :-------------------------------------------------------------------------------------------------------------------- |
-| **user-documentation** | [Update mj-attributes documentation for MJML theme support](https://github.com/mautic/user-documentation/pull/703)    |
-| **intro**              | [Updated outdated screenshots and gifs (GitHub UI updated)](https://github.com/OpenSource-Communities/intro/pull/310) |
-| **RepoReady**          | [test](https://github.com/OpenSource-Communities/RepoReady/pull/20)                                                   |
+| Repository                      | Task                                                                                                                  |
+| :------------------------------ | :-------------------------------------------------------------------------------------------------------------------- |
+| **developer-documentation-new** | [Document Notes API permissions and endpoints](https://github.com/mautic/developer-documentation-new/pull/425)        |
+| **user-documentation**          | [Document dedicated Notes permissions](https://github.com/mautic/user-documentation/pull/704)                         |
+| **user-documentation**          | [Update mj-attributes documentation for MJML theme support](https://github.com/mautic/user-documentation/pull/703)    |
+| **intro**                       | [Updated outdated screenshots and gifs (GitHub UI updated)](https://github.com/OpenSource-Communities/intro/pull/310) |
+| **RepoReady**                   | [test](https://github.com/OpenSource-Communities/RepoReady/pull/20)                                                   |
 
 </details>
 
@@ -57,7 +59,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 | Status                                                                                                       | Repository                      | Task                                                                                                               |
 | :----------------------------------------------------------------------------------------------------------- | :------------------------------ | :----------------------------------------------------------------------------------------------------------------- |
 | <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub> | **developer-documentation-new** | [Navigating UI resources](https://github.com/mautic/developer-documentation-new/pull/250)                          |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>36 days</sub>      | **developer-documentation-new** | [Documenting "withContactCounts" for campaign API](https://github.com/mautic/developer-documentation-new/pull/293) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>37 days</sub>      | **developer-documentation-new** | [Documenting "withContactCounts" for campaign API](https://github.com/mautic/developer-documentation-new/pull/293) |
 | <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved">                    | **user-documentation**          | [Add an overview of local.php for mautic 4 documentation](https://github.com/mautic/user-documentation/pull/138)   |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>50 days</sub>      | **user-documentation**          | [Campaign import export user docs](https://github.com/mautic/user-documentation/pull/361)                          |
 
@@ -91,7 +93,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>31 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>40 days</sub>                | **virtualcoffee.io**                                                                                                      | [Create a networking guide for Programmers](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399)                                            |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>43 days</sub>                | **intro**                                                                                                                 | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)                           |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>105 days</sub>               | **user-documentation**                                                                                                    | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>106 days</sub>               | **user-documentation**                                                                                                    | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
 | <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved">                              | **mautic-community-handbook**                                                                                             | [Add statement about re-election (don't merge until approved at the General Assembly)](https://github.com/mautic/mautic-community-handbook/pull/418) |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>181 days</sub>               | **virtualcoffee.io**                                                                                                      | [Add TypeScript — Getting Started Resource Page](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1430)                                       |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>226 days</sub>               | **guestbook**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft">                      | [feat: Add new process and move contributors](https://github.com/OpenSource-Communities/guestbook/pull/828)                                          |
