@@ -6,10 +6,10 @@ const { WORKBENCH_BALL_STATUS } = require('../../config/constants');
 
 /**
  * Maps ball status to GitHub-friendly indicators (using Shields.io for consistency).
+ * @param {Object} task - The task data
+ * @param {string} role - 'owner' or 'reviewer'
  */
-function getBallTrackingBadge(task, type) {
-  if (type !== 'ongoing') return null;
-
+function getBallTrackingBadge(task, role = 'owner') {
   // 1. Approved logic - HIGHEST PRIORITY
   if (task.reviewState === 'APPROVED' || task.status === 'APPROVED') {
     return {
@@ -22,7 +22,7 @@ function getBallTrackingBadge(task, type) {
   const lastUpdate = new Date(task.lastSubstantiveDate || task.updatedAt);
   const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
 
-  // 2. Stale logic - Displays day count
+  // 2. Stale logic
   if (diffDays >= 21) {
     const dayCount = Math.floor(diffDays);
     return {
@@ -31,19 +31,32 @@ function getBallTrackingBadge(task, type) {
     };
   }
 
-  // 3. Actor logic - For active, non-approved PRs
-  const lastActor = task.lastActor;
-  const isMe = lastActor === GITHUB_USERNAME;
-  const isAuthor = lastActor === task.author;
+  // 3. Normalization with Fallback (Matches HTML logic)
+  const rawLastActor = task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
+  
+  const lastActor = String(rawLastActor || '').toLowerCase().trim();
+  const prAuthor = String(task.author || '').toLowerCase().trim();
+  const me = String(GITHUB_USERNAME || '').toLowerCase().trim();
 
+  const isMe = lastActor === me;
+  const isAuthor = lastActor === prAuthor;
+
+  // 4. Sub-label logic
   let child = task.hasFormalReview ? 'Review' : 'Discussion';
-  const isBotActor = task.isLastActorBot || /\[bot\]$|dependabot|snyk/i.test(lastActor || '');
-
+  const isBotActor = task.isLastActorBot || /\[bot\]$|dependabot|snyk/i.test(lastActor);
   if (isBotActor) child += ' + BOT';
 
+  // 5. Branching Logic by Role
   let statusKey = 'watching';
-  if (isMe) statusKey = 'waiting';
-  else if (isAuthor) statusKey = 'takeAction';
+
+  if (role === 'reviewer') {
+    if (isMe) statusKey = 'waiting';
+    else if (isAuthor) statusKey = 'takeAction';
+  } else {
+    // Scenario: Owner/Co-Author
+    if (isMe) statusKey = 'waiting';
+    else if (!isMe && !isBotActor) statusKey = 'takeAction';
+  }
 
   const colorMap = {
     waiting: '4338ca', // Indigo 700
@@ -53,7 +66,7 @@ function getBallTrackingBadge(task, type) {
 
   const config = WORKBENCH_BALL_STATUS[statusKey];
   const color = colorMap[statusKey] || '334155';
-  const label = config.label.toUpperCase().replace(' ', '%20');
+  const label = config.label.toUpperCase().replace(/ /g, '%20');
 
   return {
     badge: `<img src="https://img.shields.io/badge/${label}-${color}?style=flat-square" alt="${config.label}">`,
@@ -176,9 +189,9 @@ async function createCommunityMarkdown(
 
   md += buildSection('To do issues', '📝', ongoingIssues, 'todo');
   md += buildSection('Request review', '📥', manualRequestTasks, 'todo');
-  md += buildSection('Ongoing PRs', '📤', ongoingPRs, 'ongoing');
-  md += buildSection('Moving Co-authored PRs Forward', '🤝', ongoingCoAuthoredPRs, 'ongoing');
-  md += buildSection('Review in progress', '🔄', inProgressTasks, 'ongoing');
+  md += buildSection('Ongoing PRs', '📤', ongoingPRs, 'owner');
+  md += buildSection('Moving Co-authored PRs Forward', '🤝', ongoingCoAuthoredPRs, 'owner');
+  md += buildSection('Review in progress', '🔄', inProgressTasks, 'reviewer');
   md += buildSection('Bot request review', '🤖', botTasks, 'bot');
 
   md += `---\n`;

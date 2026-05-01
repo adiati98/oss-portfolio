@@ -119,46 +119,67 @@ async function createCommunityHtml(
   };
 
   /**
-   * Logic to determine ball-tracking status for ongoing tasks
+   * Logic to determine ball-tracking status based on the user's role
+   * @param {Object} task - The task data
+   * @param {string} role - 'owner' (for Ongoing/Co-authored) or 'reviewer' (for Review in progress)
    */
-  function getWorkbenchStatus(task) {
+  function getWorkbenchStatus(task, role = 'owner') {
     const now = new Date();
 
-    // 1. APPROVED SHIELD - Priority Override
+    // 1. Common Logic: Approved & Stale
     if (task.reviewState === 'APPROVED' || task.status === 'APPROVED') {
-      return {
-        ...WORKBENCH_BALL_STATUS.approved,
-        child: '',
-      };
+      return { ...WORKBENCH_BALL_STATUS.approved, child: '' };
     }
 
-    // 2. Substantive Date Calculation
     const effectiveDate = task.lastSubstantiveDate || task.updatedAt;
-    const lastUpdate = new Date(effectiveDate);
-    const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
+    const diffDays = (now - new Date(effectiveDate)) / (1000 * 60 * 60 * 24);
 
-    // 3. Stale Check - Updated to show dynamic day count
     if (diffDays >= 21) {
-      return {
-        ...WORKBENCH_BALL_STATUS.stale,
-        child: `${Math.floor(diffDays)} days`,
-      };
+      return { ...WORKBENCH_BALL_STATUS.stale, child: `${Math.floor(diffDays)} days` };
     }
 
-    // 4. Responsibility Logic
-    const lastActor = task.lastActor;
-    const isMe = lastActor === GITHUB_USERNAME;
-    const isAuthor = lastActor === task.author;
+    // 2. Normalization
+    // Fallback: If lastActor is missing, use the login from the task.user object
+    const rawLastActor =
+      task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
 
+    const lastActor = String(rawLastActor || '')
+      .toLowerCase()
+      .trim();
+    const prAuthor = String(task.author || '')
+      .toLowerCase()
+      .trim();
+    const me = String(GITHUB_USERNAME || '')
+      .toLowerCase()
+      .trim();
+
+    const isMe = lastActor === me;
+    const isAuthor = lastActor === prAuthor;
+
+    // 3. Sub-label
     const isFormalReview = task.hasFormalReview === true;
     const childBase = isFormalReview ? 'Review' : 'Discussion';
     const isBotActor = task.isLastActorBot || isBot({ user: lastActor, title: '' });
     const childStatus = isBotActor ? `${childBase} + BOT` : childBase;
 
-    if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
-    if (isAuthor) return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
+    // 4. Branching Logic by Role
 
-    return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+    if (role === 'reviewer') {
+      // SCENARIO: You are reviewing someone else's PR
+      if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
+      if (isAuthor) return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
+      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+    } else {
+      // SCENARIO: You are the Author or Co-Author (Ongoing / Co-authored)
+      if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
+
+      // In ongoing and co-authored PR, "Not Me" is treated as "Take Action"
+      if (!isMe && !isBotActor) {
+        return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
+      }
+
+      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+    }
   }
 
   function renderStatusIndicator(type) {
@@ -234,7 +255,13 @@ async function createCommunityHtml(
           }
 
           // New ball-tracking logic only for "ongoing" task types
-          const ballStatus = type === 'ongoing' ? getWorkbenchStatus(task) : null;
+          let ballStatus = null;
+
+          if (label === 'Review in progress') {
+            ballStatus = getWorkbenchStatus(task, 'reviewer');
+          } else if (label === 'Ongoing PRs' || label === 'Moving co-authored PRs forward') {
+            ballStatus = getWorkbenchStatus(task, 'owner');
+          }
 
           return dedent`
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
