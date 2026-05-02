@@ -23,7 +23,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_You've outpaced the tasks!_**
+> **_Hooray! You're all caught up._**
 
 </details>
 
@@ -86,11 +86,11 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 | <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | **guestbook**                                                                                                             | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)                                             |
 | <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Discussion</sub>       | **user-documentation**                                                                                                    | [Add introduction for Zapier plugin documentation](https://github.com/mautic/user-documentation/pull/600)                                            |
 | <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub>           | **guestbook**                                                                                                             | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)                                    |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>25 days</sub>                | **guestbook**                                                                                                             | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)                                           |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>26 days</sub>                | **guestbook**                                                                                                             | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)                                           |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>26 days</sub>                | **guestbook**                                                                                                             | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934)                                      |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>26 days</sub>                | **guestbook**                                                                                                             | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)                                         |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>28 days</sub>                | **user-documentation**                                                                                                    | [docs: Add Tags documentation for Contact management](https://github.com/mautic/user-documentation/pull/647)                                         |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>31 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>41 days</sub>                | **virtualcoffee.io**                                                                                                      | [Create a networking guide for Programmers](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399)                                            |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>44 days</sub>                | **intro**                                                                                                                 | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)                           |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>106 days</sub>               | **user-documentation**                                                                                                    | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
@@ -122,4 +122,4 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 ---
 
-_Last updated: May 1, 2026_
+_Last updated: May 2, 2026_
