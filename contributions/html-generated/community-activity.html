@@ -824,7 +824,7 @@
                         class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md"
                         style="color: #991b1b"
                       >
-                        Zero tasks. The ecosystem is in good hands!
+                        All quiet on this front. Well done!
                       </p>
                     </div>
                   </div>
@@ -870,14 +870,18 @@
                   <div class="bg-white border-t border-slate-100">
                     <div class="overflow-x-auto">
                       <div class="min-w-[600px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="workbench-table-1">
                           <thead class="bg-slate-50/80 border-b border-slate-100">
                             <tr>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 1, 'repo')"
                               >
-                                Repository
+                                <div class="flex items-center">
+                                  Repository
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
@@ -890,6 +894,9 @@
                           <tbody class="divide-y divide-slate-100">
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-06T10:34:39.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -913,6 +920,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-05T19:20:55.000Z"
+                              data-repo="virtualcoffee.io"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -936,6 +946,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-05T14:08:02.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -959,6 +972,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-05T11:43:30.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -983,6 +999,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-05T09:19:34.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -1006,6 +1025,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-01T07:00:55.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -1029,6 +1051,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-01T07:00:49.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -1052,6 +1077,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-04-03T18:24:28.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -1073,6 +1101,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-21T16:15:09.000Z"
+                              data-repo="repoready"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -1141,20 +1172,28 @@
                   <div class="bg-white border-t border-slate-100">
                     <div class="overflow-x-auto">
                       <div class="min-w-[600px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="workbench-table-2">
                           <thead class="bg-slate-50/80 border-b border-slate-100">
                             <tr>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 2)"
                               >
-                                Status
+                                <div class="flex items-center">
+                                  Status
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 2, 'repo')"
                               >
-                                Repository
+                                <div class="flex items-center">
+                                  Repository
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
@@ -1167,6 +1206,9 @@
                           <tbody class="divide-y divide-slate-100">
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-03-18T00:24:29.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1220,6 +1262,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-03-18T00:21:27.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1273,6 +1318,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-02-05T01:01:54.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1327,6 +1375,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-02-05T01:01:25.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1381,6 +1432,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2025-09-22T18:18:38.000Z"
+                              data-repo="oss-communities"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1480,20 +1534,28 @@
                   <div class="bg-white border-t border-slate-100">
                     <div class="overflow-x-auto">
                       <div class="min-w-[600px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="workbench-table-3">
                           <thead class="bg-slate-50/80 border-b border-slate-100">
                             <tr>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 3)"
                               >
-                                Status
+                                <div class="flex items-center">
+                                  Status
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 3, 'repo')"
                               >
-                                Repository
+                                <div class="flex items-center">
+                                  Repository
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
@@ -1506,6 +1568,9 @@
                           <tbody class="divide-y divide-slate-100">
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-21T05:55:56.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1550,6 +1615,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-03-25T09:59:31.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1594,6 +1662,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-03-19T10:41:32.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1637,6 +1708,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-03-11T11:46:03.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1726,20 +1800,28 @@
                   <div class="bg-white border-t border-slate-100">
                     <div class="overflow-x-auto">
                       <div class="min-w-[600px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="workbench-table-4">
                           <thead class="bg-slate-50/80 border-b border-slate-100">
                             <tr>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 4)"
                               >
-                                Status
+                                <div class="flex items-center">
+                                  Status
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 4, 'repo')"
                               >
-                                Repository
+                                <div class="flex items-center">
+                                  Repository
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
@@ -1752,6 +1834,9 @@
                           <tbody class="divide-y divide-slate-100">
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-05-04T09:01:33.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1795,6 +1880,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-05-04T08:59:53.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1838,6 +1926,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="take action"
+                              data-date="2026-05-03T23:54:02.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1882,6 +1973,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="watching"
+                              data-date="2026-05-03T23:31:00.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1926,6 +2020,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="watching"
+                              data-date="2026-05-03T23:08:31.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -1970,6 +2067,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="watching"
+                              data-date="2026-05-03T22:31:05.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2015,6 +2115,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-30T17:41:10.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2059,6 +2162,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="take action"
+                              data-date="2026-04-29T20:52:13.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2114,6 +2220,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-29T20:29:05.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2158,6 +2267,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-28T05:58:53.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2202,6 +2314,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-04-27T09:12:50.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2245,6 +2360,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="take action"
+                              data-date="2026-04-26T15:29:10.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2289,6 +2407,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="take action"
+                              data-date="2026-04-25T00:03:21.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2343,6 +2464,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-24T13:11:25.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2387,6 +2511,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-24T12:59:36.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2431,6 +2558,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="take action"
+                              data-date="2026-04-23T23:46:38.000Z"
+                              data-repo="vc-community-docs"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2475,6 +2605,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2026-04-22T10:01:03.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2529,6 +2662,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="waiting"
+                              data-date="2026-04-20T07:39:52.000Z"
+                              data-repo="virtualcoffee.io"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2573,6 +2709,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-14T17:07:10.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2617,6 +2756,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-11T09:15:21.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2661,6 +2803,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-11T08:48:53.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2679,7 +2824,7 @@
                                   <span
                                     class="text-[11px] text-slate-400 font-bold ml-4 mt-0.5 uppercase tracking-tight"
                                   >
-                                    25 days
+                                    26 days
                                   </span>
                                 </div>
                               </td>
@@ -2705,6 +2850,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-05T23:10:20.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2749,6 +2897,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-05T11:24:17.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2793,6 +2944,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-05T11:23:24.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2837,6 +2991,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-04-03T15:51:39.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2881,6 +3038,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-03-31T00:37:28.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2923,6 +3083,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-03-21T11:59:03.000Z"
+                              data-repo="virtualcoffee.io"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -2967,6 +3130,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-03-18T17:18:04.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3009,6 +3175,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2026-01-15T09:17:19.000Z"
+                              data-repo="user-documentation"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3053,6 +3222,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2025-11-07T09:40:16.000Z"
+                              data-repo="mautic-community-handbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3097,6 +3269,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2025-10-31T11:59:12.000Z"
+                              data-repo="virtualcoffee.io"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3141,6 +3316,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="stale"
+                              data-date="2025-09-16T14:36:12.000Z"
+                              data-repo="guestbook"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3195,6 +3373,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status="approved"
+                              data-date="2024-06-26T19:54:54.000Z"
+                              data-repo="vc-community-docs"
                             >
                               <td class="px-6 py-4 vertical-align-top w-[180px]">
                                 <div class="flex flex-col">
@@ -3283,14 +3464,18 @@
                   <div class="bg-white border-t border-slate-100">
                     <div class="overflow-x-auto">
                       <div class="min-w-[600px]">
-                        <table class="min-w-full">
+                        <table class="min-w-full" id="workbench-table-5">
                           <thead class="bg-slate-50/80 border-b border-slate-100">
                             <tr>
                               <th
                                 scope="col"
-                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest"
+                                class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort"
+                                onclick="sortWorkbenchTable(this, 5, 'repo')"
                               >
-                                Repository
+                                <div class="flex items-center">
+                                  Repository
+                                  <span class="sort-icon ml-1">↕</span>
+                                </div>
                               </th>
                               <th
                                 scope="col"
@@ -3303,6 +3488,9 @@
                           <tbody class="divide-y divide-slate-100">
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-05-01T16:55:32.000Z"
+                              data-repo="virtualcoffee.io"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3326,6 +3514,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-04-30T07:42:33.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3349,6 +3540,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-04-13T06:46:32.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3372,6 +3566,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-04-06T06:42:27.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3405,6 +3602,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-04-05T17:22:30.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3428,6 +3628,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2026-02-26T13:49:33.000Z"
+                              data-repo="developer-documentation-new"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3461,6 +3664,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-09T11:13:10.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3482,6 +3688,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-09T11:13:03.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3503,6 +3712,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-09T11:13:00.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3524,6 +3736,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-09T11:12:54.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3546,6 +3761,9 @@
                             </tr>
                             <tr
                               class="table-row-hover border-b border-slate-100 last:border-0 transition-colors"
+                              data-status=""
+                              data-date="2025-10-09T11:12:49.000Z"
+                              data-repo="intro"
                             >
                               <td class="px-6 py-4 vertical-align-top w-1/3">
                                 <div class="flex flex-col items-start">
@@ -3577,6 +3795,90 @@
         </div>
       </div>
     </main>
+    <script>
+      function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
+        const table = document.getElementById('workbench-table-' + tableIndex);
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const icon = header.querySelector('.sort-icon');
+
+        // Reset other sortable headers in the same table to initial state
+        const headers = header.closest('tr').querySelectorAll('th[data-sort-state]');
+        headers.forEach((h) => {
+          if (h !== header) {
+            h.setAttribute('data-sort-state', '0');
+            h.classList.remove('sort-custom1', 'sort-custom2');
+            const otherIcon = h.querySelector('.sort-icon');
+            if (otherIcon) otherIcon.textContent = '↕';
+          }
+        });
+
+        // Cycle states: 0 (initial), 1 (asc), 2 (desc)
+        let state = parseInt(header.getAttribute('data-sort-state') || '0');
+        state = (state + 1) % 3;
+        header.setAttribute('data-sort-state', state);
+
+        const priorityMap = {
+          'take action': 1,
+          watching: 2,
+          waiting: 3,
+          stale: 4,
+          approved: 5,
+        };
+        const priorityMapRev = {
+          approved: 1,
+          stale: 2,
+          waiting: 3,
+          watching: 4,
+          'take action': 5,
+        };
+
+        rows.sort((a, b) => {
+          if (state === 0) {
+            return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+          }
+
+          if (sortType === 'status') {
+            const statusA = a.getAttribute('data-status');
+            const statusB = b.getAttribute('data-status');
+            if (state === 1) {
+              if (statusA !== statusB)
+                return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
+              if (statusA === 'stale')
+                return (
+                  new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'))
+                );
+            } else {
+              if (statusA !== statusB)
+                return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
+              if (statusA === 'stale')
+                return (
+                  new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'))
+                );
+            }
+          } else if (sortType === 'repo') {
+            const repoA = a.getAttribute('data-repo');
+            const repoB = b.getAttribute('data-repo');
+            return state === 1 ? repoA.localeCompare(repoB) : repoB.localeCompare(repoA);
+          }
+          return 0;
+        });
+
+        // Update UI
+        header.classList.remove('sort-custom1', 'sort-custom2');
+        if (state === 1) {
+          header.classList.add('sort-custom1');
+          icon.textContent = '▲';
+        } else if (state === 2) {
+          header.classList.add('sort-custom2');
+          icon.textContent = '▼';
+        } else {
+          icon.textContent = '↕';
+        }
+
+        rows.forEach((row) => tbody.appendChild(row));
+      }
+    </script>
     <footer
       style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
       class="mt-16 py-8 border-t text-center text-sm"
