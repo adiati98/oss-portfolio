@@ -293,7 +293,8 @@ async function createCommunityHtml(
           return dedent`
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" 
                 data-status="${ballStatus?.label.toLowerCase() || ''}" 
-                data-date="${subDate}">
+                data-date="${subDate}"
+                data-repo="${repoName.toLowerCase()}">
               ${
                 ballStatus
                   ? dedent`
@@ -349,7 +350,12 @@ async function createCommunityHtml(
                     </th>`
                       : ''
                   }
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort" onclick="sortWorkbenchTable(this, ${index}, 'repo')">
+                    <div class="flex items-center">
+                      Repository
+                      <span class="sort-icon ml-1">↕</span>
+                    </div>
+                  </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                 </tr>
               </thead>
@@ -501,59 +507,55 @@ async function createCommunityHtml(
         </div>
       </main>
       <script>
-      function sortWorkbenchTable(header, tableIndex) {
+      function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
         const table = document.getElementById('workbench-table-' + tableIndex);
         const tbody = table.querySelector('tbody');
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const icon = header.querySelector('.sort-icon');
 
-        // Cycle states: 0 (initial), 1 (custom asc), 2 (custom desc)
+        // Reset other sortable headers in the same table to initial state
+        const headers = header.closest('tr').querySelectorAll('th[data-sort-state]');
+        headers.forEach(h => {
+          if (h !== header) {
+            h.setAttribute('data-sort-state', '0');
+            h.classList.remove('sort-custom1', 'sort-custom2');
+            const otherIcon = h.querySelector('.sort-icon');
+            if (otherIcon) otherIcon.textContent = '↕';
+          }
+        });
+
+        // Cycle states: 0 (initial), 1 (asc), 2 (desc)
         let state = parseInt(header.getAttribute('data-sort-state') || '0');
         state = (state + 1) % 3;
         header.setAttribute('data-sort-state', state);
 
-        const priorityMap = {
-          'take action': 1,
-          'watching': 2,
-          'waiting': 3,
-          'stale': 4,
-          'approved': 5,
-        };
-        const priorityMapRev = {
-          'approved': 1,
-          'stale': 2,
-          'waiting': 3,
-          'watching': 4,
-          'take action': 5,
-        };
+        const priorityMap = { 'take action': 1, 'watching': 2, 'waiting': 3, 'stale': 4, 'approved': 5 };
+        const priorityMapRev = { 'approved': 1, 'stale': 2, 'waiting': 3, 'watching': 4, 'take action': 5 };
 
         rows.sort((a, b) => {
-          const statusA = a.getAttribute('data-status');
-          const statusB = b.getAttribute('data-status');
-          const dateA = new Date(a.getAttribute('data-date'));
-          const dateB = new Date(b.getAttribute('data-date'));
-
-          if (state === 1) {
-            // 1st Click: Ascending + Stale (Longest time = oldest date first)
-            if (statusA !== statusB) {
-              return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
-            }
-            if (statusA === 'stale') return dateA - dateB;
-            return 0;
-          } else if (state === 2) {
-            // 2nd Click: Descending + Stale (Shortest time = newest date first)
-            if (statusA !== statusB) {
-              return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
-            }
-            if (statusA === 'stale') return dateB - dateA;
-            return 0;
-          } else {
-            // 3rd Click: Initial (Newest to oldest)
-            return dateB - dateA;
+          if (state === 0) {
+            return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
           }
+
+          if (sortType === 'status') {
+            const statusA = a.getAttribute('data-status');
+            const statusB = b.getAttribute('data-status');
+            if (state === 1) {
+              if (statusA !== statusB) return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
+              if (statusA === 'stale') return new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'));
+            } else {
+              if (statusA !== statusB) return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
+              if (statusA === 'stale') return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+            }
+          } else if (sortType === 'repo') {
+            const repoA = a.getAttribute('data-repo');
+            const repoB = b.getAttribute('data-repo');
+            return state === 1 ? repoA.localeCompare(repoB) : repoB.localeCompare(repoA);
+          }
+          return 0;
         });
 
-        // Update UI classes and icons
+        // Update UI
         header.classList.remove('sort-custom1', 'sort-custom2');
         if (state === 1) {
           header.classList.add('sort-custom1');
@@ -565,7 +567,6 @@ async function createCommunityHtml(
           icon.textContent = '↕';
         }
 
-        // Re-append rows in new order
         rows.forEach((row) => tbody.appendChild(row));
       }
     </script>
