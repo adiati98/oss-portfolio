@@ -227,12 +227,38 @@ async function createCommunityHtml(
     let sectionContent;
 
     if (count > 0) {
-      const rows = tasks
-        .sort((a, b) => {
+      // Logic for sorting "ongoing" tasks
+      if (type === 'ongoing') {
+        tasks.sort((a, b) => {
+          const ballA =
+            label === 'Review in progress'
+              ? getWorkbenchStatus(a, 'reviewer')
+              : getWorkbenchStatus(a, 'owner');
+          const ballB =
+            label === 'Review in progress'
+              ? getWorkbenchStatus(b, 'reviewer')
+              : getWorkbenchStatus(b, 'owner');
+
+          const priorityMap = { 'take action': 1, watching: 2, waiting: 3, stale: 4, approved: 5 };
+          const pA = priorityMap[ballA.label.toLowerCase()] || 99;
+          const pB = priorityMap[ballB.label.toLowerCase()] || 99;
+
+          const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
+          const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
+
+          // Default state (3rd click / initial): Newest to oldest
+          return dateB - dateA;
+        });
+      } else {
+        // Default sorting for other types
+        tasks.sort((a, b) => {
           const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
           const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
           return dateB - dateA;
-        })
+        });
+      }
+
+      const rows = tasks
         .map((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
           const labels = (task.labels || []).map((l) => l.toLowerCase());
@@ -254,17 +280,20 @@ async function createCommunityHtml(
             statusIndicator = renderStatusIndicator('blocked');
           }
 
-          // New ball-tracking logic only for "ongoing" task types
           let ballStatus = null;
-
           if (label === 'Review in progress') {
             ballStatus = getWorkbenchStatus(task, 'reviewer');
           } else if (label === 'Ongoing PRs' || label === 'Moving co-authored PRs forward') {
             ballStatus = getWorkbenchStatus(task, 'owner');
           }
 
+          // Format substantive date for data attributes if needed for JS sorting
+          const subDate = task.lastSubstantiveDate || task.updatedAt;
+
           return dedent`
-            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors">
+            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" 
+                data-status="${ballStatus?.label.toLowerCase() || ''}" 
+                data-date="${subDate}">
               ${
                 ballStatus
                   ? dedent`
@@ -306,10 +335,20 @@ async function createCommunityHtml(
       sectionContent = dedent`
         <div class="overflow-x-auto">
           <div class="min-w-[600px]">
-            <table class="min-w-full">
+            <table class="min-w-full" id="workbench-table-${index}">
               <thead class="bg-slate-50/80 border-b border-slate-100">
                 <tr>
-                  ${type === 'ongoing' ? '<th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Status</th>' : ''}
+                  ${
+                    type === 'ongoing'
+                      ? dedent`
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort" onclick="sortWorkbenchTable(this, ${index})">
+                      <div class="flex items-center">
+                        Status
+                        <span class="sort-icon ml-1">↕</span>
+                      </div>
+                    </th>`
+                      : ''
+                  }
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Repository</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                 </tr>
@@ -461,6 +500,75 @@ async function createCommunityHtml(
           </div>
         </div>
       </main>
+      <script>
+      function sortWorkbenchTable(header, tableIndex) {
+        const table = document.getElementById('workbench-table-' + tableIndex);
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const icon = header.querySelector('.sort-icon');
+
+        // Cycle states: 0 (initial), 1 (custom asc), 2 (custom desc)
+        let state = parseInt(header.getAttribute('data-sort-state') || '0');
+        state = (state + 1) % 3;
+        header.setAttribute('data-sort-state', state);
+
+        const priorityMap = {
+          'take action': 1,
+          'watching': 2,
+          'waiting': 3,
+          'stale': 4,
+          'approved': 5,
+        };
+        const priorityMapRev = {
+          'approved': 1,
+          'stale': 2,
+          'waiting': 3,
+          'watching': 4,
+          'take action': 5,
+        };
+
+        rows.sort((a, b) => {
+          const statusA = a.getAttribute('data-status');
+          const statusB = b.getAttribute('data-status');
+          const dateA = new Date(a.getAttribute('data-date'));
+          const dateB = new Date(b.getAttribute('data-date'));
+
+          if (state === 1) {
+            // 1st Click: Ascending + Stale (Longest time = oldest date first)
+            if (statusA !== statusB) {
+              return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
+            }
+            if (statusA === 'stale') return dateA - dateB;
+            return 0;
+          } else if (state === 2) {
+            // 2nd Click: Descending + Stale (Shortest time = newest date first)
+            if (statusA !== statusB) {
+              return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
+            }
+            if (statusA === 'stale') return dateB - dateA;
+            return 0;
+          } else {
+            // 3rd Click: Initial (Newest to oldest)
+            return dateB - dateA;
+          }
+        });
+
+        // Update UI classes and icons
+        header.classList.remove('sort-custom1', 'sort-custom2');
+        if (state === 1) {
+          header.classList.add('sort-custom1');
+          icon.textContent = '▲';
+        } else if (state === 2) {
+          header.classList.add('sort-custom2');
+          icon.textContent = '▼';
+        } else {
+          icon.textContent = '↕';
+        }
+
+        // Re-append rows in new order
+        rows.forEach((row) => tbody.appendChild(row));
+      }
+    </script>
       ${footerHtml}
     </body>
     </html>
