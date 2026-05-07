@@ -342,20 +342,26 @@ async function createCommunityHtml(
                   ${
                     type === 'ongoing'
                       ? dedent`
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort" onclick="sortWorkbenchTable(this, ${index})">
-                      <div class="flex items-center">
-                        Status
-                        <span class="sort-icon ml-1">↕</span>
-                      </div>
-                    </th>`
+    <th scope="col" class="px-6 py-3 text-left">
+      <button type="button" 
+              class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+              onclick="sortWorkbenchTable(this.parentElement, ${index})"
+              onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
+        Status
+        <span class="sort-icon ml-1" aria-hidden="true">↕</span>
+      </button>
+    </th>`
                       : ''
                   }
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort" onclick="sortWorkbenchTable(this, ${index}, 'repo')">
-                    <div class="flex items-center">
-                      Repository
-                      <span class="sort-icon ml-1">↕</span>
-                    </div>
-                  </th>
+<th scope="col" class="px-6 py-3 text-left">
+  <button type="button" 
+          class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+          onclick="sortWorkbenchTable(this.parentElement, ${index}, 'repo')"
+          onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}, 'repo'); }">
+    Repository
+    <span class="sort-icon ml-1" aria-hidden="true">↕</span>
+  </button>
+</th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                 </tr>
               </thead>
@@ -508,6 +514,10 @@ async function createCommunityHtml(
       </main>
       <script>
       function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
+        if (header.tagName === 'BUTTON') {
+          header = header.parentElement;
+        }
+          
         const table = document.getElementById('workbench-table-' + tableIndex);
         const tbody = table.querySelector('tbody');
         const rows = Array.from(tbody.querySelectorAll('tr'));
