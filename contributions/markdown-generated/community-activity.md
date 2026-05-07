@@ -9,21 +9,21 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 ## 🏗️ Roles & Impact
 
-- 🟢 **Active** | **Education Team Lead** at Mautic (January 2026 - Present)
-- 🟢 **Active** | **Documentation Team Lead** at Virtual Coffee (December 2021 - Present)
-- 🟢 **Active** | **Co-Maintainer** at Open Source Communities (June 2025 - Present)
-- 🟢 **Active** | **Monthly Challenge Team Lead** at Virtual Coffee (December 2023 - Present)
-- 🟢 **Active** | **Community Advisor** at Virtual Coffee (April 2022 - Present)
-- ⚪ _Past_ | **Assistant Team Lead, Education Team** at Mautic (June 2025 - December 2025)
-- ⚪ _Past_ | **Docs Maintainer** at OpenSauced (October 2023 - November 2024)
-- ⚪ _Past_ | **Hacktoberfest Support** at SheSharp (September 2023 - November 2023)
+- 🟢 **Active** | **Education Team Lead** at [Mautic](https://mautic.org/leadership/) (January 2026 - Present)
+- 🟢 **Active** | **Documentation Team Lead** at [Virtual Coffee](https://virtualcoffee.io) (December 2021 - Present)
+- 🟢 **Active** | **Co-Maintainer** at [Open Source Communities](https://github.com/OpenSource-Communities) (June 2025 - Present)
+- 🟢 **Active** | **Monthly Challenge Team Lead** at [Virtual Coffee](https://virtualcoffee.io) (December 2023 - Present)
+- 🟢 **Active** | **Community Advisor** at [Virtual Coffee](https://virtualcoffee.io) (April 2022 - Present)
+- ⚪ _Past_ | **Assistant Team Lead, Education Team** at [Mautic](https://mautic.org/leadership/) (June 2025 - December 2025)
+- ⚪ _Past_ | **Docs Maintainer** at [OpenSauced](https://github.com/open-sauced) (October 2023 - November 2024)
+- ⚪ _Past_ | **Hacktoberfest Support** at [SheSharp](https://www.shesharp.co) (September 2023 - November 2023)
 
 ## 🛠️ Active Workbench
 
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_Inbox Zero achieved! Time for a coffee?_**
+> **_404: Tasks not found (and that's a good thing!)_**
 
 </details>
 

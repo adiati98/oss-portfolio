@@ -841,7 +841,7 @@
                         class="italic text-sm font-bold leading-relaxed break-words mx-auto max-w-xs sm:max-w-md"
                         style="color: #991b1b"
                       >
-                        404: Tasks not found (and that's a good thing!)
+                        Hooray! You're all caught up.
                       </p>
                     </div>
                   </div>
@@ -1179,7 +1179,7 @@
                   </div>
                 </details>
                 <details
-                  id="active-workbench"
+                  id="section-2"
                   class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white"
                 >
                   <summary
@@ -3877,10 +3877,9 @@
           }
         }
 
-        const defaultSection = document.getElementById('active-workbench');
-        if (defaultSection) {
-          defaultSection.open = true;
-        }
+        allDetails.forEach((detail, idx) => {
+          detail.open = idx === 0;
+        });
       }
 
       document.addEventListener('DOMContentLoaded', () => {
