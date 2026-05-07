@@ -156,6 +156,8 @@ const GLOSSARY_CONTENT = {
 
 * **To do issues:** Assigned issues
 * **Request review:** PRs waiting for a review
+* **Ongoing PRs:** Authored PRs that are currently open and being actively worked on
+* **Moving co-authored PRs forward:** Collaborative PRs where contributions are being made alongside others to reach completion
 * **Review in progress:** Reviews currently being done
 * **Bot request review:** Automated bot requests waiting for a review
 
