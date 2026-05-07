@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.0] - 2026-05-07
+
+### Added
+
+- **Interactive Table Sorting**: Introduced client-side sorting for the Workbench dashboard.
+    - **Status Priority Sort**: Implements a three-state toggle to sort tasks by urgency (Take Action > Watching > Waiting > Stale > Approved), with a secondary date-based sort for stale items.
+    - **Alphabetical Repository Sort**: Added the ability to sort the Workbench by repository name (A-Z / Z-A).
+- **Visual Sort Indicators**: Integrated dynamic UI icons (↕, ▲, ▼) and header highlighting to indicate active sort states and directions.
+
+### Changed
+
+- **Glossary Refinement**: Updated the `activeWorkbench` definitions to provide better distinction between work types.
+    - Added **Ongoing PRs**: Specifically defined as self-authored PRs.
+    - Added **Moving co-authored PRs forward**: Defined as collaborative contributions made alongside other authors.
+- **Table Data Architecture**: Modified the HTML generator to include `data-repo` and `data-status` attributes, enabling faster and more reliable client-side sorting without DOM scraping.
+
 ## [2.5.2] - 2026-05-01
 
 ### Fixed
