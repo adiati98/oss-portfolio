@@ -379,7 +379,7 @@ async function createCommunityHtml(
       `;
     }
 
-    const sectionId = label === 'Ongoing PRs' ? 'active-workbench' : `section-${index}`;
+    const sectionId = `section-${index}`;
 
     return dedent`
       <details id="${sectionId}" class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
@@ -518,7 +518,7 @@ async function createCommunityHtml(
         function syncSectionState() {
           const hash = window.location.hash;
           const allDetails = document.querySelectorAll('details');
-          
+
           if (hash) {
             const target = document.querySelector(hash);
             if (target && target.tagName === 'DETAILS') {
@@ -530,10 +530,9 @@ async function createCommunityHtml(
             }
           }
 
-          const defaultSection = document.getElementById('active-workbench');
-          if (defaultSection) {
-            defaultSection.open = true;
-          }
+          allDetails.forEach((detail, idx) => {
+            detail.open = (idx === 0);
+          });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -554,12 +553,12 @@ async function createCommunityHtml(
         });
 
         window.addEventListener('hashchange', syncSectionState);
-        
+
         function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
           if (header.tagName === 'BUTTON') {
             header = header.parentElement;
           }
-            
+
           const table = document.getElementById('workbench-table-' + tableIndex);
           const tbody = table.querySelector('tbody');
           const rows = Array.from(tbody.querySelectorAll('tr'));
