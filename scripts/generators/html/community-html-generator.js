@@ -84,23 +84,23 @@ async function createCommunityHtml(
         : `<span class="text-slate-700">${sanitizeAttribute(role.org)}</span>`;
 
       return dedent`
-      <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
-        <div class="flex items-start xl:items-center space-x-3 pr-2">
-          <div class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 xl:mt-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
-          <div>
-            <h3 class="font-bold text-slate-900 leading-tight text-base sm:text-lg">${role.title}</h3>
-            <p class="text-sm sm:text-base font-medium">${orgDisplay}</p>
+        <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
+          <div class="flex items-start xl:items-center space-x-3 pr-2">
+            <div class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 xl:mt-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
+            <div>
+              <h3 class="font-bold text-slate-900 leading-tight text-base sm:text-lg">${role.title}</h3>
+              <p class="text-sm sm:text-base font-medium">${orgDisplay}</p>
+            </div>
+          </div>
+          <div class="flex flex-col items-start xl:items-end justify-center shrink-0 mt-1 xl:mt-0 ml-6 xl:ml-0">
+            <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-widest mb-1" 
+                  style="background-color: ${statusBg}; color: ${statusColor};">
+              ${isActive ? 'Active' : 'Past'}
+            </span>
+            <span class="text-sm font-mono text-slate-500 leading-tight">${role.period}</span>
           </div>
         </div>
-        <div class="flex flex-col items-start xl:items-end justify-center shrink-0 mt-1 xl:mt-0 ml-6 xl:ml-0">
-          <span class="px-2 py-0.5 rounded text-[11px] font-black uppercase tracking-widest mb-1" 
-                style="background-color: ${statusBg}; color: ${statusColor};">
-            ${isActive ? 'Active' : 'Past'}
-          </span>
-          <span class="text-sm font-mono text-slate-500 leading-tight">${role.period}</span>
-        </div>
-      </div>
-    `;
+      `;
     })
     .join('');
 
@@ -139,7 +139,6 @@ async function createCommunityHtml(
     }
 
     // 2. Normalization
-    // Fallback: If lastActor is missing, use the login from the task.user object
     const rawLastActor =
       task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
 
@@ -246,7 +245,6 @@ async function createCommunityHtml(
           const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
           const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
 
-          // Default state (3rd click / initial): Newest to oldest
           return dateB - dateA;
         });
       } else {
@@ -287,7 +285,6 @@ async function createCommunityHtml(
             ballStatus = getWorkbenchStatus(task, 'owner');
           }
 
-          // Format substantive date for data attributes if needed for JS sorting
           const subDate = task.lastSubstantiveDate || task.updatedAt;
 
           return dedent`
@@ -342,26 +339,26 @@ async function createCommunityHtml(
                   ${
                     type === 'ongoing'
                       ? dedent`
-    <th scope="col" class="px-6 py-3 text-left">
-      <button type="button" 
-              class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
-              onclick="sortWorkbenchTable(this.parentElement, ${index})"
-              onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
-        Status
-        <span class="sort-icon ml-1" aria-hidden="true">↕</span>
-      </button>
-    </th>`
+                    <th scope="col" class="px-6 py-3 text-left">
+                      <button type="button" 
+                              class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+                              onclick="sortWorkbenchTable(this.parentElement, ${index})"
+                              onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
+                        Status
+                        <span class="sort-icon ml-1" aria-hidden="true">↕</span>
+                      </button>
+                    </th>`
                       : ''
                   }
-<th scope="col" class="px-6 py-3 text-left">
-  <button type="button" 
-          class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
-          onclick="sortWorkbenchTable(this.parentElement, ${index}, 'repo')"
-          onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}, 'repo'); }">
-    Repository
-    <span class="sort-icon ml-1" aria-hidden="true">↕</span>
-  </button>
-</th>
+                  <th scope="col" class="px-6 py-3 text-left">
+                    <button type="button" 
+                            class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+                            onclick="sortWorkbenchTable(this.parentElement, ${index}, 'repo')"
+                            onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}, 'repo'); }">
+                      Repository
+                      <span class="sort-icon ml-1" aria-hidden="true">↕</span>
+                    </button>
+                  </th>
                   <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
                 </tr>
               </thead>
@@ -382,9 +379,9 @@ async function createCommunityHtml(
       `;
     }
 
-const sectionId = label === 'Ongoing PRs' ? 'active-workbench' : `section-${index}`;
+    const sectionId = label === 'Ongoing PRs' ? 'active-workbench' : `section-${index}`;
 
-return dedent`
+    return dedent`
       <details id="${sectionId}" class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
         <summary 
           class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/30 focus-visible:bg-white"
@@ -410,7 +407,7 @@ return dedent`
     `;
   }
 
-  // --- Filtering logic  ---
+  // --- Filtering logic ---
   const botTasks = ongoingTasks.filter((t) => isBot(t));
   const humanTasks = ongoingTasks.filter((t) => !isBot(t));
 
@@ -518,117 +515,110 @@ return dedent`
         </div>
       </main>
       <script>
-  /**
-   * Manages section visibility based on the URL hash or defaults to 'active-workbench'.
-   */
-  function syncSectionState() {
-    const hash = window.location.hash;
-    const allDetails = document.querySelectorAll('details');
-    
-    if (hash) {
-      const target = document.querySelector(hash);
-      if (target && target.tagName === 'DETAILS') {
-        allDetails.forEach(detail => detail.open = (detail === target));
-        setTimeout(() => {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }, 100);
-        return;
-      }
-    }
-
-    // Default behavior: Open 'Ongoing PRs' (active-workbench) if no hash is present
-    const defaultSection = document.getElementById('active-workbench');
-    if (defaultSection) {
-      defaultSection.open = true;
-    }
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    syncSectionState();
-
-    const summaries = document.querySelectorAll('summary');
-    summaries.forEach(summary => {
-      summary.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          setTimeout(() => {
-            if (summary.parentElement.open) {
-              summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            }
-          }, 100);
-        }
-      });
-    });
-  });
-
-  window.addEventListener('hashchange', syncSectionState);
-  
-      function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
-        if (header.tagName === 'BUTTON') {
-          header = header.parentElement;
-        }
+        function syncSectionState() {
+          const hash = window.location.hash;
+          const allDetails = document.querySelectorAll('details');
           
-        const table = document.getElementById('workbench-table-' + tableIndex);
-        const tbody = table.querySelector('tbody');
-        const rows = Array.from(tbody.querySelectorAll('tr'));
-        const icon = header.querySelector('.sort-icon');
-
-        // Reset other sortable headers in the same table to initial state
-        const headers = header.closest('tr').querySelectorAll('th[data-sort-state]');
-        headers.forEach(h => {
-          if (h !== header) {
-            h.setAttribute('data-sort-state', '0');
-            h.classList.remove('sort-custom1', 'sort-custom2');
-            const otherIcon = h.querySelector('.sort-icon');
-            if (otherIcon) otherIcon.textContent = '↕';
-          }
-        });
-
-        // Cycle states: 0 (initial), 1 (asc), 2 (desc)
-        let state = parseInt(header.getAttribute('data-sort-state') || '0');
-        state = (state + 1) % 3;
-        header.setAttribute('data-sort-state', state);
-
-        const priorityMap = { 'take action': 1, 'watching': 2, 'waiting': 3, 'stale': 4, 'approved': 5 };
-        const priorityMapRev = { 'approved': 1, 'stale': 2, 'waiting': 3, 'watching': 4, 'take action': 5 };
-
-        rows.sort((a, b) => {
-          if (state === 0) {
-            return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
-          }
-
-          if (sortType === 'status') {
-            const statusA = a.getAttribute('data-status');
-            const statusB = b.getAttribute('data-status');
-            if (state === 1) {
-              if (statusA !== statusB) return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
-              if (statusA === 'stale') return new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'));
-            } else {
-              if (statusA !== statusB) return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
-              if (statusA === 'stale') return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+          if (hash) {
+            const target = document.querySelector(hash);
+            if (target && target.tagName === 'DETAILS') {
+              allDetails.forEach(detail => detail.open = (detail === target));
+              setTimeout(() => {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+              return;
             }
-          } else if (sortType === 'repo') {
-            const repoA = a.getAttribute('data-repo');
-            const repoB = b.getAttribute('data-repo');
-            return state === 1 ? repoA.localeCompare(repoB) : repoB.localeCompare(repoA);
           }
-          return 0;
-        });
 
-        // Update UI
-        header.classList.remove('sort-custom1', 'sort-custom2');
-        if (state === 1) {
-          header.classList.add('sort-custom1');
-          icon.textContent = '▲';
-        } else if (state === 2) {
-          header.classList.add('sort-custom2');
-          icon.textContent = '▼';
-        } else {
-          icon.textContent = '↕';
+          const defaultSection = document.getElementById('active-workbench');
+          if (defaultSection) {
+            defaultSection.open = true;
+          }
         }
 
-        rows.forEach((row) => tbody.appendChild(row));
-      }
-    </script>
+        document.addEventListener('DOMContentLoaded', () => {
+          syncSectionState();
+
+          const summaries = document.querySelectorAll('summary');
+          summaries.forEach(summary => {
+            summary.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                setTimeout(() => {
+                  if (summary.parentElement.open) {
+                    summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                  }
+                }, 100);
+              }
+            });
+          });
+        });
+
+        window.addEventListener('hashchange', syncSectionState);
+        
+        function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
+          if (header.tagName === 'BUTTON') {
+            header = header.parentElement;
+          }
+            
+          const table = document.getElementById('workbench-table-' + tableIndex);
+          const tbody = table.querySelector('tbody');
+          const rows = Array.from(tbody.querySelectorAll('tr'));
+          const icon = header.querySelector('.sort-icon');
+
+          const headers = header.closest('tr').querySelectorAll('th[data-sort-state]');
+          headers.forEach(h => {
+            if (h !== header) {
+              h.setAttribute('data-sort-state', '0');
+              h.classList.remove('sort-custom1', 'sort-custom2');
+              const otherIcon = h.querySelector('.sort-icon');
+              if (otherIcon) otherIcon.textContent = '↕';
+            }
+          });
+
+          let state = parseInt(header.getAttribute('data-sort-state') || '0');
+          state = (state + 1) % 3;
+          header.setAttribute('data-sort-state', state);
+
+          const priorityMap = { 'take action': 1, 'watching': 2, 'waiting': 3, 'stale': 4, 'approved': 5 };
+          const priorityMapRev = { 'approved': 1, 'stale': 2, 'waiting': 3, 'watching': 4, 'take action': 5 };
+
+          rows.sort((a, b) => {
+            if (state === 0) {
+              return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+            }
+
+            if (sortType === 'status') {
+              const statusA = a.getAttribute('data-status');
+              const statusB = b.getAttribute('data-status');
+              if (state === 1) {
+                if (statusA !== statusB) return (priorityMap[statusA] || 99) - (priorityMap[statusB] || 99);
+                if (statusA === 'stale') return new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'));
+              } else {
+                if (statusA !== statusB) return (priorityMapRev[statusA] || 99) - (priorityMapRev[statusB] || 99);
+                if (statusA === 'stale') return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+              }
+            } else if (sortType === 'repo') {
+              const repoA = a.getAttribute('data-repo');
+              const repoB = b.getAttribute('data-repo');
+              return state === 1 ? repoA.localeCompare(repoB) : repoB.localeCompare(repoA);
+            }
+            return 0;
+          });
+
+          header.classList.remove('sort-custom1', 'sort-custom2');
+          if (state === 1) {
+            header.classList.add('sort-custom1');
+            icon.textContent = '▲';
+          } else if (state === 2) {
+            header.classList.add('sort-custom2');
+            icon.textContent = '▼';
+          } else {
+            icon.textContent = '↕';
+          }
+
+          rows.forEach((row) => tbody.appendChild(row));
+        }
+      </script>
       ${footerHtml}
     </body>
     </html>
