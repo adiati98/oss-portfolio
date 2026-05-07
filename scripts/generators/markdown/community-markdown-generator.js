@@ -130,14 +130,17 @@ async function createCommunityMarkdown(
 
   md += `## 🏆 Major Milestones\n\n`;
   rolesData.achievements.forEach((ach) => {
-    md += `* **${ach.title}** (${ach.year}) — *${ach.org}*\n`;
+    const orgDisplay = ach.orgUrl ? `[${ach.org}](${ach.orgUrl})` : ach.org;
+    md += `* **${ach.title}** (${ach.year}) — *${orgDisplay}*\n`;
   });
   md += `\n`;
 
   md += `## 🏗️ Roles & Impact\n\n`;
   rolesData.roles.forEach((role) => {
     const icon = role.active ? '🟢 **Active**' : '⚪ *Past*';
-    md += `* ${icon} | **${role.title}** at ${role.org} (${role.period})\n`;
+    const orgDisplay = role.orgUrl ? `[${role.org}](${role.orgUrl})` : role.org;
+
+    md += `* ${icon} | **${role.title}** at ${orgDisplay} (${role.period})\n`;
   });
   md += `\n`;
 
