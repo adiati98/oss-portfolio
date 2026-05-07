@@ -382,12 +382,17 @@ async function createCommunityHtml(
       `;
     }
 
-    return dedent`
-      <details class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
-        <summary class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-colors focus:outline-none">
+const sectionId = label === 'Ongoing PRs' ? 'active-workbench' : `section-${index}`;
+
+return dedent`
+      <details id="${sectionId}" class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
+        <summary 
+          class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/30 focus-visible:bg-white"
+          role="button"
+          tabindex="0">
           <div class="flex items-center gap-3">
-             <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
-                  style="background-color: ${getColorValue(statusStyle.bg)}; color: ${getColorValue(statusStyle.text)}; border-color: ${getColorValue(statusStyle.border)};">
+            <span class="inline-flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-black uppercase tracking-widest border" 
+              style="background-color: ${getColorValue(statusStyle.bg)}; color: ${getColorValue(statusStyle.text)}; border-color: ${getColorValue(statusStyle.border)};">
               <span class="inline-flex justify-center items-center text-xs sm:text-base border-r pr-2 sm:pr-3 mr-2 sm:mr-3 min-w-[1.2rem]" style="border-color: ${getColorValue(statusStyle.border)};">
                 ${displayCount}
               </span>
@@ -513,6 +518,50 @@ async function createCommunityHtml(
         </div>
       </main>
       <script>
+  /**
+   * Manages section visibility based on the URL hash or defaults to 'active-workbench'.
+   */
+  function syncSectionState() {
+    const hash = window.location.hash;
+    const allDetails = document.querySelectorAll('details');
+    
+    if (hash) {
+      const target = document.querySelector(hash);
+      if (target && target.tagName === 'DETAILS') {
+        allDetails.forEach(detail => detail.open = (detail === target));
+        setTimeout(() => {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+        return;
+      }
+    }
+
+    // Default behavior: Open 'Ongoing PRs' (active-workbench) if no hash is present
+    const defaultSection = document.getElementById('active-workbench');
+    if (defaultSection) {
+      defaultSection.open = true;
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    syncSectionState();
+
+    const summaries = document.querySelectorAll('summary');
+    summaries.forEach(summary => {
+      summary.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          setTimeout(() => {
+            if (summary.parentElement.open) {
+              summary.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }
+          }, 100);
+        }
+      });
+    });
+  });
+
+  window.addEventListener('hashchange', syncSectionState);
+  
       function sortWorkbenchTable(header, tableIndex, sortType = 'status') {
         if (header.tagName === 'BUTTON') {
           header = header.parentElement;

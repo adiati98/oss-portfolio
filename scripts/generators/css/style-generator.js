@@ -100,6 +100,20 @@ function getCommunityStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
     
+    summary {
+      cursor: pointer;
+      outline: none;
+      transition: background-color 0.15s ease-in-out;
+    }
+
+    /* The 'Tab' focus state */
+    summary:focus-visible {
+      outline: 2px solid ${COLORS.primary.rgb};
+      outline-offset: -2px;
+      background-color: ${COLORS.primary[5]};
+      border-radius: 0.75rem;
+    }
+
     /* Achievement Cards */
     .metric-card-hover {
       transition: all 0.2s ease-in-out;
