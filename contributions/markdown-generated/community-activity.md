@@ -23,7 +23,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_You've outpaced the tasks!_**
+> **_Inbox Zero achieved! Time for a coffee?_**
 
 </details>
 
