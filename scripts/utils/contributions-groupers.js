@@ -9,22 +9,27 @@ function groupContributionsByQuarter(contributions) {
   const grouped = {};
 
   for (const [type, items] of Object.entries(contributions)) {
-    // Iterate over each item within the type.
     for (const item of items) {
-      // Determine which date to use for quarter assignment
       let dateStr;
+
+      // 1. Prioritize domain-specific engagement dates
       if (type === 'reviewedPrs' && item.myFirstReviewDate) {
-        // For reviewed PRs, use the date of first review to determine the quarter
         dateStr = item.myFirstReviewDate;
       } else if (type === 'coAuthoredPrs' && item.firstCommitDate) {
-        // For co-authored PRs, use the date of first commit to determine the quarter
         dateStr = item.firstCommitDate;
-      } else {
-        // For all other types, use the regular date field
-        dateStr = item.date;
       }
 
-      if (!dateStr) continue;
+      // 2. Universal Fallback: If dateStr is still empty (or for other types),
+      // check these in order of reliability.
+      if (!dateStr) {
+        dateStr = item.date || item.createdAt || item.closedAt || item.updatedAt;
+      }
+
+      // 3. Final safety check
+      if (!dateStr) {
+        console.warn(`Skipping item in ${type} due to missing date:`, item.title);
+        continue;
+      }
 
       const dateObj = new Date(dateStr);
       const year = dateObj.getFullYear();
@@ -34,7 +39,6 @@ function groupContributionsByQuarter(contributions) {
       const quarter = `Q${Math.floor((month - 1) / 3) + 1}`;
       const key = `${year}-${quarter}`;
 
-      // Initialize the quarter group structure if the key doesn't exist
       if (!grouped[key]) {
         grouped[key] = {
           pullRequests: [],
@@ -44,7 +48,7 @@ function groupContributionsByQuarter(contributions) {
           collaborations: [],
         };
       }
-      // Ensure the target array exists and push the item
+
       if (!grouped[key][type]) {
         grouped[key][type] = [];
       }

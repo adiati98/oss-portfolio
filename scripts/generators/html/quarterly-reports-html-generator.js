@@ -212,11 +212,11 @@ async function writeHtmlFiles(groupedContributions) {
 
     // Calculate repository statistics for the summary section.
     const allItems = [
-      ...data.pullRequests,
-      ...data.issues,
-      ...data.reviewedPrs,
-      ...data.coAuthoredPrs,
-      ...data.collaborations,
+      ...(data.pullRequests || []),
+      ...(data.issues || []),
+      ...(data.reviewedPrs || []),
+      ...(data.coAuthoredPrs || []),
+      ...(data.collaborations || []),
     ];
     const uniqueRepos = new Set(allItems.map((item) => item.repo));
     const totalRepos = uniqueRepos.size;
@@ -303,7 +303,7 @@ async function writeHtmlFiles(groupedContributions) {
         headers: ['No.', 'Project', 'Title', 'Created At', 'First Comment', 'Last Update / Status'],
         widths: ['5%', '25%', '30%', '12%', '12%', '16%'],
         colTypes: ['number', 'string', 'string', 'date', 'date', 'status'],
-        keys: ['repo', 'title', 'createdAt', 'date', 'date'],
+        keys: ['repo', 'title', 'createdAt', 'firstCommentedAt', 'updatedAt'],
       },
     };
 
@@ -413,7 +413,7 @@ ${navHtmlForReports}
 
     // Generate HTML for each contribution section (table).
     for (const [section, sectionInfo] of Object.entries(sections)) {
-      let items = data[section]; // Get data for the current section.
+      let items = data[section] || []; // Get data for the current section.
 
       // Apply initial chronological sort to Reviewed PRs and Co-Authored PRs for display consistency.
       if (section === 'reviewedPrs' && items && items.length > 0) {
@@ -520,13 +520,17 @@ ${navHtmlForReports}
           // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
             const createdAt = formatDate(item.createdAt);
-            const mergedAt = formatDate(item.mergedAt);
-            const reviewPeriod = calculatePeriodInDays(item.createdAt, item.mergedAt);
-            const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0; // extract number for sorting
+            // Use mergedAt if available, otherwise closedAt
+            const completedAtDate = item.mergedAt || item.closedAt;
+            const completedAtFormatted = formatDate(completedAtDate);
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.mergedAt}" data-col-type="date">${mergedAt}</td>\n`;
-            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
+            // Calculate period using whatever end date we found
+            const reviewPeriod = calculatePeriodInDays(item.createdAt, completedAtDate);
+            const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0;
+
+            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += ` <td data-value="${completedAtDate || ''}" data-col-type="date">${completedAtFormatted}</td>\n`;
+            tableContent += ` <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
@@ -580,9 +584,10 @@ ${navHtmlForReports}
             const commentedAt = formatDate(item.firstCommentedAt);
             const statusObj = formatPrStatusWithBadge(getCollaborationStatusContent(item));
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.firstCommentedAt}" data-col-type="date">${commentedAt}</td>\n`;
-            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
+            tableContent += ` <td data-value="${item.firstCommentedAt || ''}" data-col-type="date">${commentedAt}</td>\n`;
+            // Using updatedAt for the status column's date value to ensure proper sorting
+            tableContent += ` <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
           }
 
           tableContent += `   </tr>\n`;
