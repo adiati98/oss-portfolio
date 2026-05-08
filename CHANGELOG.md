@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.0] - 2026-05-09
+
+### Added
+
+- **Domain-Specific Fetchers**: Created `scripts/api/fetch-historical-contributions.js` and `scripts/api/fetch-ongoing-workbench.js` to handle specialized data retrieval for long-term history and active tasks respectively.
+- **Centralized GitHub Utilities**: Established `scripts/utils/github-helpers.js` to house shared pure functions, ensuring consistent logic for date parsing, activity metadata, and contribution year discovery.
+
+### Changed
+
+- **Architectural Refactor (DRY)**: Centralized shared `axios` instances and search pagination logic (`searchAll` and `getAllPages`) to reduce code duplication across the API layer.
+- **Standardized API Handling**: Implemented uniform rate-limit management and "Next" link navigation within the new modular scripts.
+
+### Removed
+
+- **Monolithic Fetcher**: Deleted `github-api-fetchers.js` as its responsibilities were migrated to the new domain-focused architecture.
+
 ## [2.6.1] - 2026-05-08
 
 ### Fixed
