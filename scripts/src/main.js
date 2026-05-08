@@ -17,13 +17,13 @@ try {
 }
 
 // Import core fetching logic
+const { fetchHistoricalContributions } = require('../api/fetch-historical-contributions');
 const {
-  fetchContributions,
   fetchOngoingReviews,
   fetchOngoingIssues,
   fetchOngoingAuthoredPrs,
   fetchOngoingCoAuthoredPrs,
-} = require('../api/github-api-fetchers');
+} = require('../api/fetch-ongoing-workbench');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
 
 // Import grouping logic
@@ -238,7 +238,7 @@ async function main() {
       contributions: newContributions,
       prCache: updatedPrCache,
       commitCache: usedCommitCache,
-    } = await fetchContributions(fetchStartYear, prCache, mergedCommitCache);
+    } = await fetchHistoricalContributions(fetchStartYear, prCache, mergedCommitCache);
 
     let finalContributions = {
       pullRequests: [],
