@@ -23,15 +23,17 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_404: Tasks not found (and that's a good thing!)_**
+> **_Mission accomplished. No tasks found._**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (10)</h3></summary>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (12)</h3></summary>
 
 | Repository                      | Task                                                                                                                            |
 | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------ |
+| **virtualcoffee.io**            | [Adding Members/FrancisTRAlt](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1502)                                     |
+| **guestbook**                   | [Fixed Intro-to-Open-Source-Course link](https://github.com/OpenSource-Communities/guestbook/pull/953)                          |
 | **developer-documentation-new** | [Document LeadGetCurrentEvent for skipping last active logging](https://github.com/mautic/developer-documentation-new/pull/483) |
 | **user-documentation**          | [Document --cleanup-only flag for report scheduler command](https://github.com/mautic/user-documentation/pull/708)              |
 | **virtualcoffee.io**            | [Consolidate webhooks repo into virtualcoffee.io](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1501)                 |
@@ -96,11 +98,11 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>23 days</sub>                | **guestbook**                                                                                                             | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941)                                             |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>26 days</sub>                | **user-documentation**                                                                                                    | [Add introduction for Zapier plugin documentation](https://github.com/mautic/user-documentation/pull/600)                                            |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>26 days</sub>                | **guestbook**                                                                                                             | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947)                                    |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>31 days</sub>                | **guestbook**                                                                                                             | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)                                           |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub>                | **guestbook**                                                                                                             | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937)                                           |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub>                | **guestbook**                                                                                                             | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934)                                      |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub>                | **guestbook**                                                                                                             | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)                                         |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>34 days</sub>                | **user-documentation**                                                                                                    | [docs: Add Tags documentation for Contact management](https://github.com/mautic/user-documentation/pull/647)                                         |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>37 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>38 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>47 days</sub>                | **virtualcoffee.io**                                                                                                      | [Create a networking guide for Programmers](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399)                                            |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>50 days</sub>                | **intro**                                                                                                                 | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)                           |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>112 days</sub>               | **user-documentation**                                                                                                    | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
@@ -112,11 +114,10 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; cursor: pointer;">🤖 Bot request review (11)</h3></summary>
+  <summary><h3 style="display: inline-block; cursor: pointer;">🤖 Bot request review (10)</h3></summary>
 
 | Repository                                                                                                                 | Task                                                                                                                           |
 | :------------------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| **virtualcoffee.io**                                                                                                       | [Bump postcss from 8.5.6 to 8.5.10](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1497)                              |
 | **developer-documentation-new**                                                                                            | [Bump linkify-it-py from 2.0.3 to 2.1.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/307)              |
 | **developer-documentation-new**                                                                                            | [Bump esbonio from 1.1.0 to 2.0.0 in /docs](https://github.com/mautic/developer-documentation-new/pull/323)                    |
 | **developer-documentation-new**<br><img src="https://img.shields.io/badge/BLOCKED-b91c1c?style=flat-square" alt="Blocked"> | [Bump sphinxcontrib-phpdomain from 0.13.2 to 0.15.1 in /docs](https://github.com/mautic/developer-documentation-new/pull/308)  |
@@ -132,4 +133,4 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 ---
 
-_Last updated: May 7, 2026_
+_Last updated: May 8, 2026_
