@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.6.1] - 2026-05-08
+
+### Fixed
+
+- **Quarterly Report Rendering**: Resolved a critical regression where closed or merged PRs were missing from the generated UI. Implemented an **Explicit Data Contract** in the grouper to ensure all contribution categories initialize as empty arrays `[]` rather than `undefined`, preventing generator crashes during the build process.
+- **Date Attribution Logic**: Fixed a bug where contributions with missing `date` properties were excluded from reports. Introduced a tiered fallback system that checks `mergedAt`, `closedAt`, `firstCommitDate`, and `myFirstReviewDate` before defaulting to `createdAt`.
+
+### Changed
+
+- **Defensive Generator Architecture**: Updated the HTML generator with "redundant-but-safe" iteration logic (`data[section] || []`) to ensure structural stability even if the data source deviates from the expected shape.
+- **Reporting Accuracy**: Refined the contribution breakdown logic to ensure "0" counts are explicitly rendered in statistics cards for inactive categories, maintaining a consistent visual layout across all quarterly files.
+
 ## [2.6.0] - 2026-05-07
 
 ### Added
