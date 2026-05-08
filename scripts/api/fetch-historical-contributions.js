@@ -1,8 +1,6 @@
 require('dotenv').config();
 const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
-
-// Import shared pure helpers
 const {
   getGitHubJoinYear,
   getPrMyFirstReviewDate,
@@ -10,20 +8,56 @@ const {
 } = require('../utils/github-helpers');
 
 /**
+ * SHARED AXIOS CONFIGURATION
+ */
+const token = process.env.GITHUB_TOKEN;
+if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: `token ${token}`,
+    Accept: 'application/vnd.github.v3+json',
+  },
+});
+
+/**
+ * SHARED UTILITY: getAllPages
+ * Handles paginated search results for historical data.
+ */
+async function getAllPages(query) {
+  let results = [];
+  let page = 1;
+  while (true) {
+    try {
+      const response = await axiosInstance.get(
+        `/search/issues?q=${query}&per_page=100&page=${page}`
+      );
+      results.push(...response.data.items);
+      const linkHeader = response.headers.link;
+      if (linkHeader && linkHeader.includes('rel="next"')) {
+        page++;
+      } else {
+        break;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        console.log('Rate limit hit. Waiting for 60 seconds...');
+        await new Promise((resolve) => setTimeout(resolve, 60000));
+        continue;
+      } else {
+        throw err;
+      }
+    }
+  }
+  return results;
+}
+
+/**
  * HISTORICAL CONTRIBUTIONS FETCHER
  */
 async function fetchHistoricalContributions(requestedStartYear, prCache, persistentCommitCache) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not set.');
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-
   /**
    * LOCAL HELPER: isCommitByUser
    * Broad matching for historical data (emails, co-authors, and names).
@@ -117,35 +151,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
     }
     commitCache.set(prUrlKey, result);
     return result;
-  }
-
-  async function getAllPages(query) {
-    let results = [];
-    let page = 1;
-    while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const linkHeader = response.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-        } else {
-          break;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit. Waiting for 60 seconds...');
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        } else {
-          throw err;
-        }
-      }
-    }
-    return results;
   }
 
   let startYear = requestedStartYear;

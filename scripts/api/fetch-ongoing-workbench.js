@@ -4,6 +4,51 @@ const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
 const { getLinkedIssueNumbers, getPrActivityMeta } = require('../utils/github-helpers');
 
 /**
+ * SHARED AXIOS CONFIGURATION
+ */
+const token = process.env.GITHUB_TOKEN;
+if (!token) throw new Error('GITHUB_TOKEN is not set.');
+
+const axiosInstance = axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: `token ${token}`,
+    Accept: 'application/vnd.github.v3+json',
+  },
+});
+
+/**
+ * SHARED UTILITY: searchAll
+ * Handles paginated search results for all functions.
+ */
+async function searchAll(query) {
+  let results = [];
+  let page = 1;
+  while (true) {
+    try {
+      const response = await axiosInstance.get(
+        `/search/issues?q=${query}&per_page=100&page=${page}`
+      );
+      results.push(...response.data.items);
+      const link = response.headers.link;
+      if (link && link.includes('rel="next"')) {
+        page++;
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } else {
+        break;
+      }
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        await new Promise((resolve) => setTimeout(resolve, 60000));
+        continue;
+      }
+      throw err;
+    }
+  }
+  return results;
+}
+
+/**
  * LOCAL HELPER: isCommitByUser (Ongoing Workbench Version)
  * Strict logic to ignore web-flow and suggestions.
  */
@@ -55,7 +100,6 @@ async function getFirstCommitDetails(
   prNumber,
   username,
   commitCache,
-  axiosInstance,
   prUpdatedAt = null
 ) {
   const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
@@ -99,47 +143,39 @@ async function getFirstCommitDetails(
 }
 
 /**
+ * SHARED FORMATTER: formatTask
+ */
+const formatTask = async (pr, status) => {
+  const repoParts = new URL(pr.repository_url).pathname.split('/');
+  const owner = repoParts[repoParts.length - 2];
+  const repo = repoParts[repoParts.length - 1];
+
+  const activity = await getPrActivityMeta(owner, repo, pr.number, axiosInstance, pr.updated_at);
+
+  return {
+    title: pr.title,
+    url: pr.html_url,
+    repo: `${owner}/${repo}`,
+    status: status,
+    createdAt: pr.created_at,
+    updatedAt: pr.updated_at,
+    number: pr.number,
+    user: pr.user,
+    isDraft: pr.draft,
+    labels: pr.labels ? pr.labels.map((l) => l.name) : [],
+    lastActor: activity.lastActor,
+    isLastActorBot: activity.isLastActorBot,
+    hasFormalReview: activity.hasFormalReview,
+    reviewState: activity.reviewState,
+    lastSubstantiveDate: activity.lastSubstantiveDate,
+    author: pr.user.login,
+  };
+};
+
+/**
  * FETCH ONGOING REVIEWS
  */
 async function fetchOngoingReviews() {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not set.');
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-
-  async function searchAll(query) {
-    let results = [];
-    let page = 1;
-    while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const link = response.headers.link;
-        if (link && link.includes('rel="next"')) {
-          page++;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        } else {
-          break;
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        }
-        throw err;
-      }
-    }
-    return results;
-  }
-
   async function checkHumanActivity(pr) {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
     const owner = repoParts[repoParts.length - 2];
@@ -180,33 +216,6 @@ async function fetchOngoingReviews() {
   const ongoingTasks = [];
   const seenUrls = new Set();
 
-  const formatTask = async (pr, status) => {
-    const repoParts = new URL(pr.repository_url).pathname.split('/');
-    const owner = repoParts[repoParts.length - 2];
-    const repo = repoParts[repoParts.length - 1];
-
-    const activity = await getPrActivityMeta(owner, repo, pr.number, axiosInstance, pr.updated_at);
-
-    return {
-      title: pr.title,
-      url: pr.html_url,
-      repo: `${owner}/${repo}`,
-      status: status,
-      createdAt: pr.created_at,
-      updatedAt: pr.updated_at,
-      number: pr.number,
-      user: pr.user,
-      isDraft: pr.draft,
-      labels: pr.labels ? pr.labels.map((l) => l.name) : [],
-      lastActor: activity.lastActor,
-      isLastActorBot: activity.isLastActorBot,
-      hasFormalReview: activity.hasFormalReview,
-      reviewState: activity.reviewState,
-      lastSubstantiveDate: activity.lastSubstantiveDate,
-      author: pr.user.login,
-    };
-  };
-
   for (const pr of underReviewPrs) {
     if (!seenUrls.has(pr.html_url)) {
       ongoingTasks.push(await formatTask(pr, 'Review in progress'));
@@ -228,49 +237,11 @@ async function fetchOngoingReviews() {
  * FETCH ONGOING ISSUES
  */
 async function fetchOngoingIssues(ongoingPrs = []) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not set.');
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-
   const linkedIssueNumbers = new Set();
   ongoingPrs.forEach((pr) => {
     const numbers = getLinkedIssueNumbers(pr.body);
     numbers.forEach((num) => linkedIssueNumbers.add(num));
   });
-
-  async function searchAll(query) {
-    let results = [];
-    let page = 1;
-    while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const link = response.headers.link;
-        if (link && link.includes('rel="next"')) {
-          page++;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        } else {
-          break;
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        }
-        throw err;
-      }
-    }
-    return results;
-  }
 
   const query = `is:issue is:open assignee:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawIssues = await searchAll(query);
@@ -295,17 +266,6 @@ async function fetchOngoingIssues(ongoingPrs = []) {
  * FETCH ONGOING AUTHORED PRS
  */
 async function fetchOngoingAuthoredPrs() {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not set.');
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-
   let allAuthoredItems = [];
   let page = 1;
 
@@ -340,35 +300,11 @@ async function fetchOngoingAuthoredPrs() {
     const isExternal = !item.repository_url.includes(`repos/${GITHUB_USERNAME}/`);
 
     if (isPr && isExternal) {
-      const repoParts = new URL(item.repository_url).pathname.split('/');
-      const owner = repoParts[repoParts.length - 2];
-      const repo = repoParts[repoParts.length - 1];
-
-      const activity = await getPrActivityMeta(
-        owner,
-        repo,
-        item.number,
-        axiosInstance,
-        item.updated_at
-      );
-
-      results.push({
-        title: item.title,
-        url: item.html_url,
-        repo: `${owner}/${repo}`,
-        createdAt: item.created_at,
-        updatedAt: item.updated_at,
-        number: item.number,
-        isDraft: item.draft === true || !!(item.pull_request && item.pull_request.draft),
-        labels: item.labels ? item.labels.map((l) => l.name) : [],
-        body: item.body,
-        lastActor: activity.lastActor,
-        isLastActorBot: activity.isLastActorBot,
-        hasFormalReview: activity.hasFormalReview,
-        reviewState: activity.reviewState,
-        lastSubstantiveDate: activity.lastSubstantiveDate,
-        author: GITHUB_USERNAME,
-      });
+      const formatted = await formatTask(item, 'Authored');
+      formatted.isDraft = item.draft === true || !!(item.pull_request && item.pull_request.draft);
+      formatted.author = GITHUB_USERNAME;
+      formatted.body = item.body;
+      results.push(formatted);
     }
   }
   return results;
@@ -378,44 +314,6 @@ async function fetchOngoingAuthoredPrs() {
  * FETCH ONGOING CO-AUTHORED PRS
  */
 async function fetchOngoingCoAuthoredPrs(commitCache) {
-  const token = process.env.GITHUB_TOKEN;
-  if (!token) throw new Error('GITHUB_TOKEN is not set.');
-
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
-
-  async function searchAll(query) {
-    let results = [];
-    let page = 1;
-    while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const link = response.headers.link;
-        if (link && link.includes('rel="next"')) {
-          page++;
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-        } else {
-          break;
-        }
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        }
-        throw err;
-      }
-    }
-    return results;
-  }
-
   const query = `is:pr is:open commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
   const rawPrs = await searchAll(query);
 
@@ -434,37 +332,13 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
       pr.number,
       GITHUB_USERNAME,
       commitCache,
-      axiosInstance,
       pr.updated_at
     );
 
     if (commitDetails && commitDetails.firstCommitDate) {
-      const activity = await getPrActivityMeta(
-        owner,
-        repoName,
-        pr.number,
-        axiosInstance,
-        pr.updated_at
-      );
-
-      coAuthoredResults.push({
-        title: pr.title,
-        url: pr.html_url,
-        repo: `${owner}/${repoName}`,
-        number: pr.number,
-        status: 'Co-authoring',
-        createdAt: pr.created_at,
-        updatedAt: pr.updated_at,
-        labels: pr.labels ? pr.labels.map((l) => l.name) : [],
-        isDraft: pr.draft,
-        body: pr.body,
-        lastActor: activity.lastActor,
-        isLastActorBot: activity.isLastActorBot,
-        hasFormalReview: activity.hasFormalReview,
-        reviewState: activity.reviewState,
-        lastSubstantiveDate: activity.lastSubstantiveDate,
-        author: pr.user.login,
-      });
+      const formatted = await formatTask(pr, 'Co-authoring');
+      formatted.body = pr.body;
+      coAuthoredResults.push(formatted);
     }
   }
 
