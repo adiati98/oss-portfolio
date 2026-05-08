@@ -13,43 +13,58 @@ function getLinkedIssueNumbers(prBody) {
 }
 
 /**
- * HELPER: Determines if a commit was physically authored by the user.
- * This is the gatekeeper for the "Co-authored" category.
+ * HELPER: Discover the user's GitHub join year.
  */
-function isCommitByUser(c, username) {
+async function getGitHubJoinYear(axiosInstance, username) {
   try {
-    const commitMessage = c.commit?.message || '';
+    const response = await axiosInstance.get(`/users/${username}`);
+    const joinDate = new Date(response.data.created_at);
+    return joinDate.getFullYear();
+  } catch (err) {
+    console.error(
+      `❌ Error discovering GitHub join date for ${username}, defaulting to 2020:`,
+      err.message
+    );
+    return 2020;
+  }
+}
 
-    // 1. GATEKEEPER: If the committer is web-flow, it's a GitHub UI action.
-    if (c.committer?.login === 'web-flow') return false;
+/**
+ * HELPER: Fetches the date of the user's first review on a specific PR.
+ */
+async function getPrMyFirstReviewDate(owner, repo, prNumber, username, axiosInstance) {
+  try {
+    const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
+    const myReviews = response.data
+      .filter((review) => review.user?.login === username)
+      .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+    return myReviews.length > 0 ? myReviews[0].submitted_at : null;
+  } catch (err) {
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    throw err;
+  }
+}
 
-    // 2. EXCLUSION: Explicitly catch "suggestion" or "merge" strings
-    if (/suggestion|Merge branch|Merge remote-tracking/i.test(commitMessage)) return false;
-
-    // 3. LOCAL AUTHOR CHECK: Verify it's actually you via CLI
-    const authorLogin = c.author?.login || '';
-    const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
-    const lowerUsername = username.toLowerCase();
-
-    const isAuthorMatch =
-      authorLogin === username ||
-      authorEmail === `${lowerUsername}@users.noreply.github.com` ||
-      (authorEmail.endsWith('@users.noreply.github.com') &&
-        authorEmail.includes(`+${lowerUsername}@`));
-
-    if (isAuthorMatch) return true;
-
-    // 4. CO-AUTHORED TRAILER: Handle Git "Co-authored-by" trailers
-    if (
-      /Co-authored-by:/i.test(commitMessage) &&
-      commitMessage.toLowerCase().includes(lowerUsername)
-    ) {
-      return true;
+/**
+ * HELPER: Fetches the date of the user's first comment on an issue or PR.
+ */
+async function getFirstCommentDate(url, username, axiosInstance) {
+  try {
+    let page = 1;
+    while (true) {
+      const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
+      const myFirstComment = response.data.find((comment) => comment.user?.login === username);
+      if (myFirstComment) return myFirstComment.created_at;
+      const linkHeader = response.headers.link;
+      if (linkHeader && linkHeader.includes('rel="next"')) {
+        page++;
+      } else {
+        return null;
+      }
     }
-
-    return false;
-  } catch (e) {
-    return false;
+  } catch (err) {
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    throw err;
   }
 }
 
@@ -135,72 +150,10 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
   }
 }
 
-/**
- * Fetches the very first commit of a PR to check the original author.
- */
-async function getFirstCommitDetails(
-  owner,
-  repo,
-  prNumber,
-  username,
-  commitCache,
-  axiosInstance,
-  prUpdatedAt = null
-) {
-  const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
-
-  if (commitCache.has(prUrlKey)) {
-    const cached = commitCache.get(prUrlKey);
-    if (
-      cached &&
-      typeof cached === 'object' &&
-      cached.prUpdatedAt &&
-      prUpdatedAt &&
-      cached.prUpdatedAt === prUpdatedAt
-    ) {
-      return cached;
-    }
-  }
-
-  let result = null;
-  try {
-    let page = 1;
-    let allCommits = [];
-    while (true) {
-      const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
-      allCommits.push(...resp.data);
-      const linkHeader = resp.headers.link;
-      if (linkHeader && linkHeader.includes('rel="next"')) {
-        page++;
-        await new Promise((r) => setTimeout(r, 200));
-      } else {
-        break;
-      }
-    }
-
-    const userCommits = allCommits.filter((c) => isCommitByUser(c, username));
-
-    if (userCommits.length > 0) {
-      userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
-      result = {
-        firstCommitDate: userCommits[0].commit.author.date,
-        commitCount: userCommits.length,
-        prUpdatedAt,
-      };
-    } else {
-      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
-    }
-  } catch (err) {
-    result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
-  }
-
-  commitCache.set(prUrlKey, result);
-  return result;
-}
-
 module.exports = {
   getLinkedIssueNumbers,
-  isCommitByUser,
+  getGitHubJoinYear,
+  getPrMyFirstReviewDate,
+  getFirstCommentDate,
   getPrActivityMeta,
-  getFirstCommitDetails,
 };

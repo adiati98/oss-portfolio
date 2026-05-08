@@ -2,16 +2,12 @@ require('dotenv').config();
 const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
 
-async function getGitHubJoinYear(axiosInstance) {
-  try {
-    const response = await axiosInstance.get(`/users/${GITHUB_USERNAME}`);
-    const joinDate = new Date(response.data.created_at);
-    return joinDate.getFullYear();
-  } catch (err) {
-    console.error('❌ Error discovering GitHub join date, defaulting to 2020:', err.message);
-    return 2020;
-  }
-}
+// Import shared pure helpers
+const {
+  getGitHubJoinYear,
+  getPrMyFirstReviewDate,
+  getFirstCommentDate,
+} = require('../utils/github-helpers');
 
 /**
  * HISTORICAL CONTRIBUTIONS FETCHER
@@ -28,94 +24,53 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
     },
   });
 
-  let startYear = requestedStartYear;
-  if (!startYear) {
-    console.log(`🔍 No start year provided. Discovering first year for ${GITHUB_USERNAME}...`);
-    startYear = await getGitHubJoinYear(axiosInstance);
-  }
-
-  const contributions = {
-    pullRequests: [],
-    issues: [],
-    reviewedPrs: [],
-    collaborations: [],
-    coAuthoredPrs: [],
-  };
-
-  const seenUrls = {
-    pullRequests: new Set(),
-    issues: new Set(),
-    reviewedPrs: new Set(),
-    collaborations: new Set(),
-    coAuthoredPrs: new Set(),
-  };
-
-  const commitCache =
-    persistentCommitCache instanceof Map ? new Map(persistentCommitCache) : new Map();
-  const currentYear = new Date().getFullYear();
-
-  async function getAllPages(query) {
-    let results = [];
-    let page = 1;
-    while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
-        const linkHeader = response.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-        } else {
-          break;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit. Waiting for 60 seconds...');
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        } else {
-          throw err;
-        }
-      }
-    }
-    return results;
-  }
-
-  async function getPrMyFirstReviewDate(owner, repo, prNumber, username) {
+  /**
+   * LOCAL HELPER: isCommitByUser
+   * Broad matching for historical data (emails, co-authors, and names).
+   */
+  function isCommitByUser(c, username) {
     try {
-      const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
-      const myReviews = response.data
-        .filter((review) => review.user?.login === username)
-        .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
-      return myReviews.length > 0 ? myReviews[0].submitted_at : null;
-    } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
-      throw err;
-    }
-  }
+      const lowerUsername = username.toLowerCase();
+      const commitMessage = c.commit?.message || '';
 
-  async function getFirstCommentDate(url, username) {
-    try {
-      let page = 1;
-      while (true) {
-        const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
-        const myFirstComment = response.data.find((comment) => comment.user?.login === username);
-        if (myFirstComment) return myFirstComment.created_at;
-        const linkHeader = response.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-        } else {
-          return null;
-        }
+      // Exclude branch merges
+      if (/^Merge branch '.+' into .+/i.test(commitMessage)) return false;
+
+      // 1. Login match
+      if (c.author?.login === username) return true;
+
+      // 2. Email pattern matching
+      const authorEmail = c.commit?.author?.email?.toLowerCase();
+      if (authorEmail) {
+        if (
+          authorEmail.endsWith('@users.noreply.github.com') &&
+          authorEmail.includes(`+${lowerUsername}@`)
+        )
+          return true;
+        if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
+        if (authorEmail.includes(lowerUsername)) return true;
       }
-    } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
-      throw err;
+
+      // 3. Name match
+      if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
+        return true;
+
+      // 4. Co-authored-by trailer
+      if (
+        /Co-authored-by:/i.test(commitMessage) &&
+        commitMessage.toLowerCase().includes(lowerUsername)
+      )
+        return true;
+    } catch (e) {
+      return false;
     }
+    return false;
   }
 
+  /**
+   * LOCAL HELPER: getFirstCommitDetails
+   * Uses the local isCommitByUser to determine authorship.
+   */
   async function getFirstCommitDetails(
     owner,
     repo,
@@ -146,37 +101,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         }
       }
 
-      function isCommitByUser(c) {
-        try {
-          const lowerUsername = username.toLowerCase();
-          const commitMessage = c.commit?.message || '';
-          const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
-          if (isBranchUpdate) return false;
-          if (c.author?.login === username) return true;
-          const authorEmail = c.commit?.author?.email?.toLowerCase();
-          if (authorEmail) {
-            if (
-              authorEmail.endsWith('@users.noreply.github.com') &&
-              authorEmail.includes(`+${lowerUsername}@`)
-            )
-              return true;
-            if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
-            if (authorEmail.includes(lowerUsername)) return true;
-          }
-          if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-            return true;
-          if (
-            /Co-authored-by:/i.test(commitMessage) &&
-            commitMessage.toLowerCase().includes(lowerUsername)
-          )
-            return true;
-        } catch (e) {
-          return false;
-        }
-        return false;
-      }
-
-      const userCommits = allCommits.filter(isCommitByUser);
+      const userCommits = allCommits.filter((c) => isCommitByUser(c, username));
       if (userCommits.length > 0) {
         userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
         result = {
@@ -194,11 +119,67 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
     return result;
   }
 
+  async function getAllPages(query) {
+    let results = [];
+    let page = 1;
+    while (true) {
+      try {
+        const response = await axiosInstance.get(
+          `/search/issues?q=${query}&per_page=100&page=${page}`
+        );
+        results.push(...response.data.items);
+        const linkHeader = response.headers.link;
+        if (linkHeader && linkHeader.includes('rel="next"')) {
+          page++;
+        } else {
+          break;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      } catch (err) {
+        if (err.response && err.response.status === 403) {
+          console.log('Rate limit hit. Waiting for 60 seconds...');
+          await new Promise((resolve) => setTimeout(resolve, 60000));
+          continue;
+        } else {
+          throw err;
+        }
+      }
+    }
+    return results;
+  }
+
+  let startYear = requestedStartYear;
+  if (!startYear) {
+    console.log(`🔍 No start year provided. Discovering first year for ${GITHUB_USERNAME}...`);
+    startYear = await getGitHubJoinYear(axiosInstance, GITHUB_USERNAME);
+  }
+
+  const contributions = {
+    pullRequests: [],
+    issues: [],
+    reviewedPrs: [],
+    collaborations: [],
+    coAuthoredPrs: [],
+  };
+
+  const seenUrls = {
+    pullRequests: new Set(),
+    issues: new Set(),
+    reviewedPrs: new Set(),
+    collaborations: new Set(),
+    coAuthoredPrs: new Set(),
+  };
+
+  const commitCache =
+    persistentCommitCache instanceof Map ? new Map(persistentCommitCache) : new Map();
+  const currentYear = new Date().getFullYear();
+
   for (let year = startYear; year <= currentYear; year++) {
-    console.log(`Fetching contributions for year: ${year}...`);
+    console.log(`📅 Fetching contributions for year: ${year}...`);
     const yearStart = `${year}-01-01T00:00:00Z`;
     const yearEnd = `${year + 1}-01-01T00:00:00Z`;
 
+    // 1. AUTHORED PRs
     const prs = await getAllPages(
       `is:pr author:${GITHUB_USERNAME} is:merged merged:${yearStart}..${yearEnd}`
     );
@@ -227,6 +208,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       seenUrls.pullRequests.add(pr.html_url);
     }
 
+    // 2. AUTHORED ISSUES
     const issues = await getAllPages(
       `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:${yearStart}..${yearEnd}`
     );
@@ -252,6 +234,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       seenUrls.issues.add(issue.html_url);
     }
 
+    // 3. REVIEWS & CO-AUTHORING
     const reviewedByPrs = await getAllPages(
       `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:${yearStart}..${yearEnd}`
     );
@@ -304,6 +287,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           commitCache,
           pr.updated_at
         );
+
         if (commitDetails?.firstCommitDate) {
           const daysDiff = Math.round(
             (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
@@ -328,7 +312,8 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           owner,
           repoName,
           pr.number,
-          GITHUB_USERNAME
+          GITHUB_USERNAME,
+          axiosInstance
         );
         if (myFirstReviewDate && !uniqueReviewedPrs.has(pr.html_url)) {
           let myFirstReviewPeriod =
@@ -352,6 +337,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       }
     }
 
+    // 4. COLLABORATIONS
     const collaborationsPrs = await getAllPages(
       `is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:${yearStart}..${yearEnd}`
     );
@@ -406,7 +392,8 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           owner,
           repoName,
           item.number,
-          GITHUB_USERNAME
+          GITHUB_USERNAME,
+          axiosInstance
         );
         if (myFirstReviewDate) {
           hasReview = true;
@@ -438,7 +425,11 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       }
 
       if (!hasCommits && !hasReview) {
-        const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
+        const firstCommentDate = await getFirstCommentDate(
+          item.comments_url,
+          GITHUB_USERNAME,
+          axiosInstance
+        );
         contributions.collaborations.push({
           title: item.title,
           url: item.html_url,
