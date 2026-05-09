@@ -55,14 +55,20 @@ async function getAllPages(query) {
 async function fetchHistoricalContributions(requestedStartYear, prCache, persistentCommitCache) {
   /**
    * LOCAL HELPER: isCommitByUser
+   * Broad matching for historical data (emails, co-authors, and names).
    */
   function isCommitByUser(c, username) {
     try {
       const lowerUsername = username.toLowerCase();
       const commitMessage = c.commit?.message || '';
+
+      // Exclude branch merges
       if (/^Merge branch '.+' into .+/i.test(commitMessage)) return false;
+
+      // 1. Login match
       if (c.author?.login === username) return true;
 
+      // 2. Email pattern matching
       const authorEmail = c.commit?.author?.email?.toLowerCase();
       if (authorEmail) {
         if (
@@ -74,8 +80,11 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         if (authorEmail.includes(lowerUsername)) return true;
       }
 
+      // 3. Name match
       if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
         return true;
+
+      // 4. Co-authored-by trailer
       if (
         /Co-authored-by:/i.test(commitMessage) &&
         commitMessage.toLowerCase().includes(lowerUsername)
@@ -89,6 +98,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
 
   /**
    * LOCAL HELPER: getFirstCommitDetails
+   * Uses the local isCommitByUser to determine authorship.
    */
   async function getFirstCommitDetails(
     owner,
@@ -109,7 +119,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       let page = 1;
       let allCommits = [];
       while (true) {
-        // DRY: smartRequest handles 403/Retry-After logic
         const resp = await smartRequest(
           axiosInstance,
           `${prUrlKey}/commits?per_page=100&page=${page}`

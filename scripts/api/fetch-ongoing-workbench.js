@@ -49,17 +49,20 @@ async function searchAll(query) {
 }
 
 /**
- * LOCAL HELPER: isCommitByUser
+ * LOCAL HELPER: isCommitByUser (Ongoing Workbench Version)
+ * Strict logic to ignore web-flow and suggestions.
  */
 function isCommitByUser(c, username) {
   try {
     const lowerUsername = username.toLowerCase();
     const commitMessage = c.commit?.message || '';
 
+    // Ignore GitHub Web-flow actions and branch updates
     if (c.committer?.login === 'web-flow') return false;
     if (/suggestion|Merge branch|Merge remote-tracking|Merge pull request/i.test(commitMessage))
       return false;
 
+    // Author check
     const authorLogin = c.author?.login || '';
     const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
     const authorName = c.commit?.author?.name?.toLowerCase() || '';
@@ -74,6 +77,7 @@ function isCommitByUser(c, username) {
 
     if (isAuthorMatch) return true;
 
+    // Co-authored check
     if (
       /Co-authored-by:/i.test(commitMessage) &&
       commitMessage.toLowerCase().includes(lowerUsername)
@@ -87,7 +91,7 @@ function isCommitByUser(c, username) {
 }
 
 /**
- * LOCAL HELPER: getFirstCommitDetails
+ * LOCAL HELPER: getFirstCommitDetails (Ongoing Workbench Version)
  */
 async function getFirstCommitDetails(
   owner,
