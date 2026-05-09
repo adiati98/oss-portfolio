@@ -38,9 +38,14 @@ async function getPrMyFirstReviewDate(owner, repo, prNumber, username, axiosInst
     const myReviews = response.data
       .filter((review) => review.user?.login === username)
       .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
-    return myReviews.length > 0 ? myReviews[0].submitted_at : null;
+    if (myReviews.length > 0) {
+      return myReviews[0].submitted_at;
+    }
+    return null;
   } catch (err) {
-    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+      return null;
+    }
     throw err;
   }
 }
@@ -54,7 +59,9 @@ async function getFirstCommentDate(url, username, axiosInstance) {
     while (true) {
       const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
       const myFirstComment = response.data.find((comment) => comment.user?.login === username);
-      if (myFirstComment) return myFirstComment.created_at;
+      if (myFirstComment) {
+        return myFirstComment.created_at;
+      }
       const linkHeader = response.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {
         page++;
@@ -63,7 +70,9 @@ async function getFirstCommentDate(url, username, axiosInstance) {
       }
     }
   } catch (err) {
-    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+      return null;
+    }
     throw err;
   }
 }
