@@ -33,24 +33,15 @@ async function getGitHubJoinYear(axiosInstance, username) {
  * HELPER: Fetches the date of the user's first review on a specific PR.
  */
 async function getPrMyFirstReviewDate(owner, repo, prNumber, username, axiosInstance) {
-  while (true) {
-    try {
-      const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
-      const myReviews = response.data
-        .filter((review) => review.user?.login === username)
-        .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
-      return myReviews.length > 0 ? myReviews[0].submitted_at : null;
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        const retryAfter = err.response.headers['retry-after'];
-        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : 60000;
-        console.warn(`[Rate Limit] 403 on PR #${prNumber}. Retrying in ${waitTime / 1000}s...`);
-        await new Promise((resolve) => setTimeout(resolve, waitTime));
-        continue;
-      }
-      if (err.response && err.response.status === 404) return null;
-      throw err;
-    }
+  try {
+    const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
+    const myReviews = response.data
+      .filter((review) => review.user?.login === username)
+      .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
+    return myReviews.length > 0 ? myReviews[0].submitted_at : null;
+  } catch (err) {
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    throw err;
   }
 }
 
@@ -58,52 +49,22 @@ async function getPrMyFirstReviewDate(owner, repo, prNumber, username, axiosInst
  * HELPER: Fetches the date of the user's first comment on an issue or PR.
  */
 async function getFirstCommentDate(url, username, axiosInstance) {
-  let page = 1;
-  while (true) {
-    try {
+  try {
+    let page = 1;
+    while (true) {
       const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
       const myFirstComment = response.data.find((comment) => comment.user?.login === username);
       if (myFirstComment) return myFirstComment.created_at;
-
       const linkHeader = response.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {
         page++;
       } else {
         return null;
       }
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        const retryAfter = err.response.headers['retry-after'];
-        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : 60000;
-        console.warn(`[Rate Limit] 403 on comments. Retrying in ${waitTime / 1000}s...`);
-        await new Promise((resolve) => setTimeout(resolve, waitTime));
-        continue;
-      }
-      if (err.response && err.response.status === 404) return null;
-      throw err;
     }
-  }
-}
-
-/**
- * Centralized request handler to manage GitHub Rate Limits (403) and 404s.
- */
-async function smartRequest(axiosInstance, url) {
-  while (true) {
-    try {
-      return await axiosInstance.get(url);
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        const retryAfter = err.response.headers['retry-after'];
-        // Use Retry-After header or default to 60s
-        const waitTime = retryAfter ? parseInt(retryAfter) * 1000 : 60000;
-        console.warn(`[Rate Limit] 403 at ${url}. Retrying in ${waitTime / 1000}s...`);
-        await new Promise((resolve) => setTimeout(resolve, waitTime));
-        continue;
-      }
-      if (err.response && err.response.status === 404) return null;
-      throw err;
-    }
+  } catch (err) {
+    if (err.response && (err.response.status === 403 || err.response.status === 404)) return null;
+    throw err;
   }
 }
 
@@ -194,6 +155,5 @@ module.exports = {
   getGitHubJoinYear,
   getPrMyFirstReviewDate,
   getFirstCommentDate,
-  smartRequest,
   getPrActivityMeta,
 };
