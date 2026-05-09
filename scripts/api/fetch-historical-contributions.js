@@ -8,11 +8,16 @@ const {
 } = require('../utils/github-helpers');
 
 /**
- * SHARED AXIOS CONFIGURATION
+ * Ensure the GitHub token is available from the environment variables.
  */
 const token = process.env.GITHUB_TOKEN;
-if (!token) throw new Error('GITHUB_TOKEN is not set.');
+if (!token) {
+  throw new Error('GITHUB_TOKEN is not set.');
+}
 
+/**
+ * Create an Axios instance with base URL and authentication headers.
+ */
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
   headers: {
@@ -22,8 +27,7 @@ const axiosInstance = axios.create({
 });
 
 /**
- * SHARED UTILITY: getAllPages
- * Handles paginated search results for historical data.
+ * A helper function to fetch all pages for a given search query.
  */
 async function getAllPages(query) {
   let results = [];
@@ -34,6 +38,7 @@ async function getAllPages(query) {
         `/search/issues?q=${query}&per_page=100&page=${page}`
       );
       results.push(...response.data.items);
+
       const linkHeader = response.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {
         page++;
@@ -55,104 +60,104 @@ async function getAllPages(query) {
 }
 
 /**
- * HISTORICAL CONTRIBUTIONS FETCHER
+ * Fetches the date of the user's first commit on a given PR.
  */
-async function fetchHistoricalContributions(requestedStartYear, prCache, persistentCommitCache) {
-  /**
-   * LOCAL HELPER: isCommitByUser
-   * Broad matching for historical data (emails, co-authors, and names).
-   */
-  function isCommitByUser(c, username) {
-    try {
-      const lowerUsername = username.toLowerCase();
-      const commitMessage = c.commit?.message || '';
+async function getFirstCommitDetails(
+  owner,
+  repo,
+  prNumber,
+  username,
+  commitCache,
+  prUpdatedAt = null
+) {
+  const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
 
-      // Exclude branch merges
-      if (/^Merge branch '.+' into .+/i.test(commitMessage)) return false;
+  if (commitCache.has(prUrlKey)) {
+    const cached = commitCache.get(prUrlKey);
+    if (
+      cached &&
+      typeof cached === 'object' &&
+      cached.prUpdatedAt &&
+      prUpdatedAt &&
+      cached.prUpdatedAt === prUpdatedAt
+    ) {
+      return cached;
+    }
+  }
 
-      // 1. Login match
-      if (c.author?.login === username) return true;
+  let result = null;
 
-      // 2. Email pattern matching
-      const authorEmail = c.commit?.author?.email?.toLowerCase();
-      if (authorEmail) {
+  try {
+    let page = 1;
+    let allCommits = [];
+    while (true) {
+      const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
+      allCommits.push(...resp.data);
+
+      const linkHeader = resp.headers.link;
+      if (linkHeader && linkHeader.includes('rel="next"')) {
+        page++;
+        await new Promise((r) => setTimeout(r, 200));
+      } else {
+        break;
+      }
+    }
+
+    function isCommitByUser(c) {
+      try {
+        const lowerUsername = username.toLowerCase();
+        const commitMessage = c.commit?.message || '';
+        const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
+        if (isBranchUpdate) return false;
+        if (c.author?.login === username) return true;
+        const authorEmail = c.commit?.author?.email?.toLowerCase();
+        if (authorEmail) {
+          if (
+            authorEmail.endsWith('@users.noreply.github.com') &&
+            authorEmail.includes(`+${lowerUsername}@`)
+          )
+            return true;
+          if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
+          if (authorEmail.includes(lowerUsername)) return true;
+        }
+        if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
+          return true;
         if (
-          authorEmail.endsWith('@users.noreply.github.com') &&
-          authorEmail.includes(`+${lowerUsername}@`)
+          /Co-authored-by:/i.test(commitMessage) &&
+          commitMessage.toLowerCase().includes(lowerUsername)
         )
           return true;
-        if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
-        if (authorEmail.includes(lowerUsername)) return true;
+      } catch (e) {
+        return false;
       }
-
-      // 3. Name match
-      if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-        return true;
-
-      // 4. Co-authored-by trailer
-      if (
-        /Co-authored-by:/i.test(commitMessage) &&
-        commitMessage.toLowerCase().includes(lowerUsername)
-      )
-        return true;
-    } catch (e) {
       return false;
     }
-    return false;
-  }
 
-  /**
-   * LOCAL HELPER: getFirstCommitDetails
-   * Uses the local isCommitByUser to determine authorship.
-   */
-  async function getFirstCommitDetails(
-    owner,
-    repo,
-    prNumber,
-    username,
-    commitCache,
-    prUpdatedAt = null
-  ) {
-    const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
-    if (commitCache.has(prUrlKey)) {
-      const cached = commitCache.get(prUrlKey);
-      if (cached?.prUpdatedAt && prUpdatedAt && cached.prUpdatedAt === prUpdatedAt) return cached;
-    }
+    const userCommits = allCommits.filter(isCommitByUser);
 
-    let result = null;
-    try {
-      let page = 1;
-      let allCommits = [];
-      while (true) {
-        const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
-        allCommits.push(...resp.data);
-        const linkHeader = resp.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-          await new Promise((r) => setTimeout(r, 200));
-        } else {
-          break;
-        }
-      }
-
-      const userCommits = allCommits.filter((c) => isCommitByUser(c, username));
-      if (userCommits.length > 0) {
-        userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
-        result = {
-          firstCommitDate: userCommits[0].commit.author.date,
-          commitCount: userCommits.length,
-          prUpdatedAt,
-        };
-      } else {
-        result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
-      }
-    } catch (err) {
+    if (userCommits.length > 0) {
+      userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
+      result = {
+        firstCommitDate: userCommits[0].commit.author.date,
+        commitCount: userCommits.length,
+        prUpdatedAt,
+      };
+    } else {
       result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
     }
-    commitCache.set(prUrlKey, result);
-    return result;
+  } catch (err) {
+    result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
   }
 
+  commitCache.set(prUrlKey, result);
+  return result;
+}
+
+/**
+ * Fetches all contribution data from the GitHub API for a given year range.
+ */
+async function fetchHistoricalContributions(requestedStartYear, prCache, persistentCommitCache) {
+  // --- AUTO-DISCOVERY LOGIC ---
   let startYear = requestedStartYear;
   if (!startYear) {
     console.log(`🔍 No start year provided. Discovering first year for ${GITHUB_USERNAME}...`);
@@ -180,25 +185,30 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
   const currentYear = new Date().getFullYear();
 
   for (let year = startYear; year <= currentYear; year++) {
-    console.log(`📅 Fetching contributions for year: ${year}...`);
+    console.log(`Fetching contributions for year: ${year}...`);
+
     const yearStart = `${year}-01-01T00:00:00Z`;
     const yearEnd = `${year + 1}-01-01T00:00:00Z`;
 
-    // 1. AUTHORED PRs
     const prs = await getAllPages(
       `is:pr author:${GITHUB_USERNAME} is:merged merged:${yearStart}..${yearEnd}`
     );
+
     for (const pr of prs) {
       if (prCache.has(pr.html_url)) continue;
+
       const repoParts = new URL(pr.repository_url).pathname.split('/');
       const owner = repoParts[repoParts.length - 2];
       const repoName = repoParts[repoParts.length - 1];
+
       if (owner === GITHUB_USERNAME) {
         prCache.add(pr.html_url);
         continue;
       }
+
       prCache.add(pr.html_url);
       if (seenUrls.pullRequests.has(pr.html_url)) continue;
+
       contributions.pullRequests.push({
         title: pr.title,
         url: pr.html_url,
@@ -213,7 +223,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       seenUrls.pullRequests.add(pr.html_url);
     }
 
-    // 2. AUTHORED ISSUES
     const issues = await getAllPages(
       `is:issue author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME} created:${yearStart}..${yearEnd}`
     );
@@ -222,12 +231,14 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       const repoParts = new URL(issue.repository_url).pathname.split('/');
       const owner = repoParts[repoParts.length - 2];
       const repoName = repoParts[repoParts.length - 1];
+
       const closingPeriod =
         issue.state === 'closed'
           ? Math.round(
               (new Date(issue.closed_at) - new Date(issue.created_at)) / (1000 * 60 * 60 * 24)
             )
           : 'Open';
+
       contributions.issues.push({
         title: issue.title,
         url: issue.html_url,
@@ -239,7 +250,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       seenUrls.issues.add(issue.html_url);
     }
 
-    // 3. REVIEWS & CO-AUTHORING
     const reviewedByPrs = await getAllPages(
       `is:pr reviewed-by:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:${yearStart}..${yearEnd}`
     );
@@ -258,6 +268,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         prCache.add(pr.html_url);
         continue;
       }
+
       let owner, repoName;
       try {
         const repoParts = new URL(pr.repository_url).pathname.split('/');
@@ -293,7 +304,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           pr.updated_at
         );
 
-        if (commitDetails?.firstCommitDate) {
+        if (commitDetails && commitDetails.firstCommitDate) {
           const daysDiff = Math.round(
             (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
               (1000 * 60 * 60 * 24)
@@ -342,19 +353,20 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       }
     }
 
-    // 4. COLLABORATIONS
     const collaborationsPrs = await getAllPages(
       `is:pr commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -reviewed-by:${GITHUB_USERNAME} updated:${yearStart}..${yearEnd}`
     );
     const collaborationsIssues = await getAllPages(
       `is:issue commenter:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} updated:${yearStart}..${yearEnd}`
     );
+
     const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
 
     for (const item of allCollaborations) {
       const repoParts = new URL(item.repository_url).pathname.split('/');
       const owner = repoParts[repoParts.length - 2];
       const repoName = repoParts[repoParts.length - 1];
+
       if (seenUrls.collaborations.has(item.html_url) || owner === GITHUB_USERNAME) continue;
 
       let hasCommits = false;
@@ -367,7 +379,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           commitCache,
           item.updated_at
         );
-        if (commitDetails?.firstCommitDate) {
+        if (commitDetails && commitDetails.firstCommitDate) {
           hasCommits = true;
           if (!seenUrls.coAuthoredPrs.has(item.html_url)) {
             const daysDiff = Math.round(
@@ -455,4 +467,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
   return { contributions, prCache, commitCache };
 }
 
-module.exports = { fetchHistoricalContributions };
+module.exports = {
+  fetchHistoricalContributions,
+};
