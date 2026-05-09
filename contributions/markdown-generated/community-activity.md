@@ -23,15 +23,17 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 <details>
   <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (0)</h3></summary>
 
-> **_The workbench is sparkling clean._**
+> **_Hooray! You're all caught up._**
 
 </details>
 
 <details>
-  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (12)</h3></summary>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (14)</h3></summary>
 
 | Repository                      | Task                                                                                                                            |
 | :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------ |
+| **pizza-verse**                 | [docs: add Kenyan Pilau to traditional food section](https://github.com/OpenSource-Communities/pizza-verse/pull/136)            |
+| **guestbook**                   | [docs: add OdaloV as contributor](https://github.com/OpenSource-Communities/guestbook/pull/955)                                 |
 | **virtualcoffee.io**            | [Adding Members/FrancisTRAlt](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1502)                                     |
 | **guestbook**                   | [Fixed Intro-to-Open-Source-Course link](https://github.com/OpenSource-Communities/guestbook/pull/953)                          |
 | **developer-documentation-new** | [Document LeadGetCurrentEvent for skipping last active logging](https://github.com/mautic/developer-documentation-new/pull/483) |
@@ -102,7 +104,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>33 days</sub>                | **guestbook**                                                                                                             | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934)                                      |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>33 days</sub>                | **guestbook**                                                                                                             | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)                                         |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>35 days</sub>                | **user-documentation**                                                                                                    | [docs: Add Tags documentation for Contact management](https://github.com/mautic/user-documentation/pull/647)                                         |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>38 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>39 days</sub>                | **intro**                                                                                                                 | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                                     |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>48 days</sub>                | **virtualcoffee.io**                                                                                                      | [Create a networking guide for Programmers](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1399)                                            |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>51 days</sub>                | **intro**                                                                                                                 | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)                           |
 | <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>113 days</sub>               | **user-documentation**                                                                                                    | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                                     |
@@ -133,4 +135,4 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 ---
 
-_Last updated: May 8, 2026_
+_Last updated: May 9, 2026_
