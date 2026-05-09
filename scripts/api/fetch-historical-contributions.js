@@ -5,6 +5,7 @@ const {
   getGitHubJoinYear,
   getPrMyFirstReviewDate,
   getFirstCommentDate,
+  smartRequest,
 } = require('../utils/github-helpers');
 
 /**
@@ -29,26 +30,20 @@ async function getAllPages(query) {
   let results = [];
   let page = 1;
   while (true) {
-    try {
-      const response = await axiosInstance.get(
-        `/search/issues?q=${query}&per_page=100&page=${page}`
-      );
-      results.push(...response.data.items);
-      const linkHeader = response.headers.link;
-      if (linkHeader && linkHeader.includes('rel="next"')) {
-        page++;
-      } else {
-        break;
-      }
+    const response = await smartRequest(
+      axiosInstance,
+      `/search/issues?q=${query}&per_page=100&page=${page}`
+    );
+
+    if (!response) break;
+    results.push(...response.data.items);
+
+    const linkHeader = response.headers.link;
+    if (linkHeader && linkHeader.includes('rel="next"')) {
+      page++;
       await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        console.log('Rate limit hit. Waiting for 60 seconds...');
-        await new Promise((resolve) => setTimeout(resolve, 60000));
-        continue;
-      } else {
-        throw err;
-      }
+    } else {
+      break;
     }
   }
   return results;
@@ -124,7 +119,12 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       let page = 1;
       let allCommits = [];
       while (true) {
-        const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
+        const resp = await smartRequest(
+          axiosInstance,
+          `${prUrlKey}/commits?per_page=100&page=${page}`
+        );
+        if (!resp) break;
+
         allCommits.push(...resp.data);
         const linkHeader = resp.headers.link;
         if (linkHeader && linkHeader.includes('rel="next"')) {
@@ -166,7 +166,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
     collaborations: [],
     coAuthoredPrs: [],
   };
-
   const seenUrls = {
     pullRequests: new Set(),
     issues: new Set(),
@@ -174,7 +173,6 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
     collaborations: new Set(),
     coAuthoredPrs: new Set(),
   };
-
   const commitCache =
     persistentCommitCache instanceof Map ? new Map(persistentCommitCache) : new Map();
   const currentYear = new Date().getFullYear();
@@ -197,6 +195,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         prCache.add(pr.html_url);
         continue;
       }
+
       prCache.add(pr.html_url);
       if (seenUrls.pullRequests.has(pr.html_url)) continue;
       contributions.pullRequests.push({
@@ -207,7 +206,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         mergedAt: pr.pull_request.merged_at,
         createdAt: pr.created_at,
         reviewPeriod: Math.round(
-          (new Date(pr.pull_request.merged_at) - new Date(pr.created_at)) / (1000 * 60 * 60 * 24)
+          (new Date(pr.pull_request.merged_at) - new Date(pr.created_at)) / 86400000
         ),
       });
       seenUrls.pullRequests.add(pr.html_url);
@@ -224,10 +223,9 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
       const repoName = repoParts[repoParts.length - 1];
       const closingPeriod =
         issue.state === 'closed'
-          ? Math.round(
-              (new Date(issue.closed_at) - new Date(issue.created_at)) / (1000 * 60 * 60 * 24)
-            )
+          ? Math.round((new Date(issue.closed_at) - new Date(issue.created_at)) / 86400000)
           : 'Open';
+
       contributions.issues.push({
         title: issue.title,
         url: issue.html_url,
@@ -278,8 +276,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           pr.pull_request?.merged_at ||
           (pr.state === 'closed' && pr.merged_at ? pr.merged_at : null);
         let mergePeriod = mergedAt
-          ? Math.round((new Date(mergedAt) - new Date(pr.created_at)) / (1000 * 60 * 60 * 24)) +
-            ' days'
+          ? Math.round((new Date(mergedAt) - new Date(pr.created_at)) / 86400000) + ' days'
           : pr.state === 'closed'
             ? 'Closed'
             : 'Open';
@@ -295,8 +292,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
 
         if (commitDetails?.firstCommitDate) {
           const daysDiff = Math.round(
-            (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) /
-              (1000 * 60 * 60 * 24)
+            (new Date(commitDetails.firstCommitDate) - new Date(pr.created_at)) / 86400000
           );
           contributions.coAuthoredPrs.push({
             title: pr.title,
@@ -322,9 +318,8 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
         );
         if (myFirstReviewDate && !uniqueReviewedPrs.has(pr.html_url)) {
           let myFirstReviewPeriod =
-            Math.round(
-              (new Date(myFirstReviewDate) - new Date(pr.created_at)) / (1000 * 60 * 60 * 24)
-            ) + ' days';
+            Math.round((new Date(myFirstReviewDate) - new Date(pr.created_at)) / 86400000) +
+            ' days';
           contributions.reviewedPrs.push({
             title: pr.title,
             url: pr.html_url,
@@ -371,8 +366,7 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           hasCommits = true;
           if (!seenUrls.coAuthoredPrs.has(item.html_url)) {
             const daysDiff = Math.round(
-              (new Date(commitDetails.firstCommitDate) - new Date(item.created_at)) /
-                (1000 * 60 * 60 * 24)
+              (new Date(commitDetails.firstCommitDate) - new Date(item.created_at)) / 86400000
             );
             contributions.coAuthoredPrs.push({
               title: item.title,
@@ -404,15 +398,13 @@ async function fetchHistoricalContributions(requestedStartYear, prCache, persist
           hasReview = true;
           let mergedAt = item.pull_request.merged_at || null;
           let mergePeriod = mergedAt
-            ? Math.round((new Date(mergedAt) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)) +
-              ' days'
+            ? Math.round((new Date(mergedAt) - new Date(item.created_at)) / 86400000) + ' days'
             : item.state === 'closed'
               ? 'Closed'
               : 'Open';
           let myFirstReviewPeriod =
-            Math.round(
-              (new Date(myFirstReviewDate) - new Date(item.created_at)) / (1000 * 60 * 60 * 24)
-            ) + ' days';
+            Math.round((new Date(myFirstReviewDate) - new Date(item.created_at)) / 86400000) +
+            ' days';
           contributions.reviewedPrs.push({
             title: item.title,
             url: item.html_url,
