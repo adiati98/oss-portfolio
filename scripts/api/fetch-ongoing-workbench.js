@@ -1,7 +1,11 @@
 require('dotenv').config();
 const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
-const { getLinkedIssueNumbers, getPrActivityMeta } = require('../utils/github-helpers');
+const {
+  getLinkedIssueNumbers,
+  getPrActivityMeta,
+  smartRequest,
+} = require('../utils/github-helpers');
 
 /**
  * SHARED AXIOS CONFIGURATION
@@ -25,44 +29,37 @@ async function searchAll(query) {
   let results = [];
   let page = 1;
   while (true) {
-    try {
-      const response = await axiosInstance.get(
-        `/search/issues?q=${query}&per_page=100&page=${page}`
-      );
-      results.push(...response.data.items);
-      const link = response.headers.link;
-      if (link && link.includes('rel="next"')) {
-        page++;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } else {
-        break;
-      }
-    } catch (err) {
-      if (err.response && err.response.status === 403) {
-        await new Promise((resolve) => setTimeout(resolve, 60000));
-        continue;
-      }
-      throw err;
+    const response = await smartRequest(
+      axiosInstance,
+      `/search/issues?q=${query}&per_page=100&page=${page}`
+    );
+
+    if (!response) break;
+    results.push(...response.data.items);
+
+    const link = response.headers.link;
+    if (link && link.includes('rel="next"')) {
+      page++;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    } else {
+      break;
     }
   }
   return results;
 }
 
 /**
- * LOCAL HELPER: isCommitByUser (Ongoing Workbench Version)
- * Strict logic to ignore web-flow and suggestions.
+ * LOCAL HELPER: isCommitByUser
  */
 function isCommitByUser(c, username) {
   try {
     const lowerUsername = username.toLowerCase();
     const commitMessage = c.commit?.message || '';
 
-    // Ignore GitHub Web-flow actions and branch updates
     if (c.committer?.login === 'web-flow') return false;
     if (/suggestion|Merge branch|Merge remote-tracking|Merge pull request/i.test(commitMessage))
       return false;
 
-    // Author check
     const authorLogin = c.author?.login || '';
     const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
     const authorName = c.commit?.author?.name?.toLowerCase() || '';
@@ -77,14 +74,12 @@ function isCommitByUser(c, username) {
 
     if (isAuthorMatch) return true;
 
-    // Co-authored check
     if (
       /Co-authored-by:/i.test(commitMessage) &&
       commitMessage.toLowerCase().includes(lowerUsername)
     ) {
       return true;
     }
-
     return false;
   } catch (e) {
     return false;
@@ -92,7 +87,7 @@ function isCommitByUser(c, username) {
 }
 
 /**
- * LOCAL HELPER: getFirstCommitDetails (Ongoing Workbench Version)
+ * LOCAL HELPER: getFirstCommitDetails
  */
 async function getFirstCommitDetails(
   owner,
@@ -113,7 +108,12 @@ async function getFirstCommitDetails(
     let page = 1;
     let allCommits = [];
     while (true) {
-      const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
+      const resp = await smartRequest(
+        axiosInstance,
+        `${prUrlKey}/commits?per_page=100&page=${page}`
+      );
+      if (!resp) break;
+
       allCommits.push(...resp.data);
       const linkHeader = resp.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {
@@ -182,27 +182,25 @@ async function fetchOngoingReviews() {
     const repo = repoParts[repoParts.length - 1];
     const author = pr.user.login;
 
-    try {
-      const reviewsResp = await axiosInstance.get(
-        `/repos/${owner}/${repo}/pulls/${pr.number}/reviews`
-      );
-      const hasHumanReview = reviewsResp.data.some(
-        (review) => review.user.type === 'User' && review.user.login !== author
-      );
-      if (hasHumanReview) return true;
+    const reviewsResp = await smartRequest(
+      axiosInstance,
+      `/repos/${owner}/${repo}/pulls/${pr.number}/reviews`
+    );
+    const hasHumanReview = reviewsResp?.data.some(
+      (review) => review.user.type === 'User' && review.user.login !== author
+    );
+    if (hasHumanReview) return true;
 
-      const commentsResp = await axiosInstance.get(
-        `/repos/${owner}/${repo}/issues/${pr.number}/comments`
-      );
-      const hasHumanComment = commentsResp.data.some(
-        (comment) => comment.user.type === 'User' && comment.user.login !== author
-      );
-      if (hasHumanComment) return true;
+    const commentsResp = await smartRequest(
+      axiosInstance,
+      `/repos/${owner}/${repo}/issues/${pr.number}/comments`
+    );
+    const hasHumanComment = commentsResp?.data.some(
+      (comment) => comment.user.type === 'User' && comment.user.login !== author
+    );
+    if (hasHumanComment) return true;
 
-      return false;
-    } catch (e) {
-      return false;
-    }
+    return false;
   }
 
   const requestedQuery = `is:pr is:open review-requested:${GITHUB_USERNAME} -author:${GITHUB_USERNAME} -user:${GITHUB_USERNAME}`;
@@ -269,29 +267,21 @@ async function fetchOngoingAuthoredPrs() {
   let allAuthoredItems = [];
   let page = 1;
 
-  try {
-    while (true) {
-      const response = await axiosInstance.get(`/issues`, {
-        params: {
-          filter: 'created',
-          state: 'open',
-          per_page: 100,
-          page: page,
-        },
-      });
+  while (true) {
+    const response = await smartRequest(
+      axiosInstance,
+      `/issues?filter=created&state=open&per_page=100&page=${page}`
+    );
 
-      if (response.data.length === 0) break;
-      allAuthoredItems.push(...response.data);
+    if (!response || response.data.length === 0) break;
+    allAuthoredItems.push(...response.data);
 
-      const link = response.headers.link;
-      if (link && link.includes('rel="next"')) {
-        page++;
-      } else {
-        break;
-      }
+    const link = response.headers.link;
+    if (link && link.includes('rel="next"')) {
+      page++;
+    } else {
+      break;
     }
-  } catch (err) {
-    return [];
   }
 
   const results = [];
@@ -318,7 +308,6 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
   const rawPrs = await searchAll(query);
 
   const coAuthoredResults = [];
-
   for (const pr of rawPrs) {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
     const owner = repoParts[repoParts.length - 2];
@@ -341,7 +330,6 @@ async function fetchOngoingCoAuthoredPrs(commitCache) {
       coAuthoredResults.push(formatted);
     }
   }
-
   return coAuthoredResults;
 }
 
