@@ -17,7 +17,7 @@ try {
 }
 
 // Import core fetching logic
-const { fetchHistoricalContributions } = require('../api/fetch-historical-contributions');
+const { fetchContributions } = require('../api/fetch-historical-contributions');
 const {
   fetchOngoingReviews,
   fetchOngoingIssues,
@@ -238,7 +238,7 @@ async function main() {
       contributions: newContributions,
       prCache: updatedPrCache,
       commitCache: usedCommitCache,
-    } = await fetchHistoricalContributions(fetchStartYear, prCache, mergedCommitCache);
+    } = await fetchContributions(fetchStartYear, prCache, mergedCommitCache);
 
     let finalContributions = {
       pullRequests: [],
