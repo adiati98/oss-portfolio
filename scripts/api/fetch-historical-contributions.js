@@ -1,5 +1,7 @@
 require('dotenv').config();
 const axios = require('axios');
+const fs = require('fs/promises');
+const path = require('path');
 
 // Import configuration
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
@@ -15,6 +17,30 @@ async function getGitHubJoinYear(axiosInstance) {
   } catch (err) {
     console.error('❌ Error discovering GitHub join date, defaulting to 2020:', err.message);
     return 2020;
+  }
+}
+
+/**
+ * Helper to log 403 errors to console and file once.
+ */
+async function logPermanent403(url, logState = { hasLogged: false }) {
+  if (logState.hasLogged) return;
+
+  console.log(`Skipping 403 pr: ${url}`);
+  const logPath = path.join(process.cwd(), 'data', 'failed-fetch.json');
+  try {
+    let failedData = {};
+    try {
+      const content = await fs.readFile(logPath, 'utf8');
+      failedData = JSON.parse(content);
+    } catch (e) {
+      // File doesn't exist yet
+    }
+    failedData[url] = { status: '403 Forbidden', timestamp: new Date().toISOString() };
+    await fs.writeFile(logPath, JSON.stringify(failedData, null, 2));
+    logState.hasLogged = true;
+  } catch (err) {
+    // Fail silently on logging error to avoid breaking main loop
   }
 }
 
@@ -100,7 +126,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
   /**
    * Fetches the date of the user's first review on a given pull request.
    */
-  async function getPrMyFirstReviewDate(owner, repo, prNumber, username) {
+  async function getPrMyFirstReviewDate(owner, repo, prNumber, username, logState) {
     try {
       const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
       const myReviews = response.data
@@ -111,7 +137,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       }
       return null;
     } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+      if (err.response && err.response.status === 403) {
+        await logPermanent403(`https://github.com/${owner}/${repo}/pull/${prNumber}`, logState);
+        return null;
+      }
+      if (err.response && err.response.status === 404) {
         return null;
       }
       throw err;
@@ -121,7 +151,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
   /**
    * Fetches the date of the user's first comment on an issue or PR.
    */
-  async function getFirstCommentDate(url, username) {
+  async function getFirstCommentDate(url, username, logState) {
     try {
       let page = 1;
       while (true) {
@@ -138,7 +168,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         }
       }
     } catch (err) {
-      if (err.response && (err.response.status === 403 || err.response.status === 404)) {
+      if (err.response && err.response.status === 403) {
+        await logPermanent403(url, logState);
+        return null;
+      }
+      if (err.response && err.response.status === 404) {
         return null;
       }
       throw err;
@@ -154,7 +188,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     prNumber,
     username,
     commitCache,
-    prUpdatedAt = null
+    prUpdatedAt = null,
+    logState
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
 
@@ -232,6 +267,9 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
       }
     } catch (err) {
+      if (err.response && err.response.status === 403) {
+        await logPermanent403(`https://github.com/${owner}/${repo}/pull/${prNumber}`, logState);
+      }
       result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
     }
 
@@ -343,6 +381,9 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 
       const prDate = new Date(pr.updated_at);
       if (prDate >= new Date(yearStart) && prDate < new Date(yearEnd)) {
+        // Initialize log flag for this PR
+        let logState = { hasLogged: false };
+
         let mergedAt =
           pr.pull_request?.merged_at ||
           (pr.state === 'closed' && pr.merged_at ? pr.merged_at : null);
@@ -359,7 +400,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           pr.number,
           GITHUB_USERNAME,
           commitCache,
-          pr.updated_at
+          pr.updated_at,
+          logState
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
@@ -386,7 +428,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           owner,
           repoName,
           pr.number,
-          GITHUB_USERNAME
+          GITHUB_USERNAME,
+          logState
         );
         if (myFirstReviewDate && !uniqueReviewedPrs.has(pr.html_url)) {
           let myFirstReviewPeriod =
@@ -427,6 +470,9 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 
       if (seenUrls.collaborations.has(item.html_url) || owner === GITHUB_USERNAME) continue;
 
+      // Initialize log flag for this item
+      let logState = { hasLogged: false };
+
       let hasCommits = false;
       if (item.pull_request) {
         const commitDetails = await getFirstCommitDetails(
@@ -435,7 +481,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           item.number,
           GITHUB_USERNAME,
           commitCache,
-          item.updated_at
+          item.updated_at,
+          logState
         );
         if (commitDetails && commitDetails.firstCommitDate) {
           hasCommits = true;
@@ -467,7 +514,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           owner,
           repoName,
           item.number,
-          GITHUB_USERNAME
+          GITHUB_USERNAME,
+          logState
         );
         if (myFirstReviewDate) {
           hasReview = true;
@@ -499,7 +547,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       }
 
       if (!hasCommits && !hasReview) {
-        const firstCommentDate = await getFirstCommentDate(item.comments_url, GITHUB_USERNAME);
+        const firstCommentDate = await getFirstCommentDate(
+          item.comments_url,
+          GITHUB_USERNAME,
+          logState
+        );
         contributions.collaborations.push({
           title: item.title,
           url: item.html_url,
