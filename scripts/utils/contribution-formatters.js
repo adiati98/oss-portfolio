@@ -64,6 +64,11 @@ function getPrStatusContent(item) {
  * @returns {string} Formatted date with status badge.
  */
 function getCollaborationStatusContent(item) {
+  // Handle inaccessible data points logged from 403 errors
+  if (item.isInaccessible) {
+    return `Data Restricted<br><strong>RECORDED</strong>`;
+  }
+
   const lastUpdateDate = formatDate(item.updatedAt || item.firstCommentedAt || item.date);
 
   let status = 'OPEN';

@@ -1,31 +1,54 @@
+const fs = require('fs');
+const path = require('path');
+
 /**
  * Processes a list of contributions and groups them into calendar quarters (YYYY-QX).
- * For reviewedPrs and coAuthoredPrs, uses the original engagement date (myFirstReviewDate / firstCommitDate)
- * to determine the quarter assignment, ensuring they stay in the quarter where they were first reviewed/committed.
- * @param {object} contributions The object containing all contribution lists (pullRequests, issues, etc.).
- * @returns {object} An object where keys are "YYYY-QX" and values are objects containing contribution lists for that quarter.
+ * @param {object} contributions The object containing all contribution lists.
+ * @returns {object}
  */
 function groupContributionsByQuarter(contributions) {
   const grouped = {};
+
+  // --- INJECT 403 DATA ---
+  const logPath = path.join(process.cwd(), 'data', 'failed-fetch.json');
+  if (fs.existsSync(logPath)) {
+    try {
+      const failedData = JSON.parse(fs.readFileSync(logPath, 'utf8'));
+      for (const [url, details] of Object.entries(failedData)) {
+        // Extract repo name from URL: https://github.com/owner/repo/pull/123 -> owner/repo
+        const urlParts = new URL(url).pathname.split('/');
+        const repo = `${urlParts[1]}/${urlParts[2]}`;
+
+        // Add to collaborations as a "Ghost Row"
+        contributions.collaborations.push({
+          title: details.title || 'Unknown Title',
+          url: url,
+          repo: repo,
+          date: details.timestamp, // Use the time it was caught as the fallback date
+          isInaccessible: true, // Flag for the UI
+          state: 'archived', // Custom state for the badge
+        });
+      }
+    } catch (e) {
+      console.warn('Could not process failed-fetch.json for grouping');
+    }
+  }
+  // --- END INJECTION ---
 
   for (const [type, items] of Object.entries(contributions)) {
     for (const item of items) {
       let dateStr;
 
-      // 1. Prioritize domain-specific engagement dates
       if (type === 'reviewedPrs' && item.myFirstReviewDate) {
         dateStr = item.myFirstReviewDate;
       } else if (type === 'coAuthoredPrs' && item.firstCommitDate) {
         dateStr = item.firstCommitDate;
       }
 
-      // 2. Universal Fallback: If dateStr is still empty (or for other types),
-      // check these in order of reliability.
       if (!dateStr) {
         dateStr = item.date || item.createdAt || item.closedAt || item.updatedAt;
       }
 
-      // 3. Final safety check
       if (!dateStr) {
         console.warn(`Skipping item in ${type} due to missing date:`, item.title);
         continue;
@@ -34,8 +57,6 @@ function groupContributionsByQuarter(contributions) {
       const dateObj = new Date(dateStr);
       const year = dateObj.getFullYear();
       const month = dateObj.getMonth() + 1;
-
-      // Calculate the quarter (1-4) based on the month
       const quarter = `Q${Math.floor((month - 1) / 3) + 1}`;
       const key = `${year}-${quarter}`;
 
