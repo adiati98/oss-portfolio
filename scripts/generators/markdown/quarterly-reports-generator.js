@@ -252,61 +252,55 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
               item.myFirstReviewDate
             );
 
-            // Separate the last updated date from the status badge
-            const lastUpdatedDate = formatDate(item.date);
+            const statusContentRaw = getPrStatusContent(item);
+            const statusPartsArray = statusContentRaw.split('<br>');
+            const lastUpdatedString = statusPartsArray[0];
+            const rawStatusTag = statusPartsArray[1];
 
-            // Check for 403 status first, otherwise check for merged status
-            const statusBadgeText = item.isInaccessible
-              ? 'RECORDED'
-              : item.mergedAt
-                ? 'MERGED'
-                : item.state || 'OPEN';
-            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
+            // Clean the tag and generate the badge
+            const cleanStatusLabel = rawStatusTag.replace(/<\/?strong>/g, '');
+            const finalStatusBadge = getGitHubStatusBadge(cleanStatusLabel.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewAt}</td>\n`;
             tableContent += `      <td>${myFirstReviewPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
+            tableContent += `      <td>${lastUpdatedString}<br>${finalStatusBadge}</td>\n`;
             // Logic for Co-Authored PRs table structure
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
             const firstCommitPeriod = calculatePeriodInDays(item.createdAt, item.firstCommitDate);
 
-            // Separate the last updated date from the status badge
-            const lastUpdatedDate = formatDate(item.date);
+            const statusContentRaw = getPrStatusContent(item);
+            const statusPartsArray = statusContentRaw.split('<br>');
+            const lastUpdatedString = statusPartsArray[0];
+            const rawStatusTag = statusPartsArray[1];
 
-            // Check for 403 status first, otherwise check for merged status
-            const statusBadgeText = item.isInaccessible
-              ? 'RECORDED'
-              : item.mergedAt
-                ? 'MERGED'
-                : item.state || 'OPEN';
-            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
+            // Clean the tag and generate the badge
+            const cleanStatusLabel = rawStatusTag.replace(/<\/?strong>/g, '');
+            const finalStatusBadge = getGitHubStatusBadge(cleanStatusLabel.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${firstCommitAt}</td>\n`;
             tableContent += `      <td>${firstCommitPeriod}</td>\n`;
-            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
+            tableContent += `      <td>${lastUpdatedString}<br>${finalStatusBadge}</td>\n`;
             // Logic for Collaborations table structure
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
 
-            // Separate the last updated date from the status badge
-            const lastUpdatedDate = formatDate(item.date);
+            const statusContentRaw = getCollaborationStatusContent(item);
+            const statusPartsArray = statusContentRaw.split('<br>');
+            const lastUpdatedString = statusPartsArray[0];
+            const rawStatusTag = statusPartsArray[1];
 
-            // Check for 403 status first, otherwise check for merged status
-            const statusBadgeText = item.isInaccessible
-              ? 'RECORDED'
-              : item.mergedAt
-                ? 'MERGED'
-                : item.state || 'OPEN';
-            const statusBadge = getGitHubStatusBadge(statusBadgeText.toUpperCase());
+            // Clean the tag and generate the badge
+            const cleanStatusLabel = rawStatusTag.replace(/<\/?strong>/g, '');
+            const finalStatusBadge = getGitHubStatusBadge(cleanStatusLabel.toUpperCase());
 
             tableContent += `      <td>${createdAt}</td>\n`;
             tableContent += `      <td>${commentedAt}</td>\n`;
-            tableContent += `      <td>${lastUpdatedDate}<br>${statusBadge}</td>\n`;
+            tableContent += `      <td>${lastUpdatedString}<br>${finalStatusBadge}</td>\n`;
           }
 
           tableContent += `    </tr>\n`;
