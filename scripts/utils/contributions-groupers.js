@@ -9,31 +9,39 @@ const path = require('path');
 function groupContributionsByQuarter(contributions) {
   const grouped = {};
 
-  // --- INJECT 403 DATA ---
+  // --- Inject 403 data ---
   const logPath = path.join(process.cwd(), 'data', 'failed-fetch.json');
   if (fs.existsSync(logPath)) {
     try {
       const failedData = JSON.parse(fs.readFileSync(logPath, 'utf8'));
       for (const [url, details] of Object.entries(failedData)) {
-        // Extract repo name from URL: https://github.com/owner/repo/pull/123 -> owner/repo
-        const urlParts = new URL(url).pathname.split('/');
-        const repo = `${urlParts[1]}/${urlParts[2]}`;
+        const urlObj = new URL(url);
+        const urlParts = urlObj.pathname.split('/').filter(Boolean); // filter removes empty strings
+
+        let repo = 'Unknown Repo';
+
+        if (urlObj.hostname === 'api.github.com' && urlParts[0] === 'repos') {
+          // API format: /repos/owner/repo/...
+          repo = `${urlParts[1]}/${urlParts[2]}`;
+        } else {
+          // Standard format: /owner/repo/...
+          repo = `${urlParts[0]}/${urlParts[1]}`;
+        }
 
         // Add to collaborations as a "Ghost Row"
         contributions.collaborations.push({
           title: details.title || 'Unknown Title',
-          url: url,
+          url: url.replace('api.github.com/repos/', 'github.com/').replace('/pulls/', '/pull/'),
           repo: repo,
-          date: details.timestamp, // Use the time it was caught as the fallback date
-          isInaccessible: true, // Flag for the UI
-          state: 'archived', // Custom state for the badge
+          date: details.timestamp,
+          isInaccessible: true,
+          state: 'archived',
         });
       }
     } catch (e) {
       console.warn('Could not process failed-fetch.json for grouping');
     }
   }
-  // --- END INJECTION ---
 
   for (const [type, items] of Object.entries(contributions)) {
     for (const item of items) {
