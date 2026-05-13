@@ -85,6 +85,11 @@ async function writeHtmlFiles(groupedContributions) {
         textColor = COLORS.status?.red?.text || '#991b1b';
         fontWeight = 'font-semibold';
         break;
+      case 'RECORDED':
+        bgColor = COLORS.status?.gray?.bg || '#f1f5f9';
+        textColor = COLORS.status?.gray?.text || '#475569';
+        fontWeight = 'font-semibold';
+        break;
       default:
         break;
     }
@@ -504,7 +509,10 @@ ${navHtmlForReports}
           const safeTitle = sanitizeAttribute(item.title);
 
           // Row with data-href to enable click navigation.
-          tableContent += `   <tr class="${rowBg} table-row-hover" style="transition: background-color 0.15s ease-in-out;">\n`;
+          const rowClass = item.isInaccessible
+            ? `${rowBg} table-row-hover opacity-75`
+            : `${rowBg} table-row-hover`;
+          tableContent += `   <tr class="${rowClass}" style="transition: background-color 0.15s ease-in-out;">\n`;
 
           // No. column (not sortable).
           tableContent += `    <td>${counter++}.</td>\n`;

@@ -50,12 +50,20 @@ async function main() {
   await fs.mkdir(dataDir, { recursive: true });
 
   // Use the path module to correctly build the file paths.
+  const failedFetchFile = path.join(dataDir, 'failed-fetch.json');
   const cacheFile = path.join(dataDir, 'pr-cache.json');
   const dataFile = path.join(dataDir, 'all-contributions.json');
   const articlesFile = path.join(dataDir, 'all-articles.json');
   const ongoingTasksFile = path.join(dataDir, 'ongoing-tasks.json');
   const ongoingIssuesFile = path.join(dataDir, 'ongoing-issues.json');
   const ongoingCoAuthoredPRsFile = path.join(dataDir, 'ongoing-coauthored-prs.json');
+
+  // --- Ensure failed-fetch file exists to prevent errors in fetch script ---
+  try {
+    await fs.access(failedFetchFile);
+  } catch {
+    await fs.writeFile(failedFetchFile, JSON.stringify({}), 'utf8');
+  }
 
   let prCache = new Set();
 
