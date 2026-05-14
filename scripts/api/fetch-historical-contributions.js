@@ -382,28 +382,59 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     const uniqueReviewedPrs = new Set();
 
     for (const pr of combinedResults) {
-      if (pr.private || (pr.user && pr.user.type === 'Bot')) {
+      // 1. Private repo check
+      if (pr.private) {
         prCache.add(pr.html_url);
         continue;
       }
 
-      let owner, repoName;
-      try {
-        const repoParts = new URL(pr.repository_url).pathname.split('/');
-        owner = repoParts[repoParts.length - 2];
-        repoName = repoParts[repoParts.length - 1];
-        if (owner === GITHUB_USERNAME) {
+      const isBot = pr.user && pr.user.type === 'Bot';
+      const repoParts = new URL(pr.repository_url).pathname.split('/');
+      const owner = repoParts[repoParts.length - 2];
+      const repoName = repoParts[repoParts.length - 1];
+
+      // 2. Logic for Bot PRs
+      if (isBot) {
+        const firstCommentDate = await getFirstCommentDate(
+          pr.comments_url,
+          GITHUB_USERNAME,
+          { hasLogged: false },
+          year,
+          pr.title
+        );
+
+        if (firstCommentDate) {
+          if (!seenUrls.collaborations.has(pr.html_url)) {
+            contributions.collaborations.push({
+              title: pr.title,
+              url: pr.html_url,
+              repo: `${owner}/${repoName}`,
+              date: firstCommentDate,
+              createdAt: pr.created_at,
+              firstCommentedAt: firstCommentDate,
+              state: pr.state,
+              mergedAt: pr.pull_request?.merged_at || null,
+              closedAt: pr.state === 'closed' ? pr.closed_at : null,
+              updatedAt: pr.updated_at,
+            });
+            seenUrls.collaborations.add(pr.html_url);
+          }
+          continue;
+        } else {
           prCache.add(pr.html_url);
           continue;
         }
-      } catch (e) {
+      }
+
+      // 3. Skip personal repos for non-bot PRs
+      if (owner === GITHUB_USERNAME) {
         prCache.add(pr.html_url);
         continue;
       }
 
+      // Logic for Human PRs (Note: redundant owner/repoName check removed)
       const prDate = new Date(pr.updated_at);
       if (prDate >= new Date(yearStart) && prDate < new Date(yearEnd)) {
-        // Initialize log flag for this PR
         let logState = { hasLogged: false };
 
         let mergedAt =
@@ -490,53 +521,47 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     const allCollaborations = [...collaborationsPrs, ...collaborationsIssues];
 
     for (const item of allCollaborations) {
+      const isBot = item.user && item.user.type === 'Bot';
       const repoParts = new URL(item.repository_url).pathname.split('/');
       const owner = repoParts[repoParts.length - 2];
       const repoName = repoParts[repoParts.length - 1];
 
       if (seenUrls.collaborations.has(item.html_url) || owner === GITHUB_USERNAME) continue;
 
-      // Initialize log flag for this item
       let logState = { hasLogged: false };
 
-      let hasCommits = false;
-      if (item.pull_request) {
-        const commitDetails = await getFirstCommitDetails(
-          owner,
-          repoName,
-          item.number,
+      if (isBot) {
+        const firstCommentDate = await getFirstCommentDate(
+          item.comments_url,
           GITHUB_USERNAME,
-          commitCache,
-          item.updated_at,
           logState,
           year,
           item.title
         );
-        if (commitDetails && commitDetails.firstCommitDate) {
-          hasCommits = true;
-          if (!seenUrls.coAuthoredPrs.has(item.html_url)) {
-            const daysDiff = Math.round(
-              (new Date(commitDetails.firstCommitDate) - new Date(item.created_at)) /
-                (1000 * 60 * 60 * 24)
-            );
-            contributions.coAuthoredPrs.push({
-              title: item.title,
-              url: item.html_url,
-              repo: `${owner}/${repoName}`,
-              date: commitDetails.firstCommitDate,
-              createdAt: item.created_at,
-              firstCommitDate: commitDetails.firstCommitDate,
-              firstCommitPeriod: daysDiff + (daysDiff === 1 ? ' day' : ' days'),
-              commitCount: commitDetails.commitCount,
-              mergedAt: item.pull_request.merged_at || null,
-              state: item.state,
-            });
-            seenUrls.coAuthoredPrs.add(item.html_url);
-          }
+
+        if (firstCommentDate) {
+          contributions.collaborations.push({
+            title: item.title,
+            url: item.html_url,
+            repo: `${owner}/${repoName}`,
+            date: firstCommentDate,
+            createdAt: item.created_at,
+            firstCommentedAt: firstCommentDate,
+            state: item.state,
+            mergedAt: item.pull_request?.merged_at || null,
+            closedAt: item.state === 'closed' ? item.closed_at : null,
+            updatedAt: item.updated_at,
+          });
+          seenUrls.collaborations.add(item.html_url);
+        } else {
+          prCache.add(item.html_url);
         }
+        continue;
       }
 
       let hasReview = false;
+      let hasCommits = false;
+
       if (item.pull_request && !uniqueReviewedPrs.has(item.html_url)) {
         const myFirstReviewDate = await getPrMyFirstReviewDate(
           owner,

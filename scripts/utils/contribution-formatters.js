@@ -66,7 +66,7 @@ function getPrStatusContent(item) {
 function getCollaborationStatusContent(item) {
   // Handle inaccessible data points logged from 403 errors
   if (item.isInaccessible) {
-    return `Data Restricted<br><strong>RECORDED</strong>`;
+    return `Basic Info Only<br><strong>RECORDED</strong>`;
   }
 
   const lastUpdateDate = formatDate(item.updatedAt || item.firstCommentedAt || item.date);
