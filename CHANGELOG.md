@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.0] - 2026-05-14
+
+### Added
+
+- **Graceful Degradation for Rate Limits**: Introduced a robust system to capture and display contribution data when GitHub API secondary rate limits (403 Forbidden) are triggered.
+    - **Persistent Failure Tracking**: Implemented `logPermanent403` to save metadata of throttled items into `data/failed-fetch.json`.
+    - **Ghost Row Injection**: Updated grouper logic to reconstruct and append inaccessible items to the Collaborations category using logged titles and timestamps.
+- **Visual Data Status Indicators**:
+    - **RECORDED Badge**: Added a gray status badge and "Basic Info Only" label for rate-limited or archived repository data.
+    - **Inaccessibility Cues**: Applied `opacity-75` styling to table rows missing full metadata to provide clear visual feedback for partial data.
+- **Strict Repository Filtering**: Implemented a high-priority check to identify and exclude Private Repositories early in the data acquisition loop.
+
+### Changed
+
+- **Refined Bot Categorization**: Updated logic to filter bot-authored Pull Requests. Contributions are now only categorized under Collaborations if a manual comment exists or if the Pull Request includes human reviews, maintaining a distinction between human-led and automated workflows.
+- **URL Transformation**: Implemented logic to convert GitHub API endpoints back into standard user-facing repository and Pull Request URLs for logged failures.
+- **Enhanced Merge Logic**: Updated date handling to fallback to `closedAt` if `mergedAt` is missing, ensuring accurate chronological placement and "RECORDED" badge assignment for inaccessible items.
+- **Failover Efficiency**: 
+    - Updated fetch helpers to fail silently after logging, preventing script crashes during high-volume API requests.
+    - Introduced a `logState` object to prevent redundant log writes for the same rate-limited item.
+
 ## [2.7.0] - 2026-05-09
 
 ### Added
