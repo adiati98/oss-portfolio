@@ -147,7 +147,8 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
           .join('')
       : '<p class="text-sm text-slate-500 font-medium italic">No activity recorded yet.</p>';
 
-  const { title: personaTitle, desc: personaDesc } = determinePersona(countsDict);
+  const chosenPersona = determinePersona(countsDict);
+  const { title: personaTitle, desc: personaDesc, key: activePersonaKey } = chosenPersona;
 
   const footerHtml = createFooterHtml();
   const indexCss = getIndexStyleCss();
@@ -211,7 +212,13 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                 <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
                   ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
                     .map((label, idx) => {
-                      const key = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
+                      const key = [
+                        'prCount',
+                        'issueCount',
+                        'reviewedPrCount',
+                        'coAuthoredPrCount',
+                        'collaborationCount',
+                      ][idx];
                       const count = [
                         prCount,
                         issueCount,
@@ -219,8 +226,9 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                         coAuthoredPrCount,
                         collaborationCount,
                       ][idx];
-                      const s = stats[key];
-                      const isHighest = grandTotal > 0 && count === maxCount;
+                      const statsKey = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
+                      const s = stats[statsKey];
+                      const isHighest = grandTotal > 0 && key === activePersonaKey;
 
                       const rowStyle = isHighest
                         ? `style="background-color: ${getColorValue(COLORS.primary[10] || '#f5f3ff')};"`
