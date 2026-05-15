@@ -206,7 +206,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     prUpdatedAt = null,
     logState,
     year,
-    title
+    title,
+    prCreatedAt = null
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
 
@@ -243,6 +244,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 
       function isCommitByUser(c) {
         try {
+          // --- Ignore stale historical commits from wrong base branches ---
+          if (prCreatedAt && new Date(c.commit?.author?.date) < new Date(prCreatedAt)) {
+            return false;
+          }
+
           const lowerUsername = username.toLowerCase();
           const commitMessage = c.commit?.message || '';
           const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
@@ -456,7 +462,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           pr.updated_at,
           logState,
           year,
-          pr.title
+          pr.title,
+          pr.created_at
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
@@ -574,7 +581,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           item.updated_at,
           logState,
           year,
-          item.title
+          item.title,
+          item.created_at
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
