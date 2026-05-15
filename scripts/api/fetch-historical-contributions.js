@@ -206,7 +206,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     prUpdatedAt = null,
     logState,
     year,
-    title
+    title,
+    prCreatedAt = null
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
 
@@ -243,6 +244,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
 
       function isCommitByUser(c) {
         try {
+          // --- Ignore stale historical commits from wrong base branches ---
+          if (prCreatedAt && new Date(c.commit?.author?.date) < new Date(prCreatedAt)) {
+            return false;
+          }
+
           const lowerUsername = username.toLowerCase();
           const commitMessage = c.commit?.message || '';
           const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
@@ -456,7 +462,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
           pr.updated_at,
           logState,
           year,
-          pr.title
+          pr.title,
+          pr.created_at
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
@@ -562,6 +569,45 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       let hasReview = false;
       let hasCommits = false;
 
+      // 1. Independent Check: Is it a co-authored PR?
+      if (item.pull_request) {
+        let mergedAt = item.pull_request.merged_at || null;
+        const commitDetails = await getFirstCommitDetails(
+          owner,
+          repoName,
+          item.number,
+          GITHUB_USERNAME,
+          commitCache,
+          item.updated_at,
+          logState,
+          year,
+          item.title,
+          item.created_at
+        );
+
+        if (commitDetails && commitDetails.firstCommitDate) {
+          hasCommits = true;
+          const daysDiff = Math.round(
+            (new Date(commitDetails.firstCommitDate) - new Date(item.created_at)) /
+              (1000 * 60 * 60 * 24)
+          );
+          contributions.coAuthoredPrs.push({
+            title: item.title,
+            url: item.html_url,
+            repo: `${owner}/${repoName}`,
+            date: commitDetails.firstCommitDate,
+            createdAt: item.created_at,
+            firstCommitDate: commitDetails.firstCommitDate,
+            firstCommitPeriod: daysDiff + (daysDiff === 1 ? ' day' : ' days'),
+            commitCount: commitDetails.commitCount,
+            mergedAt,
+            state: item.state,
+          });
+          seenUrls.coAuthoredPrs.add(item.html_url);
+        }
+      }
+
+      // 2. Independent Check: Is it a reviewed PR?
       if (item.pull_request && !uniqueReviewedPrs.has(item.html_url)) {
         const myFirstReviewDate = await getPrMyFirstReviewDate(
           owner,
@@ -601,6 +647,7 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         }
       }
 
+      // 3. Fallback: Only categorize as a pure collaboration if no commits AND no reviews were found
       if (!hasCommits && !hasReview) {
         const firstCommentDate = await getFirstCommentDate(
           item.comments_url,
