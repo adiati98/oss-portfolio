@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.1] - 2026-05-15
+
+### Fixed
+
+- **Co-Authored and Reviewed PR Separation**: Updated the loop evaluating user contributions to treat co-authored commit checks and review status checks as independent tracking paths. A PR can now correctly appear in both categories if both criteria match, and it will only fall back to Collaborations if neither is met.
+- **Pre-Creation Commit Filtering**: Fixed an issue where pulling down a PR targeted at a non-default base branch inherited old historical commits from previous years. Added strict date matching against the creation date of the PR (`prCreatedAt`) to prevent stale commits from forcing incorrect quarterly placement or causing negative timeline calculations.
+
 ## [2.8.0] - 2026-05-14
 
 ### Added
@@ -19,8 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Refined Bot Categorization**: Updated logic to filter bot-authored Pull Requests. Contributions are now only categorized under Collaborations if a manual comment exists or if the Pull Request includes human reviews, maintaining a distinction between human-led and automated workflows.
-- **URL Transformation**: Implemented logic to convert GitHub API endpoints back into standard user-facing repository and Pull Request URLs for logged failures.
+- **Refined Bot Categorization**: Updated logic to filter bot-authored PRs. Contributions are now only categorized under Collaborations if a manual comment exists or if the PR includes human reviews, maintaining a distinction between human-led and automated workflows.
+- **URL Transformation**: Implemented logic to convert GitHub API endpoints back into standard user-facing repository and PR URLs for logged failures.
 - **Enhanced Merge Logic**: Updated date handling to fallback to `closedAt` if `mergedAt` is missing, ensuring accurate chronological placement and "RECORDED" badge assignment for inaccessible items.
 - **Failover Efficiency**: 
     - Updated fetch helpers to fail silently after logging, preventing script crashes during high-volume API requests.
@@ -101,7 +108,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Linked Issue Deduplication**: Implemented logic to parse Pull Request descriptions for "closes/fixes" keywords. Issues linked to open PRs are now automatically removed from the "To do issues" section to prevent redundancy in the Workbench.
+- **Linked Issue Deduplication**: Implemented logic to parse PR descriptions for "closes/fixes" keywords. Issues linked to open PRs are now automatically removed from the "To do issues" section to prevent redundancy in the Workbench.
 - **Priority-Based Sorting**: Reorganized the Active Workbench layout to prioritize "To-do" tasks (Issues and Manual Reviews) at the top, followed by "Ongoing" work and "Bot" requests.
 
 ### Changed
@@ -114,7 +121,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Review Deduplication**: Implemented a priority check to ensure "Review in progress" takes precedence over "Request review" if both statuses are returned by the GitHub API.
-- **Execution Order**: Adjusted the main data orchestration sequence to ensure Pull Request data is available before processing issue exclusions.
+- **Execution Order**: Adjusted the main data orchestration sequence to ensure PR data is available before processing issue exclusions.
 
 ## [2.4.1] - 2026-04-28
 
@@ -128,7 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Co-authored Pull Request Tracking**: Introduced logic to detect and display ongoing Pull Requests in external repositories where the user is a co-author, ensuring collaborative contributions are visible.
+- **Co-authored PR Tracking**: Introduced logic to detect and display ongoing PRs in external repositories where the user is a co-author, ensuring collaborative contributions are visible.
 - **Task Prioritization UI**: Standardized the Active Workbench color scheme to improve visual hierarchy. All ongoing work now uses a clean **Cyan** theme, while manual actions (Issues and Review Requests) utilize a high-contrast **Orange** "To Do" theme.
 
 ### Changed
@@ -147,10 +154,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **Authored Pull Request Tracking**: Introduced `fetchOngoingAuthoredPrs` to monitor open Pull Requests authored by the user in external repositories.
+- **Authored PR Tracking**: Introduced `fetchOngoingAuthoredPrs` to monitor open PRs authored by the user in external repositories.
 - **Workbench UI Hierarchy**: Implemented a new layout for the Active Workbench, positioning status indicators under the repository name.
-- **Draft Support**: Added logic to `fetchOngoingReviews` and authored Pull Requests to detect and display "Draft" status.
-- **Pending Merge Status**: Added logic to detect and display "Pending Merge" status for approved Pull Requests with the specific `pending-pr-merge` label.
+- **Draft Support**: Added logic to `fetchOngoingReviews` and authored PRs to detect and display "Draft" status.
+- **Pending Merge Status**: Added logic to detect and display "Pending Merge" status for approved PRs with the specific `pending-pr-merge` label.
 - **Blocked State Tracking**: Introduced detection for "Blocked" or "Stalled" work based on repository labels.
 - **Status Indicators**: Added visual indicators (Status Dots) and conditional row highlighting for Draft, Pending Merge, and Blocked states.
 
