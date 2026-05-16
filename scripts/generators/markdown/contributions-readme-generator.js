@@ -76,50 +76,51 @@ async function createStatsReadme(finalContributions, articles = []) {
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
 
-  const maxCount = Math.max(
-    prCount,
-    issueCount,
-    reviewedPrCount,
-    collaborationCount,
-    coAuthoredPrCount
-  );
-
-  // 2. Persona Logic
-  const { title: personaTitle, desc: personaDesc } = determinePersona({
+  const countsDict = {
     prCount,
     issueCount,
     reviewedPrCount,
     coAuthoredPrCount,
     collaborationCount,
-  });
+  };
+
+  // 2. Persona Logic
+  const chosenPersona = determinePersona(countsDict);
+  const { title: personaTitle, desc: personaDesc, key: activePersonaKey } = chosenPersona;
 
   const lowerDesc = personaDesc.charAt(0).toLowerCase() + personaDesc.slice(1);
   const firstLetter = lowerDesc.charAt(0);
   const article = ['a', 'e', 'i', 'o', 'u'].includes(firstLetter) ? 'An' : 'A';
 
   // 3. Stats Helper
-  const getStats = (count) => {
+  const getStats = (count, key) => {
     const BAR_WIDTH = 30;
     if (grandTotal === 0)
-      return { pct: '0.0%', count: '0', bar: generateProgressBar(0, 0, BAR_WIDTH) };
+      return {
+        pct: '0.0%',
+        count: '0',
+        bar: generateProgressBar(0, 0, BAR_WIDTH),
+        categoryLabel: '',
+      };
 
     const pctVal = (count / grandTotal) * 100;
-    const isMax = count === maxCount && count > 0;
+    const isHighest = grandTotal > 0 && key === activePersonaKey;
     const pctStr = pctVal.toFixed(1) + '%';
 
     return {
-      pct: isMax ? `**${pctStr}**` : pctStr,
-      count: isMax ? `**${count}**` : count,
+      pct: isHighest ? `**${pctStr}**` : pctStr,
+      count: isHighest ? `**${count}**` : count,
       bar: generateProgressBar(count, grandTotal, BAR_WIDTH),
+      isHighest,
     };
   };
 
   const stats = {
-    prs: getStats(prCount),
-    issues: getStats(issueCount),
-    reviews: getStats(reviewedPrCount),
-    coauth: getStats(coAuthoredPrCount),
-    collab: getStats(collaborationCount),
+    prs: getStats(prCount, 'prCount'),
+    issues: getStats(issueCount, 'issueCount'),
+    reviews: getStats(reviewedPrCount, 'reviewedPrCount'),
+    coauth: getStats(coAuthoredPrCount, 'coAuthoredPrCount'),
+    collab: getStats(collaborationCount, 'collaborationCount'),
   };
 
   // 4. Aggregate Repository Activity
@@ -215,7 +216,7 @@ async function createStatsReadme(finalContributions, articles = []) {
 
     group.items.forEach((item) => {
       const rawNote = item.entryMethod || item.howItIsCalculated || item.source || '';
-      
+
       const tableSafeNote = personalize(rawNote)
         .trim()
         .replace(/\n/g, '<br>')
@@ -260,11 +261,11 @@ Organized by year and quarter, these reports track contributions made by **[${GI
 
 | Category | Progress | Count | Percentage |
 | :--- | :--- | :--- | :--- |
-| **Merged PRs** | \`${stats.prs.bar}\` | ${stats.prs.count} | ${stats.prs.pct} |
-| **Issues** | \`${stats.issues.bar}\` | ${stats.issues.count} | ${stats.issues.pct} |
-| **Reviewed PRs** | \`${stats.reviews.bar}\` | ${stats.reviews.count} | ${stats.reviews.pct} |
-| **Co-Authored PRs** | \`${stats.coauth.bar}\` | ${stats.coauth.count} | ${stats.coauth.pct} |
-| **Collaborations** | \`${stats.collab.bar}\` | ${stats.collab.count} | ${stats.collab.pct} |
+| ${stats.prs.isHighest ? '**Merged PRs**' : 'Merged PRs'} | \`${stats.prs.bar}\` | ${stats.prs.count} | ${stats.prs.pct} |
+| ${stats.issues.isHighest ? '**Issues**' : 'Issues'} | \`${stats.issues.bar}\` | ${stats.issues.count} | ${stats.issues.pct} |
+| ${stats.reviews.isHighest ? '**Reviewed PRs**' : 'Reviewed PRs'} | \`${stats.reviews.bar}\` | ${stats.reviews.count} | ${stats.reviews.pct} |
+| ${stats.coauth.isHighest ? '**Co-Authored PRs**' : 'Co-Authored PRs'} | \`${stats.coauth.bar}\` | ${stats.coauth.count} | ${stats.coauth.pct} |
+| ${stats.collab.isHighest ? '**Collaborations**' : 'Collaborations'} | \`${stats.collab.bar}\` | ${stats.collab.count} | ${stats.collab.pct} |
 
 ### 🎯 Primary Focus Projects
 
