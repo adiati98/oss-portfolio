@@ -463,8 +463,7 @@ ${navHtmlForReports}
                 aria-label="${accessibleLabel}"
                 class="search-input w-full border rounded-md 
                 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                style="border-color: ${getColorValue(COLORS.primary)}; 
-                focus:border-color: ${getColorValue(COLORS.primary[15])};focus:ring-color: ${getColorValue(COLORS.primary[25])};"
+                style="border-color: ${getColorValue(COLORS.primary)};"
               />
             </div>
 
