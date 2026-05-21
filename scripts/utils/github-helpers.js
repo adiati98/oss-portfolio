@@ -14,9 +14,19 @@ function getLinkedIssueNumbers(prBody) {
 
 /**
  * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
+ * Merges timeline processing with explicit fallback comment checking to guarantee review replies are caught.
  */
 async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpdatedAt) {
+  let fallbackActivity = {
+    lastActor: null,
+    isLastActorBot: false,
+    hasFormalReview: false,
+    reviewState: null,
+    lastSubstantiveDate: prMainUpdatedAt,
+  };
+
   try {
+    // 1. Initial Timeline & Review Parsing
     const [timelineResp, reviewsResp] = await Promise.all([
       axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/timeline?per_page=100`),
       axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`),
@@ -27,7 +37,6 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
 
     const substantiveEvents = timeline.filter((e) => {
       const type = e.event;
-
       if (
         [
           'review_requested',
@@ -40,13 +49,10 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
       ) {
         return false;
       }
-
       if (type === 'commented' || type === 'reviewed') return true;
-
       if (type === 'committed') {
         return !/Merge (branch|remote-tracking|pull request)|#\d+ from/i.test(e.message || '');
       }
-
       return false;
     });
 
@@ -76,22 +82,70 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
       .filter((r) => r.state !== 'COMMENTED')
       .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0];
 
-    return {
+    fallbackActivity = {
       lastActor,
       isLastActorBot,
       hasFormalReview: reviews.length > 0,
       reviewState: latestReview ? latestReview.state : null,
       lastSubstantiveDate,
     };
+
+    // 2. Explicit Substantive Activity Augmentation (The fix for review replies)
+    const [commentsResp, reviewCommentsResp, explicitReviewsResp] = await Promise.all([
+      axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/comments?per_page=100`),
+      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/comments?per_page=100`),
+      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews?per_page=100`),
+    ]);
+
+    let timelineItems = [];
+
+    commentsResp.data.forEach((c) => {
+      if (c.user) {
+        timelineItems.push({
+          date: new Date(c.created_at),
+          login: c.user.login,
+          isBot: c.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(c.user.login),
+        });
+      }
+    });
+
+    reviewCommentsResp.data.forEach((c) => {
+      if (c.user) {
+        timelineItems.push({
+          date: new Date(c.created_at),
+          login: c.user.login,
+          isBot: c.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(c.user.login),
+        });
+      }
+    });
+
+    explicitReviewsResp.data.forEach((r) => {
+      if (r.user && r.submitted_at) {
+        timelineItems.push({
+          date: new Date(r.submitted_at),
+          login: r.user.login,
+          isBot: r.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(r.user.login),
+        });
+      }
+    });
+
+    timelineItems.sort((a, b) => b.date - a.date);
+
+    if (timelineItems.length > 0) {
+      const latest = timelineItems[0];
+      return {
+        lastActor: latest.login,
+        isLastActorBot: latest.isBot,
+        hasFormalReview: fallbackActivity.hasFormalReview || explicitReviewsResp.data.length > 0,
+        reviewState: fallbackActivity.reviewState,
+        lastSubstantiveDate: latest.date.toISOString(),
+      };
+    }
   } catch (e) {
-    return {
-      lastActor: null,
-      isLastActorBot: false,
-      hasFormalReview: false,
-      reviewState: null,
-      lastSubstantiveDate: prMainUpdatedAt,
-    };
+    // Fall back safely if any step fails
   }
+
+  return fallbackActivity;
 }
 
 module.exports = {
