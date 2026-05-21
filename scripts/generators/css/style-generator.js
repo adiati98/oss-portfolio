@@ -395,6 +395,17 @@ function getReportStyleCss() {
       pointer-events: none;
     }
 
+    .search-input {
+      border-color: ${COLORS.primary.rgb};
+      transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+    .search-input:focus,
+    .search-input:focus-visible {
+      border-color: ${COLORS.primary[15]} !important;
+      box-shadow: 0 0 0 1px ${COLORS.primary[25]};
+      outline: none;
+    }
+
     @media (max-width: 400px) {
       summary .text-xl {
         font-size: 1.1rem !important;

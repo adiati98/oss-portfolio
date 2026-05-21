@@ -287,30 +287,43 @@ async function createCommunityHtml(
 
           const subDate = task.lastSubstantiveDate || task.updatedAt;
 
+          let statusColumnHtml = '';
+          if (ballStatus) {
+            const isApproved = ballStatus.label === 'APPROVED' || ballStatus.label === 'Approved';
+
+            const dotHtml = isApproved
+              ? ''
+              : `<div class="w-2 h-2 rounded-full shrink-0" style="background-color: ${ballStatus.dot || ballStatus.bg || getColorValue(COLORS.status.green.bg)};"></div>`;
+
+            const textColorStyle = isApproved
+              ? `color: ${getColorValue(COLORS.text.main || '#0f172a')};`
+              : `color: ${ballStatus.text || ballStatus.color || getColorValue(COLORS.status.green.text)};`;
+
+            const wrapperPaddingClass = isApproved ? 'pl-4' : '';
+
+            statusColumnHtml = dedent`
+              <td class="px-6 py-4 vertical-align-top w-[180px]">
+                <div class="flex flex-col items-start justify-center text-left ${wrapperPaddingClass}">
+                  <div class="flex items-center gap-2">
+                    ${dotHtml}
+                    <span class="text-[11px] font-black uppercase tracking-wider whitespace-nowrap text-left" style="${textColorStyle}">
+                      ${ballStatus.label}
+                    </span>
+                  </div>
+                  <span class="text-[11px] text-slate-400 font-bold ml-4 mt-0.5 uppercase tracking-tight text-left">
+                    ${ballStatus.child}
+                  </span>
+                </div>
+              </td>
+            `;
+          }
+
           return dedent`
             <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" 
                 data-status="${ballStatus?.label.toLowerCase() || ''}" 
                 data-date="${subDate}"
                 data-repo="${repoName.toLowerCase()}">
-              ${
-                ballStatus
-                  ? dedent`
-                <td class="px-6 py-4 vertical-align-top w-[180px]">
-                  <div class="flex flex-col">
-                    <div class="flex items-center gap-2">
-                      <div class="w-2 h-2 rounded-full shrink-0" style="background-color: ${ballStatus.dot};"></div>
-                      <span class="text-[11px] font-black uppercase tracking-wider whitespace-nowrap" style="color: ${ballStatus.text};">
-                        ${ballStatus.label}
-                      </span>
-                    </div>
-                    <span class="text-[11px] text-slate-400 font-bold ml-4 mt-0.5 uppercase tracking-tight">
-                      ${ballStatus.child}
-                    </span>
-                  </div>
-                </td>
-              `
-                  : ''
-              }
+              ${statusColumnHtml}
               <td class="px-6 py-4 vertical-align-top ${ballStatus ? 'w-1/4' : 'w-1/3'}">
                 <div class="flex flex-col items-start">
                   <span class="text-sm font-semibold text-slate-500">${repoName}</span>
@@ -330,26 +343,27 @@ async function createCommunityHtml(
         })
         .join('');
 
+      const tableHeaderStatusHtml =
+        type === 'ongoing'
+          ? dedent`
+            <th scope="col" class="px-6 py-3 text-left">
+              <button type="button" 
+                      class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+                      onclick="sortWorkbenchTable(this.parentElement, ${index})"
+                      onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
+                Status
+                <span class="sort-icon ml-1" aria-hidden="true">↕</span>
+              </button>
+            </th>`
+          : '';
+
       sectionContent = dedent`
         <div class="overflow-x-auto">
           <div class="min-w-[600px]">
             <table class="min-w-full" id="workbench-table-${index}">
               <thead class="bg-slate-50/80 border-b border-slate-100">
                 <tr>
-                  ${
-                    type === 'ongoing'
-                      ? dedent`
-                    <th scope="col" class="px-6 py-3 text-left">
-                      <button type="button" 
-                              class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
-                              onclick="sortWorkbenchTable(this.parentElement, ${index})"
-                              onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
-                        Status
-                        <span class="sort-icon ml-1" aria-hidden="true">↕</span>
-                      </button>
-                    </th>`
-                      : ''
-                  }
+                  ${tableHeaderStatusHtml}
                   <th scope="col" class="px-6 py-3 text-left">
                     <button type="button" 
                             class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
