@@ -212,6 +212,19 @@
         pointer-events: none;
       }
 
+      .search-input {
+        border-color: rgb(67, 56, 202);
+        transition:
+          border-color 0.15s ease-in-out,
+          box-shadow 0.15s ease-in-out;
+      }
+      .search-input:focus,
+      .search-input:focus-visible {
+        border-color: rgba(67, 56, 202, 0.15) !important;
+        box-shadow: 0 0 0 1px rgba(67, 56, 202, 0.25);
+        outline: none;
+      }
+
       @media (max-width: 400px) {
         summary .text-xl {
           font-size: 1.1rem !important;
@@ -705,8 +718,7 @@
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Merged PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
 
@@ -1317,8 +1329,7 @@
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Issues"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
 
@@ -1765,8 +1776,7 @@
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Reviewed PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
 
@@ -2010,8 +2020,7 @@
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Co-Authored PRs"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
 
@@ -2236,8 +2245,7 @@
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Collaborations"
                     class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202);
-              focus:border-color: rgba(67, 56, 202, 0.15);focus:ring-color: rgba(67, 56, 202, 0.25);"
+                    style="border-color: rgb(67, 56, 202)"
                   />
                 </div>
 
