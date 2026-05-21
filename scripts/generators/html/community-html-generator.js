@@ -138,6 +138,7 @@ async function createCommunityHtml(
       return { ...WORKBENCH_BALL_STATUS.stale, child: `${Math.floor(diffDays)} days` };
     }
 
+    // 2. Normalization
     const rawLastActor =
       task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
 
