@@ -223,6 +223,8 @@ async function createCommunityHtml(
     const randomMsg =
       WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
 
+    const tableIndexStr = String(index);
+
     let sectionContent;
 
     if (count > 0) {
@@ -367,8 +369,8 @@ async function createCommunityHtml(
                   <th scope="col" class="px-6 py-3 text-left">
                     <button type="button" 
                             class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
-                            onclick="sortWorkbenchTable(this.parentElement, ${index}, 'repo')"
-                            onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}, 'repo'); }">
+                            onclick="sortWorkbenchTable(this.parentElement, ${tableIndexStr}, 'repo')"
+                            onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${tableIndexStr}, 'repo'); }">
                       Repository
                       <span class="sort-icon ml-1" aria-hidden="true">↕</span>
                     </button>
