@@ -516,11 +516,11 @@ ${navHtmlForReports}
             : `${rowBg} table-row-hover`;
           tableContent += `   <tr class="${rowClass}" style="transition: background-color 0.15s ease-in-out;">\n`;
 
-          // No. column (not sortable).
-          tableContent += `    <td>${counter++}.</td>\n`;
+          // No. column (not sortable). Colored to match the PR title link text for contrast.
+          tableContent += `    <td class="text-blue-600 dark:text-blue-300">${counter++}.</td>\n`;
 
-          // Repo column (String type).
-          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded">${item.repo}</span>`;
+          // Repo column (String type). Text color paired with its background for WCAG-compliant contrast in both themes.
+          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded">${item.repo}</span>`;
           tableContent += `    <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`;
 
           // Title column (String type, contains hyperlink).
