@@ -34,6 +34,7 @@
     "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": null,
+    "approvedBy": null,
     "lastSubstantiveDate": "2026-06-25T15:46:27.000Z",
     "author": "promptless-for-oss",
     "body": "[Open this suggestion in Promptless to view citations and reasoning process](https://app.gopromptless.ai/suggestions/5a615069-6e81-4698-98d0-f35dcf904138)\n\nAdds a note to the Contacts API documentation explaining that Mautic only treats `null` and empty strings as empty values. The value `0` (integer or string) is a valid value and will be saved to the field. This clarification helps API developers who need to set numeric fields to zero.\n\n### Trigger Events\n\n<details>\n<summary><a href=\"https://github.com/mautic/mautic/pull/15900\">mautic/mautic PR #15900: fix: use strict comparison for isEmpty to allow saving value 0 in contact fields</a></summary>\n<br>\n\n**Promptless Research** (1 GitHub PR)\n\n- [Reviewed mautic/mautic#15900](https://github.com/mautic/mautic/pull/15900)\n\n**Agent Response**\n\n> I've completed my review of PR #15900 and created a documentation update.\n> \n> ## Summary\n> \n> **PR #15900** fixes a bug where setting a contact field value to `0` (zero) via the REST API was silently ignored. The root cause was PHP's loose comparison treating `0` as an empty value. With the fix, `0` is now correctly saved as a valid value.\n> \n> ## Documentation Update\n> \n> I created a suggestion that adds a clarifying note to the Contacts API documentation explaining:\n> - Only `null` and empty strings (`''`) are treated as empty values\n> - The value `0` (whether integer or string) counts as a valid value and gets saved\n> - This is relevant when using `overwriteWithBlank` or setting numeric fields to zero\n> \n> **Suggestion**: [Clarify that value 0 is valid when setting contact fields via API](https://app.gopromptless.ai/suggestions/5a615069-6e81-4698-98d0-f35dcf904138)\n> \n> **File updated**: `docs/rest_api/contacts.rst`\n> \n> This documentation clarification will help API developers understand the expected behavior when working with numeric contact fields and the `overwriteWithBlank` parameter.\n\n</details>\n\n\n\n---\n\n_Tip: Use labels in the [Promptless dashboard](https://app.gopromptless.ai) to categorize suggestions by release or team 🏷️_"
@@ -73,6 +74,7 @@
     "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": null,
+    "approvedBy": null,
     "lastSubstantiveDate": "2026-04-21T05:55:56.000Z",
     "author": "andersonjeccel",
     "body": "This pull request introduces a new documentation page, \"Navigating and using templates,\" which help developers understand views, platform templates, and organizational standards.\r\n\r\n- where to find\r\n- how to name them\r\n- finding templates"
@@ -112,6 +114,7 @@
     "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": "CHANGES_REQUESTED",
+    "approvedBy": null,
     "lastSubstantiveDate": "2026-06-24T11:07:32.000Z",
     "author": "dcjarvis",
     "body": "Added descriptions for campaign import and campaign export.\r\n"
@@ -151,6 +154,7 @@
     "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": "APPROVED",
+    "approvedBy": "RCheesley",
     "lastSubstantiveDate": "2026-03-19T10:41:32.000Z",
     "author": "beetofly",
     "body": "### Add an overview of local.php file based on a mautic 4.4.6 instance\r\n\r\nWe at Leuchtfeuer created this local.php overview as a proposal for the user documentation of mautic 4.\r\nThe impulse to create such an overview for mautic 4 was made by Sven Döring.\r\nSven Döring offered and did already the first proofreading/review. \r\n\r\nThanks a lot for that to Sven Döring.\r\n\r\nSo this PR Version has passed one time proofreading/review, but needs more by the community.\r\n\r\nWe would be glad, if somebody can do the additional review, so that it maybe could be part of the user documentation for mautic 4. \r\n \r\n\r\n"
