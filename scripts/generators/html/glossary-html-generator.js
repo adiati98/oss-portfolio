@@ -9,6 +9,7 @@ const { COLORS, FAVICON_SVG_ENCODED } = require('../../config/constants');
 const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
 const { getColorValue } = require('../../utils/color-helpers');
 const { getGlossaryStyleCss } = require('../css/style-generator');
+const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 async function createGlossaryHtml() {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -33,11 +34,14 @@ async function createGlossaryHtml() {
         // 3. List items: Wrap lines starting with '*' or '-' in <li>
         .replace(
           /^\s*[*|-]\s+(.*)$/gm,
-          '<li class="ml-4 list-disc list-inside text-indigo-600">$1</li>'
+          '<li class="ml-4 list-disc list-inside text-indigo-600 dark:text-indigo-300">$1</li>'
         )
 
         // 4. Wrap <li> groups in <ul>
-        .replace(/(<li.*?>.*?<\/li>)+/g, '<ul class="my-3 space-y-1 text-indigo-600">$1</ul>')
+        .replace(
+          /(<li.*?>.*?<\/li>)+/g,
+          '<ul class="my-3 space-y-1 text-indigo-600 dark:text-indigo-300">$1</ul>'
+        )
 
         // 5. Cleanup
         .replace(/<\/ul>\s+/g, '</ul>')
@@ -66,21 +70,21 @@ async function createGlossaryHtml() {
 
           return dedent`
             <div id="${item.id}" class="mb-16 last:mb-0">
-              <h3 style="color: ${getColorValue(COLORS.primary)}; border-bottom: 2px solid ${getColorValue(COLORS.primary[15])};" 
+              <h3 style="color: ${getColorValue(COLORS.primaryText)}; border-bottom: 2px solid ${getColorValue(COLORS.primary[15])};"
                   class="text-xl font-extrabold mb-6 pb-2 inline-block">
                 ${item.title}
               </h3>
               
               <div class="space-y-6">
-                <p class="text-lg text-slate-600 leading-relaxed">
+                <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
                   ${description}
                 </p>
-                
+
                 <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
-                  <span class="block text-xs uppercase tracking-widest text-slate-400 mb-3 font-black font-mono">
+                  <span class="block text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3 font-black font-mono">
                     ${label}
                   </span>
-                  <div class="text-sm text-indigo-600 leading-relaxed">
+                  <div class="text-sm text-indigo-600 dark:text-indigo-300 leading-relaxed">
                     ${processedNote}
                   </div>
                 </div>
@@ -93,10 +97,10 @@ async function createGlossaryHtml() {
       return dedent`
         <section id="${group.id}" class="mb-24 last:mb-0">
           <div class="mb-10">
-            <h2 style="color: ${getColorValue(COLORS.primary)};" class="text-3xl sm:text-4xl font-black mb-2">
+            <h2 style="color: ${getColorValue(COLORS.primaryText)};" class="text-3xl sm:text-4xl font-black mb-2">
               ${group.title}
             </h2>
-            <p class="text-slate-500 text-lg font-medium italic">${processText(group.description)}</p>
+            <p class="text-slate-500 dark:text-slate-400 text-lg font-medium italic">${processText(group.description)}</p>
           </div>
           <div class="space-y-2">
             ${itemsHtml}
@@ -114,19 +118,21 @@ async function createGlossaryHtml() {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Glossary | ${GITHUB_USERNAME} OSS Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+      ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      ${getThemeStyleVariant()}
       <style>${glossaryCss}</style>
     </head>
-    <body class="bg-white antialiased flex flex-col h-full min-h-full">
+    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+              <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 ${GLOSSARY_CONTENT.title}
               </h1>
-              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600">
+              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600 dark:text-slate-300">
                 ${processText(GLOSSARY_CONTENT.subtitle)}
               </p>
             </header>

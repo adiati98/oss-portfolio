@@ -23,7 +23,7 @@ function createFooterHtml() {
         &copy; ${currentYear} 
         <a href="https://github.com/${GITHUB_USERNAME}" 
            target="_blank" 
-           style="color: ${COLORS.primary.rgb};"
+           style="color: ${COLORS.primaryText};"
            class="hover:opacity-80 font-semibold transition duration-150">
             ${GITHUB_USERNAME}
         </a>'s open source contributions, 
@@ -32,7 +32,7 @@ function createFooterHtml() {
 
       <div class="text-xs mt-1">
           Made with 💙 by 
-          <a href="https://github.com/adiati98" target="_blank" style="color: ${COLORS.primary.rgb};" class="hover:opacity-80 font-semibold transition duration-150">
+          <a href="https://github.com/adiati98" target="_blank" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold transition duration-150">
               Ayu Adiati
           </a>
       </div>

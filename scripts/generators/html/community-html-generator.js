@@ -16,6 +16,7 @@ const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-message
 const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 /**
  * Generates the Community & Activity HTML page.
@@ -41,15 +42,15 @@ async function createCommunityHtml(
   const achievementCards = rolesData.achievements
     .map(
       (ach) => dedent`
-        <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:border-indigo-400 transition-colors duration-200 flex flex-col items-center text-center">
-          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${getColorValue(COLORS.primary[10]) || '#f0f7ff'}; color: ${getColorValue(COLORS.primary)};">
+        <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-400 transition-colors duration-200 flex flex-col items-center text-center">
+          <div class="p-3 rounded-full mb-4 shrink-0" style="background-color: ${getColorValue(COLORS.primary[10]) || '#f0f7ff'}; color: ${getColorValue(COLORS.primaryText)};">
             ${SPARKLES_SVG}
           </div>
           <div class="flex flex-col items-center gap-3">
-            <h3 class="text-lg font-black leading-tight text-center" style="color: ${getColorValue(COLORS.primary)};">
+            <h3 class="text-lg font-black leading-tight text-center" style="color: ${getColorValue(COLORS.primaryText)};">
               ${ach.title}
             </h3>
-            <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 text-slate-600 border border-slate-200 text-center">
+            <div class="inline-flex items-center justify-center h-auto min-h-7 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 text-center">
               ${sanitizeAttribute(ach.org)} <span class="mx-2 opacity-40" aria-hidden="true">|</span> ${ach.year}
             </div>
           </div>
@@ -72,7 +73,7 @@ async function createCommunityHtml(
         ? getColorValue(COLORS.status.green.text)
         : getColorValue(COLORS.text.muted);
 
-      const brandColor = getColorValue(COLORS.primary);
+      const brandColor = getColorValue(COLORS.primaryText);
 
       const orgDisplay = role.orgUrl
         ? dedent`
@@ -81,14 +82,14 @@ async function createCommunityHtml(
              style="color: ${brandColor}; text-decoration-color: ${brandColor};">
             ${sanitizeAttribute(role.org)}
           </a>`
-        : `<span class="text-slate-700">${sanitizeAttribute(role.org)}</span>`;
+        : `<span class="text-slate-700 dark:text-slate-200">${sanitizeAttribute(role.org)}</span>`;
 
       return dedent`
-        <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 last:border-0 transition-colors gap-3">
+        <div class="table-row-hover flex flex-col xl:flex-row xl:items-center justify-between p-4 border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors gap-3">
           <div class="flex items-start xl:items-center space-x-3 pr-2">
             <div class="w-2.5 h-2.5 rounded-full shrink-0 mt-1.5 xl:mt-0" style="background-color: ${bulletColor};" aria-hidden="true"></div>
             <div>
-              <h3 class="font-bold text-slate-900 leading-tight text-base sm:text-lg">${role.title}</h3>
+              <h3 class="font-bold text-slate-900 dark:text-slate-100 leading-tight text-base sm:text-lg">${role.title}</h3>
               <p class="text-sm sm:text-base font-medium">${orgDisplay}</p>
             </div>
           </div>
@@ -97,7 +98,7 @@ async function createCommunityHtml(
                   style="background-color: ${statusBg}; color: ${statusColor};">
               ${isActive ? 'Active' : 'Past'}
             </span>
-            <span class="text-sm font-mono text-slate-500 leading-tight">${role.period}</span>
+            <span class="text-sm font-mono text-slate-500 dark:text-slate-400 leading-tight">${role.period}</span>
           </div>
         </div>
       `;
@@ -184,9 +185,9 @@ async function createCommunityHtml(
   function renderStatusIndicator(type) {
     const configs = {
       draft: {
-        bg: getColorValue(COLORS.gray[10]),
-        text: getColorValue(COLORS.gray[600]),
-        border: getColorValue(COLORS.gray[200]),
+        bg: getColorValue(WORKBENCH_STATUS_COLORS.draft.bg),
+        text: getColorValue(WORKBENCH_STATUS_COLORS.draft.text),
+        border: getColorValue(WORKBENCH_STATUS_COLORS.draft.border),
         label: 'Draft',
       },
       pending: {
@@ -207,8 +208,8 @@ async function createCommunityHtml(
     if (!config) return '';
 
     return dedent`
-      <div class="inline-flex items-center px-2 py-0.5 mt-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border" 
-           style="background-color: ${config.bg}; color: ${config.text}; border-color: ${config.border}33;">
+      <div class="inline-flex items-center px-2 py-0.5 mt-1.5 rounded-full text-[11px] font-bold uppercase tracking-wider border"
+           style="background-color: ${config.bg}; color: ${config.text}; border-color: ${config.border};">
         ${config.label}
       </div>`;
   }
@@ -298,7 +299,7 @@ async function createCommunityHtml(
               : `<div class="w-2 h-2 rounded-full shrink-0" style="background-color: ${ballStatus.dot || ballStatus.bg || getColorValue(COLORS.status.green.bg)};"></div>`;
 
             const textColorStyle = isApproved
-              ? `color: ${getColorValue(COLORS.text.main || '#0f172a')};`
+              ? `color: ${getColorValue(COLORS.text.primary)};`
               : `color: ${ballStatus.text || ballStatus.color || getColorValue(COLORS.status.green.text)};`;
 
             const wrapperPaddingClass = isApproved ? 'pl-4' : '';
@@ -312,7 +313,7 @@ async function createCommunityHtml(
                       ${ballStatus.label}
                     </span>
                   </div>
-                  <span class="text-[11px] text-slate-400 font-bold ml-4 mt-0.5 uppercase tracking-tight text-left">
+                  <span class="text-[11px] text-slate-400 dark:text-slate-500 font-bold ml-4 mt-0.5 uppercase tracking-tight text-left">
                     ${ballStatus.child}
                   </span>
                 </div>
@@ -321,23 +322,23 @@ async function createCommunityHtml(
           }
 
           return dedent`
-            <tr class="table-row-hover border-b border-slate-100 last:border-0 transition-colors" 
+            <tr class="table-row-hover border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors" 
                 data-status="${ballStatus?.label.toLowerCase() || ''}" 
                 data-date="${subDate}"
                 data-repo="${repoName.toLowerCase()}">
               ${statusColumnHtml}
               <td class="px-6 py-4 vertical-align-top ${ballStatus ? 'w-1/4' : 'w-1/3'}">
                 <div class="flex flex-col items-start">
-                  <span class="text-sm font-semibold text-slate-500">${repoName}</span>
+                  <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">${repoName}</span>
                   ${statusIndicator}
                 </div>
               </td>
               <td class="px-6 py-4 vertical-align-top">
                 <div class="flex flex-col">
-                  <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primary)};">
+                  <a href="${task.url}" target="_blank" class="hover:underline font-medium text-sm sm:text-base leading-snug" style="color: ${getColorValue(COLORS.primaryText)};">
                     ${task.title}
                   </a>
-                  ${task.commitCount ? `<span class="text-[11px] text-slate-400 mt-1 font-mono uppercase tracking-tighter">${task.commitCount} contributions</span>` : ''}
+                  ${task.commitCount ? `<span class="text-[11px] text-slate-400 dark:text-slate-500 mt-1 font-mono uppercase tracking-tighter">${task.commitCount} contributions</span>` : ''}
                 </div>
               </td>
             </tr>
@@ -350,7 +351,7 @@ async function createCommunityHtml(
           ? dedent`
             <th scope="col" class="px-6 py-3 text-left">
               <button type="button" 
-                      class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+                      class="flex items-center text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
                       onclick="sortWorkbenchTable(this.parentElement, ${index})"
                       onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${index}); }">
                 Status
@@ -363,22 +364,22 @@ async function createCommunityHtml(
         <div class="overflow-x-auto">
           <div class="min-w-[600px]">
             <table class="min-w-full" id="workbench-table-${index}">
-              <thead class="bg-slate-50/80 border-b border-slate-100">
+              <thead class="bg-slate-50/80 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-700">
                 <tr>
                   ${tableHeaderStatusHtml}
                   <th scope="col" class="px-6 py-3 text-left">
                     <button type="button" 
-                            class="flex items-center text-xs font-black text-slate-700 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
+                            class="flex items-center text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"
                             onclick="sortWorkbenchTable(this.parentElement, ${tableIndexStr}, 'repo')"
                             onkeydown="if(event.key==='Enter'||event.key===' '){ event.preventDefault(); sortWorkbenchTable(this.parentElement, ${tableIndexStr}, 'repo'); }">
                       Repository
                       <span class="sort-icon ml-1" aria-hidden="true">↕</span>
                     </button>
                   </th>
-                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 uppercase tracking-widest">Task</th>
+                  <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Task</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100">
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
                 ${rows}
               </tbody>
             </table>
@@ -398,9 +399,9 @@ async function createCommunityHtml(
     const sectionId = `section-${index}`;
 
     return dedent`
-      <details id="${sectionId}" class="mb-6 group border border-slate-200 rounded-xl overflow-hidden shadow-xs bg-white" ${openAttribute}>
+      <details id="${sectionId}" class="mb-6 group border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-xs bg-white dark:bg-slate-800" ${openAttribute}>
         <summary 
-          class="list-none cursor-pointer p-4 bg-slate-50/50 hover:bg-slate-50 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/30 focus-visible:bg-white"
+          class="list-none cursor-pointer p-4 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-slate-50 dark:hover:bg-slate-800/70 transition-all focus:outline-none focus-visible:ring-4 focus-visible:ring-indigo-500/30 focus-visible:bg-white dark:focus-visible:bg-slate-800"
           role="button"
           tabindex="0">
           <div class="flex items-center gap-3">
@@ -411,12 +412,12 @@ async function createCommunityHtml(
               </span>
               <span>${label}</span>
             </span>
-            <span class="ml-auto text-slate-400 group-open:rotate-180 transition-transform duration-200">
+            <span class="ml-auto text-slate-400 dark:text-slate-500 group-open:rotate-180 transition-transform duration-200">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </span>
           </div>
         </summary>
-        <div class="bg-white border-t border-slate-100">
+        <div class="bg-white dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
           ${sectionContent}
         </div>
       </details>
@@ -456,11 +457,11 @@ async function createCommunityHtml(
     : getColorValue(COLORS.status.red.bg);
 
   const badgeTextColor = hasTasks
-    ? getColorValue(COLORS.primary)
+    ? getColorValue(COLORS.primaryText)
     : getColorValue(COLORS.status.red.text);
 
   const badgeBorderColor = hasTasks
-    ? getColorValue(COLORS.primary)
+    ? getColorValue(COLORS.primaryText)
     : getColorValue(COLORS.status.red.text);
 
   const fullHtml = dedent`
@@ -471,29 +472,31 @@ async function createCommunityHtml(
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Community & Activity | ${GITHUB_USERNAME} Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+      ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      ${getThemeStyleVariant()}
       <style>
         ${communityCss}
         details summary::-webkit-details-marker { display:none; }
       </style>
     </head>
-    <body class="bg-white antialiased flex flex-col h-full min-h-full">
+    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+              <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Community & Activity
               </h1>
-              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600">
+              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600 dark:text-slate-300">
                 A showcase of ecosystem honors, dedicated stewardship roles, and real-time maintenance efforts.
               </p>
             </header>
 
             <section class="mb-20" aria-labelledby="milestones-heading">
               <div class="flex flex-col items-center mb-10">
-                <h2 id="milestones-heading" class="text-sm font-black uppercase tracking-[0.4em] text-slate-600 mb-3 text-center">Milestones and Awards</h2>
+                <h2 id="milestones-heading" class="text-sm font-black uppercase tracking-[0.4em] text-slate-600 dark:text-slate-300 mb-3 text-center">Milestones and Awards</h2>
                 <div class="w-16 h-1.5 rounded-full" style="background-color: ${getColorValue(COLORS.primary)};" aria-hidden="true"></div>
               </div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -502,18 +505,18 @@ async function createCommunityHtml(
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-              <section class="lg:col-span-4 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
-                  <h2 class="text-xl font-bold" style="color: ${getColorValue(COLORS.primary)};">Ecosystem Advocacy & Roles</h2>
+              <section class="lg:col-span-4 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-700" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
+                  <h2 class="text-xl font-bold" style="color: ${getColorValue(COLORS.primaryText)};">Ecosystem Advocacy & Roles</h2>
                 </div>
-                <div class="divide-y divide-slate-100">
+                <div class="divide-y divide-slate-100 dark:divide-slate-700">
                   ${rolesItems}
                 </div>
               </section>
 
-              <section class="lg:col-span-8 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="p-6 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
-                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${getColorValue(COLORS.primary)};">
+              <section class="lg:col-span-8 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-center gap-4 mb-6" style="background-color: ${getColorValue(COLORS.primary[10]) || '#eef2ff'};">
+                  <h2 class="text-xl font-bold text-center sm:text-left" style="color: ${getColorValue(COLORS.primaryText)};">
                     Active Workbench
                   </h2>
                   <span class="px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest border text-center transition-all shadow-sm"

@@ -22,6 +22,7 @@ const {
 } = require('../../config/constants');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 /**
  * Generates and writes individual HTML report files for each quarter's contributions.
@@ -142,14 +143,14 @@ async function writeHtmlFiles(groupedContributions) {
     };
 
     const baseClasses =
-      'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200';
+      'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700';
 
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-        <a href="${prevPath}" class="${baseClasses} bg-white nav-report-button text-left" style="color: ${getColorValue(COLORS.primary)};">
-          <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
-          <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primary)};">
+        <a href="${prevPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-left" style="color: ${getColorValue(COLORS.primaryText)};">
+          <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Previous</span>
+          <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primaryText)};">
             ${LEFT_ARROW_SVG}
             <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
           </span>
@@ -164,9 +165,9 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-        <a href="${nextPath}" class="${baseClasses} bg-white nav-report-button text-right" style="color: ${getColorValue(COLORS.primary)};">
-          <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
-          <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primary)};">
+        <a href="${nextPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-right" style="color: ${getColorValue(COLORS.primaryText)};">
+          <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Next</span>
+          <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primaryText)};">
             <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
             ${RIGHT_ARROW_SVG}
           </span>
@@ -236,7 +237,7 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
         `
       )
       .join('');
@@ -321,23 +322,25 @@ async function writeHtmlFiles(groupedContributions) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${quarter} ${year} Report | ${GITHUB_USERNAME} Portfolio</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+  ${getThemeInitScript()}
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  ${getThemeStyleVariant()}
   <style>
     ${dynamicCss}
   </style>
 </head>
-<body class="bg-white antialiased flex flex-col h-full min-h-full">
+<body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
 ${navHtmlForReports}
   <main class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-12 pb-4 border-b-2">
-          <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
-          <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+          <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
+          <p class="text-lg text-gray-500 dark:text-slate-400 mt-2">Open Source Contributions Report</p>
         </header>
 
         <section class="mb-8">
-          <h2 style="border-left-color: ${getColorValue(COLORS.primary)};" class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
+          <h2 style="border-left-color: ${getColorValue(COLORS.primaryText)};" class="text-3xl font-semibold text-gray-800 dark:text-slate-100 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div style="background-color: ${getColorValue(COLORS.primary)};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
             <p class="text-4xl font-extrabold">${totalContributions}</p>
@@ -351,7 +354,7 @@ ${navHtmlForReports}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3">Contribution Breakdown</h3>
+          <h3 class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mt-16 mb-4 border-l-4 border-green-500 dark:border-green-400 pl-3">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             ${[
               {
@@ -387,9 +390,9 @@ ${navHtmlForReports}
             ]
               .map(
                 (item) => `
-              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${getColorValue(COLORS.primary)};">
-                <span class="text-2xl font-bold" style="color: ${getColorValue(COLORS.primary)};">${item.count}</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${getColorValue(COLORS.primaryText)};">
+                <span class="text-2xl font-bold" style="color: ${getColorValue(COLORS.primaryText)};">${item.count}</span>
+                <div class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     ${item.icon}
                   </span>
@@ -403,15 +406,15 @@ ${navHtmlForReports}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">Top 3 Repositories</h3>
-          <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-            <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+          <h3 class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mb-4 border-l-4 border-yellow-500 dark:border-yellow-400 pl-3">Top 3 Repositories</h3>
+          <div class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-lg shadow-sm">
+            <ol class="list-decimal list-inside pl-4 text-gray-600 dark:text-slate-300 space-y-1">
               ${top3Repos}
             </ol>
           </div>
         </section>
 
-        <hr class="my-8 border-gray-200">
+        <hr class="my-8 border-gray-200 dark:border-slate-700">
       
         <section class="space-y-6">
     `;
@@ -432,8 +435,8 @@ ${navHtmlForReports}
       }
 
       // Details tag is used for collapsible sections.
-      htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 rounded-xl p-4 shadow-sm">\n`;
-      htmlContent += ` <summary style="color: ${getColorValue(COLORS.primary)};" class="text-xl font-bold cursor-pointer outline-none">\n`;
+      htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">\n`;
+      htmlContent += ` <summary style="color: ${getColorValue(COLORS.primaryText)};" class="text-xl font-bold cursor-pointer outline-none">\n`;
       htmlContent += `  <div class="inline-flex items-center flex-nowrap gap-2 ml-3" style="vertical-align: middle;">\n`;
       htmlContent += `    <span class="w-6 h-6 flex items-center shrink-0">${sectionInfo.icon}</span>\n`;
       htmlContent += `    <span class="text-xl font-bold whitespace-nowrap">${sectionInfo.title} (${items.length})</span>\n`;
@@ -441,7 +444,7 @@ ${navHtmlForReports}
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
-        htmlContent += `<div class="p-4 text-gray-500 bg-gray-50 rounded-lg">No contributions of this type in this quarter.</div>\n`;
+        htmlContent += `<div class="p-4 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/60 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
         // Search bar with icon styling for the table in the current section.
         const searchInputId = `${sectionInfo.id}-search`;
@@ -452,24 +455,24 @@ ${navHtmlForReports}
           <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
             
             <div class="icon-input-container grow">
-              <div class="input-icon" style="color: ${getColorValue(COLORS.primary)};">
+              <div class="input-icon" style="color: ${getColorValue(COLORS.primaryText)};">
                 ${SEARCH_SVG}
               </div>
               
-              <input 
-                type="text" 
-                id="${searchInputId}" 
-                placeholder="${visualPlaceholder}" 
+              <input
+                type="text"
+                id="${searchInputId}"
+                placeholder="${visualPlaceholder}"
                 aria-label="${accessibleLabel}"
-                class="search-input w-full border rounded-md 
+                class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500
                 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                style="border-color: ${getColorValue(COLORS.primary)};"
+                style="border-color: ${getColorValue(COLORS.primaryText)};"
               />
             </div>
 
             <button 
-            class="reset-btn bg-gray-100 
-            hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+            class="reset-btn bg-gray-100 dark:bg-slate-700
+            hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
             >
               Reset
             </button>
@@ -477,9 +480,9 @@ ${navHtmlForReports}
         `;
 
         // Generate the contribution table.
-        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto">\n`;
-        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 bg-white">\n`;
-        tableContent += `  <thead class="bg-white">\n`;
+        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto">\n`;
+        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800">\n`;
+        tableContent += `  <thead class="bg-white dark:bg-slate-800">\n`;
         tableContent += `   <tr>\n`;
 
         // Generate table headers with sorting attributes (data-type).
@@ -493,13 +496,13 @@ ${navHtmlForReports}
             : `<span class="th-content">${sectionInfo.headers[i]} <span class="sort-icon ml-1">↕</span></span>`;
           const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
 
-          tableContent += `    <th ${thAttributes} class="py-3 px-4" style="color: ${getColorValue(COLORS.primary)}; ${cursorStyle}">
+          tableContent += `    <th ${thAttributes} class="py-3 px-4" style="color: ${getColorValue(COLORS.primaryText)}; ${cursorStyle}">
               ${headerContent}
           </th>\n`;
         }
         tableContent += `   </tr>\n`;
         tableContent += `  </thead>\n`;
-        tableContent += `  <tbody class="divide-y divide-gray-100">\n`;
+        tableContent += `  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">\n`;
 
         let counter = 1;
         // Generate table rows, mapping data properties to columns.
@@ -517,11 +520,11 @@ ${navHtmlForReports}
           tableContent += `    <td>${counter++}.</td>\n`;
 
           // Repo column (String type).
-          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 p-1 rounded">${item.repo}</span>`;
+          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded">${item.repo}</span>`;
           tableContent += `    <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`;
 
           // Title column (String type, contains hyperlink).
-          const linkHtml = `<a href='${item.url}' target='_blank' class="text-blue-600 hover:text-blue-800 hover:underline">${item.title}</a>`;
+          const linkHtml = `<a href='${item.url}' target='_blank' class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline">${item.title}</a>`;
           tableContent += `    <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
 
           // Handle the remaining columns based on the contribution type.
