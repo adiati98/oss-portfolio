@@ -9,6 +9,7 @@ const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getBlogStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
+const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 async function createBlogHtml(articles) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -29,16 +30,16 @@ async function createBlogHtml(articles) {
       });
 
       return dedent`
-      <div class="article-card group py-10 border-b border-slate-100 last:border-0 transition-colors hover:bg-indigo-50/50">
+      <div class="article-card group py-10 border-b border-slate-100 dark:border-slate-800 last:border-0 transition-colors hover:bg-indigo-50/50 dark:hover:bg-indigo-500/10">
         <h2 class="text-xl sm:text-2xl font-bold mb-3 pl-4">
-          <a href="${article.link}" target="_blank" rel="noopener noreferrer" 
-             style="color: ${getColorValue(COLORS.primary)};" 
-             class="group-hover:text-indigo-800 transition-colors block">
+          <a href="${article.link}" target="_blank" rel="noopener noreferrer"
+             style="color: ${getColorValue(COLORS.primaryText)};"
+             class="group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors block">
             ${article.title}
           </a>
         </h2>
-        <p class="article-meta text-slate-500 text-sm font-medium pl-4">
-          Published on <span class="platform-tag font-bold text-slate-700">${article.platform}</span> — ${date}
+        <p class="article-meta text-slate-500 dark:text-slate-400 text-sm font-medium pl-4">
+          Published on <span class="platform-tag font-bold text-slate-700 dark:text-slate-200">${article.platform}</span> — ${date}
         </p>
       </div>`;
     })
@@ -52,16 +53,18 @@ async function createBlogHtml(articles) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Articles | ${GITHUB_USERNAME} Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+      ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      ${getThemeStyleVariant()}
       <style>${blogCss}</style>
     </head>
-    <body class="bg-white antialiased flex flex-col h-full min-h-full">
+    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: ${getColorValue(COLORS.primary)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+              <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 Open Source and GitHub Articles
               </h1>
               <p style="color: ${getColorValue(COLORS.text.secondary)};" class="text-xl max-w-3xl mx-auto leading-relaxed">
@@ -71,7 +74,7 @@ async function createBlogHtml(articles) {
 
             <div class="max-w-[90ch] mx-auto">
               <div class="articles-list">
-                ${listItems || '<p class="text-slate-400 italic text-center py-12">No articles found with Open Source or GitHub tags.</p>'}
+                ${listItems || '<p class="text-slate-400 dark:text-slate-500 italic text-center py-12">No articles found with Open Source or GitHub tags.</p>'}
               </div>
             </div>
           </div>

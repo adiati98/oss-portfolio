@@ -15,6 +15,7 @@ const {
 } = require('../../config/constants');
 const { getIndexStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
+const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
 const HTML_OUTPUT_PATH = path.join(htmlBaseDir, 'index.html');
@@ -130,22 +131,22 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
             const repoUrl = `https://github.com/${repo}`;
 
             return `
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 last:border-0 gap-3 sm:gap-4">
+        <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 dark:border-slate-700 last:border-0 gap-3 sm:gap-4">
           <div class="flex flex-col min-w-0">
-            ${owner ? `<span class="text-xs uppercase tracking-[0.15em] text-slate-500 font-black leading-none mb-1.5 block">${owner}</span>` : ''}
-            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${getColorValue(COLORS.primary)};">
+            ${owner ? `<span class="text-xs uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-black leading-none mb-1.5 block">${owner}</span>` : ''}
+            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${getColorValue(COLORS.primaryText)};">
               ${name}
             </a>
           </div>
           <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
-            <span class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200">
+            <span class="text-xs font-black text-slate-600 dark:text-slate-300 whitespace-nowrap px-2 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-md border border-slate-200 dark:border-slate-700">
               ${count} contributions
             </span>
           </div>
         </div>`;
           })
           .join('')
-      : '<p class="text-sm text-slate-500 font-medium italic">No activity recorded yet.</p>';
+      : '<p class="text-sm text-slate-500 dark:text-slate-400 font-medium italic">No activity recorded yet.</p>';
 
   const chosenPersona = determinePersona(countsDict);
   const { title: personaTitle, desc: personaDesc, key: activePersonaKey } = chosenPersona;
@@ -162,18 +163,20 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Open Source Portfolio | ${GITHUB_USERNAME}</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
+      ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+      ${getThemeStyleVariant()}
       <style>${indexCss}</style>
     </head>
-    <body class="bg-white antialiased flex flex-col h-full min-h-full">
+    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${getColorValue(COLORS.border.light)};">
           <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${getColorValue(COLORS.primary)};">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${getColorValue(COLORS.primaryText)};">
               Open Source Portfolio
             </h1>
-            <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${getColorValue(COLORS.primary[75])}";>@${GITHUB_USERNAME}</h2>
+            <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${getColorValue(COLORS.primaryText)};">@${GITHUB_USERNAME}</h2>
             <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${getColorValue(COLORS.text.secondary)};">
               A comprehensive visualization of open source contributions, from high-level impact to granular quarterly details.
             </p>
@@ -209,7 +212,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                   </div>
                 </div>
 
-                <div class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"> 
+                <div class="lg:col-span-2 flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"> 
                   ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
                     .map((label, idx) => {
                       const key = [
@@ -236,25 +239,25 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
 
                       const labelClass = isHighest
                         ? 'text-lg sm:text-xl font-black self-start tracking-tighter'
-                        : 'text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter';
+                        : 'text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter';
 
                       const labelInlineStyle = isHighest
-                        ? `style="color: ${getColorValue(COLORS.primary)};"`
+                        ? `style="color: ${getColorValue(COLORS.primaryText)};"`
                         : '';
 
-                      const trackClass = isHighest ? 'bg-white' : 'bg-slate-100';
+                      const trackClass = isHighest ? 'bg-white dark:bg-slate-900' : 'bg-slate-100 dark:bg-slate-700';
 
                       return `
-                    <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative">
+                    <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative">
                       <div class="flex justify-between items-center mb-2">
                         <span class="${labelClass}" ${labelInlineStyle}>${label}</span>
                         <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                          <span style="color: ${getColorValue(COLORS.primary)};" class="tracking-tighter ${
+                          <span style="color: ${getColorValue(COLORS.primaryText)};" class="tracking-tighter ${
                             isHighest
                               ? 'font-black text-3xl sm:text-4xl'
                               : 'font-bold text-2xl sm:text-3xl'
                           } leading-none">${count}</span>
-                          <span class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold">${s.pctStr}</span>
+                          <span class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold">${s.pctStr}</span>
                         </div>
                       </div>
                       <div class="w-full ${trackClass} rounded-full h-3 overflow-hidden flex">
@@ -269,29 +272,29 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
               </div> 
 
               <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0">
-                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">Primary Focus Projects</h2>
-                  <div class="divide-y divide-slate-100 min-w-0">${topReposHtml}</div>
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-0">
+                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4">Primary Focus Projects</h2>
+                  <div class="divide-y divide-slate-100 dark:divide-slate-700 min-w-0">${topReposHtml}</div>
                 </div>
                 
-                <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between">
+                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
                   <div>
-                    <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">
+                    <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4">
                       Collaboration Profile
                     </h2>
                     <div>
-                      <p style="color: ${getColorValue(COLORS.primary)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
-                      <p class="text-md text-slate-500 leading-relaxed">${personaDesc}</p>
+                      <p style="color: ${getColorValue(COLORS.primaryText)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
+                      <p class="text-md text-slate-500 dark:text-slate-400 leading-relaxed">${personaDesc}</p>
                     </div>
                   </div>
                   
-                  <div class="mt-6 pt-4 border-t border-slate-100 flex items-start">
-                    <span style="color: ${getColorValue(COLORS.primary)};" class="mr-3 mt-0.5 shrink-0">
+                  <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-start">
+                    <span style="color: ${getColorValue(COLORS.primaryText)};" class="mr-3 mt-0.5 shrink-0">
                       ${INFO_ICON_SVG}
                     </span>
-                    <p class="text-xs text-slate-500 leading-snug">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">
                       This profile is an assigned category based on contribution activity. 
-                      <a href="glossary.html" class="font-bold underline decoration-slate-300 hover:decoration-current transition-colors" style="color: ${getColorValue(COLORS.primary)};">
+                      <a href="glossary.html" class="font-bold underline decoration-slate-300 dark:decoration-slate-600 hover:decoration-current transition-colors" style="color: ${getColorValue(COLORS.primaryText)};">
                         Learn more in the Glossary.
                       </a>
                     </p>
@@ -299,53 +302,53 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                 </div>
               </div>
 
-              <section class="mt-16 pt-12 border-t border-slate-100">
-                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
+              <section class="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800">
+                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 dark:text-slate-100 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   
-                  <a href="reports.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
+                  <a href="reports.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
                     <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
                         📊
                       </div>
                       <div>
-                        <h3 class="font-black text-slate-900">Reports</h3>
-                        <p class="text-xs text-slate-600 font-bold">Seasonal breakdown</p>
+                        <h3 class="font-black text-slate-900 dark:text-slate-100">Reports</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">Seasonal breakdown</p>
                       </div>
                     </div>
-                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>View Reports</span>
                       <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
                     </div>
                   </a>
 
-                  <a href="community-activity.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
+                  <a href="community-activity.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
                     <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
                         🤝
                       </div>
                       <div>
-                        <h3 class="font-black text-slate-900">Community</h3>
-                        <p class="text-xs text-slate-600 font-bold">Roles & Active Tasks</p>
+                        <h3 class="font-black text-slate-900 dark:text-slate-100">Community</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">Roles & Active Tasks</p>
                       </div>
                     </div>
-                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>View Activity</span>
                       <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
                     </div>
                   </a>
 
-                  <a href="blog.html" class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
+                  <a href="blog.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
                     <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
+                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
                         ✍️
                       </div>
                       <div>
-                        <h3 class="font-black text-slate-900">Articles</h3>
-                        <p class="text-xs text-slate-600 font-bold">${articleCount} Tutorials & Posts</p>
+                        <h3 class="font-black text-slate-900 dark:text-slate-100">Articles</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">${articleCount} Tutorials & Posts</p>
                       </div>
                     </div>
-                    <div style="color: ${getColorValue(COLORS.primary)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
+                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
                       <span>Read Articles</span>
                       <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
                     </div>

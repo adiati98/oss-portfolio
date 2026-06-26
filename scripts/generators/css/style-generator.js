@@ -3,7 +3,7 @@
  */
 
 const { dedent } = require('../../utils/dedent');
-const { COLORS } = require('../../config/constants');
+const { COLORS, THEME_CSS_VARS } = require('../../config/constants');
 
 // --- 1. BASE STYLES (Shared by all pages) ---
 
@@ -14,6 +14,7 @@ const { COLORS } = require('../../config/constants');
 function getCommonBaseCss() {
   return dedent`
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+    ${THEME_CSS_VARS}
     html, body {
       margin: 0;
       padding: 0;
@@ -35,11 +36,11 @@ function getCommonBaseCss() {
       transition: border-color 0.15s ease-in-out !important;
     }
     .nav-report-button:hover {
-      border-color: ${COLORS.primary.rgb} !important;
+      border-color: ${COLORS.primaryText} !important;
     }
     .nav-report-button:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
+      border-color: ${COLORS.primaryText};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: 2px;
     }
         
@@ -48,11 +49,11 @@ function getCommonBaseCss() {
       transition: border-color 0.15s ease-in-out !important;
     }
     .nav-contribution-button:hover {
-      border-color: ${COLORS.primary.rgb} !important;
+      border-color: ${COLORS.primaryText} !important;
     }
     .nav-contribution-button:focus-visible { 
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
+      border-color: ${COLORS.primaryText};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: 2px;
     }
 
@@ -108,7 +109,7 @@ function getCommunityStyleCss() {
 
     /* The 'Tab' focus state */
     summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: -2px;
       background-color: ${COLORS.primary[5]};
       border-radius: 0.75rem;
@@ -120,7 +121,7 @@ function getCommunityStyleCss() {
     }
     .metric-card-hover:hover {
       transform: translateY(-4px);
-      border-color: ${COLORS.primary.rgb} !important;
+      border-color: ${COLORS.primaryText} !important;
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
     }
 
@@ -155,7 +156,7 @@ function getBlogStyleCss() {
       border-bottom: none;
     }
     .article-card h3 a {
-      color: ${COLORS.primary.rgb};
+      color: ${COLORS.primaryText};
       text-decoration: none;
       font-weight: 700;
     }
@@ -192,7 +193,7 @@ function getIndexStyleCss() {
     .hover-underline-primary:hover {
       text-decoration: underline;
       text-underline-offset: 4px;
-      text-decoration-color: ${COLORS.primary.rgb};
+      text-decoration-color: ${COLORS.primaryText};
     }
 
     /* Animation for the Contribution Bars */
@@ -225,7 +226,7 @@ function getReportsListStyleCss() {
       transition: background-color 0.15s ease-in-out;
     }
     summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: 2px;
     }
 
@@ -235,7 +236,7 @@ function getReportsListStyleCss() {
     details[open] summary {
       background-color: ${COLORS.primary[5]};
       border-radius: 0.5rem 0.5rem 0 0;
-      color: ${COLORS.primary.rgb};
+      color: ${COLORS.primaryText};
     }
     details[open] summary:hover,
     details[open] summary:focus-visible {
@@ -258,11 +259,11 @@ function getReportsListStyleCss() {
       transition: border-color 0.15s ease-in-out !important;
     }
     .report-card-link:hover {
-      border-color: ${COLORS.primary.rgb} !important;
+      border-color: ${COLORS.primaryText} !important;
     }
     .report-card-link:focus-visible {
-      border-color: ${COLORS.primary.rgb};
-      outline: 2px solid ${COLORS.primary.rgb};
+      border-color: ${COLORS.primaryText};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: 2px;
     }
   `;
@@ -280,12 +281,12 @@ function getReportStyleCss() {
       outline: none;
       margin: 0.5em 0;
       padding: 0.5em 0;
-      color: #1f2937;
+      color: ${COLORS.text.primary};
       display: list-item;
       white-space: nowrap;
     }
     summary:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: 2px;
     }
 
@@ -300,7 +301,7 @@ function getReportStyleCss() {
       background-color: ${COLORS.primary[5]};
     }
     .details-section details:open summary {
-      color: ${COLORS.primary.rgb};
+      color: ${COLORS.primaryText};
     }
 
     .report-table {
@@ -313,24 +314,24 @@ function getReportStyleCss() {
       position: sticky;
       top: 0;
       z-index: 10;
-      background-color: #ffffff;
+      background-color: var(--c-bg-surface);
       background-image: linear-gradient(${COLORS.primary[5]}, ${COLORS.primary[5]});
       font-weight: 700;
       padding: 12px;
       text-align: left;
       border-bottom: none;
-      box-shadow: inset 0 -1px 0 0 ${COLORS.primary.rgb};
+      box-shadow: inset 0 -1px 0 0 ${COLORS.primaryText};
     }
 
     .report-table td {
-      background-color: #ffffff;
+      background-color: var(--c-bg-surface);
     }
 
     .report-table th,
     .report-table td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid ${COLORS.border.default};
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -350,12 +351,12 @@ function getReportStyleCss() {
     }
 
     .table-row-hover:focus-visible {
-      outline: 2px solid ${COLORS.primary.rgb};
+      outline: 2px solid ${COLORS.primaryText};
       outline-offset: -2px;
     }
 
-    .report-table tbody tr.bg-white { background-color: #ffffff; }
-    .report-table tbody tr.bg-gray-50 { background-color: #f9fafb; }
+    .report-table tbody tr.bg-white { background-color: var(--c-bg-surface); }
+    .report-table tbody tr.bg-gray-50 { background-color: ${COLORS.background.altRows}; }
 
     .th-content {
       display: inline-flex;
@@ -377,7 +378,7 @@ function getReportStyleCss() {
     th.sort-custom1 .sort-icon,
     th.sort-custom2 .sort-icon {
       opacity: 1 !important;
-      color: ${COLORS.primary.rgb} !important;
+      color: ${COLORS.primaryText} !important;
       font-weight: bold;
     }
 
@@ -396,7 +397,7 @@ function getReportStyleCss() {
     }
 
     .search-input {
-      border-color: ${COLORS.primary.rgb};
+      border-color: ${COLORS.primaryText};
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
     .search-input:focus,
@@ -437,8 +438,8 @@ function getGlossaryStyleCss() {
     .glossary-code-block {
       display: block;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background-color: ${COLORS.background.altRows};
+      border: 1px solid ${COLORS.border.default};
     }
 
     /* Target the text inside to ensure monospace inheritance */
@@ -448,7 +449,7 @@ function getGlossaryStyleCss() {
 
     /* Bold text: Clean, high-contrast, no background color */
     .glossary-content strong {
-      color: #3730a3; /* text-indigo-800 */
+      color: var(--c-accent-strong);
       font-weight: 900;
       background-color: transparent !important;
       padding: 0;
@@ -465,7 +466,7 @@ function getGlossaryStyleCss() {
     }
 
     :target h3 {
-      color: ${COLORS.primary.rgb} !important;
+      color: ${COLORS.primaryText} !important;
     }
   `;
 }
