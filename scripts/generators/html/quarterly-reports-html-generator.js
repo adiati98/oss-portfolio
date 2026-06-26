@@ -538,9 +538,9 @@ ${navHtmlForReports}
             const reviewPeriod = calculatePeriodInDays(item.createdAt, completedAtDate);
             const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0;
 
-            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += ` <td data-value="${completedAtDate || ''}" data-col-type="date">${completedAtFormatted}</td>\n`;
-            tableContent += ` <td data-value="${daysNum}" data-col-type="number">${reviewPeriod}</td>\n`;
+            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
+            tableContent += ` <td data-value="${completedAtDate || ''}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${completedAtFormatted}</td>\n`;
+            tableContent += ` <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${reviewPeriod}</td>\n`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
@@ -559,9 +559,9 @@ ${navHtmlForReports}
               sortValue = sortValue || '0';
             }
 
-            tableContent += `    <td data-value="${item.date}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.closedAt}" data-col-type="date">${closedAt}</td>\n`;
-            tableContent += `    <td data-value="${sortValue}" data-col-type="number">${closingPeriodHtml}</td>\n`;
+            tableContent += `    <td data-value="${item.date}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.closedAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${closedAt}</td>\n`;
+            tableContent += `    <td data-value="${sortValue}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${closingPeriodHtml}</td>\n`;
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
             const myFirstReviewAt = formatDate(item.myFirstReviewDate);
@@ -573,10 +573,10 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.myFirstReviewDate}" data-col-type="date">${myFirstReviewAt}</td>\n`;
-            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${myFirstReviewPeriod}</td>\n`;
-            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.myFirstReviewDate}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${myFirstReviewAt}</td>\n`;
+            tableContent += `    <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${myFirstReviewPeriod}</td>\n`;
+            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
@@ -585,19 +585,19 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.firstCommitDate}" data-col-type="date">${firstCommitAt}</td>\n`;
-            tableContent += `    <td data-value="${daysNum}" data-col-type="number">${firstCommitPeriod}</td>\n`;
-            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
+            tableContent += `    <td data-value="${item.firstCommitDate}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${firstCommitAt}</td>\n`;
+            tableContent += `    <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${firstCommitPeriod}</td>\n`;
+            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
             const statusObj = formatPrStatusWithBadge(getCollaborationStatusContent(item));
 
-            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date">${createdAt}</td>\n`;
-            tableContent += ` <td data-value="${item.firstCommentedAt || ''}" data-col-type="date">${commentedAt}</td>\n`;
+            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
+            tableContent += ` <td data-value="${item.firstCommentedAt || ''}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${commentedAt}</td>\n`;
             // Using updatedAt for the status column's date value to ensure proper sorting
-            tableContent += ` <td data-value="${statusObj.statusText}" data-col-type="status">${statusObj.html}</td>\n`;
+            tableContent += ` <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
           }
 
           tableContent += `   </tr>\n`;
