@@ -3,6 +3,7 @@ const path = require('path');
 const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
 const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 const { WORKBENCH_BALL_STATUS } = require('../../config/constants');
+const { isAllowedBotLogin, isBotLogin } = require('../../utils/bot-helpers');
 
 /**
  * Maps ball status to GitHub-friendly indicators (using Shields.io for consistency).
@@ -15,6 +16,7 @@ function getBallTrackingBadge(task, role = 'owner') {
     return {
       badge: `<img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved">`,
       child: ``,
+      lastActorDisplay: task.approvedBy ? String(task.approvedBy).trim() : '',
     };
   }
 
@@ -28,22 +30,31 @@ function getBallTrackingBadge(task, role = 'owner') {
     return {
       badge: `<img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle">`,
       child: `<br><sub>${dayCount} days</sub>`,
+      lastActorDisplay: '',
     };
   }
 
   // 3. Normalization with Fallback (Matches HTML logic)
-  const rawLastActor = task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
-  
-  const lastActor = String(rawLastActor || '').toLowerCase().trim();
-  const prAuthor = String(task.author || '').toLowerCase().trim();
-  const me = String(GITHUB_USERNAME || '').toLowerCase().trim();
+  const rawLastActor =
+    task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
+
+  const lastActor = String(rawLastActor || '')
+    .toLowerCase()
+    .trim();
+  const prAuthor = String(task.author || '')
+    .toLowerCase()
+    .trim();
+  const me = String(GITHUB_USERNAME || '')
+    .toLowerCase()
+    .trim();
 
   const isMe = lastActor === me;
   const isAuthor = lastActor === prAuthor;
 
   // 4. Sub-label logic
   let child = task.hasFormalReview ? 'Review' : 'Discussion';
-  const isBotActor = task.isLastActorBot || /\[bot\]$|dependabot|snyk/i.test(lastActor);
+  const isBotActor =
+    !isAllowedBotLogin(lastActor) && (task.isLastActorBot || isBotLogin(lastActor));
   if (isBotActor) child += ' + BOT';
 
   // 5. Branching Logic by Role
@@ -68,9 +79,14 @@ function getBallTrackingBadge(task, role = 'owner') {
   const color = colorMap[statusKey] || '334155';
   const label = config.label.toUpperCase().replace(/ /g, '%20');
 
+  // Only surface the actor's username when there's an action to track (Take Action / Watching).
+  const lastActorDisplay =
+    statusKey === 'takeAction' || statusKey === 'watching' ? String(rawLastActor || '').trim() : '';
+
   return {
     badge: `<img src="https://img.shields.io/badge/${label}-${color}?style=flat-square" alt="${config.label}">`,
     child: `<br><sub>${child}</sub>`,
+    lastActorDisplay,
   };
 }
 
@@ -109,6 +125,7 @@ async function createCommunityMarkdown(
 
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
+    if (isAllowedBotLogin(username)) return false;
     const userStr = String(username || '').toLowerCase();
     const titleStr = String(t.title || '').toLowerCase();
     return (
@@ -160,8 +177,8 @@ async function createCommunityMarkdown(
       section += `> ***${randomMsg}***\n`;
     } else {
       if (hasStatus) {
-        section += `| Status | Repository | Task |\n`;
-        section += `| :--- | :--- | :--- |\n`;
+        section += `| Status | Last Interaction | Repository | Task |\n`;
+        section += `| :--- | :--- | :--- | :--- |\n`;
       } else {
         section += `| Repository | Task |\n`;
         section += `| :--- | :--- |\n`;
@@ -180,7 +197,8 @@ async function createCommunityMarkdown(
           if (hasStatus) {
             const ballData = getBallTrackingBadge(task, type);
             const statusCell = ballData ? `${ballData.badge}${ballData.child}` : `—`;
-            section += `| ${statusCell} | **${repoName}**${extraBadge} | [${task.title}](${task.url}) |\n`;
+            const lastInteractionCell = ballData?.lastActorDisplay || '';
+            section += `| ${statusCell} | ${lastInteractionCell} | **${repoName}**${extraBadge} | [${task.title}](${task.url}) |\n`;
           } else {
             section += `| **${repoName}**${extraBadge} | [${task.title}](${task.url}) |\n`;
           }

@@ -36,7 +36,7 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
 #### 1. Data Fetching & Processing
 
 - **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
-- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility. Additionally, it supports dynamic repository exclusions to filter out specified organizations or projects.
+- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility, and shows the GitHub username of the relevant person in the "Last Interaction" column — the last actor whenever a task needs attention ("Take Action") or is awaiting someone else ("Watching"), or the reviewer who approved it ("Approved"). Additionally, it supports dynamic repository exclusions (`contents/repo-exclusions.js`) and a per-bot allowlist (`contents/allowed-bot.js`) to filter out specified organizations/projects or let trusted bots be treated as the last actor.
 - **Personal Technical Writing:**
     - **Automated Sync:** Fetches latest articles from **Dev.to** via their API.
     - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
@@ -118,10 +118,11 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 - **Leadership Metadata:** Update `contents/leadership.js` to reflect roles and achievements.
 - **Article Metadata:** Update `contents/fcc-articles.js` to add new freeCodeCamp publications.
 - **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from the Active Workbench.
+- **Bot Allowlist:** The Active Workbench excludes bots (e.g., Dependabot, Snyk) from being treated as a "last actor" by default. If you rely on a bot that leaves actionable comments or reviews (e.g., an AI review bot), list its username in the `allowedBot` array in `contents/allowed-bot.js` to have it show up as the last actor (driving "Take Action" / "Watching" status and the "Last Interaction" column) instead of being grouped under bot activity.
 - **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
 
 > [!TIP]
-> If you do not have articles on freeCodeCamp or do not wish to exclude any repositories from the Active Workbench, ensure the respective files (`contents/fcc-articles.js` or `contents/repo-exclusions.js`) export an empty array: `module.exports = [];`. This ensures the generator runs smoothly.
+> If you do not have articles on freeCodeCamp, do not wish to exclude any repositories from the Active Workbench, or do not want to allowlist any bots, ensure the respective files (`contents/fcc-articles.js`, `contents/repo-exclusions.js`, or `contents/allowed-bot.js`) export an empty array: `module.exports = [];`. This ensures the generator runs smoothly.
 
 ### 4. Deployment
 

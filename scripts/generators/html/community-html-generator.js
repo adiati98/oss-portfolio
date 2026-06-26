@@ -17,6 +17,7 @@ const { getCommunityStyleCss } = require('../css/style-generator');
 const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
+const { isAllowedBotLogin, isBotLogin } = require('../../utils/bot-helpers');
 
 /**
  * Generates the Community & Activity HTML page.
@@ -109,6 +110,7 @@ async function createCommunityHtml(
 
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
+    if (isAllowedBotLogin(username)) return false;
     const userStr = String(username || '').toLowerCase();
     const titleStr = String(t.title || '').toLowerCase();
     return (
@@ -129,14 +131,22 @@ async function createCommunityHtml(
 
     // 1. Common Logic: Approved & Stale
     if (task.reviewState === 'APPROVED' || task.status === 'APPROVED') {
-      return { ...WORKBENCH_BALL_STATUS.approved, child: '' };
+      return {
+        ...WORKBENCH_BALL_STATUS.approved,
+        child: '',
+        lastActorDisplay: task.approvedBy ? String(task.approvedBy).trim() : '',
+      };
     }
 
     const effectiveDate = task.lastSubstantiveDate || task.updatedAt;
     const diffDays = (now - new Date(effectiveDate)) / (1000 * 60 * 60 * 24);
 
     if (diffDays >= 21) {
-      return { ...WORKBENCH_BALL_STATUS.stale, child: `${Math.floor(diffDays)} days` };
+      return {
+        ...WORKBENCH_BALL_STATUS.stale,
+        child: `${Math.floor(diffDays)} days`,
+        lastActorDisplay: '',
+      };
     }
 
     // 2. Normalization
@@ -159,26 +169,33 @@ async function createCommunityHtml(
     // 3. Sub-label
     const isFormalReview = task.hasFormalReview === true;
     const childBase = isFormalReview ? 'Review' : 'Discussion';
-    const isBotActor = task.isLastActorBot || isBot({ user: lastActor, title: '' });
+    const isBotActor =
+      !isAllowedBotLogin(lastActor) && (task.isLastActorBot || isBotLogin(lastActor));
     const childStatus = isBotActor ? `${childBase} + BOT` : childBase;
+
+    // Only surface the actor's username when there's an action to track (Take Action / Watching).
+    const lastActorDisplay = String(rawLastActor || '').trim();
 
     // 4. Branching Logic by Role
 
     if (role === 'reviewer') {
       // SCENARIO: You are reviewing someone else's PR
-      if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
-      if (isAuthor) return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
-      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+      if (isMe)
+        return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus, lastActorDisplay: '' };
+      if (isAuthor)
+        return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus, lastActorDisplay };
+      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus, lastActorDisplay };
     } else {
       // SCENARIO: You are the Author or Co-Author (Ongoing / Co-authored)
-      if (isMe) return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus };
+      if (isMe)
+        return { ...WORKBENCH_BALL_STATUS.waiting, child: childStatus, lastActorDisplay: '' };
 
       // In ongoing and co-authored PR, "Not Me" is treated as "Take Action"
       if (!isMe && !isBotActor) {
-        return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus };
+        return { ...WORKBENCH_BALL_STATUS.takeAction, child: childStatus, lastActorDisplay };
       }
 
-      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus };
+      return { ...WORKBENCH_BALL_STATUS.watching, child: childStatus, lastActorDisplay };
     }
   }
 
@@ -321,12 +338,21 @@ async function createCommunityHtml(
             `;
           }
 
+          const lastInteractionColumnHtml = ballStatus
+            ? dedent`
+              <td class="px-6 py-4 vertical-align-top w-[160px]">
+                <span class="text-sm text-slate-500 dark:text-slate-400">${ballStatus.lastActorDisplay || ''}</span>
+              </td>
+            `
+            : '';
+
           return dedent`
-            <tr class="table-row-hover border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors" 
-                data-status="${ballStatus?.label.toLowerCase() || ''}" 
+            <tr class="table-row-hover border-b border-slate-100 dark:border-slate-700 last:border-0 transition-colors"
+                data-status="${ballStatus?.label.toLowerCase() || ''}"
                 data-date="${subDate}"
                 data-repo="${repoName.toLowerCase()}">
               ${statusColumnHtml}
+              ${lastInteractionColumnHtml}
               <td class="px-6 py-4 vertical-align-top ${ballStatus ? 'w-1/4' : 'w-1/3'}">
                 <div class="flex flex-col items-start">
                   <span class="text-sm font-semibold text-slate-500 dark:text-slate-400">${repoName}</span>
@@ -360,6 +386,12 @@ async function createCommunityHtml(
             </th>`
           : '';
 
+      const tableHeaderLastInteractionHtml =
+        type === 'ongoing'
+          ? dedent`
+            <th scope="col" class="px-6 py-3 text-left text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">Last Interaction</th>`
+          : '';
+
       sectionContent = dedent`
         <div class="overflow-x-auto">
           <div class="min-w-[600px]">
@@ -367,6 +399,7 @@ async function createCommunityHtml(
               <thead class="bg-slate-50/80 dark:bg-slate-800/60 border-b border-slate-100 dark:border-slate-700">
                 <tr>
                   ${tableHeaderStatusHtml}
+                  ${tableHeaderLastInteractionHtml}
                   <th scope="col" class="px-6 py-3 text-left">
                     <button type="button" 
                             class="flex items-center text-xs font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest cursor-pointer group/sort focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded px-1"

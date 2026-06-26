@@ -1,3 +1,5 @@
+const { isBotLogin } = require('./bot-helpers');
+
 /**
  * HELPER: Extracts linked issue numbers from PR descriptions.
  */
@@ -22,6 +24,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
     isLastActorBot: false,
     hasFormalReview: false,
     reviewState: null,
+    approvedBy: null,
     lastSubstantiveDate: prMainUpdatedAt,
   };
 
@@ -58,8 +61,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
 
     const lastEvent = substantiveEvents[substantiveEvents.length - 1];
     const lastActor = lastEvent?.actor?.login || lastEvent?.user?.login || lastEvent?.author?.login;
-    const isLastActorBot =
-      lastEvent?.actor?.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(lastActor || '');
+    const isLastActorBot = isBotLogin(lastActor, lastEvent?.actor?.type);
 
     let timestamps = [];
     substantiveEvents.forEach((e) => {
@@ -82,11 +84,15 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
       .filter((r) => r.state !== 'COMMENTED')
       .sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at))[0];
 
+    const approvedBy =
+      latestReview && latestReview.state === 'APPROVED' ? latestReview.user?.login || null : null;
+
     fallbackActivity = {
       lastActor,
       isLastActorBot,
       hasFormalReview: reviews.length > 0,
       reviewState: latestReview ? latestReview.state : null,
+      approvedBy,
       lastSubstantiveDate,
     };
 
@@ -104,7 +110,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
         timelineItems.push({
           date: new Date(c.created_at),
           login: c.user.login,
-          isBot: c.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(c.user.login),
+          isBot: isBotLogin(c.user.login, c.user.type),
         });
       }
     });
@@ -114,7 +120,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
         timelineItems.push({
           date: new Date(c.created_at),
           login: c.user.login,
-          isBot: c.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(c.user.login),
+          isBot: isBotLogin(c.user.login, c.user.type),
         });
       }
     });
@@ -124,7 +130,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
         timelineItems.push({
           date: new Date(r.submitted_at),
           login: r.user.login,
-          isBot: r.user.type === 'Bot' || /\[bot\]$|dependabot|snyk/i.test(r.user.login),
+          isBot: isBotLogin(r.user.login, r.user.type),
         });
       }
     });
@@ -138,6 +144,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
         isLastActorBot: latest.isBot,
         hasFormalReview: fallbackActivity.hasFormalReview || explicitReviewsResp.data.length > 0,
         reviewState: fallbackActivity.reviewState,
+        approvedBy: fallbackActivity.approvedBy,
         lastSubstantiveDate: latest.date.toISOString(),
       };
     }

@@ -167,6 +167,7 @@ const formatTask = async (pr, status) => {
     isLastActorBot: activity.isLastActorBot,
     hasFormalReview: activity.hasFormalReview,
     reviewState: activity.reviewState,
+    approvedBy: activity.approvedBy,
     lastSubstantiveDate: activity.lastSubstantiveDate,
     author: pr.user.login,
   };
