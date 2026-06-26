@@ -9,9 +9,255 @@
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2021a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%2019.25a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM5.75%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM18.25%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM15%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2016.75A.75.75%200%20006.5%2016V8A.75.75%200%20005%208v8c0%20.414.336.75.75.75z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M17.5%208.75v-1H19v1a3.75%203.75%200%2001-3.75%203.75h-7a1.75%201.75%200%2000-1.75%201.75H5A3.25%203.25%200%20018.25%2011h7a2.25%202.25%200%20002.25-2.25z%27%2F%3E%20%3C%2Fsvg%3E"
     />
+    <script>
+      (function () {
+        try {
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+          function isDark() {
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
+            return mq.matches;
+          }
+
+          document.documentElement.classList.toggle('dark', isDark());
+
+          // Re-reads localStorage on every change instead of caching it, so a
+          // theme choice made via the navbar toggle (after this script ran)
+          // is respected rather than overridden by a stale snapshot.
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
+          });
+        } catch (e) {}
+      })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:where(.dark, .dark *));
+    </style>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      :root {
+        --c-primary-hex: #4338ca;
+        --c-primary-rgb: rgb(67, 56, 202);
+        --c-primary-5: rgba(67, 56, 202, 0.05);
+        --c-primary-10: rgba(67, 56, 202, 0.1);
+        --c-primary-15: rgba(67, 56, 202, 0.15);
+        --c-primary-25: rgba(67, 56, 202, 0.25);
+        --c-primary-50: rgba(67, 56, 202, 0.5);
+        --c-primary-75: rgba(67, 56, 202, 0.75);
+        --c-primary-100: rgba(67, 56, 202, 1);
+        --c-primary900-hex: #312e81;
+        --c-primary900-rgb: rgb(49, 46, 129);
+        --c-primary900-5: rgba(49, 46, 129, 0.05);
+        --c-primary900-10: rgba(49, 46, 129, 0.1);
+        --c-primary900-15: rgba(49, 46, 129, 0.15);
+        --c-primary900-25: rgba(49, 46, 129, 0.25);
+        --c-primary900-50: rgba(49, 46, 129, 0.5);
+        --c-primary900-75: rgba(49, 46, 129, 0.75);
+        --c-primary900-100: rgba(49, 46, 129, 1);
+        --c-neutral-hex: #6b7280;
+        --c-neutral-rgb: rgb(107, 114, 128);
+        --c-neutral-5: rgba(107, 114, 128, 0.05);
+        --c-neutral-10: rgba(107, 114, 128, 0.1);
+        --c-neutral-15: rgba(107, 114, 128, 0.15);
+        --c-neutral-25: rgba(107, 114, 128, 0.25);
+        --c-neutral-50: rgba(107, 114, 128, 0.5);
+        --c-neutral-75: rgba(107, 114, 128, 0.75);
+        --c-neutral-100: rgba(107, 114, 128, 1);
+        --c-success-hex: #10b981;
+        --c-success-rgb: rgb(16, 185, 129);
+        --c-success-5: rgba(16, 185, 129, 0.05);
+        --c-success-10: rgba(16, 185, 129, 0.1);
+        --c-success-15: rgba(16, 185, 129, 0.15);
+        --c-success-25: rgba(16, 185, 129, 0.25);
+        --c-success-50: rgba(16, 185, 129, 0.5);
+        --c-success-75: rgba(16, 185, 129, 0.75);
+        --c-success-100: rgba(16, 185, 129, 1);
+        --c-merged-hex: #8b5cf6;
+        --c-merged-rgb: rgb(139, 92, 246);
+        --c-merged-5: rgba(139, 92, 246, 0.05);
+        --c-merged-10: rgba(139, 92, 246, 0.1);
+        --c-merged-15: rgba(139, 92, 246, 0.15);
+        --c-merged-25: rgba(139, 92, 246, 0.25);
+        --c-merged-50: rgba(139, 92, 246, 0.5);
+        --c-merged-75: rgba(139, 92, 246, 0.75);
+        --c-merged-100: rgba(139, 92, 246, 1);
+        --c-error-hex: #ef4444;
+        --c-error-rgb: rgb(239, 68, 68);
+        --c-error-5: rgba(239, 68, 68, 0.05);
+        --c-error-10: rgba(239, 68, 68, 0.1);
+        --c-error-15: rgba(239, 68, 68, 0.15);
+        --c-error-25: rgba(239, 68, 68, 0.25);
+        --c-error-50: rgba(239, 68, 68, 0.5);
+        --c-error-75: rgba(239, 68, 68, 0.75);
+        --c-error-100: rgba(239, 68, 68, 1);
+        --c-text-primary-hex: #1f2937;
+        --c-text-primary-rgb: rgb(31, 41, 55);
+        --c-text-primary-5: rgba(31, 41, 55, 0.05);
+        --c-text-primary-10: rgba(31, 41, 55, 0.1);
+        --c-text-primary-15: rgba(31, 41, 55, 0.15);
+        --c-text-primary-25: rgba(31, 41, 55, 0.25);
+        --c-text-primary-50: rgba(31, 41, 55, 0.5);
+        --c-text-primary-75: rgba(31, 41, 55, 0.75);
+        --c-text-primary-100: rgba(31, 41, 55, 1);
+        --c-text-secondary-hex: #374151;
+        --c-text-secondary-rgb: rgb(55, 65, 81);
+        --c-text-secondary-5: rgba(55, 65, 81, 0.05);
+        --c-text-secondary-10: rgba(55, 65, 81, 0.1);
+        --c-text-secondary-15: rgba(55, 65, 81, 0.15);
+        --c-text-secondary-25: rgba(55, 65, 81, 0.25);
+        --c-text-secondary-50: rgba(55, 65, 81, 0.5);
+        --c-text-secondary-75: rgba(55, 65, 81, 0.75);
+        --c-text-secondary-100: rgba(55, 65, 81, 1);
+        --c-text-muted-hex: #6b7280;
+        --c-text-muted-rgb: rgb(107, 114, 128);
+        --c-text-muted-5: rgba(107, 114, 128, 0.05);
+        --c-text-muted-10: rgba(107, 114, 128, 0.1);
+        --c-text-muted-15: rgba(107, 114, 128, 0.15);
+        --c-text-muted-25: rgba(107, 114, 128, 0.25);
+        --c-text-muted-50: rgba(107, 114, 128, 0.5);
+        --c-text-muted-75: rgba(107, 114, 128, 0.75);
+        --c-text-muted-100: rgba(107, 114, 128, 1);
+        --c-bg-surface: #ffffff;
+        --c-accent-yellow: #eab308;
+        --c-accent-strong: #3730a3;
+        --c-primary-text: #4338ca;
+        --c-draft-bg: #f1f5f9;
+        --c-draft-text: #475569;
+        --c-draft-border: #cbd5e1;
+      }
+      html.dark {
+        --c-primary-hex: #4338ca;
+        --c-primary-rgb: rgb(67, 56, 202);
+        --c-primary-5: rgba(67, 56, 202, 0.05);
+        --c-primary-10: rgba(67, 56, 202, 0.1);
+        --c-primary-15: rgba(67, 56, 202, 0.15);
+        --c-primary-25: rgba(67, 56, 202, 0.25);
+        --c-primary-50: rgba(67, 56, 202, 0.5);
+        --c-primary-75: rgba(67, 56, 202, 0.75);
+        --c-primary-100: rgba(67, 56, 202, 1);
+        --c-primary900-hex: #312e81;
+        --c-primary900-rgb: rgb(49, 46, 129);
+        --c-primary900-5: rgba(49, 46, 129, 0.05);
+        --c-primary900-10: rgba(49, 46, 129, 0.1);
+        --c-primary900-15: rgba(49, 46, 129, 0.15);
+        --c-primary900-25: rgba(49, 46, 129, 0.25);
+        --c-primary900-50: rgba(49, 46, 129, 0.5);
+        --c-primary900-75: rgba(49, 46, 129, 0.75);
+        --c-primary900-100: rgba(49, 46, 129, 1);
+        --c-neutral-hex: #94a3b8;
+        --c-neutral-rgb: rgb(148, 163, 184);
+        --c-neutral-5: rgba(148, 163, 184, 0.05);
+        --c-neutral-10: rgba(148, 163, 184, 0.1);
+        --c-neutral-15: rgba(148, 163, 184, 0.15);
+        --c-neutral-25: rgba(148, 163, 184, 0.25);
+        --c-neutral-50: rgba(148, 163, 184, 0.5);
+        --c-neutral-75: rgba(148, 163, 184, 0.75);
+        --c-neutral-100: rgba(148, 163, 184, 1);
+        --c-success-hex: #34d399;
+        --c-success-rgb: rgb(52, 211, 153);
+        --c-success-5: rgba(52, 211, 153, 0.05);
+        --c-success-10: rgba(52, 211, 153, 0.1);
+        --c-success-15: rgba(52, 211, 153, 0.15);
+        --c-success-25: rgba(52, 211, 153, 0.25);
+        --c-success-50: rgba(52, 211, 153, 0.5);
+        --c-success-75: rgba(52, 211, 153, 0.75);
+        --c-success-100: rgba(52, 211, 153, 1);
+        --c-merged-hex: #a78bfa;
+        --c-merged-rgb: rgb(167, 139, 250);
+        --c-merged-5: rgba(167, 139, 250, 0.05);
+        --c-merged-10: rgba(167, 139, 250, 0.1);
+        --c-merged-15: rgba(167, 139, 250, 0.15);
+        --c-merged-25: rgba(167, 139, 250, 0.25);
+        --c-merged-50: rgba(167, 139, 250, 0.5);
+        --c-merged-75: rgba(167, 139, 250, 0.75);
+        --c-merged-100: rgba(167, 139, 250, 1);
+        --c-error-hex: #f87171;
+        --c-error-rgb: rgb(248, 113, 113);
+        --c-error-5: rgba(248, 113, 113, 0.05);
+        --c-error-10: rgba(248, 113, 113, 0.1);
+        --c-error-15: rgba(248, 113, 113, 0.15);
+        --c-error-25: rgba(248, 113, 113, 0.25);
+        --c-error-50: rgba(248, 113, 113, 0.5);
+        --c-error-75: rgba(248, 113, 113, 0.75);
+        --c-error-100: rgba(248, 113, 113, 1);
+        --c-text-primary-hex: #f1f5f9;
+        --c-text-primary-rgb: rgb(241, 245, 249);
+        --c-text-primary-5: rgba(241, 245, 249, 0.05);
+        --c-text-primary-10: rgba(241, 245, 249, 0.1);
+        --c-text-primary-15: rgba(241, 245, 249, 0.15);
+        --c-text-primary-25: rgba(241, 245, 249, 0.25);
+        --c-text-primary-50: rgba(241, 245, 249, 0.5);
+        --c-text-primary-75: rgba(241, 245, 249, 0.75);
+        --c-text-primary-100: rgba(241, 245, 249, 1);
+        --c-text-secondary-hex: #cbd5e1;
+        --c-text-secondary-rgb: rgb(203, 213, 225);
+        --c-text-secondary-5: rgba(203, 213, 225, 0.05);
+        --c-text-secondary-10: rgba(203, 213, 225, 0.1);
+        --c-text-secondary-15: rgba(203, 213, 225, 0.15);
+        --c-text-secondary-25: rgba(203, 213, 225, 0.25);
+        --c-text-secondary-50: rgba(203, 213, 225, 0.5);
+        --c-text-secondary-75: rgba(203, 213, 225, 0.75);
+        --c-text-secondary-100: rgba(203, 213, 225, 1);
+        --c-text-muted-hex: #94a3b8;
+        --c-text-muted-rgb: rgb(148, 163, 184);
+        --c-text-muted-5: rgba(148, 163, 184, 0.05);
+        --c-text-muted-10: rgba(148, 163, 184, 0.1);
+        --c-text-muted-15: rgba(148, 163, 184, 0.15);
+        --c-text-muted-25: rgba(148, 163, 184, 0.25);
+        --c-text-muted-50: rgba(148, 163, 184, 0.5);
+        --c-text-muted-75: rgba(148, 163, 184, 0.75);
+        --c-text-muted-100: rgba(148, 163, 184, 1);
+        --c-bg-surface: #1e293b;
+        --c-accent-yellow: #facc15;
+        --c-accent-strong: #928fd7;
+        --c-primary-text: #8f89df;
+        --c-draft-bg: #334155;
+        --c-draft-text: #e2e8f0;
+        --c-draft-border: #64748b;
+      }
+      :root {
+        --wb-ongoing-bg: #ecfeff;
+        --wb-ongoing-text: #086788;
+        --wb-ongoing-border: #a5f3fc;
+        --wb-todo-bg: #fff7ed;
+        --wb-todo-text: #c2410c;
+        --wb-todo-border: #fdba74;
+        --wb-bot-bg: #f8fafc;
+        --wb-bot-text: #475569;
+        --wb-bot-border: #e2e8f0;
+        --wb-empty-text: #991b1b;
+        --wb-waiting-dot: #84cc16;
+        --wb-waiting-text: #4d7c0f;
+        --wb-takeaction-dot: #d946ef;
+        --wb-takeaction-text: #a21caf;
+        --wb-watching-dot: #0ea5e9;
+        --wb-watching-text: #0369a1;
+        --wb-stale-dot: #94a3b8;
+        --wb-stale-text: #64748b;
+      }
+      html.dark {
+        --wb-ongoing-bg: #083344;
+        --wb-ongoing-text: #67e8f9;
+        --wb-ongoing-border: #0e7490;
+        --wb-todo-bg: #431407;
+        --wb-todo-text: #fdba74;
+        --wb-todo-border: #c2410c;
+        --wb-bot-bg: #1e293b;
+        --wb-bot-text: #cbd5e1;
+        --wb-bot-border: #475569;
+        --wb-empty-text: #fca5a5;
+        --wb-waiting-dot: #a3e635;
+        --wb-waiting-text: #bef264;
+        --wb-takeaction-dot: #e879f9;
+        --wb-takeaction-text: #f0abfc;
+        --wb-watching-dot: #38bdf8;
+        --wb-watching-text: #7dd3fc;
+        --wb-stale-dot: #cbd5e1;
+        --wb-stale-text: #94a3b8;
+      }
       html,
       body {
         margin: 0;
@@ -30,28 +276,28 @@
 
       /* Navigation Buttons */
       .nav-report-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        border: 1px solid var(--c-neutral-10) !important;
         transition: border-color 0.15s ease-in-out !important;
       }
       .nav-report-button:hover {
-        border-color: rgb(67, 56, 202) !important;
+        border-color: var(--c-primary-text) !important;
       }
       .nav-report-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
+        border-color: var(--c-primary-text);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: 2px;
       }
 
       .nav-contribution-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        border: 1px solid var(--c-neutral-10) !important;
         transition: border-color 0.15s ease-in-out !important;
       }
       .nav-contribution-button:hover {
-        border-color: rgb(67, 56, 202) !important;
+        border-color: var(--c-primary-text) !important;
       }
       .nav-contribution-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
+        border-color: var(--c-primary-text);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: 2px;
       }
 
@@ -98,7 +344,7 @@
       .hover-underline-primary:hover {
         text-decoration: underline;
         text-underline-offset: 4px;
-        text-decoration-color: rgb(67, 56, 202);
+        text-decoration-color: var(--c-primary-text);
       }
 
       /* Animation for the Contribution Bars */
@@ -112,9 +358,9 @@
       }
     </style>
   </head>
-  <body class="bg-white antialiased flex flex-col h-full min-h-full">
+  <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
     <nav
-      style="background-color: rgb(67, 56, 202)"
+      style="background-color: var(--c-primary-rgb)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
     >
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -132,25 +378,25 @@
           <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a
               href="./reports.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Quarterly Reports</a
             >
             <a
               href="./community-activity.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Community & Activity</a
             >
             <a
               href="./blog.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Articles</a
             >
             <a
               href="./glossary.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Glossary</a
             >
@@ -169,11 +415,142 @@
                   /></svg
               ></span>
             </a>
+
+            <div class="theme-dropdown relative" data-theme-dropdown>
+              <button
+                type="button"
+                class="theme-dropdown-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Change theme"
+              >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                    />
+                  </svg> </span
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg> </span
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                    <path d="M8 20h8M12 16v4" />
+                  </svg>
+                </span>
+              </button>
+              <div class="theme-dropdown-menu hidden" role="menu">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="light"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="12" r="4" />
+                      <path
+                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                      />
+                    </svg>
+                  </span>
+                  <span>Light</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                ><button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="dark"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                  </span>
+                  <span>Dark</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                ><button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="system"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                      <path d="M8 20h8M12 16v4" />
+                    </svg>
+                  </span>
+                  <span>System</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <button
             id="menu-button"
-            style="background-color: rgba(67, 56, 202, 0.75); cursor: pointer"
+            style="background-color: var(--c-primary-75); cursor: pointer"
             class="min-[1025px]:hidden w-10 h-10 flex items-center justify-center rounded-md transition duration-150"
             aria-expanded="false"
             aria-controls="mobile-menu"
@@ -209,7 +586,7 @@
 
       <div
         id="mobile-menu"
-        style="background-color: rgb(49, 46, 129)"
+        style="background-color: var(--c-primary900-rgb)"
         class="hidden min-[1025px]:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
       >
         <div class="flex flex-col space-y-2">
@@ -235,7 +612,10 @@
           >
         </div>
 
-        <div class="mt-3 pt-3" style="border-top-color: rgb(67, 56, 202); border-top-width: 1px">
+        <div
+          class="mt-3 pt-3 flex items-center justify-between"
+          style="border-top-color: var(--c-primary-rgb); border-top-width: 1px"
+        >
           <a
             href="https://github.com/adiati98/oss-portfolio"
             target="_blank"
@@ -250,6 +630,137 @@
                 /></svg
             ></span>
           </a>
+
+          <div class="theme-dropdown relative mr-3" data-theme-dropdown>
+            <button
+              type="button"
+              class="theme-dropdown-trigger"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Change theme"
+            >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path
+                    d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                  />
+                </svg> </span
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg> </span
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                  <path d="M8 20h8M12 16v4" />
+                </svg>
+              </span>
+            </button>
+            <div class="theme-dropdown-menu hidden" role="menu">
+              <button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="light"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                    />
+                  </svg>
+                </span>
+                <span>Light</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+              ><button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="dark"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                </span>
+                <span>Dark</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+              ><button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="system"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                    <path d="M8 20h8M12 16v4" />
+                  </svg>
+                </span>
+                <span>System</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -269,6 +780,71 @@
               closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
+
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
+
+          function closeAllDropdowns() {
+            dropdowns.forEach((dropdown) => {
+              dropdown.querySelector('.theme-dropdown-menu').classList.add('hidden');
+              dropdown
+                .querySelector('.theme-dropdown-trigger')
+                .setAttribute('aria-expanded', 'false');
+            });
+          }
+
+          function setTheme(choice) {
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
+            } else {
+              localStorage.setItem('theme', choice);
+            }
+            const isDark =
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
+            reflectActiveChoice();
+          }
+
+          function reflectActiveChoice() {
+            const current = localStorage.getItem('theme') || 'system';
+            dropdowns.forEach((dropdown) => {
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
+            });
+          }
+
+          dropdowns.forEach((dropdown) => {
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
+
+            trigger.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isOpen = !menu.classList.contains('hidden');
+              closeAllDropdowns();
+              if (!isOpen) {
+                menu.classList.remove('hidden');
+                trigger.setAttribute('aria-expanded', 'true');
+              }
+            });
+
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
+                setTheme(item.dataset.themeChoice);
+                closeAllDropdowns();
+              });
+            });
+          });
+
+          document.addEventListener('click', closeAllDropdowns);
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns();
+          });
+
+          reflectActiveChoice();
         });
       </script>
     </nav>
@@ -282,7 +858,7 @@
       }
       .nav-link:hover {
         border-color: white !important;
-        background-color: rgba(67, 56, 202, 0.25) !important;
+        background-color: var(--c-primary-25) !important;
       }
       .nav-home-link {
         padding: 0.5rem;
@@ -296,7 +872,7 @@
       }
       .nav-mobile-link {
         padding: 0.5rem 0.75rem;
-        background-color: rgb(49, 46, 129);
+        background-color: var(--c-primary900-rgb);
         width: 100%;
       }
 
@@ -310,26 +886,101 @@
         width: 100%;
         height: 100%;
       }
+
+      .theme-dropdown-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.375rem;
+        color: rgba(255, 255, 255, 0.85);
+        cursor: pointer;
+        border: none;
+        background-color: var(--c-primary-75);
+        transition:
+          background-color 0.15s ease-in-out,
+          color 0.15s ease-in-out;
+      }
+      .theme-dropdown-trigger:hover,
+      .theme-dropdown-trigger[aria-expanded='true'] {
+        color: white;
+      }
+      .theme-dropdown-trigger-icon svg {
+        width: 1.15rem;
+        height: 1.15rem;
+        display: block;
+      }
+
+      .theme-dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        min-width: 9.5rem;
+        background-color: var(--c-bg-surface);
+        border: 1px solid var(--c-neutral-10);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+        padding: 0.25rem;
+        z-index: 60;
+      }
+      .theme-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.5rem 0.625rem;
+        border-radius: 0.375rem;
+        border: none;
+        background: transparent;
+        color: var(--c-text-secondary-rgb);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: left;
+        transition: background-color 0.15s ease-in-out;
+      }
+      .theme-dropdown-item:hover,
+      .theme-dropdown-item:focus-visible {
+        background-color: var(--c-primary-10);
+        outline: none;
+      }
+      .theme-dropdown-item-icon {
+        display: inline-flex;
+      }
+      .theme-dropdown-item-icon svg {
+        width: 1rem;
+        height: 1rem;
+        display: block;
+      }
+      .theme-dropdown-check {
+        margin-left: auto;
+        opacity: 0;
+        color: var(--c-primary-text);
+        font-weight: 700;
+      }
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
+        opacity: 1;
+      }
     </style>
     <main class="grow w-full">
-      <header class="pt-24 pb-20 px-6 border-b" style="border-color: rgba(107, 114, 128, 0.1)">
+      <header class="pt-24 pb-20 px-6 border-b" style="border-color: var(--c-neutral-10)">
         <div class="max-w-4xl mx-auto text-center">
           <h1
             class="text-5xl md:text-7xl font-extrabold mb-8 mt-12"
-            style="color: rgb(67, 56, 202)"
+            style="color: var(--c-primary-text)"
           >
             Open Source Portfolio
           </h1>
           <h2
             class="block text-4xl md:text-5xl font-bold opacity-80 mb-8"
-            style="color: rgba(67, 56, 202, 0.75)"
-            ;
+            style="color: var(--c-primary-text)"
           >
             @adiati98
           </h2>
           <p
             class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto"
-            style="color: rgb(55, 65, 81)"
+            style="color: var(--c-text-secondary-rgb)"
           >
             A comprehensive visualization of open source contributions, from high-level impact to
             granular quarterly details.
@@ -342,7 +993,7 @@
           <section>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
               <div
-                style="background-color: rgb(67, 56, 202)"
+                style="background-color: var(--c-primary-rgb)"
                 class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20"
               >
                 <div
@@ -359,7 +1010,7 @@
                 </div>
                 <div class="relative z-10 space-y-2">
                   <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
-                  <p class="text-7xl font-black tracking-tight">2670</p>
+                  <p class="text-7xl font-black tracking-tight">2673</p>
                   <p class="text-lg opacity-90 font-semibold">Lifetime Contributions on GitHub</p>
                 </div>
                 <div class="relative z-10 h-px bg-white/20 my-8"></div>
@@ -398,160 +1049,170 @@
               </div>
 
               <div
-                class="lg:col-span-2 flex flex-col bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
+                class="lg:col-span-2 flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"
               >
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative"
                 >
                   <div class="flex justify-between items-center mb-2">
                     <span
-                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      class="text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
                       >Merged PRs</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
                       <span
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                         class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >533</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
-                        >20.0%</span
+                        class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        >19.9%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div
+                    class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden flex"
+                  >
                     <div
                       style="
-                        width: 19.962546816479403%;
-                        max-width: 19.962546816479403%;
-                        background-color: rgb(67, 56, 202);
+                        width: 19.940142162364385%;
+                        max-width: 19.940142162364385%;
+                        background-color: var(--c-primary-rgb);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
                     ></div>
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative"
                 >
                   <div class="flex justify-between items-center mb-2">
                     <span
-                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      class="text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
                       >Issues</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
                       <span
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                         class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >651</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >24.4%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div
+                    class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden flex"
+                  >
                     <div
                       style="
-                        width: 24.382022471910112%;
-                        max-width: 24.382022471910112%;
-                        background-color: rgb(67, 56, 202);
+                        width: 24.354657687991022%;
+                        max-width: 24.354657687991022%;
+                        background-color: var(--c-primary-rgb);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
                     ></div>
                   </div>
                 </div>
                 <div
-                  style="background-color: rgba(67, 56, 202, 0.1)"
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
+                  style="background-color: var(--c-primary-10)"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative"
                 >
                   <div class="flex justify-between items-center mb-2">
                     <span
                       class="text-lg sm:text-xl font-black self-start tracking-tighter"
-                      style="color: rgb(67, 56, 202)"
+                      style="color: var(--c-primary-text)"
                       >Reviewed PRs</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
                       <span
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                         class="tracking-tighter font-black text-3xl sm:text-4xl leading-none"
-                        >766</span
+                        >768</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >28.7%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-white rounded-full h-3 overflow-hidden flex">
+                  <div
+                    class="w-full bg-white dark:bg-slate-900 rounded-full h-3 overflow-hidden flex"
+                  >
                     <div
                       style="
-                        width: 28.689138576779026%;
-                        max-width: 28.689138576779026%;
-                        background-color: rgb(67, 56, 202);
+                        width: 28.731762065095403%;
+                        max-width: 28.731762065095403%;
+                        background-color: var(--c-primary-rgb);
                       "
                       class="progress-bar h-3 rounded-full opacity-100 transition-all duration-300"
                     ></div>
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative"
                 >
                   <div class="flex justify-between items-center mb-2">
                     <span
-                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      class="text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
                       >Co-Authored PRs</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
                       <span
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                         class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
                         >280</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >10.5%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div
+                    class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden flex"
+                  >
                     <div
                       style="
-                        width: 10.486891385767791%;
-                        max-width: 10.486891385767791%;
-                        background-color: rgb(67, 56, 202);
+                        width: 10.475121586232698%;
+                        max-width: 10.475121586232698%;
+                        background-color: var(--c-primary-rgb);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
                     ></div>
                   </div>
                 </div>
                 <div
-                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 hover:opacity-95 transition-all last:border-0 relative"
+                  class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative"
                 >
                   <div class="flex justify-between items-center mb-2">
                     <span
-                      class="text-slate-800 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
+                      class="text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter"
                       >Collaborations</span
                     >
                     <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
                       <span
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                         class="tracking-tighter font-bold text-2xl sm:text-3xl leading-none"
-                        >440</span
+                        >441</span
                       >
                       <span
-                        class="text-xs sm:text-sm text-slate-600 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
+                        class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold"
                         >16.5%</span
                       >
                     </div>
                   </div>
-                  <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden flex">
+                  <div
+                    class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-3 overflow-hidden flex"
+                  >
                     <div
                       style="
-                        width: 16.479400749063668%;
-                        max-width: 16.479400749063668%;
-                        background-color: rgb(67, 56, 202);
+                        width: 16.4983164983165%;
+                        max-width: 16.4983164983165%;
+                        background-color: var(--c-primary-rgb);
                       "
                       class="progress-bar h-3 rounded-full opacity-60 transition-all duration-300"
                     ></div>
@@ -562,18 +1223,20 @@
 
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
               <div
-                class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm min-w-0"
+                class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-0"
               >
-                <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">
+                <h2
+                  class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4"
+                >
                   Primary Focus Projects
                 </h2>
-                <div class="divide-y divide-slate-100 min-w-0">
+                <div class="divide-y divide-slate-100 dark:divide-slate-700 min-w-0">
                   <div
-                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 last:border-0 gap-3 sm:gap-4"
+                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 dark:border-slate-700 last:border-0 gap-3 sm:gap-4"
                   >
                     <div class="flex flex-col min-w-0">
                       <span
-                        class="text-xs uppercase tracking-[0.15em] text-slate-500 font-black leading-none mb-1.5 block"
+                        class="text-xs uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-black leading-none mb-1.5 block"
                         >OpenSource-Communities</span
                       >
                       <a
@@ -581,25 +1244,25 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-base font-black break-all hover:underline underline-offset-4"
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                       >
                         guestbook
                       </a>
                     </div>
                     <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
-                        class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
+                        class="text-xs font-black text-slate-600 dark:text-slate-300 whitespace-nowrap px-2 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-md border border-slate-200 dark:border-slate-700"
                       >
                         658 contributions
                       </span>
                     </div>
                   </div>
                   <div
-                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 last:border-0 gap-3 sm:gap-4"
+                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 dark:border-slate-700 last:border-0 gap-3 sm:gap-4"
                   >
                     <div class="flex flex-col min-w-0">
                       <span
-                        class="text-xs uppercase tracking-[0.15em] text-slate-500 font-black leading-none mb-1.5 block"
+                        class="text-xs uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-black leading-none mb-1.5 block"
                         >mautic</span
                       >
                       <a
@@ -607,25 +1270,25 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-sm font-bold break-all hover:underline underline-offset-4"
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                       >
                         user-documentation
                       </a>
                     </div>
                     <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
-                        class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
+                        class="text-xs font-black text-slate-600 dark:text-slate-300 whitespace-nowrap px-2 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-md border border-slate-200 dark:border-slate-700"
                       >
-                        393 contributions
+                        395 contributions
                       </span>
                     </div>
                   </div>
                   <div
-                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 last:border-0 gap-3 sm:gap-4"
+                    class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 dark:border-slate-700 last:border-0 gap-3 sm:gap-4"
                   >
                     <div class="flex flex-col min-w-0">
                       <span
-                        class="text-xs uppercase tracking-[0.15em] text-slate-500 font-black leading-none mb-1.5 block"
+                        class="text-xs uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-black leading-none mb-1.5 block"
                         >mautic</span
                       >
                       <a
@@ -633,14 +1296,14 @@
                         target="_blank"
                         rel="noopener noreferrer"
                         class="text-sm font-bold break-all hover:underline underline-offset-4"
-                        style="color: rgb(67, 56, 202)"
+                        style="color: var(--c-primary-text)"
                       >
                         developer-documentation-new
                       </a>
                     </div>
                     <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
                       <span
-                        class="text-xs font-black text-slate-600 whitespace-nowrap px-2 py-1 bg-slate-50 rounded-md border border-slate-200"
+                        class="text-xs font-black text-slate-600 dark:text-slate-300 whitespace-nowrap px-2 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-md border border-slate-200 dark:border-slate-700"
                       >
                         302 contributions
                       </span>
@@ -650,28 +1313,32 @@
               </div>
 
               <div
-                class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between"
+                class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between"
               >
                 <div>
-                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 mb-4">
+                  <h2
+                    class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4"
+                  >
                     Collaboration Profile
                   </h2>
                   <div>
                     <p
-                      style="color: rgb(67, 56, 202)"
+                      style="color: var(--c-primary-text)"
                       class="text-3xl font-black mb-2 tracking-tight"
                     >
                       Community Mentor
                     </p>
-                    <p class="text-md text-slate-500 leading-relaxed">
+                    <p class="text-md text-slate-500 dark:text-slate-400 leading-relaxed">
                       Expert advocate for code quality and peer development. Code review and
                       technical guidance ensure high standards across the community.
                     </p>
                   </div>
                 </div>
 
-                <div class="mt-6 pt-4 border-t border-slate-100 flex items-start">
-                  <span style="color: rgb(67, 56, 202)" class="mr-3 mt-0.5 shrink-0">
+                <div
+                  class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-start"
+                >
+                  <span style="color: var(--c-primary-text)" class="mr-3 mt-0.5 shrink-0">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="14"
@@ -689,12 +1356,12 @@
                       <line x1="12" x2="12.01" y1="8" y2="8" />
                     </svg>
                   </span>
-                  <p class="text-xs text-slate-500 leading-snug">
+                  <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">
                     This profile is an assigned category based on contribution activity.
                     <a
                       href="glossary.html"
-                      class="font-bold underline decoration-slate-300 hover:decoration-current transition-colors"
-                      style="color: rgb(67, 56, 202)"
+                      class="font-bold underline decoration-slate-300 dark:decoration-slate-600 hover:decoration-current transition-colors"
+                      style="color: var(--c-primary-text)"
                     >
                       Learn more in the Glossary.
                     </a>
@@ -703,30 +1370,32 @@
               </div>
             </div>
 
-            <section class="mt-16 pt-12 border-t border-slate-100">
+            <section class="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800">
               <h2
-                class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 mb-8 text-center"
+                class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 dark:text-slate-100 mb-8 text-center"
               >
                 Explore Detailed Metrics & Activities
               </h2>
               <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <a
                   href="reports.html"
-                  class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
+                  class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
                 >
                   <div class="flex items-center space-x-4 mb-4">
                     <div
-                      class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
+                      class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
                     >
                       📊
                     </div>
                     <div>
-                      <h3 class="font-black text-slate-900">Reports</h3>
-                      <p class="text-xs text-slate-600 font-bold">Seasonal breakdown</p>
+                      <h3 class="font-black text-slate-900 dark:text-slate-100">Reports</h3>
+                      <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">
+                        Seasonal breakdown
+                      </p>
                     </div>
                   </div>
                   <div
-                    style="color: rgb(67, 56, 202)"
+                    style="color: var(--c-primary-text)"
                     class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity"
                   >
                     <span>View Reports</span>
@@ -753,21 +1422,23 @@
 
                 <a
                   href="community-activity.html"
-                  class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
+                  class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
                 >
                   <div class="flex items-center space-x-4 mb-4">
                     <div
-                      class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
+                      class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
                     >
                       🤝
                     </div>
                     <div>
-                      <h3 class="font-black text-slate-900">Community</h3>
-                      <p class="text-xs text-slate-600 font-bold">Roles & Active Tasks</p>
+                      <h3 class="font-black text-slate-900 dark:text-slate-100">Community</h3>
+                      <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">
+                        Roles & Active Tasks
+                      </p>
                     </div>
                   </div>
                   <div
-                    style="color: rgb(67, 56, 202)"
+                    style="color: var(--c-primary-text)"
                     class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity"
                   >
                     <span>View Activity</span>
@@ -794,21 +1465,23 @@
 
                 <a
                   href="blog.html"
-                  class="group p-6 bg-slate-50 rounded-2xl border border-slate-200 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
+                  class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm"
                 >
                   <div class="flex items-center space-x-4 mb-4">
                     <div
-                      class="p-3 bg-white rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
+                      class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl"
                     >
                       ✍️
                     </div>
                     <div>
-                      <h3 class="font-black text-slate-900">Articles</h3>
-                      <p class="text-xs text-slate-600 font-bold">47 Tutorials & Posts</p>
+                      <h3 class="font-black text-slate-900 dark:text-slate-100">Articles</h3>
+                      <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">
+                        47 Tutorials & Posts
+                      </p>
                     </div>
                   </div>
                   <div
-                    style="color: rgb(67, 56, 202)"
+                    style="color: var(--c-primary-text)"
                     class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity"
                   >
                     <span>Read Articles</span>
@@ -839,7 +1512,7 @@
       </div>
     </main>
     <footer
-      style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -847,7 +1520,7 @@
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          style="color: rgb(67, 56, 202)"
+          style="color: var(--c-primary-text)"
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
@@ -859,7 +1532,7 @@
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          style="color: rgb(67, 56, 202)"
+          style="color: var(--c-primary-text)"
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           Ayu Adiati

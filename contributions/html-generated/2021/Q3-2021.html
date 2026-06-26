@@ -9,9 +9,255 @@
       type="image/svg+xml"
       href="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2021a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%2019.25a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM5.75%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM2.5%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200zM18.25%206.5a1.75%201.75%200%20110-3.5%201.75%201.75%200%20010%203.5zM15%204.75a3.25%203.25%200%20106.5%200%203.25%203.25%200%2000-6.5%200z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M5.75%2016.75A.75.75%200%20006.5%2016V8A.75.75%200%20005%208v8c0%20.414.336.75.75.75z%27%2F%3E%20%3Cpath%20fill%3D%27%234338CA%27%20fill-rule%3D%27evenodd%27%20d%3D%27M17.5%208.75v-1H19v1a3.75%203.75%200%2001-3.75%203.75h-7a1.75%201.75%200%2000-1.75%201.75H5A3.25%203.25%200%20018.25%2011h7a2.25%202.25%200%20002.25-2.25z%27%2F%3E%20%3C%2Fsvg%3E"
     />
+    <script>
+      (function () {
+        try {
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+
+          function isDark() {
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
+            return mq.matches;
+          }
+
+          document.documentElement.classList.toggle('dark', isDark());
+
+          // Re-reads localStorage on every change instead of caching it, so a
+          // theme choice made via the navbar toggle (after this script ran)
+          // is respected rather than overridden by a stale snapshot.
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
+          });
+        } catch (e) {}
+      })();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:where(.dark, .dark *));
+    </style>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      :root {
+        --c-primary-hex: #4338ca;
+        --c-primary-rgb: rgb(67, 56, 202);
+        --c-primary-5: rgba(67, 56, 202, 0.05);
+        --c-primary-10: rgba(67, 56, 202, 0.1);
+        --c-primary-15: rgba(67, 56, 202, 0.15);
+        --c-primary-25: rgba(67, 56, 202, 0.25);
+        --c-primary-50: rgba(67, 56, 202, 0.5);
+        --c-primary-75: rgba(67, 56, 202, 0.75);
+        --c-primary-100: rgba(67, 56, 202, 1);
+        --c-primary900-hex: #312e81;
+        --c-primary900-rgb: rgb(49, 46, 129);
+        --c-primary900-5: rgba(49, 46, 129, 0.05);
+        --c-primary900-10: rgba(49, 46, 129, 0.1);
+        --c-primary900-15: rgba(49, 46, 129, 0.15);
+        --c-primary900-25: rgba(49, 46, 129, 0.25);
+        --c-primary900-50: rgba(49, 46, 129, 0.5);
+        --c-primary900-75: rgba(49, 46, 129, 0.75);
+        --c-primary900-100: rgba(49, 46, 129, 1);
+        --c-neutral-hex: #6b7280;
+        --c-neutral-rgb: rgb(107, 114, 128);
+        --c-neutral-5: rgba(107, 114, 128, 0.05);
+        --c-neutral-10: rgba(107, 114, 128, 0.1);
+        --c-neutral-15: rgba(107, 114, 128, 0.15);
+        --c-neutral-25: rgba(107, 114, 128, 0.25);
+        --c-neutral-50: rgba(107, 114, 128, 0.5);
+        --c-neutral-75: rgba(107, 114, 128, 0.75);
+        --c-neutral-100: rgba(107, 114, 128, 1);
+        --c-success-hex: #10b981;
+        --c-success-rgb: rgb(16, 185, 129);
+        --c-success-5: rgba(16, 185, 129, 0.05);
+        --c-success-10: rgba(16, 185, 129, 0.1);
+        --c-success-15: rgba(16, 185, 129, 0.15);
+        --c-success-25: rgba(16, 185, 129, 0.25);
+        --c-success-50: rgba(16, 185, 129, 0.5);
+        --c-success-75: rgba(16, 185, 129, 0.75);
+        --c-success-100: rgba(16, 185, 129, 1);
+        --c-merged-hex: #8b5cf6;
+        --c-merged-rgb: rgb(139, 92, 246);
+        --c-merged-5: rgba(139, 92, 246, 0.05);
+        --c-merged-10: rgba(139, 92, 246, 0.1);
+        --c-merged-15: rgba(139, 92, 246, 0.15);
+        --c-merged-25: rgba(139, 92, 246, 0.25);
+        --c-merged-50: rgba(139, 92, 246, 0.5);
+        --c-merged-75: rgba(139, 92, 246, 0.75);
+        --c-merged-100: rgba(139, 92, 246, 1);
+        --c-error-hex: #ef4444;
+        --c-error-rgb: rgb(239, 68, 68);
+        --c-error-5: rgba(239, 68, 68, 0.05);
+        --c-error-10: rgba(239, 68, 68, 0.1);
+        --c-error-15: rgba(239, 68, 68, 0.15);
+        --c-error-25: rgba(239, 68, 68, 0.25);
+        --c-error-50: rgba(239, 68, 68, 0.5);
+        --c-error-75: rgba(239, 68, 68, 0.75);
+        --c-error-100: rgba(239, 68, 68, 1);
+        --c-text-primary-hex: #1f2937;
+        --c-text-primary-rgb: rgb(31, 41, 55);
+        --c-text-primary-5: rgba(31, 41, 55, 0.05);
+        --c-text-primary-10: rgba(31, 41, 55, 0.1);
+        --c-text-primary-15: rgba(31, 41, 55, 0.15);
+        --c-text-primary-25: rgba(31, 41, 55, 0.25);
+        --c-text-primary-50: rgba(31, 41, 55, 0.5);
+        --c-text-primary-75: rgba(31, 41, 55, 0.75);
+        --c-text-primary-100: rgba(31, 41, 55, 1);
+        --c-text-secondary-hex: #374151;
+        --c-text-secondary-rgb: rgb(55, 65, 81);
+        --c-text-secondary-5: rgba(55, 65, 81, 0.05);
+        --c-text-secondary-10: rgba(55, 65, 81, 0.1);
+        --c-text-secondary-15: rgba(55, 65, 81, 0.15);
+        --c-text-secondary-25: rgba(55, 65, 81, 0.25);
+        --c-text-secondary-50: rgba(55, 65, 81, 0.5);
+        --c-text-secondary-75: rgba(55, 65, 81, 0.75);
+        --c-text-secondary-100: rgba(55, 65, 81, 1);
+        --c-text-muted-hex: #6b7280;
+        --c-text-muted-rgb: rgb(107, 114, 128);
+        --c-text-muted-5: rgba(107, 114, 128, 0.05);
+        --c-text-muted-10: rgba(107, 114, 128, 0.1);
+        --c-text-muted-15: rgba(107, 114, 128, 0.15);
+        --c-text-muted-25: rgba(107, 114, 128, 0.25);
+        --c-text-muted-50: rgba(107, 114, 128, 0.5);
+        --c-text-muted-75: rgba(107, 114, 128, 0.75);
+        --c-text-muted-100: rgba(107, 114, 128, 1);
+        --c-bg-surface: #ffffff;
+        --c-accent-yellow: #eab308;
+        --c-accent-strong: #3730a3;
+        --c-primary-text: #4338ca;
+        --c-draft-bg: #f1f5f9;
+        --c-draft-text: #475569;
+        --c-draft-border: #cbd5e1;
+      }
+      html.dark {
+        --c-primary-hex: #4338ca;
+        --c-primary-rgb: rgb(67, 56, 202);
+        --c-primary-5: rgba(67, 56, 202, 0.05);
+        --c-primary-10: rgba(67, 56, 202, 0.1);
+        --c-primary-15: rgba(67, 56, 202, 0.15);
+        --c-primary-25: rgba(67, 56, 202, 0.25);
+        --c-primary-50: rgba(67, 56, 202, 0.5);
+        --c-primary-75: rgba(67, 56, 202, 0.75);
+        --c-primary-100: rgba(67, 56, 202, 1);
+        --c-primary900-hex: #312e81;
+        --c-primary900-rgb: rgb(49, 46, 129);
+        --c-primary900-5: rgba(49, 46, 129, 0.05);
+        --c-primary900-10: rgba(49, 46, 129, 0.1);
+        --c-primary900-15: rgba(49, 46, 129, 0.15);
+        --c-primary900-25: rgba(49, 46, 129, 0.25);
+        --c-primary900-50: rgba(49, 46, 129, 0.5);
+        --c-primary900-75: rgba(49, 46, 129, 0.75);
+        --c-primary900-100: rgba(49, 46, 129, 1);
+        --c-neutral-hex: #94a3b8;
+        --c-neutral-rgb: rgb(148, 163, 184);
+        --c-neutral-5: rgba(148, 163, 184, 0.05);
+        --c-neutral-10: rgba(148, 163, 184, 0.1);
+        --c-neutral-15: rgba(148, 163, 184, 0.15);
+        --c-neutral-25: rgba(148, 163, 184, 0.25);
+        --c-neutral-50: rgba(148, 163, 184, 0.5);
+        --c-neutral-75: rgba(148, 163, 184, 0.75);
+        --c-neutral-100: rgba(148, 163, 184, 1);
+        --c-success-hex: #34d399;
+        --c-success-rgb: rgb(52, 211, 153);
+        --c-success-5: rgba(52, 211, 153, 0.05);
+        --c-success-10: rgba(52, 211, 153, 0.1);
+        --c-success-15: rgba(52, 211, 153, 0.15);
+        --c-success-25: rgba(52, 211, 153, 0.25);
+        --c-success-50: rgba(52, 211, 153, 0.5);
+        --c-success-75: rgba(52, 211, 153, 0.75);
+        --c-success-100: rgba(52, 211, 153, 1);
+        --c-merged-hex: #a78bfa;
+        --c-merged-rgb: rgb(167, 139, 250);
+        --c-merged-5: rgba(167, 139, 250, 0.05);
+        --c-merged-10: rgba(167, 139, 250, 0.1);
+        --c-merged-15: rgba(167, 139, 250, 0.15);
+        --c-merged-25: rgba(167, 139, 250, 0.25);
+        --c-merged-50: rgba(167, 139, 250, 0.5);
+        --c-merged-75: rgba(167, 139, 250, 0.75);
+        --c-merged-100: rgba(167, 139, 250, 1);
+        --c-error-hex: #f87171;
+        --c-error-rgb: rgb(248, 113, 113);
+        --c-error-5: rgba(248, 113, 113, 0.05);
+        --c-error-10: rgba(248, 113, 113, 0.1);
+        --c-error-15: rgba(248, 113, 113, 0.15);
+        --c-error-25: rgba(248, 113, 113, 0.25);
+        --c-error-50: rgba(248, 113, 113, 0.5);
+        --c-error-75: rgba(248, 113, 113, 0.75);
+        --c-error-100: rgba(248, 113, 113, 1);
+        --c-text-primary-hex: #f1f5f9;
+        --c-text-primary-rgb: rgb(241, 245, 249);
+        --c-text-primary-5: rgba(241, 245, 249, 0.05);
+        --c-text-primary-10: rgba(241, 245, 249, 0.1);
+        --c-text-primary-15: rgba(241, 245, 249, 0.15);
+        --c-text-primary-25: rgba(241, 245, 249, 0.25);
+        --c-text-primary-50: rgba(241, 245, 249, 0.5);
+        --c-text-primary-75: rgba(241, 245, 249, 0.75);
+        --c-text-primary-100: rgba(241, 245, 249, 1);
+        --c-text-secondary-hex: #cbd5e1;
+        --c-text-secondary-rgb: rgb(203, 213, 225);
+        --c-text-secondary-5: rgba(203, 213, 225, 0.05);
+        --c-text-secondary-10: rgba(203, 213, 225, 0.1);
+        --c-text-secondary-15: rgba(203, 213, 225, 0.15);
+        --c-text-secondary-25: rgba(203, 213, 225, 0.25);
+        --c-text-secondary-50: rgba(203, 213, 225, 0.5);
+        --c-text-secondary-75: rgba(203, 213, 225, 0.75);
+        --c-text-secondary-100: rgba(203, 213, 225, 1);
+        --c-text-muted-hex: #94a3b8;
+        --c-text-muted-rgb: rgb(148, 163, 184);
+        --c-text-muted-5: rgba(148, 163, 184, 0.05);
+        --c-text-muted-10: rgba(148, 163, 184, 0.1);
+        --c-text-muted-15: rgba(148, 163, 184, 0.15);
+        --c-text-muted-25: rgba(148, 163, 184, 0.25);
+        --c-text-muted-50: rgba(148, 163, 184, 0.5);
+        --c-text-muted-75: rgba(148, 163, 184, 0.75);
+        --c-text-muted-100: rgba(148, 163, 184, 1);
+        --c-bg-surface: #1e293b;
+        --c-accent-yellow: #facc15;
+        --c-accent-strong: #928fd7;
+        --c-primary-text: #8f89df;
+        --c-draft-bg: #334155;
+        --c-draft-text: #e2e8f0;
+        --c-draft-border: #64748b;
+      }
+      :root {
+        --wb-ongoing-bg: #ecfeff;
+        --wb-ongoing-text: #086788;
+        --wb-ongoing-border: #a5f3fc;
+        --wb-todo-bg: #fff7ed;
+        --wb-todo-text: #c2410c;
+        --wb-todo-border: #fdba74;
+        --wb-bot-bg: #f8fafc;
+        --wb-bot-text: #475569;
+        --wb-bot-border: #e2e8f0;
+        --wb-empty-text: #991b1b;
+        --wb-waiting-dot: #84cc16;
+        --wb-waiting-text: #4d7c0f;
+        --wb-takeaction-dot: #d946ef;
+        --wb-takeaction-text: #a21caf;
+        --wb-watching-dot: #0ea5e9;
+        --wb-watching-text: #0369a1;
+        --wb-stale-dot: #94a3b8;
+        --wb-stale-text: #64748b;
+      }
+      html.dark {
+        --wb-ongoing-bg: #083344;
+        --wb-ongoing-text: #67e8f9;
+        --wb-ongoing-border: #0e7490;
+        --wb-todo-bg: #431407;
+        --wb-todo-text: #fdba74;
+        --wb-todo-border: #c2410c;
+        --wb-bot-bg: #1e293b;
+        --wb-bot-text: #cbd5e1;
+        --wb-bot-border: #475569;
+        --wb-empty-text: #fca5a5;
+        --wb-waiting-dot: #a3e635;
+        --wb-waiting-text: #bef264;
+        --wb-takeaction-dot: #e879f9;
+        --wb-takeaction-text: #f0abfc;
+        --wb-watching-dot: #38bdf8;
+        --wb-watching-text: #7dd3fc;
+        --wb-stale-dot: #cbd5e1;
+        --wb-stale-text: #94a3b8;
+      }
       html,
       body {
         margin: 0;
@@ -30,28 +276,28 @@
 
       /* Navigation Buttons */
       .nav-report-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        border: 1px solid var(--c-neutral-10) !important;
         transition: border-color 0.15s ease-in-out !important;
       }
       .nav-report-button:hover {
-        border-color: rgb(67, 56, 202) !important;
+        border-color: var(--c-primary-text) !important;
       }
       .nav-report-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
+        border-color: var(--c-primary-text);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: 2px;
       }
 
       .nav-contribution-button {
-        border: 1px solid rgba(107, 114, 128, 0.1) !important;
+        border: 1px solid var(--c-neutral-10) !important;
         transition: border-color 0.15s ease-in-out !important;
       }
       .nav-contribution-button:hover {
-        border-color: rgb(67, 56, 202) !important;
+        border-color: var(--c-primary-text) !important;
       }
       .nav-contribution-button:focus-visible {
-        border-color: rgb(67, 56, 202);
-        outline: 2px solid rgb(67, 56, 202);
+        border-color: var(--c-primary-text);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: 2px;
       }
 
@@ -93,12 +339,12 @@
         outline: none;
         margin: 0.5em 0;
         padding: 0.5em 0;
-        color: #1f2937;
+        color: var(--c-text-primary-rgb);
         display: list-item;
         white-space: nowrap;
       }
       summary:focus-visible {
-        outline: 2px solid rgb(67, 56, 202);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: 2px;
       }
 
@@ -110,10 +356,10 @@
       }
 
       .details-section {
-        background-color: rgba(67, 56, 202, 0.05);
+        background-color: var(--c-primary-5);
       }
       .details-section details:open summary {
-        color: rgb(67, 56, 202);
+        color: var(--c-primary-text);
       }
 
       .report-table {
@@ -126,24 +372,24 @@
         position: sticky;
         top: 0;
         z-index: 10;
-        background-color: #ffffff;
-        background-image: linear-gradient(rgba(67, 56, 202, 0.05), rgba(67, 56, 202, 0.05));
+        background-color: var(--c-bg-surface);
+        background-image: linear-gradient(var(--c-primary-5), var(--c-primary-5));
         font-weight: 700;
         padding: 12px;
         text-align: left;
         border-bottom: none;
-        box-shadow: inset 0 -1px 0 0 rgb(67, 56, 202);
+        box-shadow: inset 0 -1px 0 0 var(--c-primary-text);
       }
 
       .report-table td {
-        background-color: #ffffff;
+        background-color: var(--c-bg-surface);
       }
 
       .report-table th,
       .report-table td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #e5e7eb;
+        border-bottom: 1px solid var(--c-neutral-15);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -159,19 +405,19 @@
 
       .table-row-hover:hover,
       .table-row-hover:focus-visible {
-        background-color: rgba(67, 56, 202, 0.1) !important;
+        background-color: var(--c-primary-10) !important;
       }
 
       .table-row-hover:focus-visible {
-        outline: 2px solid rgb(67, 56, 202);
+        outline: 2px solid var(--c-primary-text);
         outline-offset: -2px;
       }
 
       .report-table tbody tr.bg-white {
-        background-color: #ffffff;
+        background-color: var(--c-bg-surface);
       }
       .report-table tbody tr.bg-gray-50 {
-        background-color: #f9fafb;
+        background-color: var(--c-neutral-5);
       }
 
       .th-content {
@@ -194,7 +440,7 @@
       th.sort-custom1 .sort-icon,
       th.sort-custom2 .sort-icon {
         opacity: 1 !important;
-        color: rgb(67, 56, 202) !important;
+        color: var(--c-primary-text) !important;
         font-weight: bold;
       }
 
@@ -213,15 +459,15 @@
       }
 
       .search-input {
-        border-color: rgb(67, 56, 202);
+        border-color: var(--c-primary-text);
         transition:
           border-color 0.15s ease-in-out,
           box-shadow 0.15s ease-in-out;
       }
       .search-input:focus,
       .search-input:focus-visible {
-        border-color: rgba(67, 56, 202, 0.15) !important;
-        box-shadow: 0 0 0 1px rgba(67, 56, 202, 0.25);
+        border-color: var(--c-primary-15) !important;
+        box-shadow: 0 0 0 1px var(--c-primary-25);
         outline: none;
       }
 
@@ -240,9 +486,9 @@
       }
     </style>
   </head>
-  <body class="bg-white antialiased flex flex-col h-full min-h-full">
+  <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
     <nav
-      style="background-color: rgb(67, 56, 202)"
+      style="background-color: var(--c-primary-rgb)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
     >
       <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -260,25 +506,25 @@
           <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a
               href="../reports.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Quarterly Reports</a
             >
             <a
               href="../community-activity.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Community & Activity</a
             >
             <a
               href="../blog.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Articles</a
             >
             <a
               href="../glossary.html"
-              style="background-color: rgba(67, 56, 202, 0.1)"
+              style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
               >Glossary</a
             >
@@ -297,11 +543,142 @@
                   /></svg
               ></span>
             </a>
+
+            <div class="theme-dropdown relative" data-theme-dropdown>
+              <button
+                type="button"
+                class="theme-dropdown-trigger"
+                aria-haspopup="true"
+                aria-expanded="false"
+                aria-label="Change theme"
+              >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                    />
+                  </svg> </span
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg> </span
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                    <path d="M8 20h8M12 16v4" />
+                  </svg>
+                </span>
+              </button>
+              <div class="theme-dropdown-menu hidden" role="menu">
+                <button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="light"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="12" r="4" />
+                      <path
+                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                      />
+                    </svg>
+                  </span>
+                  <span>Light</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                ><button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="dark"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                  </span>
+                  <span>Dark</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                ><button
+                  type="button"
+                  role="menuitemradio"
+                  data-theme-choice="system"
+                  class="theme-dropdown-item"
+                  aria-checked="false"
+                >
+                  <span class="theme-dropdown-item-icon">
+                    <svg
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                      aria-hidden="true"
+                    >
+                      <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                      <path d="M8 20h8M12 16v4" />
+                    </svg>
+                  </span>
+                  <span>System</span>
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span>
+                </button>
+              </div>
+            </div>
           </div>
 
           <button
             id="menu-button"
-            style="background-color: rgba(67, 56, 202, 0.75); cursor: pointer"
+            style="background-color: var(--c-primary-75); cursor: pointer"
             class="min-[1025px]:hidden w-10 h-10 flex items-center justify-center rounded-md transition duration-150"
             aria-expanded="false"
             aria-controls="mobile-menu"
@@ -337,7 +714,7 @@
 
       <div
         id="mobile-menu"
-        style="background-color: rgb(49, 46, 129)"
+        style="background-color: var(--c-primary900-rgb)"
         class="hidden min-[1025px]:hidden absolute top-16 left-0 right-0 shadow-lg p-4"
       >
         <div class="flex flex-col space-y-2">
@@ -363,7 +740,10 @@
           >
         </div>
 
-        <div class="mt-3 pt-3" style="border-top-color: rgb(67, 56, 202); border-top-width: 1px">
+        <div
+          class="mt-3 pt-3 flex items-center justify-between"
+          style="border-top-color: var(--c-primary-rgb); border-top-width: 1px"
+        >
           <a
             href="https://github.com/adiati98/oss-portfolio"
             target="_blank"
@@ -378,6 +758,137 @@
                 /></svg
             ></span>
           </a>
+
+          <div class="theme-dropdown relative mr-3" data-theme-dropdown>
+            <button
+              type="button"
+              class="theme-dropdown-trigger"
+              aria-haspopup="true"
+              aria-expanded="false"
+              aria-label="Change theme"
+            >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path
+                    d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                  />
+                </svg> </span
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg> </span
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                <svg
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                  <path d="M8 20h8M12 16v4" />
+                </svg>
+              </span>
+            </button>
+            <div class="theme-dropdown-menu hidden" role="menu">
+              <button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="light"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                      d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+                    />
+                  </svg>
+                </span>
+                <span>Light</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+              ><button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="dark"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                  </svg>
+                </span>
+                <span>Dark</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+              ><button
+                type="button"
+                role="menuitemradio"
+                data-theme-choice="system"
+                class="theme-dropdown-item"
+                aria-checked="false"
+              >
+                <span class="theme-dropdown-item-icon">
+                  <svg
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="4" width="18" height="12" rx="1.5" />
+                    <path d="M8 20h8M12 16v4" />
+                  </svg>
+                </span>
+                <span>System</span>
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -397,6 +908,71 @@
               closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
+
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
+
+          function closeAllDropdowns() {
+            dropdowns.forEach((dropdown) => {
+              dropdown.querySelector('.theme-dropdown-menu').classList.add('hidden');
+              dropdown
+                .querySelector('.theme-dropdown-trigger')
+                .setAttribute('aria-expanded', 'false');
+            });
+          }
+
+          function setTheme(choice) {
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
+            } else {
+              localStorage.setItem('theme', choice);
+            }
+            const isDark =
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
+            reflectActiveChoice();
+          }
+
+          function reflectActiveChoice() {
+            const current = localStorage.getItem('theme') || 'system';
+            dropdowns.forEach((dropdown) => {
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
+            });
+          }
+
+          dropdowns.forEach((dropdown) => {
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
+
+            trigger.addEventListener('click', (e) => {
+              e.stopPropagation();
+              const isOpen = !menu.classList.contains('hidden');
+              closeAllDropdowns();
+              if (!isOpen) {
+                menu.classList.remove('hidden');
+                trigger.setAttribute('aria-expanded', 'true');
+              }
+            });
+
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
+                setTheme(item.dataset.themeChoice);
+                closeAllDropdowns();
+              });
+            });
+          });
+
+          document.addEventListener('click', closeAllDropdowns);
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns();
+          });
+
+          reflectActiveChoice();
         });
       </script>
     </nav>
@@ -410,7 +986,7 @@
       }
       .nav-link:hover {
         border-color: white !important;
-        background-color: rgba(67, 56, 202, 0.25) !important;
+        background-color: var(--c-primary-25) !important;
       }
       .nav-home-link {
         padding: 0.5rem;
@@ -424,7 +1000,7 @@
       }
       .nav-mobile-link {
         padding: 0.5rem 0.75rem;
-        background-color: rgb(49, 46, 129);
+        background-color: var(--c-primary900-rgb);
         width: 100%;
       }
 
@@ -438,40 +1014,118 @@
         width: 100%;
         height: 100%;
       }
+
+      .theme-dropdown-trigger {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: 0.375rem;
+        color: rgba(255, 255, 255, 0.85);
+        cursor: pointer;
+        border: none;
+        background-color: var(--c-primary-75);
+        transition:
+          background-color 0.15s ease-in-out,
+          color 0.15s ease-in-out;
+      }
+      .theme-dropdown-trigger:hover,
+      .theme-dropdown-trigger[aria-expanded='true'] {
+        color: white;
+      }
+      .theme-dropdown-trigger-icon svg {
+        width: 1.15rem;
+        height: 1.15rem;
+        display: block;
+      }
+
+      .theme-dropdown-menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.5rem);
+        min-width: 9.5rem;
+        background-color: var(--c-bg-surface);
+        border: 1px solid var(--c-neutral-10);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+        padding: 0.25rem;
+        z-index: 60;
+      }
+      .theme-dropdown-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 0.5rem 0.625rem;
+        border-radius: 0.375rem;
+        border: none;
+        background: transparent;
+        color: var(--c-text-secondary-rgb);
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-align: left;
+        transition: background-color 0.15s ease-in-out;
+      }
+      .theme-dropdown-item:hover,
+      .theme-dropdown-item:focus-visible {
+        background-color: var(--c-primary-10);
+        outline: none;
+      }
+      .theme-dropdown-item-icon {
+        display: inline-flex;
+      }
+      .theme-dropdown-item-icon svg {
+        width: 1rem;
+        height: 1rem;
+        display: block;
+      }
+      .theme-dropdown-check {
+        margin-left: auto;
+        opacity: 0;
+        color: var(--c-primary-text);
+        font-weight: 700;
+      }
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
+        opacity: 1;
+      }
     </style>
     <main class="grow w-full">
       <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
         <div class="max-w-[120ch] mx-auto">
           <header
-            style="border-bottom-color: rgba(67, 56, 202, 0.15)"
+            style="border-bottom-color: var(--c-primary-15)"
             class="text-center mt-16 mb-12 pb-4 border-b-2"
           >
             <h1
-              style="color: rgb(67, 56, 202)"
+              style="color: var(--c-primary-text)"
               class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
             >
               Q3 2021
             </h1>
-            <p class="text-lg text-gray-500 mt-2">Open Source Contributions Report</p>
+            <p class="text-lg text-gray-500 dark:text-slate-400 mt-2">
+              Open Source Contributions Report
+            </p>
           </header>
 
           <section class="mb-8">
             <h2
-              style="border-left-color: rgb(67, 56, 202)"
-              class="text-3xl font-semibold text-gray-800 mb-12 border-l-4 pl-3"
+              style="border-left-color: var(--c-primary-text)"
+              class="text-3xl font-semibold text-gray-800 dark:text-slate-100 mb-12 border-l-4 pl-3"
             >
               📊 Quarterly Statistics
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
               <div
-                style="background-color: rgb(67, 56, 202)"
+                style="background-color: var(--c-primary-rgb)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
                 <p class="text-4xl font-extrabold">14</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
-                style="background-color: rgb(67, 56, 202)"
+                style="background-color: var(--c-primary-rgb)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
                 <p class="text-4xl font-extrabold">2</p>
@@ -482,18 +1136,20 @@
 
           <section class="mb-8">
             <h3
-              class="text-2xl font-semibold text-gray-800 mt-16 mb-4 border-l-4 border-green-500 pl-3"
+              class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mt-16 mb-4 border-l-4 border-green-500 dark:border-green-400 pl-3"
             >
               Contribution Breakdown
             </h3>
             <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
               <a
                 href="#merged-prs"
-                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
-                style="color: rgb(67, 56, 202)"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">6</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">6</span>
+                <div
+                  class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
+                >
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -512,11 +1168,13 @@
 
               <a
                 href="#issues"
-                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
-                style="color: rgb(67, 56, 202)"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">2</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">2</span>
+                <div
+                  class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
+                >
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -536,11 +1194,13 @@
 
               <a
                 href="#reviewed-prs"
-                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
-                style="color: rgb(67, 56, 202)"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">0</span>
+                <div
+                  class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
+                >
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -559,11 +1219,13 @@
 
               <a
                 href="#co-authored-prs"
-                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
-                style="color: rgb(67, 56, 202)"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">0</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">0</span>
+                <div
+                  class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
+                >
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -585,11 +1247,13 @@
 
               <a
                 href="#collaborations"
-                class="nav-contribution-button flex flex-col items-center p-3 bg-white border rounded-xl shadow-sm hover:shadow-lg transition text-center"
-                style="color: rgb(67, 56, 202)"
+                class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: rgb(67, 56, 202)">6</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 mt-1">
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">6</span>
+                <div
+                  class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
+                >
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -628,16 +1292,18 @@
           </section>
 
           <section class="mb-8">
-            <h3 class="text-2xl font-semibold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">
+            <h3
+              class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mb-4 border-l-4 border-yellow-500 dark:border-yellow-400 pl-3"
+            >
               Top 3 Repositories
             </h3>
-            <div class="p-4 bg-gray-50 rounded-lg shadow-sm">
-              <ol class="list-decimal list-inside pl-4 text-gray-600 space-y-1">
+            <div class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-lg shadow-sm">
+              <ol class="list-decimal list-inside pl-4 text-gray-600 dark:text-slate-300 space-y-1">
                 <li class="pl-2">
                   <a
                     href="https://github.com/Virtual-Coffee/virtualcoffee.io"
                     target="_blank"
-                    class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                    class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm"
                     >Virtual-Coffee/virtualcoffee.io</a
                   >
                   (13 contributions)
@@ -646,7 +1312,7 @@
                   <a
                     href="https://github.com/Virtual-Coffee/VC-Community-Docs"
                     target="_blank"
-                    class="text-blue-600 hover:text-blue-800 hover:underline font-mono text-sm"
+                    class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm"
                     >Virtual-Coffee/VC-Community-Docs</a
                   >
                   (1 contributions)
@@ -655,12 +1321,15 @@
             </div>
           </section>
 
-          <hr class="my-8 border-gray-200" />
+          <hr class="my-8 border-gray-200 dark:border-slate-700" />
 
           <section class="space-y-6">
-            <details id="merged-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
+            <details
+              id="merged-prs"
+              class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+            >
               <summary
-                style="color: rgb(67, 56, 202)"
+                style="color: var(--c-primary-text)"
                 class="text-xl font-bold cursor-pointer outline-none"
               >
                 <div
@@ -684,7 +1353,7 @@
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
                 <div class="icon-input-container grow">
-                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                  <div class="input-icon" style="color: var(--c-primary-text)">
                     <svg
                       class="w-5 h-5"
                       width="100%"
@@ -708,31 +1377,33 @@
                     id="merged-prs-search"
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Merged PRs"
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: var(--c-primary-text)"
                   />
                 </div>
 
                 <button
-                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                  class="reset-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
               <div
-                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+                class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto"
               >
-                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead class="bg-white">
+                <table
+                  class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800"
+                >
+                  <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
                         No.
                       </th>
                       <th
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -742,7 +1413,7 @@
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
@@ -750,7 +1421,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -760,7 +1431,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Merged <span class="sort-icon ml-1">↕</span></span
@@ -770,7 +1441,7 @@
                         data-type="number"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Review Period <span class="sort-icon ml-1">↕</span></span
@@ -778,14 +1449,14 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100">
+                  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
                     <tr
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -796,7 +1467,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/348"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Fix typo for YouTube link's markdown</a
                         >
                       </td>
@@ -810,7 +1481,7 @@
                     >
                       <td>2.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -821,7 +1492,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/336"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Feature/add guide for VC prospective members</a
                         >
                       </td>
@@ -835,7 +1506,7 @@
                     >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/VC-Community-Docs" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/VC-Community-Docs</span
                         >
                       </td>
@@ -846,7 +1517,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/203"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add tips to onboard volunteer notetaker</a
                         >
                       </td>
@@ -860,7 +1531,7 @@
                     >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -868,7 +1539,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/325"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add September newsletter</a
                         >
                       </td>
@@ -882,7 +1553,7 @@
                     >
                       <td>5.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -890,7 +1561,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/291"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add August newsletter</a
                         >
                       </td>
@@ -904,7 +1575,7 @@
                     >
                       <td>6.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -912,7 +1583,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/274"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add July newsletter</a
                         >
                       </td>
@@ -925,9 +1596,12 @@
               </div>
             </details>
 
-            <details id="issues" class="border border-gray-200 rounded-xl p-4 shadow-sm">
+            <details
+              id="issues"
+              class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+            >
               <summary
-                style="color: rgb(67, 56, 202)"
+                style="color: var(--c-primary-text)"
                 class="text-xl font-bold cursor-pointer outline-none"
               >
                 <div
@@ -952,7 +1626,7 @@
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
                 <div class="icon-input-container grow">
-                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                  <div class="input-icon" style="color: var(--c-primary-text)">
                     <svg
                       class="w-5 h-5"
                       width="100%"
@@ -976,31 +1650,33 @@
                     id="issues-search"
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Issues"
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: var(--c-primary-text)"
                   />
                 </div>
 
                 <button
-                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                  class="reset-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
               <div
-                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+                class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto"
               >
-                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead class="bg-white">
+                <table
+                  class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800"
+                >
+                  <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
                         No.
                       </th>
                       <th
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1010,7 +1686,7 @@
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
@@ -1018,7 +1694,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created <span class="sort-icon ml-1">↕</span></span
@@ -1028,7 +1704,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closed <span class="sort-icon ml-1">↕</span></span
@@ -1038,7 +1714,7 @@
                         data-type="number"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Closing Period <span class="sort-icon ml-1">↕</span></span
@@ -1046,14 +1722,14 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100">
+                  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
                     <tr
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1061,7 +1737,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/347"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Typo of markdown in Guide To VC</a
                         >
                       </td>
@@ -1075,7 +1751,7 @@
                     >
                       <td>2.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1086,7 +1762,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/317"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Install and Run link in CONTRIBUTING.md goes nowhere
                         </a>
                       </td>
@@ -1099,9 +1775,12 @@
               </div>
             </details>
 
-            <details id="reviewed-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
+            <details
+              id="reviewed-prs"
+              class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+            >
               <summary
-                style="color: rgb(67, 56, 202)"
+                style="color: var(--c-primary-text)"
                 class="text-xl font-bold cursor-pointer outline-none"
               >
                 <div
@@ -1123,14 +1802,19 @@
                   <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (0)</span>
                 </div>
               </summary>
-              <div class="p-4 text-gray-500 bg-gray-50 rounded-lg">
+              <div
+                class="p-4 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/60 rounded-lg"
+              >
                 No contributions of this type in this quarter.
               </div>
             </details>
 
-            <details id="co-authored-prs" class="border border-gray-200 rounded-xl p-4 shadow-sm">
+            <details
+              id="co-authored-prs"
+              class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+            >
               <summary
-                style="color: rgb(67, 56, 202)"
+                style="color: var(--c-primary-text)"
                 class="text-xl font-bold cursor-pointer outline-none"
               >
                 <div
@@ -1155,14 +1839,19 @@
                   <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
                 </div>
               </summary>
-              <div class="p-4 text-gray-500 bg-gray-50 rounded-lg">
+              <div
+                class="p-4 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/60 rounded-lg"
+              >
                 No contributions of this type in this quarter.
               </div>
             </details>
 
-            <details id="collaborations" class="border border-gray-200 rounded-xl p-4 shadow-sm">
+            <details
+              id="collaborations"
+              class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm"
+            >
               <summary
-                style="color: rgb(67, 56, 202)"
+                style="color: var(--c-primary-text)"
                 class="text-xl font-bold cursor-pointer outline-none"
               >
                 <div
@@ -1205,7 +1894,7 @@
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
                 <div class="icon-input-container grow">
-                  <div class="input-icon" style="color: rgb(67, 56, 202)">
+                  <div class="input-icon" style="color: var(--c-primary-text)">
                     <svg
                       class="w-5 h-5"
                       width="100%"
@@ -1229,31 +1918,33 @@
                     id="collaborations-search"
                     placeholder="Search (Project, Title, status:open...)"
                     aria-label="Search contributions in Collaborations"
-                    class="search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                    style="border-color: rgb(67, 56, 202)"
+                    class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: var(--c-primary-text)"
                   />
                 </div>
 
                 <button
-                  class="reset-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition"
+                  class="reset-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
                 >
                   Reset
                 </button>
               </div>
               <div
-                class="overflow-x-auto rounded-lg border border-gray-100 max-h-[70vh] overflow-y-auto"
+                class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto"
               >
-                <table class="report-table min-w-full divide-y divide-gray-200 bg-white">
-                  <thead class="bg-white">
+                <table
+                  class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800"
+                >
+                  <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: rgb(67, 56, 202); cursor: default">
+                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
                         No.
                       </th>
                       <th
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Project <span class="sort-icon ml-1">↕</span></span
@@ -1263,7 +1954,7 @@
                         data-type="string"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
                       </th>
@@ -1271,7 +1962,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Created At <span class="sort-icon ml-1">↕</span></span
@@ -1281,7 +1972,7 @@
                         data-type="date"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >First Comment <span class="sort-icon ml-1">↕</span></span
@@ -1291,7 +1982,7 @@
                         data-type="status"
                         title="Click to sort"
                         class="py-3 px-4"
-                        style="color: rgb(67, 56, 202); cursor: pointer"
+                        style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
                           >Last Update / Status <span class="sort-icon ml-1">↕</span></span
@@ -1299,14 +1990,14 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100">
+                  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
                     <tr
                       class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td>1.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1317,7 +2008,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/331"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add 'How to write a Good Issue' guide to Member Resources</a
                         >
                       </td>
@@ -1326,7 +2017,7 @@
                       <td data-value="CLOSED" data-col-type="status">
                         2021-10-01<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          style="background-color: var(--c-error-10); color: var(--c-error-rgb)"
                           >CLOSED</span
                         >
                       </td>
@@ -1337,7 +2028,7 @@
                     >
                       <td>2.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1345,7 +2036,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/329"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Feature/add channel guide</a
                         >
                       </td>
@@ -1354,10 +2045,7 @@
                       <td data-value="MERGED" data-col-type="status">
                         2021-09-10<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="
-                            background-color: rgba(139, 92, 246, 0.1);
-                            color: rgb(139, 92, 246);
-                          "
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
                           >MERGED</span
                         >
                       </td>
@@ -1368,7 +2056,7 @@
                     >
                       <td>3.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1379,7 +2067,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/310"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add Slack channel guide to member resources</a
                         >
                       </td>
@@ -1388,7 +2076,7 @@
                       <td data-value="CLOSED" data-col-type="status">
                         2026-06-15<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          style="background-color: var(--c-error-10); color: var(--c-error-rgb)"
                           >CLOSED</span
                         >
                       </td>
@@ -1399,7 +2087,7 @@
                     >
                       <td>4.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1410,7 +2098,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/311"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Add New/Prospective Member resource page</a
                         >
                       </td>
@@ -1419,7 +2107,7 @@
                       <td data-value="CLOSED" data-col-type="status">
                         2021-10-01<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          style="background-color: var(--c-error-10); color: var(--c-error-rgb)"
                           >CLOSED</span
                         >
                       </td>
@@ -1430,7 +2118,7 @@
                     >
                       <td>5.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1438,7 +2126,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/298"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Member resources/guideto vc</a
                         >
                       </td>
@@ -1447,10 +2135,7 @@
                       <td data-value="MERGED" data-col-type="status">
                         2021-09-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="
-                            background-color: rgba(139, 92, 246, 0.1);
-                            color: rgb(139, 92, 246);
-                          "
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
                           >MERGED</span
                         >
                       </td>
@@ -1461,7 +2146,7 @@
                     >
                       <td>6.</td>
                       <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
-                        <span class="font-mono text-xs bg-gray-100 p-1 rounded"
+                        <span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
@@ -1469,7 +2154,7 @@
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/282"
                           target="_blank"
-                          class="text-blue-600 hover:text-blue-800 hover:underline"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
                           >Put August Newsletter on the site</a
                         >
                       </td>
@@ -1478,7 +2163,7 @@
                       <td data-value="CLOSED" data-col-type="status">
                         2021-08-12<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68)"
+                          style="background-color: var(--c-error-10); color: var(--c-error-rgb)"
                           >CLOSED</span
                         >
                       </td>
@@ -1494,13 +2179,15 @@
             >
               <a
                 href="../2021/Q2-2021.html"
-                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white nav-report-button text-left"
-                style="color: rgb(67, 56, 202)"
+                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 nav-report-button text-left"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-[10px] sm:text-xs font-medium text-gray-500">Previous</span>
+                <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
+                  >Previous</span
+                >
                 <span
                   class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal"
-                  style="color: rgb(67, 56, 202)"
+                  style="color: var(--c-primary-text)"
                 >
                   <svg
                     class="w-4 h-4"
@@ -1524,13 +2211,15 @@
               </a>
               <a
                 href="../2021/Q4-2021.html"
-                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 bg-white nav-report-button text-right"
-                style="color: rgb(67, 56, 202)"
+                class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 nav-report-button text-right"
+                style="color: var(--c-primary-text)"
               >
-                <span class="text-[10px] sm:text-xs font-medium text-gray-500">Next</span>
+                <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
+                  >Next</span
+                >
                 <span
                   class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal"
-                  style="color: rgb(67, 56, 202)"
+                  style="color: var(--c-primary-text)"
                 >
                   <span class="whitespace-normal min-w-0">Q4 2021</span>
 
@@ -1838,7 +2527,7 @@
       window.addEventListener('hashchange', openSectionFromHash);
     </script>
     <footer
-      style="border-top-color: rgba(107, 114, 128, 0.1); color: rgb(55, 65, 81)"
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -1846,7 +2535,7 @@
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          style="color: rgb(67, 56, 202)"
+          style="color: var(--c-primary-text)"
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
@@ -1858,7 +2547,7 @@
         <a
           href="https://github.com/adiati98"
           target="_blank"
-          style="color: rgb(67, 56, 202)"
+          style="color: var(--c-primary-text)"
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           Ayu Adiati
