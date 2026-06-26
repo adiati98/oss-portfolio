@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.9.0] - 2026-06-26
+
+### Added
+
+- **Class-Based Dark Theme**: Implemented a comprehensive, class-based dark mode (utilizing Tailwind `@custom-variant`) across all generated views, including the landing page, blog, glossary, community pages, and quarterly reports.
+- **Unified Theme Switcher**: Integrated a global navbar dropdown menu supporting manual selection (Light / Dark) and real-time operating system preference synchronization (System).
+- **FOUC Prevention Script**: Embedded an inline, flash-safe bootstrap script to completely eliminate the Flash of Unthemed Content (FOUC) during initial page load.
+- **Centralized Design Token Layer**: Introduced a unified CSS-variable architecture (`:root` and `html.dark`) that maps all core components—including the navbar, footer, all six page generators, and workbench status elements—to automatically resolve themes without requiring per-call-site updates.
+- **Programmatic Accessibility & Contrast Engine**: Implemented a brand-agnostic color system that dynamically derives dark-mode typography and accent colors via HSL adjustments. Colors are validated against live WCAG AA contrast ratios (`ensureReadableOn`), ensuring custom brand forks stay automatically accessible.
+- **Dark Mode Layout Optimizations**: Designed a dark-theme visual hierarchy with high-contrast active workbench row dividers, clear structural card borders, normalized text saturation to eliminate eye strain, and robust color token fallbacks for critical asset states like the "Draft" status badge.
+
 ## [2.8.3] - 2026-05-22
 
 ### Fixed
