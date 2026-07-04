@@ -1121,7 +1121,7 @@
                 style="background-color: var(--c-primary-rgb)"
                 class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center"
               >
-                <p class="text-4xl font-extrabold">13</p>
+                <p class="text-4xl font-extrabold">23</p>
                 <p class="text-lg mt-2 font-medium">Total Contributions</p>
               </div>
               <div
@@ -1146,7 +1146,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">0</span>
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">1</span>
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1197,7 +1197,7 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">9</span>
+                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">18</span>
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1306,7 +1306,7 @@
                     class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm"
                     >mautic/user-documentation</a
                   >
-                  (8 contributions)
+                  (18 contributions)
                 </li>
                 <li class="pl-2">
                   <a
@@ -1357,13 +1357,154 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (0)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (1)</span>
                 </div>
               </summary>
+              <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
+                <div class="icon-input-container grow">
+                  <div class="input-icon" style="color: var(--c-primary-text)">
+                    <svg
+                      class="w-5 h-5"
+                      width="100%"
+                      height="100%"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19ZM21 21L16.65 16.65"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </div>
+
+                  <input
+                    type="text"
+                    id="merged-prs-search"
+                    placeholder="Search (Project, Title, status:open...)"
+                    aria-label="Search contributions in Merged PRs"
+                    class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                    style="border-color: var(--c-primary-text)"
+                  />
+                </div>
+
+                <button
+                  class="reset-btn bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
+                >
+                  Reset
+                </button>
+              </div>
               <div
-                class="p-4 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/60 rounded-lg"
+                class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto"
               >
-                No contributions of this type in this quarter.
+                <table
+                  class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800"
+                >
+                  <thead class="bg-white dark:bg-slate-800">
+                    <tr>
+                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
+                        No.
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Project <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="string"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Created <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Merged <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="number"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">1.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="fix: Incorrect claim for &#96;username&#96;"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/827"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >fix: Incorrect claim for `username`</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T10:37:20Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T10:44:55Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </details>
 
@@ -1426,7 +1567,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (9)</span>
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (18)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1543,6 +1684,501 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">1.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Backport Cloning Emails section to 7.1 docs"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/828"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Backport Cloning Emails section to 7.1 docs</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T16:03:11Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T21:27:48Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">2.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Backport Cloning Emails section to 5.2 docs"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/831"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Backport Cloning Emails section to 5.2 docs</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T16:03:31Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T21:01:48Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">3.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Backport Cloning Emails section to 6.0 docs"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/830"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Backport Cloning Emails section to 6.0 docs</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T16:03:24Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T20:43:06Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">4.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Backport Cloning Emails section to 7.0 docs"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/829"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Backport Cloning Emails section to 7.0 docs</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T16:03:18Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T20:10:54Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">5.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Document the basic single-Email cloning workflow"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/822"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Document the basic single-Email cloning workflow</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T05:19:23Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T11:22:35Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">6.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Clean up SAML IDP config and Azure example (6.0 cherry-pick)"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/823"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Clean up SAML IDP config and Azure example (6.0 cherry-pick)</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T07:20:12Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T10:32:47Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">7.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Document SAML password hiding and login retry screen (7.2)"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/826"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Document SAML password hiding and login retry screen (7.2)</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T07:57:49Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T10:05:33Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">8.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Document SAML password hiding and login retry screen (7.1)"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/825"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Document SAML password hiding and login retry screen (7.1)</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T07:57:41Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T10:05:09Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-white table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">9.</td>
+                      <td data-value="mautic/user-documentation" data-col-type="string">
+                        <span
+                          class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
+                          >mautic/user-documentation</span
+                        >
+                      </td>
+                      <td
+                        data-value="docs: Clean up SAML IDP config and Azure example (5.2 cherry-pick)"
+                        data-col-type="string"
+                      >
+                        <a
+                          href="https://github.com/mautic/user-documentation/pull/824"
+                          target="_blank"
+                          class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline"
+                          >docs: Clean up SAML IDP config and Azure example (5.2 cherry-pick)</a
+                        >
+                      </td>
+                      <td
+                        data-value="2026-07-03T07:20:22Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="2026-07-03T09:54:40Z"
+                        data-col-type="date"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03
+                      </td>
+                      <td
+                        data-value="0"
+                        data-col-type="number"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        0 days
+                      </td>
+                      <td
+                        data-value="MERGED"
+                        data-col-type="status"
+                        class="text-blue-600 dark:text-blue-300"
+                      >
+                        2026-07-03<br /><span
+                          class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
+                        >
+                      </td>
+                    </tr>
+                    <tr
+                      class="bg-gray-50 table-row-hover"
+                      style="transition: background-color 0.15s ease-in-out"
+                    >
+                      <td class="text-blue-600 dark:text-blue-300">10.</td>
                       <td data-value="mautic/developer-documentation-new" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1583,22 +2219,22 @@
                         6 days
                       </td>
                       <td
-                        data-value="OPEN"
+                        data-value="MERGED"
                         data-col-type="status"
                         class="text-blue-600 dark:text-blue-300"
                       >
-                        2026-07-02<br /><span
+                        2026-07-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-success-10); color: var(--c-success-rgb)"
-                          >OPEN</span
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
                         >
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">2.</td>
+                      <td class="text-blue-600 dark:text-blue-300">11.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1650,10 +2286,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">3.</td>
+                      <td class="text-blue-600 dark:text-blue-300">12.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1705,10 +2341,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">4.</td>
+                      <td class="text-blue-600 dark:text-blue-300">13.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1760,10 +2396,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">5.</td>
+                      <td class="text-blue-600 dark:text-blue-300">14.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1815,10 +2451,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">6.</td>
+                      <td class="text-blue-600 dark:text-blue-300">15.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1870,10 +2506,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">7.</td>
+                      <td class="text-blue-600 dark:text-blue-300">16.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1913,22 +2549,22 @@
                         0 days
                       </td>
                       <td
-                        data-value="OPEN"
+                        data-value="MERGED"
                         data-col-type="status"
                         class="text-blue-600 dark:text-blue-300"
                       >
-                        2026-07-02<br /><span
+                        2026-07-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-success-10); color: var(--c-success-rgb)"
-                          >OPEN</span
+                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          >MERGED</span
                         >
                       </td>
                     </tr>
                     <tr
-                      class="bg-gray-50 table-row-hover"
+                      class="bg-white table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">8.</td>
+                      <td class="text-blue-600 dark:text-blue-300">17.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -1980,10 +2616,10 @@
                       </td>
                     </tr>
                     <tr
-                      class="bg-white table-row-hover"
+                      class="bg-gray-50 table-row-hover"
                       style="transition: background-color 0.15s ease-in-out"
                     >
-                      <td class="text-blue-600 dark:text-blue-300">9.</td>
+                      <td class="text-blue-600 dark:text-blue-300">18.</td>
                       <td data-value="mautic/user-documentation" data-col-type="string">
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
@@ -2307,7 +2943,7 @@
                         data-col-type="status"
                         class="text-blue-600 dark:text-blue-300"
                       >
-                        2026-07-02<br /><span
+                        2026-07-03<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
                           style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
                           >MERGED</span
@@ -2750,7 +3386,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on July 3, 2026.
+        >'s open source contributions, generated on July 4, 2026.
       </div>
 
       <div class="text-xs mt-1">
