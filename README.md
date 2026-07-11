@@ -126,7 +126,7 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 
 ### 4. Deployment
 
-This project is host-agnostic. The content-generation workflow only ever commits plain HTML to `main` — it has no opinion on hosting. Connect your repository to a service like Netlify, Vercel, or GitHub Pages to deploy your portfolio.
+This project is host-agnostic. Connect your repository to a service like Netlify, Vercel, or GitHub Pages to deploy your portfolio.
 
 **Using GitHub Pages:** This repo ships a ready-to-use workflow, `.github/workflows/deploy-gh-pages.yml`, that publishes `contributions/html-generated/` after each content update. To use it:
 
