@@ -127,3 +127,10 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 ### 4. Deployment
 
 This project is host-agnostic. Connect your repository to a service like Netlify, Vercel, or GitHub Pages to deploy your portfolio.
+
+**Using GitHub Pages:** This repo ships a ready-to-use workflow, `.github/workflows/deploy-gh-pages.yml`, that publishes `contributions/html-generated/` after each content update. To use it:
+
+1. Go to **Settings → Pages** in your repository and set **Source** to **GitHub Actions**.
+2. That's it — the workflow deploys automatically whenever `Update Contributions` finishes (or run it manually via **Actions → Deploy to GitHub Pages → Run workflow**).
+
+Prefer a different host? Just delete `deploy-gh-pages.yml` and connect your repo to Netlify, Vercel, etc. as usual.
