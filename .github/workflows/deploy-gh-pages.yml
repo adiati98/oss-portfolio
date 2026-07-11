@@ -1,0 +1,47 @@
+name: Deploy to GitHub Pages
+
+# Optional: only relevant if you're hosting this portfolio on GitHub Pages.
+# The content-generation workflow (update-contributions.yml) only ever
+# commits plain HTML/Markdown to `main` — it has no opinion on hosting.
+# If you're using Netlify, Vercel, or another static host instead, delete
+# this file; your host will pick up changes from `main` on its own.
+
+on:
+  workflow_run:
+    workflows: ['Update Contributions']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: contributions/html-generated/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
