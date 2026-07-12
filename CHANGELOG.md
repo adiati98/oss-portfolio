@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.11.0] - 2026-07-12
+
+### Added
+
+- **GitHub Pages Deployment**: Added `deploy-gh-pages.yml`, an optional workflow that publishes `contributions/html-generated/` to GitHub Pages after `Update Contributions` completes (or via manual `workflow_dispatch`).
+- **Dependabot**: Added `.github/dependabot.yml` to track `npm` and `github-actions` dependency updates.
+- **Rate-Limit Retry Classification**: Confirmed rate limits now back off and retry (honoring `retry-after`/quota headers); a non-rate-limit 403 (e.g. an org requiring SSO authorization) gets one quick retry before being treated as permanent, instead of burning a full backoff ladder on something that can't succeed. Transient 502/503/504s are retried too.
+- **Permanent-Failure Tracking**: PRs confirming a non-rate-limit 403 are recorded in `failed-fetch.json` and skipped on future daily runs, while still being counted and listed as real contributions.
+- **Crash-Safe Persistence**: All caches are written in a `finally` block so a failed run doesn't waste API calls it already made; a capped retry wrapper was also added at the GitHub Actions workflow level.
+- **`FULL_RESYNC` Mode / `npm run resync`**: Re-verifies full history against live GitHub data without deleting `all-contributions.json` first, so a Search API miss on one run can still fall back to the last verified baseline.
+- **Manual Full Sync Trigger**: Added a `full_sync` input to `workflow_dispatch`, so a full sync can be triggered from the Actions UI instead of only on the monthly schedule.
+
+### Changed
+
+- **Simplified Push Logic**: Removed the `main`-vs-`live` branch split in `update-contributions.yml` that force-pushed to a separate branch for Netlify; every repo now pushes directly to `main`.
+- **Batched, Deduped Requests**: Deduped redundant review fetches and batched ongoing-workbench PR processing with bounded concurrency instead of one PR at a time, cutting daily run time significantly.
+- **Total Contributions Accuracy**: The all-time total now includes confirmed-403 PRs (real contributions that couldn't be fully categorized), each counted exactly once.
+
+### Fixed
+
+- **Stale GitHub Pages Deploys**: The deploy workflow checked out the commit that was HEAD before "Update Contributions" ran, not the commit it actually pushed, so the live site always lagged one run behind. Now checks out `main` directly.
+
+### Removed
+
+- **Netlify Configuration**: Removed `netlify.toml` now that Netlify is no longer the deploy target.
+
 ## [2.10.0] - 2026-06-27
 
 ### Added
