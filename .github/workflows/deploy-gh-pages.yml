@@ -30,7 +30,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           # Check out main by name so this always deploys the commit "Update
           # Contributions" just pushed, not the commit that was HEAD before it ran.
