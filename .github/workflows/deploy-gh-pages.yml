@@ -32,7 +32,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.ref }}
+          # Check out main by name so this always deploys the commit "Update
+          # Contributions" just pushed, not the commit that was HEAD before it ran.
+          ref: main
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
