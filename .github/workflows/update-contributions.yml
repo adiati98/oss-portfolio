@@ -17,7 +17,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -30,9 +30,34 @@ jobs:
 
       - name: Conditionally run full sync or daily update
         run: |
+          # Retries the fetch script a few times on failure (e.g. a transient
+          # GitHub 5xx). main.js persists its caches even when it fails, so a
+          # retry resumes from where the previous attempt left off instead of
+          # re-fetching everything from scratch.
+          run_main() {
+            local max_attempts=3
+            local attempt=1
+            until node scripts/src/main.js; do
+              if [ "$attempt" -ge "$max_attempts" ]; then
+                echo "main.js failed after $attempt attempts."
+                return 1
+              fi
+              echo "main.js failed (attempt $attempt/$max_attempts). Retrying in 30s..."
+              attempt=$((attempt + 1))
+              sleep 30
+            done
+          }
+
           if [ "$SCHEDULE" = "1 0 1 * *" ]; then
             echo "Running monthly full sync..."
-            rm -f data/all-contributions.json
+            # FULL_RESYNC re-crawls the entire history from live GitHub data
+            # instead of trusting caches — but deliberately does NOT delete
+            # all-contributions.json first. That file is the fallback the
+            # merge logic in main.js uses when a given run's Search API
+            # results happen to miss something (GitHub doesn't guarantee
+            # Search results are fully consistent). Deleting it removed the
+            # one thing that made a transient Search miss recoverable.
+            export FULL_RESYNC=true
             rm -f data/commit-cache.json
             rm -f data/pr-cache.json
             rm -f data/failed-fetch.json
@@ -41,10 +66,11 @@ jobs:
             rm -f data/ongoing-issues.json
             rm -f data/ongoing-prs.json
             rm -f data/ongoing-coauthored-prs.json
-            node scripts/src/main.js
+            rm -f data/workbench-activity-cache.json
+            run_main
           else
             echo "Running daily update..."
-            node scripts/src/main.js
+            run_main
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
@@ -52,15 +78,15 @@ jobs:
 
       - name: Format generated files
         run: npm run format
-        
+
       - name: Commit and push changes
         id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add contributions/markdown-generated/ contributions/html-generated/ data/
-          
+
           if ! git diff --staged --quiet; then
             # Determine the commit message based on schedule
             if [ "$SCHEDULE" = "1 0 1 * *" ]; then

@@ -48,7 +48,7 @@ function determinePersona(counts) {
 /**
  * Generates the main landing page for the portfolio.
  */
-async function createIndexHtml(finalContributions = {}, articles = []) {
+async function createIndexHtml(finalContributions = {}, articles = [], failedFetchCount = 0) {
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
   const prCount = finalContributions.pullRequests?.length || 0;
@@ -61,8 +61,15 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
 
   const articleCount = articles.length || 0;
 
+  // grandTotal drives the persona/percentage math below, so it's kept to
+  // contributions we could fully categorize. Confirmed-403 PRs (see
+  // failed-fetch.json) are real contributions too — we just couldn't fetch
+  // enough detail to place them in a category — so they're added to the
+  // headline number only, not to grandTotal, to avoid distorting the
+  // per-category percentages with contributions we can't attribute.
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
+  const displayTotal = grandTotal + failedFetchCount;
 
   const countsDict = {
     prCount,
@@ -192,7 +199,7 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                   <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
                   <div class="relative z-10 space-y-2">
                     <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
-                    <p class="text-7xl font-black tracking-tight">${grandTotal}</p>
+                    <p class="text-7xl font-black tracking-tight">${displayTotal}</p>
                     <p class="text-lg opacity-90 font-semibold">Lifetime Contributions on GitHub</p>
                   </div>
                   <div class="relative z-10 h-px bg-white/20 my-8"></div>
@@ -245,7 +252,9 @@ async function createIndexHtml(finalContributions = {}, articles = []) {
                         ? `style="color: ${getColorValue(COLORS.primaryText)};"`
                         : '';
 
-                      const trackClass = isHighest ? 'bg-white dark:bg-slate-900' : 'bg-slate-100 dark:bg-slate-700';
+                      const trackClass = isHighest
+                        ? 'bg-white dark:bg-slate-900'
+                        : 'bg-slate-100 dark:bg-slate-700';
 
                       return `
                     <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative">

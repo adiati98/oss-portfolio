@@ -31,6 +31,9 @@ const cleanFolder = (dirPath, isRoot = true) => {
 };
 
 console.log('🧹 Deep cleaning generated folders...');
+console.log(
+  '⚠️  This deletes data/all-contributions.json too — the fallback that protects against a GitHub Search API result being incomplete on any given run. If you just want to force a full re-verification against live data (not wipe your local state), use `npm run resync` instead.'
+);
 targets.forEach((target) => {
   const resolvedPath = path.resolve(target);
   cleanFolder(resolvedPath, true);

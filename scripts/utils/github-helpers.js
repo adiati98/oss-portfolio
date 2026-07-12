@@ -1,4 +1,5 @@
 const { isBotLogin } = require('./bot-helpers');
+const { withRateLimitRetry } = require('./http-helpers');
 
 /**
  * HELPER: Extracts linked issue numbers from PR descriptions.
@@ -16,23 +17,60 @@ function getLinkedIssueNumbers(prBody) {
 
 /**
  * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
- * Merges timeline processing with explicit fallback comment checking to guarantee review replies are caught.
+ * Merges timeline processing with explicit fallback comment checking to guarantee review replies are caught,
+ * and derives whether a human (other than the PR author) has engaged at all — so callers don't need a
+ * separate reviews/comments fetch just to answer that question.
+ *
+ * All 4 endpoints below are independent of one another, so they're fetched in a single batch rather than
+ * two sequential "waves" — this halves the wall-clock cost per PR on top of not re-fetching reviews twice.
  */
-async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpdatedAt) {
-  let fallbackActivity = {
+async function getPrActivityMeta(
+  owner,
+  repo,
+  prNumber,
+  axiosInstance,
+  prMainUpdatedAt,
+  authorLogin = null,
+  failedFetchCache = null,
+  prUrl = null,
+  prTitle = null
+) {
+  const resolvedPrUrl = prUrl || `https://github.com/${owner}/${repo}/pull/${prNumber}`;
+
+  const fallbackActivity = {
     lastActor: null,
     isLastActorBot: false,
     hasFormalReview: false,
     reviewState: null,
     approvedBy: null,
     lastSubstantiveDate: prMainUpdatedAt,
+    hasHumanEngagement: false,
   };
 
+  // Already confirmed permanently 403 (e.g. an org we don't have SSO
+  // authorization for) — don't re-attempt until the next full sync clears it.
+  if (failedFetchCache?.has(resolvedPrUrl)) {
+    return fallbackActivity;
+  }
+
   try {
-    // 1. Initial Timeline & Review Parsing
-    const [timelineResp, reviewsResp] = await Promise.all([
-      axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/timeline?per_page=100`),
-      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`),
+    const [timelineResp, reviewsResp, commentsResp, reviewCommentsResp] = await Promise.all([
+      withRateLimitRetry(
+        () => axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/timeline?per_page=100`),
+        { label: `timeline#${prNumber}` }
+      ),
+      withRateLimitRetry(
+        () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews?per_page=100`),
+        { label: `reviews#${prNumber}` }
+      ),
+      withRateLimitRetry(
+        () => axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/comments?per_page=100`),
+        { label: `comments#${prNumber}` }
+      ),
+      withRateLimitRetry(
+        () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/comments?per_page=100`),
+        { label: `review-comments#${prNumber}` }
+      ),
     ]);
 
     const timeline = timelineResp.data;
@@ -87,22 +125,24 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
     const approvedBy =
       latestReview && latestReview.state === 'APPROVED' ? latestReview.user?.login || null : null;
 
-    fallbackActivity = {
+    // A human (not the PR author) left a review or an issue comment — reused by
+    // callers that previously ran their own extra reviews/comments fetch for this.
+    const hasHumanEngagement = authorLogin
+      ? reviews.some((r) => r.user?.type === 'User' && r.user.login !== authorLogin) ||
+        commentsResp.data.some((c) => c.user?.type === 'User' && c.user.login !== authorLogin)
+      : false;
+
+    const baseActivity = {
       lastActor,
       isLastActorBot,
       hasFormalReview: reviews.length > 0,
       reviewState: latestReview ? latestReview.state : null,
       approvedBy,
       lastSubstantiveDate,
+      hasHumanEngagement,
     };
 
-    // 2. Explicit Substantive Activity Augmentation (The fix for review replies)
-    const [commentsResp, reviewCommentsResp, explicitReviewsResp] = await Promise.all([
-      axiosInstance.get(`/repos/${owner}/${repo}/issues/${prNumber}/comments?per_page=100`),
-      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/comments?per_page=100`),
-      axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews?per_page=100`),
-    ]);
-
+    // Explicit Substantive Activity Augmentation (the fix for review replies)
     let timelineItems = [];
 
     commentsResp.data.forEach((c) => {
@@ -125,7 +165,7 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
       }
     });
 
-    explicitReviewsResp.data.forEach((r) => {
+    reviews.forEach((r) => {
       if (r.user && r.submitted_at) {
         timelineItems.push({
           date: new Date(r.submitted_at),
@@ -140,16 +180,25 @@ async function getPrActivityMeta(owner, repo, prNumber, axiosInstance, prMainUpd
     if (timelineItems.length > 0) {
       const latest = timelineItems[0];
       return {
+        ...baseActivity,
         lastActor: latest.login,
         isLastActorBot: latest.isBot,
-        hasFormalReview: fallbackActivity.hasFormalReview || explicitReviewsResp.data.length > 0,
-        reviewState: fallbackActivity.reviewState,
-        approvedBy: fallbackActivity.approvedBy,
         lastSubstantiveDate: latest.date.toISOString(),
       };
     }
+
+    return baseActivity;
   } catch (e) {
-    // Fall back safely if any step fails
+    // Fall back safely if any step fails. A confirmed permanent 403 (not a
+    // rate limit — see withRateLimitRetry) is worth remembering so we don't
+    // re-attempt this PR on every future daily run.
+    if (e.isPermanent403 && failedFetchCache) {
+      failedFetchCache.set(resolvedPrUrl, {
+        status: '403 Forbidden',
+        timestamp: new Date().toISOString(),
+        title: prTitle || 'Unknown Title',
+      });
+    }
   }
 
   return fallbackActivity;
