@@ -27,7 +27,7 @@ The workflow file in `.github/workflows/` orchestrates the entire process. It ha
 | Event | Schedule | Sync Type | Automation Purpose |
 | :--- | :--- | :--- | :--- |
 | **Daily Update** | Once per day | **Incremental** | Captures activity from the last 24 hours to keep the portfolio current. |
-| **Monthly Sync** | 1st of every month | **Full Sync** | Clears the cache and performs a deep-verify of all historical data. |
+| **Monthly Sync** | 1st of every month | **Full Sync** | Rechecks the entire history against GitHub, while keeping existing records safe. |
 
 ### 🧠 The Brain: The Node.js Script
 
@@ -41,7 +41,7 @@ When the GitHub Action triggers the runner, the script executes a multi-stage pi
     - **Automated Sync:** Fetches latest articles from **Dev.to** via their API.
     - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
 - **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
-- **Hierarchical Caching:** Maintains `pr-cache.json` and `commit-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
+- **Hierarchical Caching:** Maintains `pr-cache.json`, `commit-cache.json`, and `workbench-activity-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
 
 #### 2. Output Generation
 
@@ -107,6 +107,9 @@ Once configured, use the following commands to manage and generate your portfoli
    ```bash
    npm start
    ```
+
+> [!TIP]
+> Once your initial setup (`npm start`) has finished, you can run `npm run resync` any time to force a full re-verification of your history against GitHub, without wiping your saved data.
 
 ### 3. Configuration
 
