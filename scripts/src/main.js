@@ -412,14 +412,31 @@ async function main() {
     const quarterlyHtmlLinks = await writeHtmlFiles(grouped);
 
     // 3. Generate README and glossary files (Markdown)
-    // failedFetchCache.size: confirmed-403 PRs (e.g. an org needing SSO
-    // authorization we don't have) are real contributions we just couldn't
-    // fetch enough detail on to categorize — see failed-fetch-cache.js.
-    await createStatsReadme(finalContributions, articles, failedFetchCache.size);
+    // Confirmed-403 PRs (e.g. a public repo in an org that enforces SSO we
+    // aren't authorized for) are real contributions we couldn't fetch enough
+    // detail on to categorize — see failed-fetch-cache.js — so they belong in
+    // the headline total. But some of them are ALSO already present in a
+    // category: the historical pipeline pushes them into `collaborations` with
+    // a null date as a graceful fallback. Adding failedFetchCache.size wholesale
+    // would double-count those, so we add only the entries not already
+    // categorized. This also keeps the headline stable if a run's in-memory
+    // failed-fetch set is transiently larger than what ends up persisted.
+    const categorizedUrls = new Set();
+    for (const type of Object.keys(finalContributions)) {
+      if (!Array.isArray(finalContributions[type])) continue;
+      for (const item of finalContributions[type]) {
+        if (item?.url) categorizedUrls.add(item.url.replace(/\/$/, '').toLowerCase());
+      }
+    }
+    const uncountedFailedFetch = [...failedFetchCache.keys()].filter(
+      (url) => !categorizedUrls.has(url.replace(/\/$/, '').toLowerCase())
+    ).length;
+
+    await createStatsReadme(finalContributions, articles, uncountedFailedFetch);
 
     // 4. Generate landing page (index.html)
     console.log('Generating landing page...');
-    await createIndexHtml(finalContributions, articles, failedFetchCache.size);
+    await createIndexHtml(finalContributions, articles, uncountedFailedFetch);
 
     // 5. Generate the Glossary page
     console.log('Generating Glossary...');
