@@ -80,7 +80,7 @@ Leadership roles, major milestones, and active maintenance tasks across the Open
 
 | Status                                                                                                   | Last Interaction | Repository                                                                                                 | Task                                                                                            |
 | :------------------------------------------------------------------------------------------------------- | :--------------- | :--------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>292 days</sub> |                  | **oss-communities**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [Chores: Restructure website](https://github.com/OpenSource-Communities/oss-communities/pull/2) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>293 days</sub> |                  | **oss-communities**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [Chores: Restructure website](https://github.com/OpenSource-Communities/oss-communities/pull/2) |
 
 </details>
 
