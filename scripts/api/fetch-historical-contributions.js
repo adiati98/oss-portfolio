@@ -1,10 +1,9 @@
 require('dotenv').config();
 const axios = require('axios');
-const fs = require('fs/promises');
-const path = require('path');
 
 // Import configuration
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
+const { attachRateLimitLogger, withRateLimitRetry } = require('../utils/http-helpers');
 
 /**
  * Fetches the year the user joined GitHub to set the baseline for discovery.
@@ -21,43 +20,14 @@ async function getGitHubJoinYear(axiosInstance) {
 }
 
 /**
- * Helper to log 403 errors to console and file once.
- */
-async function logPermanent403(url, logState = { hasLogged: false }, year, title) {
-  if (logState.hasLogged) return;
-
-  console.log(`Skipping 403 pr: ${url}`);
-  const logPath = path.join(process.cwd(), 'data', 'failed-fetch.json');
-
-  const timestamp = year ? `${year}-01-01T12:00:00Z` : new Date().toISOString();
-
-  try {
-    let failedData = {};
-    try {
-      const content = await fs.readFile(logPath, 'utf8');
-      failedData = JSON.parse(content);
-    } catch (e) {
-      // File doesn't exist yet
-    }
-
-    // Store the actual title instead of leaving it for the renderer to guess
-    failedData[url] = {
-      status: '403 Forbidden',
-      timestamp: timestamp,
-      title: title || 'Unknown Title',
-    };
-
-    await fs.writeFile(logPath, JSON.stringify(failedData, null, 2));
-    logState.hasLogged = true;
-  } catch (err) {
-    // Fail silently
-  }
-}
-
-/**
  * Fetches all contribution data from the GitHub API for a given year range.
  */
-async function fetchContributions(requestedStartYear, prCache, persistentCommitCache) {
+async function fetchContributions(
+  requestedStartYear,
+  prCache,
+  persistentCommitCache,
+  failedFetchCache
+) {
   // Ensure the GitHub token is available from the environment variables.
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
@@ -65,13 +35,15 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
   }
 
   // Create an Axios instance with base URL and authentication headers.
-  const axiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-      Authorization: `token ${token}`,
-      Accept: 'application/vnd.github.v3+json',
-    },
-  });
+  const axiosInstance = attachRateLimitLogger(
+    axios.create({
+      baseURL: BASE_URL,
+      headers: {
+        Authorization: `token ${token}`,
+        Accept: 'application/vnd.github.v3+json',
+      },
+    })
+  );
 
   // --- AUTO-DISCOVERY LOGIC ---
   let startYear = requestedStartYear;
@@ -96,9 +68,45 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     coAuthoredPrs: new Set(),
   };
 
-  const commitCache =
-    persistentCommitCache instanceof Map ? new Map(persistentCommitCache) : new Map();
+  // Mutate the caller's map directly (not a clone) so that if this function
+  // throws partway through the year loop, whatever commits it already
+  // fetched are still visible to the caller and can be persisted instead of
+  // thrown away.
+  const commitCache = persistentCommitCache instanceof Map ? persistentCommitCache : new Map();
   const currentYear = new Date().getFullYear();
+
+  // Same in-place-mutation approach as commitCache above: the caller's map,
+  // not a clone, so a permanent-failure record survives even a mid-run throw
+  // and persists across runs — a PR that's confirmed permanently 403 (e.g.
+  // an org needing SSO authorization we don't have) gets skipped on future
+  // daily runs instead of re-attempted, until the monthly full sync wipes it.
+  const permanentFailures = failedFetchCache instanceof Map ? failedFetchCache : new Map();
+
+  /**
+   * Records a PR/issue as permanently un-fetchable (confirmed non-rate-limit
+   * 403 — see withRateLimitRetry). In-memory only; the caller persists this
+   * once for the whole run instead of writing to disk on every failure.
+   */
+  function logPermanent403(url, logState = { hasLogged: false }, year, title) {
+    if (logState.hasLogged || permanentFailures.has(url)) return;
+    console.log(`Skipping 403 (non-retryable): ${url}`);
+    const timestamp = year ? `${year}-01-01T12:00:00Z` : new Date().toISOString();
+    permanentFailures.set(url, {
+      status: '403 Forbidden',
+      timestamp,
+      title: title || 'Unknown Title',
+    });
+    logState.hasLogged = true;
+  }
+
+  // GitHub's search API allows only 30 requests/minute — the year loop below
+  // fires 7 distinct search queries per year with nothing in between, which
+  // alone exceeds that after just a few years. This tracks the last search
+  // call process-wide (not just between pages of one query) so every call
+  // waits out a minimum gap first, instead of only pacing within a single
+  // query's own pagination.
+  let lastSearchCallAt = 0;
+  const MIN_SEARCH_INTERVAL_MS = 2000;
 
   /**
    * A helper function to fetch all pages for a given search query.
@@ -107,27 +115,23 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     let results = [];
     let page = 1;
     while (true) {
-      try {
-        const response = await axiosInstance.get(
-          `/search/issues?q=${query}&per_page=100&page=${page}`
-        );
-        results.push(...response.data.items);
+      const wait = MIN_SEARCH_INTERVAL_MS - (Date.now() - lastSearchCallAt);
+      if (wait > 0) {
+        await new Promise((resolve) => setTimeout(resolve, wait));
+      }
+      lastSearchCallAt = Date.now();
 
-        const linkHeader = response.headers.link;
-        if (linkHeader && linkHeader.includes('rel="next"')) {
-          page++;
-        } else {
-          break;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      } catch (err) {
-        if (err.response && err.response.status === 403) {
-          console.log('Rate limit hit. Waiting for 60 seconds...');
-          await new Promise((resolve) => setTimeout(resolve, 60000));
-          continue;
-        } else {
-          throw err;
-        }
+      const response = await withRateLimitRetry(
+        () => axiosInstance.get(`/search/issues?q=${query}&per_page=100&page=${page}`),
+        { label: `search p${page}`, assumeRateLimit: true }
+      );
+      results.push(...response.data.items);
+
+      const linkHeader = response.headers.link;
+      if (linkHeader && linkHeader.includes('rel="next"')) {
+        page++;
+      } else {
+        break;
       }
     }
     return results;
@@ -137,8 +141,13 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
    * Fetches the date of the user's first review on a given pull request.
    */
   async function getPrMyFirstReviewDate(owner, repo, prNumber, username, logState, year, title) {
+    const url = `https://github.com/${owner}/${repo}/pull/${prNumber}`;
+    if (permanentFailures.has(url)) return null;
     try {
-      const response = await axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`);
+      const response = await withRateLimitRetry(
+        () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`),
+        { label: `reviews#${prNumber}` }
+      );
       const myReviews = response.data
         .filter((review) => review.user?.login === username)
         .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
@@ -147,13 +156,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       }
       return null;
     } catch (err) {
-      if (err.response && err.response.status === 403) {
-        await logPermanent403(
-          `https://github.com/${owner}/${repo}/pull/${prNumber}`,
-          logState,
-          year,
-          title
-        );
+      if (err.isPermanent403) {
+        logPermanent403(url, logState, year, title);
         return null;
       }
       if (err.response && err.response.status === 404) {
@@ -167,10 +171,14 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
    * Fetches the date of the user's first comment on an issue or PR.
    */
   async function getFirstCommentDate(url, username, logState, year, title) {
+    if (permanentFailures.has(url)) return null;
     try {
       let page = 1;
       while (true) {
-        const response = await axiosInstance.get(`${url}?per_page=100&page=${page}`);
+        const response = await withRateLimitRetry(
+          () => axiosInstance.get(`${url}?per_page=100&page=${page}`),
+          { label: `comments p${page}` }
+        );
         const myFirstComment = response.data.find((comment) => comment.user?.login === username);
         if (myFirstComment) {
           return myFirstComment.created_at;
@@ -183,8 +191,8 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         }
       }
     } catch (err) {
-      if (err.response && err.response.status === 403) {
-        await logPermanent403(url, logState, year, title);
+      if (err.isPermanent403) {
+        logPermanent403(url, logState, year, title);
         return null;
       }
       if (err.response && err.response.status === 404) {
@@ -210,6 +218,11 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
     prCreatedAt = null
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
+    const prUrl = `https://github.com/${owner}/${repo}/pull/${prNumber}`;
+
+    if (permanentFailures.has(prUrl)) {
+      return { firstCommitDate: null, commitCount: 0, prUpdatedAt, fetchFailed: true };
+    }
 
     if (commitCache.has(prUrlKey)) {
       const cached = commitCache.get(prUrlKey);
@@ -230,7 +243,10 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
       let page = 1;
       let allCommits = [];
       while (true) {
-        const resp = await axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`);
+        const resp = await withRateLimitRetry(
+          () => axiosInstance.get(`${prUrlKey}/commits?per_page=100&page=${page}`),
+          { label: `commits#${prNumber} p${page}` }
+        );
         allCommits.push(...resp.data);
 
         const linkHeader = resp.headers.link;
@@ -290,15 +306,14 @@ async function fetchContributions(requestedStartYear, prCache, persistentCommitC
         result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
       }
     } catch (err) {
-      if (err.response && err.response.status === 403) {
-        await logPermanent403(
-          `https://github.com/${owner}/${repo}/pull/${prNumber}`,
-          logState,
-          year,
-          title
-        );
+      // A confirmed permanent 403 is worth remembering so we don't retry it
+      // every day. Either way, we couldn't verify commit authorship — mark
+      // it as unknown rather than a confirmed "no", so callers don't drop a
+      // PR just because we couldn't check it this run.
+      if (err.isPermanent403) {
+        logPermanent403(prUrl, logState, year, title);
       }
-      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
+      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt, fetchFailed: true };
     }
 
     commitCache.set(prUrlKey, result);

@@ -25,6 +25,7 @@ const {
   fetchOngoingCoAuthoredPrs,
 } = require('../api/fetch-ongoing-workbench');
 const { fetchStrictOssArticles } = require('../api/articles-api-fetcher');
+const { loadFailedFetchCache, persistFailedFetchCache } = require('../utils/failed-fetch-cache');
 
 // Import grouping logic
 const { groupContributionsByQuarter } = require('../utils/contributions-groupers');
@@ -58,12 +59,12 @@ async function main() {
   const ongoingIssuesFile = path.join(dataDir, 'ongoing-issues.json');
   const ongoingCoAuthoredPRsFile = path.join(dataDir, 'ongoing-coauthored-prs.json');
 
-  // --- Ensure failed-fetch file exists to prevent errors in fetch script ---
-  try {
-    await fs.access(failedFetchFile);
-  } catch {
-    await fs.writeFile(failedFetchFile, JSON.stringify({}), 'utf8');
-  }
+  // Load the permanent-failure cache: PRs/issues that returned a confirmed,
+  // non-rate-limit 403 (e.g. an org needing SSO authorization we don't
+  // have). These are skipped entirely on future daily runs instead of
+  // re-attempted, until the monthly full sync wipes this file and gives
+  // everything a fresh chance.
+  const failedFetchCache = await loadFailedFetchCache(failedFetchFile);
 
   let prCache = new Set();
 
@@ -96,11 +97,40 @@ async function main() {
     }
   }
 
+  // Merge the on-disk commit cache into a single map used for the whole run.
+  // Declared before the main try block (and mutated in place by
+  // fetchContributions, not cloned) so that even if the run fails partway
+  // through, whatever commits were already fetched are still here to persist.
+  const mergedCommitCache = new Map();
+  for (const [k, v] of commitCacheFromDisk) mergedCommitCache.set(k, v);
+
+  // Load persistent Active Workbench activity cache. Keyed by PR URL and
+  // gated by the PR's updated_at, so a PR that hasn't changed since the
+  // last run costs zero API calls instead of ~4 — this is what keeps daily
+  // runs fast as the number of tracked open PRs grows into the thousands.
+  const activityCacheFile = path.join(dataDir, 'workbench-activity-cache.json');
+  const activityCache = new Map();
+  try {
+    const activityCacheData = await fs.readFile(activityCacheFile, 'utf8');
+    const parsed = JSON.parse(activityCacheData);
+    for (const [k, v] of Object.entries(parsed)) {
+      activityCache.set(k, v);
+    }
+    console.log('Loaded workbench activity cache from file.');
+  } catch (e) {
+    if (e.code !== 'ENOENT') {
+      console.error('Failed to load workbench activity cache:', e);
+    } else {
+      console.log('No persistent workbench activity cache found, starting fresh.');
+    }
+  }
+
+  let hasFailed = false;
   try {
     // --- Fetch Ongoing Pull Requests (Submitted by you) ---
     console.log('Fetching ongoing submitted PRs...');
 
-    const rawOngoingPRs = await fetchOngoingAuthoredPrs();
+    const rawOngoingPRs = await fetchOngoingAuthoredPrs(activityCache, failedFetchCache);
 
     const ongoingPRs = rawOngoingPRs.filter((pr) => {
       const repoName = pr.repo.toLowerCase();
@@ -135,7 +165,11 @@ async function main() {
     // Pass a fresh Map() instead of commitCacheFromDisk.
     // This forces a fresh look at the commits for OPEN PRs only,
     // ensuring the 'web-flow' fix is applied to the Workbench without affecting historical data.
-    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(new Map());
+    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(
+      new Map(),
+      activityCache,
+      failedFetchCache
+    );
 
     const ongoingCoAuthoredPRs = rawOngoingCoAuthoredPRs.filter((pr) => {
       const repoName = pr.repo.toLowerCase();
@@ -156,7 +190,7 @@ async function main() {
 
     // --- Fetch Ongoing Reviews (Workbench) ---
     console.log('Fetching ongoing review tasks for the Active Workbench...');
-    const rawOngoingTasks = await fetchOngoingReviews();
+    const rawOngoingTasks = await fetchOngoingReviews(activityCache, failedFetchCache);
 
     // Only remove from the Workbench "Reviews" if it's already in the "Co-authored" list
     const coAuthoredUrls = new Set(ongoingCoAuthoredPRs.map((pr) => pr.url));
@@ -199,13 +233,27 @@ async function main() {
       }
     }
 
+    // FULL_RESYNC forces a full-history re-crawl (same as having no data file
+    // at all) without actually deleting all-contributions.json first. That
+    // matters because the file isn't just a cache — it's the only thing the
+    // preserve-then-merge logic below has to fall back on when a given run's
+    // GitHub Search results happen to miss something (Search API results
+    // aren't guaranteed consistent). Deleting it before a "clean slate" run
+    // removes that safety net right when a full re-crawl needs it most; this
+    // flag gets the same "re-verify everything against live data" behavior
+    // without giving up the fallback.
+    const isFullResync = process.env.FULL_RESYNC === 'true';
+
     const cacheStats = await fs.stat(dataFile).catch(() => null);
     const lastUpdate = cacheStats ? new Date(cacheStats.mtime) : null;
     const today = new Date();
 
     let fetchStartYear;
 
-    if (!lastUpdate) {
+    if (isFullResync) {
+      fetchStartYear = undefined;
+      console.log('FULL_RESYNC requested — triggering full re-crawl from GitHub join date');
+    } else if (!lastUpdate) {
       fetchStartYear = undefined;
       console.log('First run - triggering auto-discovery of GitHub join date');
     } else {
@@ -232,21 +280,17 @@ async function main() {
       }
     }
 
-    if (!lastUpdate) {
+    if (isFullResync || !lastUpdate) {
       prCache = new Set();
-      console.log(
-        'No existing contributions file — clearing persistent PR cache for a full fetch.'
-      );
+      console.log('Clearing persistent PR cache for a full fetch.');
     }
 
-    const mergedCommitCache = new Map();
-    for (const [k, v] of commitCacheFromDisk) mergedCommitCache.set(k, v);
-
-    const {
-      contributions: newContributions,
-      prCache: updatedPrCache,
-      commitCache: usedCommitCache,
-    } = await fetchContributions(fetchStartYear, prCache, mergedCommitCache);
+    const { contributions: newContributions } = await fetchContributions(
+      fetchStartYear,
+      prCache,
+      mergedCommitCache,
+      failedFetchCache
+    );
 
     let finalContributions = {
       pullRequests: [],
@@ -368,11 +412,14 @@ async function main() {
     const quarterlyHtmlLinks = await writeHtmlFiles(grouped);
 
     // 3. Generate README and glossary files (Markdown)
-    await createStatsReadme(finalContributions, articles);
+    // failedFetchCache.size: confirmed-403 PRs (e.g. an org needing SSO
+    // authorization we don't have) are real contributions we just couldn't
+    // fetch enough detail on to categorize — see failed-fetch-cache.js.
+    await createStatsReadme(finalContributions, articles, failedFetchCache.size);
 
     // 4. Generate landing page (index.html)
     console.log('Generating landing page...');
-    await createIndexHtml(finalContributions, articles);
+    await createIndexHtml(finalContributions, articles, failedFetchCache.size);
 
     // 5. Generate the Glossary page
     console.log('Generating Glossary...');
@@ -425,13 +472,25 @@ async function main() {
       ongoingCoAuthoredPRs
     );
 
-    // Save the updated PR cache to a file for future runs.
-    await fs.writeFile(cacheFile, JSON.stringify(Array.from(updatedPrCache)), 'utf8');
-    console.log('Updated PR cache saved to file.');
+    console.log('Contributions update completed successfully.');
+  } catch (e) {
+    hasFailed = true;
+    console.error(`Failed to update contributions: ${e.message}`);
+  } finally {
+    // Persist whatever progress this run made — even a partial, failed run —
+    // so a transient error (e.g. a GitHub 503) doesn't force the next run to
+    // repeat API calls we already paid for. prCache and mergedCommitCache are
+    // mutated in place by the fetchers, so they reflect partial progress too.
+    try {
+      await fs.writeFile(cacheFile, JSON.stringify(Array.from(prCache)), 'utf8');
+      console.log('Persisted PR cache to file.');
+    } catch (e) {
+      console.error('Failed to persist PR cache:', e);
+    }
 
     try {
       const obj = {};
-      for (const [k, v] of usedCommitCache || mergedCommitCache) {
+      for (const [k, v] of mergedCommitCache) {
         obj[k] = v;
       }
       await fs.writeFile(commitCacheFile, JSON.stringify(obj, null, 2), 'utf8');
@@ -440,11 +499,26 @@ async function main() {
       console.error('Failed to persist commit cache:', e);
     }
 
-    console.log('Contributions update completed successfully.');
-  } catch (e) {
-    console.error(`Failed to update contributions: ${e.message}`);
-    process.exit(1);
+    try {
+      const obj = {};
+      for (const [k, v] of activityCache) {
+        obj[k] = v;
+      }
+      await fs.writeFile(activityCacheFile, JSON.stringify(obj, null, 2), 'utf8');
+      console.log('Persisted workbench activity cache to file.');
+    } catch (e) {
+      console.error('Failed to persist workbench activity cache:', e);
+    }
+
+    try {
+      await persistFailedFetchCache(failedFetchFile, failedFetchCache);
+      console.log('Persisted failed-fetch cache to file.');
+    } catch (e) {
+      console.error('Failed to persist failed-fetch cache:', e);
+    }
   }
+
+  if (hasFailed) process.exit(1);
 }
 
 main();

@@ -55,7 +55,7 @@ function generateProgressBar(count, total, width) {
   return filledChar.repeat(Math.max(0, filledCount)) + emptyChar.repeat(Math.max(0, emptyCount));
 }
 
-async function createStatsReadme(finalContributions, articles = []) {
+async function createStatsReadme(finalContributions, articles = [], failedFetchCount = 0) {
   const markdownBaseDir = path.join(BASE_DIR, MARKDOWN_OUTPUT_DIR_NAME);
   const README_PATH = path.join(markdownBaseDir, MARKDOWN_README_FILENAME);
   const GLOSSARY_PATH = path.join(markdownBaseDir, MARKDOWN_GLOSSARY_FILENAME);
@@ -73,8 +73,15 @@ async function createStatsReadme(finalContributions, articles = []) {
 
   const articleCount = articles.length || 0;
 
+  // grandTotal drives the persona/percentage math below, so it's kept to
+  // contributions we could fully categorize. Confirmed-403 PRs (see
+  // failed-fetch.json) are real contributions too — we just couldn't fetch
+  // enough detail to place them in a category — so they're added to the
+  // headline number only, not to grandTotal, to avoid distorting the
+  // per-category percentages with contributions we can't attribute.
   const grandTotal =
     prCount + issueCount + reviewedPrCount + collaborationCount + coAuthoredPrCount;
+  const displayTotal = grandTotal + failedFetchCount;
 
   const countsDict = {
     prCount,
@@ -249,7 +256,7 @@ Organized by year and quarter, these reports track contributions made by **[${GI
 
 ## 📊 All-Time Impact Summary
 
-### 🚀 Total Contributions: **${grandTotal}**
+### 🚀 Total Contributions: **${displayTotal}**
 
 | Context | Detail |
 | :--- | :--- |
