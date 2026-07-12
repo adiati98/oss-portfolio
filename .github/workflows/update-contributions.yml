@@ -7,6 +7,11 @@ on:
     # Daily update at 01:00 UTC
     - cron: '0 1 * * *'
   workflow_dispatch:
+    inputs:
+      full_sync:
+        description: 'Run a full sync (re-verify the entire history) instead of the daily incremental update'
+        type: boolean
+        default: false
 
 jobs:
   run_scheduled_update:
@@ -48,8 +53,12 @@ jobs:
             done
           }
 
-          if [ "$SCHEDULE" = "1 0 1 * *" ]; then
-            echo "Running monthly full sync..."
+          # A full sync runs on the monthly schedule OR when manually
+          # triggered from the Actions UI with the full_sync input checked.
+          # github.event.schedule is empty for workflow_dispatch runs, so the
+          # input is the only way to force a full sync manually.
+          if [ "$SCHEDULE" = "1 0 1 * *" ] || [ "$FULL_SYNC" = "true" ]; then
+            echo "Running full sync..."
             # FULL_RESYNC re-crawls the entire history from live GitHub data
             # instead of trusting caches — but deliberately does NOT delete
             # all-contributions.json first. That file is the fallback the
@@ -75,6 +84,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
           SCHEDULE: ${{ github.event.schedule }}
+          FULL_SYNC: ${{ inputs.full_sync }}
 
       - name: Format generated files
         run: npm run format
@@ -88,9 +98,11 @@ jobs:
           git add contributions/markdown-generated/ contributions/html-generated/ data/
 
           if ! git diff --staged --quiet; then
-            # Determine the commit message based on schedule
+            # Determine the commit message based on the sync type
             if [ "$SCHEDULE" = "1 0 1 * *" ]; then
                 MSG="docs: Monthly full sync"
+            elif [ "$FULL_SYNC" = "true" ]; then
+                MSG="docs: Full sync"
             else
                 MSG="docs: Daily contributions update"
             fi
@@ -105,3 +117,4 @@ jobs:
           fi
         env:
           SCHEDULE: ${{ github.event.schedule }}
+          FULL_SYNC: ${{ inputs.full_sync }}
