@@ -193,9 +193,11 @@ async function getPrActivityMeta(
     // rate limit — see withRateLimitRetry) is worth remembering so we don't
     // re-attempt this PR on every future daily run.
     if (e.isPermanent403 && failedFetchCache) {
+      // Stamp with the PR's own updated_at, not the run time, so its ghost row
+      // in the historical reports lands in the quarter it was actually active.
       failedFetchCache.set(resolvedPrUrl, {
         status: '403 Forbidden',
-        timestamp: new Date().toISOString(),
+        timestamp: prMainUpdatedAt || new Date().toISOString(),
         title: prTitle || 'Unknown Title',
       });
     }
