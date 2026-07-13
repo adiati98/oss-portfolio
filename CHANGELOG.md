@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.0] - 2026-07-13
+
+### Fixed
+
+- **Contribution Total Double-Count**: The quarterly grouper mutated the shared contributions object while injecting 403 "ghost rows," double-counting them into the headline total (2754 instead of the correct 2744). Ghost rows are now built into the grouped output only, and skipped if the same URL is already a categorized row.
+- **Stale PRs on the Active Workbench**: Unverifiable (403) co-authored PRs were kept on the Active Workbench indefinitely instead of being dropped once their commit history couldn't be verified, so dormant, years-old PRs never left the "current tasks" view.
+- **Misdated 403 Ghost Rows**: Workbench-discovered 403s were timestamped with the run time instead of the PR's own `updated_at`, scattering historical PRs into whatever quarter the daily run happened to land in.
+
+### Changed
+
+- **Independent Retry Budgets**: `withRateLimitRetry` now retries transient network failures (`ECONNRESET`, `ETIMEDOUT`, and similar) on their own retry budget, separate from the rate-limit retry budget, so a call that already spent its rate-limit retries doesn't abort on the first unrelated socket reset.
+- **Connection Resilience**: Added a shared keep-alive `https.Agent` with a capped socket count, reused across both fetchers, to cut TLS handshake overhead and prevent connection-reset storms under concurrent load.
+- **Reduced Fan-Out Concurrency**: Lowered the workbench's `PR_CONCURRENCY` from 6 to 3 to stay well under GitHub's secondary rate limit / abuse-detection threshold.
+- **Leaner Search Pacing**: Removed the blanket pre-search delay in favor of pacing only between pages of a single query, cutting several minutes of fixed waiting from a full resync.
+
 ## [2.11.0] - 2026-07-12
 
 ### Added
