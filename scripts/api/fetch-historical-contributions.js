@@ -3,7 +3,11 @@ const axios = require('axios');
 
 // Import configuration
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
-const { attachRateLimitLogger, withRateLimitRetry } = require('../utils/http-helpers');
+const {
+  attachRateLimitLogger,
+  withRateLimitRetry,
+  keepAliveAgent,
+} = require('../utils/http-helpers');
 
 /**
  * Fetches the year the user joined GitHub to set the baseline for discovery.
@@ -38,6 +42,8 @@ async function fetchContributions(
   const axiosInstance = attachRateLimitLogger(
     axios.create({
       baseURL: BASE_URL,
+      httpsAgent: keepAliveAgent,
+      timeout: 30000,
       headers: {
         Authorization: `token ${token}`,
         Accept: 'application/vnd.github.v3+json',
@@ -99,14 +105,12 @@ async function fetchContributions(
     logState.hasLogged = true;
   }
 
-  // GitHub's search API allows only 30 requests/minute — the year loop below
-  // fires 7 distinct search queries per year with nothing in between, which
-  // alone exceeds that after just a few years. This tracks the last search
-  // call process-wide (not just between pages of one query) so every call
-  // waits out a minimum gap first, instead of only pacing within a single
-  // query's own pagination.
-  let lastSearchCallAt = 0;
-  const MIN_SEARCH_INTERVAL_MS = 2000;
+  // Pace only BETWEEN pages of a single query, not before every query. Most
+  // year queries return a single page and so incur no delay at all; the
+  // withRateLimitRetry wrapper below already absorbs the occasional secondary
+  // rate-limit with backoff. A blanket pre-emptive gap before every call just
+  // added minutes of fixed waiting to a run that is otherwise sequential.
+  const INTER_PAGE_DELAY_MS = 1000;
 
   /**
    * A helper function to fetch all pages for a given search query.
@@ -115,12 +119,6 @@ async function fetchContributions(
     let results = [];
     let page = 1;
     while (true) {
-      const wait = MIN_SEARCH_INTERVAL_MS - (Date.now() - lastSearchCallAt);
-      if (wait > 0) {
-        await new Promise((resolve) => setTimeout(resolve, wait));
-      }
-      lastSearchCallAt = Date.now();
-
       const response = await withRateLimitRetry(
         () => axiosInstance.get(`/search/issues?q=${query}&per_page=100&page=${page}`),
         { label: `search p${page}`, assumeRateLimit: true }
@@ -130,6 +128,7 @@ async function fetchContributions(
       const linkHeader = response.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {
         page++;
+        await new Promise((resolve) => setTimeout(resolve, INTER_PAGE_DELAY_MS));
       } else {
         break;
       }

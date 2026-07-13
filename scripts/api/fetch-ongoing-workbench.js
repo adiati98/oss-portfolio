@@ -6,6 +6,7 @@ const {
   attachRateLimitLogger,
   withRateLimitRetry,
   mapWithConcurrency,
+  keepAliveAgent,
 } = require('../utils/http-helpers');
 
 /**
@@ -17,6 +18,8 @@ if (!token) throw new Error('GITHUB_TOKEN is not set.');
 const axiosInstance = attachRateLimitLogger(
   axios.create({
     baseURL: BASE_URL,
+    httpsAgent: keepAliveAgent,
+    timeout: 30000,
     headers: {
       Authorization: `token ${token}`,
       Accept: 'application/vnd.github.v3+json',
@@ -27,9 +30,13 @@ const axiosInstance = attachRateLimitLogger(
 // How many PRs to process concurrently per fetcher. Bounded (rather than
 // unlimited Promise.all) so we don't fire hundreds of simultaneous requests
 // at GitHub's secondary rate limiter when a user has thousands of open PRs
-// to track — high enough to actually cut wall time, low enough to stay well
-// under the abuse-detection threshold.
-const PR_CONCURRENCY = 6;
+// to track. Each PR's activity fetch already fans out to 4 parallel calls, so
+// the real peak is PR_CONCURRENCY * 4 sockets — kept at 3 (=> ~12 in flight,
+// further capped by the agent's maxSockets) to stay under GitHub's
+// abuse-detection threshold. Going higher (6 => ~24) reliably tripped
+// secondary rate limits and ECONNRESET storms that cost far more in backoff
+// than the extra parallelism saved.
+const PR_CONCURRENCY = 3;
 
 /**
  * SHARED UTILITY: searchAll
@@ -160,9 +167,13 @@ async function getFirstCommitDetails(
     // authorship — mark it as unknown rather than a confirmed "no", so
     // callers don't drop a PR just because we couldn't check it this run.
     if (err.isPermanent403 && failedFetchCache) {
+      // Stamp with the PR's own updated_at, not the run time. This 403 will be
+      // rendered as a ghost row in the historical reports, and it belongs in
+      // the quarter it was actually active in (e.g. a 2023 PR), not in
+      // whatever quarter this daily run happens to fall in.
       failedFetchCache.set(prUrl, {
         status: '403 Forbidden',
-        timestamp: new Date().toISOString(),
+        timestamp: prUpdatedAt || new Date().toISOString(),
         title: prTitle || 'Unknown Title',
       });
     }
@@ -392,12 +403,14 @@ async function fetchOngoingCoAuthoredPrs(commitCache, activityCache, failedFetch
       pr.title
     );
 
-    // A confirmed commit by the user -> definitely co-authored. A fetch we
-    // couldn't complete (fetchFailed, e.g. a permanently-403ing repo) -> the
-    // search query already confirms the user commented on this PR, so keep
-    // it listed rather than silently dropping a real contribution just
-    // because we couldn't verify commit-level detail.
-    if (commitDetails?.firstCommitDate || commitDetails?.fetchFailed) {
+    // Only a confirmed commit by the user keeps a PR on the Active Workbench.
+    // A fetch we couldn't complete (fetchFailed, e.g. a permanently-403ing
+    // repo) is NOT kept here: those are almost always old, dormant PRs we
+    // can't verify, and the Active Workbench is for current tasks only. The
+    // 403 is still recorded (getFirstCommitDetails wrote it to the
+    // failed-fetch cache), so it still surfaces in the historical reports as
+    // a ghost row — just not as an active task.
+    if (commitDetails?.firstCommitDate) {
       const formatted = await formatTask(pr, 'Co-authoring', activityCache, failedFetchCache);
       formatted.body = pr.body;
       return formatted;

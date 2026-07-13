@@ -6,6 +6,8 @@
  * abuse-detection / secondary rate limits instead of each reinventing it.
  */
 
+const https = require('https');
+
 const MAX_RATE_LIMIT_RETRIES = 6;
 
 // GitHub's own infra occasionally 502/503/504s — transient, unlike a 403
@@ -13,6 +15,42 @@ const MAX_RATE_LIMIT_RETRIES = 6;
 // 5xx usually clears in seconds, not the up-to-60s a secondary rate limit
 // needs.
 const RETRYABLE_SERVER_ERRORS = new Set([502, 503, 504]);
+
+// Transient network failures where the request never got an HTTP response at
+// all — the socket was reset / timed out / dropped mid-flight, typically when
+// a burst of concurrent TLS connections overwhelms the client or an
+// intermediary. Unlike a 4xx/5xx these carry no `err.response`, so they're
+// matched by `err.code` (or a couple of message-only variants). They almost
+// always succeed on a quick retry.
+const RETRYABLE_NETWORK_ERRORS = new Set([
+  'ECONNRESET',
+  'ETIMEDOUT',
+  'ECONNABORTED',
+  'ENOTFOUND',
+  'EAI_AGAIN',
+  'ENETUNREACH',
+  'EHOSTUNREACH',
+  'EPIPE',
+  'ERR_SOCKET_CONNECTION_TIMEOUT',
+]);
+
+function isRetryableNetworkError(err) {
+  if (err.response) return false; // got an HTTP response — not a network-level failure
+  if (RETRYABLE_NETWORK_ERRORS.has(err.code)) return true;
+  return /socket hang up|network socket disconnected/i.test(err.message || '');
+}
+
+// A shared keep-alive agent, reused across every axios instance. Two jobs:
+//   1. keepAlive reuses TCP/TLS connections instead of doing a fresh handshake
+//      per request — far fewer handshakes means far fewer resets.
+//   2. maxSockets caps how many connections can be open at once, so the
+//      per-PR fan-out (getPrActivityMeta fires 4 parallel calls) times the
+//      PR-level concurrency can't open dozens of sockets simultaneously and
+//      trip a connection reset. Extra requests queue at the socket layer. Set
+//      to 6 as a hard ceiling that matches the workbench's PR_CONCURRENCY of 3
+//      (3 PRs * up to ~2 in-flight of their 4 calls) and keeps the total
+//      simultaneous-connection count well under GitHub's abuse threshold.
+const keepAliveAgent = new https.Agent({ keepAlive: true, maxSockets: 6 });
 
 let rateLimitLogged = false;
 
@@ -90,6 +128,11 @@ async function withRateLimitRetry(
 ) {
   let attempt = 0;
   let quickAttempt = 0;
+  // Network-level failures (ECONNRESET etc.) get their OWN retry budget,
+  // independent of the rate-limit budget above. They have different root
+  // causes, so a run that already spent its rate-limit retries this call
+  // shouldn't die on the first unrelated socket reset (and vice versa).
+  let networkAttempt = 0;
   while (true) {
     try {
       return await fn();
@@ -133,6 +176,26 @@ async function withRateLimitRetry(
         continue;
       }
 
+      if (isRetryableNetworkError(err)) {
+        if (networkAttempt >= retries) throw err;
+        networkAttempt++;
+        // On a search endpoint a reset is almost always GitHub's abuse
+        // detection escalating from "403, slow down" to just killing the
+        // socket — so back off on the same long ladder as a rate limit
+        // rather than the short one a plain transport blip needs. Jitter so a
+        // batch of connections that reset together don't retry in lockstep
+        // and immediately re-storm the pool.
+        const base = assumeRateLimit
+          ? Math.min(60000, 2000 * 2 ** (networkAttempt - 1))
+          : Math.min(15000, 1000 * 2 ** (networkAttempt - 1));
+        const delay = base + Math.floor(Math.random() * 500);
+        console.log(
+          `[retry] network error (${err.code || err.message}) on ${label || 'request'} (attempt ${networkAttempt}/${retries}), backing off ${Math.round(delay / 1000)}s...`
+        );
+        await new Promise((resolve) => setTimeout(resolve, delay));
+        continue;
+      }
+
       throw err;
     }
   }
@@ -161,4 +224,5 @@ module.exports = {
   attachRateLimitLogger,
   withRateLimitRetry,
   mapWithConcurrency,
+  keepAliveAgent,
 };
