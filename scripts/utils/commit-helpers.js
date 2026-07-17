@@ -3,11 +3,10 @@
  *
  * Used by BOTH the historical crawler and the Active Workbench so the two share
  * one set of matching rules. Historically these lived as two slightly different
- * inline copies, which is how a PR the user only commented on
- * (mautic/user-documentation#838) slipped into the co-authored bucket: a commit
- * that was never really theirs matched a loose substring rule, and once the
- * branch was force-pushed the evidence vanished, leaving an entry nothing could
- * disprove.
+ * inline copies, which is how a PR the user only commented on slipped into the
+ * co-authored bucket: a commit that was never really theirs matched a loose
+ * substring rule, and once the branch was force-pushed the evidence vanished,
+ * leaving an entry nothing could disprove.
  *
  * Strictness is the whole point. Co-authored is the only contribution category
  * whose evidence — a commit in the PR branch — can later be erased by a

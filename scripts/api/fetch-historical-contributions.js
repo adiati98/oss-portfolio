@@ -75,6 +75,18 @@ async function fetchContributions(
     coAuthoredPrs: new Set(),
   };
 
+  // PRs this run successfully re-checked for commit authorship and found NONE
+  // by the user (a clean, definitive verdict — never a fetchFailed "unknown").
+  // The caller uses this to self-heal a stale coAuthoredPrs entry left over
+  // from before a fix to the matching rules, or from a PR that was force-pushed
+  // after being wrongly flagged. This complements the Active Workbench's own
+  // rejection signal: the Workbench only re-checks PRs that are STILL OPEN, so
+  // it can never correct an entry for a PR that has since merged or closed —
+  // this crawler re-examines a PR's commits regardless of its current state
+  // whenever the PR falls in the year range being fetched, so it's the only
+  // signal that can heal a stale entry after the PR is no longer open.
+  const rejectedCoAuthorUrls = new Set();
+
   // Mutate the caller's map directly (not a clone) so that if this function
   // throws partway through the year loop, whatever commits it already
   // fetched are still visible to the caller and can be persisted instead of
@@ -467,6 +479,8 @@ async function fetchContributions(
             state: pr.state,
           });
           seenUrls.coAuthoredPrs.add(pr.html_url);
+        } else if (commitDetails && !commitDetails.fetchFailed) {
+          rejectedCoAuthorUrls.add(pr.html_url);
         }
 
         const myFirstReviewDate = await getPrMyFirstReviewDate(
@@ -587,6 +601,8 @@ async function fetchContributions(
             state: item.state,
           });
           seenUrls.coAuthoredPrs.add(item.html_url);
+        } else if (commitDetails && !commitDetails.fetchFailed) {
+          rejectedCoAuthorUrls.add(item.html_url);
         }
       }
 
@@ -656,7 +672,7 @@ async function fetchContributions(
     }
   }
 
-  return { contributions, prCache, commitCache };
+  return { contributions, prCache, commitCache, rejectedCoAuthorUrls };
 }
 
 module.exports = {
