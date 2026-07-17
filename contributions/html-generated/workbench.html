@@ -722,15 +722,6 @@
         color: var(--t-positive);
         background: var(--t-positive-wash);
       }
-      .wbx-miss {
-        font-family: ui-monospace, monospace;
-        font-size: 0.64rem;
-        color: var(--t-critical);
-        background: var(--t-critical-wash);
-        border: 1px dashed var(--t-critical-line);
-        border-radius: 4px;
-        padding: 1px 7px;
-      }
       .wbx-empty {
         text-align: center;
         padding: 44px 20px;
@@ -1442,7 +1433,7 @@
                 Active across open source
                 <span>— live maintainer &amp; contribution activity</span>
               </h2>
-              <span class="wbx-live"><i></i>cached data</span>
+              <span class="wbx-live"><i></i>updated today</span>
             </div>
             <div class="wbx-tiles">
               <div class="wbx-tile wbx-tile--hero">
@@ -1450,37 +1441,32 @@
                 ><span class="c">changes shipped this quarter</span>
               </div>
               <div class="wbx-tile wbx-tile--good">
-                <span class="n">8</span
+                <span class="n">7</span
                 ><span class="c">approved &amp; heading to merge</span>
               </div>
               <div class="wbx-tile wbx-tile--hot">
-                <span class="n">60</span
+                <span class="n">61</span
                 ><span class="c">need your action now</span>
               </div>
               <div class="wbx-tile">
-                <span class="n">1099</span
-                ><span class="c">contributions you helped ship</span>
+                <span class="n">35</span
+                ><span class="c">contributions you helped ship this month</span>
               </div>
               <div class="wbx-tile">
-                <span class="n">9</span
-                ><span class="c">projects across 3 organizations</span>
+                <span class="n">5</span
+                ><span class="c"
+                  >projects across 3 organizations this month</span
+                >
               </div>
             </div>
           </div>
           <div class="wbx-sync">
-            tracker synced 2026-07-17 10:58 · sources:
+            tracker synced 2026-07-17 13:29 · sources:
             <span class="wbx-src wbx-src--local">local</span>
             <span class="wbx-src wbx-src--up">tracker</span>
             <span class="wbx-src wbx-src--both">merged</span>
           </div>
-          <div class="wbx-banner wbx-banner--warn">
-            <span class="ic">▲</span>
-            <div>
-              <b>Tracker feed degraded.</b> offline render Local records are
-              current as of this build; lane placement keeps working from the
-              last good data.
-            </div>
-          </div>
+
           <div class="wbx-lanes">
             <details
               class="wbx-lane"
@@ -1489,7 +1475,7 @@
             >
               <summary>
                 <span class="wbx-lane-title">Needs your action</span>
-                <span class="wbx-lane-count">60</span>
+                <span class="wbx-lane-count">61</span>
                 <p class="wbx-lane-explain">
                   Your move — feedback to address, a review waiting on you, or a
                   note left after approval.
@@ -1516,10 +1502,6 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-miss"
-                        >upstream unmatched — key not in tracker</span
-                      >
-                      ·
                       <span class="wbx-step wbx-step--do"
                         >Assigned 50d ago, no PR yet — start the work</span
                       >
@@ -1776,7 +1758,7 @@
                 </div>
                 <div class="wbx-row">
                   <span class="wbx-pill wbx-pill--act"
-                    ><i></i>Take Action · 19d</span
+                    ><i></i>Take Action · 20d</span
                   >
                   <div>
                     <div class="wbx-meta">
@@ -1796,14 +1778,14 @@
                     </div>
                     <div class="wbx-next">
                       <span class="wbx-step wbx-step--do"
-                        >idle 19d — escalate</span
+                        >idle 20d — escalate</span
                       >
                     </div>
                   </div>
                 </div>
                 <div class="wbx-row">
                   <span class="wbx-pill wbx-pill--act"
-                    ><i></i>Take Action · 19d</span
+                    ><i></i>Take Action · 20d</span
                   >
                   <div>
                     <div class="wbx-meta">
@@ -1822,7 +1804,7 @@
                     </div>
                     <div class="wbx-next">
                       <span class="wbx-step wbx-step--do"
-                        >idle 19d — escalate</span
+                        >idle 20d — escalate</span
                       >
                     </div>
                   </div>
@@ -3100,6 +3082,30 @@
                     </div>
                   </div>
                 </div>
+                <div class="wbx-row">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                      <span class="wbx-src wbx-src--both">merged</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/855"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >docs: Document 'Notify admins about contact exports'
+                        configuration setting</a
+                      >
+                    </div>
+                    <div class="wbx-next">
+                      <span class="wbx-step wbx-step--do"
+                        >Author replied — review the latest changes</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </details>
             <details
@@ -3109,7 +3115,7 @@
             >
               <summary>
                 <span class="wbx-lane-title">Approved — bring it home</span>
-                <span class="wbx-lane-count">8</span>
+                <span class="wbx-lane-count">7</span>
                 <p class="wbx-lane-explain">
                   Reviewed and approved, but not done: each still needs a final
                   review, a backport check, or a maintainer nudge before it
@@ -3117,36 +3123,6 @@
                 </p>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved</span>
-                  <div>
-                    <div class="wbx-meta">
-                      <span class="wbx-repo"
-                        >mautic/developer-documentation-new</span
-                      >
-                      <span class="wbx-rel">👀 reviewing</span>
-                      <span class="wbx-src wbx-src--local">local</span>
-                    </div>
-                    <div class="wbx-task">
-                      <a
-                        href="https://github.com/mautic/developer-documentation-new/pull/505"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >Document CSS and frontend asset build workflow</a
-                      >
-                    </div>
-                    <div class="wbx-next">
-                      approved by <b>andersonjeccel</b> ·
-                      <span class="wbx-miss"
-                        >upstream unmatched — key not in tracker</span
-                      >
-                      ·
-                      <span class="wbx-step wbx-step--ship"
-                        >Final review, then merge</span
-                      >
-                    </div>
-                  </div>
-                </div>
                 <div class="wbx-row">
                   <span class="wbx-pill wbx-pill--ok"><i></i>Approved</span>
                   <div>
@@ -3341,13 +3317,49 @@
             <details class="wbx-lane" style="border-left-color: var(--t-brand)">
               <summary>
                 <span class="wbx-lane-title">Waiting on others</span>
-                <span class="wbx-lane-count">19</span>
+                <span class="wbx-lane-count">21</span>
                 <p class="wbx-lane-explain">
                   Your part is done — awaiting review, or blocked on a linked
                   code PR.
                 </p>
               </summary>
               <div class="wbx-rows">
+                <div class="wbx-row">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                      <span class="wbx-src wbx-src--up">tracker</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/856"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >mautic/user-documentation#856</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                      <span class="wbx-src wbx-src--up">tracker</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/854"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >mautic/user-documentation#854</a
+                      >
+                    </div>
+                  </div>
+                </div>
                 <div class="wbx-row">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
@@ -3999,7 +4011,7 @@
                 </div>
                 <div class="wbx-row">
                   <span class="wbx-pill wbx-pill--stale"
-                    ><i></i>Stale · 102d</span
+                    ><i></i>Stale · 103d</span
                   >
                   <div>
                     <div class="wbx-meta">
@@ -4019,7 +4031,7 @@
                     </div>
                     <div class="wbx-next">
                       <span class="wbx-step wbx-step--do"
-                        >Idle 102d — decide: nudge or close</span
+                        >Idle 103d — decide: nudge or close</span
                       >
                     </div>
                   </div>
