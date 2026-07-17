@@ -41,8 +41,12 @@ const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-ge
 const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
 const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
 const { createBlogHtml } = require('../generators/html/blog-html-generator');
-const { createCommunityHtml } = require('../generators/html/community-html-generator');
+const { createJourneyHtml } = require('../generators/html/journey-html-generator');
+const { createWorkbenchHtml } = require('../generators/html/workbench-html-generator');
+const { createRedirectStubs } = require('../generators/html/redirect-stub-generator');
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
+const { loadMergedWorkbench } = require('../services/workbench-merge');
+const skillsData = require('../../contents/skills');
 
 async function main() {
   // Define the data directory path.
@@ -488,36 +492,20 @@ async function main() {
     await createBlogHtml(articles);
     await writeArticlesMarkdown(articles);
 
-    // --- 8. Generate Community & Activity Reports ---
-    console.log('Generating Community & Activity reports...');
+    // --- 8. Generate Journey + Workbench pages (IA split of the old
+    // Community & Activity page — design blueprint §02) ---
+    console.log('Generating Journey page...');
+    await createJourneyHtml(leadershipData, skillsData);
 
-    const isBot = (t) => {
-      const username = typeof t.user === 'object' ? t.user?.login : t.user;
-      const userStr = String(username || '').toLowerCase();
-      const titleStr = String(t.title || '').toLowerCase();
-      return (
-        userStr.includes('dependabot') ||
-        userStr.includes('[bot]') ||
-        titleStr.startsWith('[snyk]') ||
-        (titleStr.startsWith('bump') && userStr.includes('dependabot'))
-      );
-    };
+    console.log('Generating Workbench page (local records ⨝ docs-PR tracker)...');
+    const workbenchModel = await loadMergedWorkbench();
+    if (workbenchModel.feed.degraded) {
+      console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
+    }
+    await createWorkbenchHtml(workbenchModel);
 
-    // Use the logic to filter for the report generation
-    const manualRequestTasks = ongoingTasks.filter(
-      (t) => t.status === 'Request review' && !isBot(t)
-    );
-    const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
-    const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
-
-    await createCommunityHtml(
-      finalContributions,
-      leadershipData,
-      ongoingTasks,
-      ongoingIssues,
-      ongoingPRs,
-      ongoingCoAuthoredPRs
-    );
+    // Old URLs keep resolving
+    await createRedirectStubs();
 
     await createCommunityMarkdown(
       finalContributions,

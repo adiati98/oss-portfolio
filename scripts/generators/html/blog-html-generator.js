@@ -13,7 +13,9 @@ const { getThemeInitScript, getThemeStyleVariant } = require('../../components/t
 
 async function createBlogHtml(articles) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
-  const outputPath = path.join(htmlBaseDir, 'blog.html');
+  // Renamed to writing.html in the IA restructure (design blueprint §02);
+  // blog.html is kept as a redirect stub for old links (see main.js).
+  const outputPath = path.join(htmlBaseDir, 'writing.html');
 
   await fs.mkdir(htmlBaseDir, { recursive: true });
 

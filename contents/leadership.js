@@ -2,16 +2,25 @@
  * Professional roles and community milestones.
  */
 module.exports = {
+  // Milestones render as the Journey timeline (design blueprint §03).
+  // `url` links the title; `description` gives one or two sentences of
+  // context (clamped to three lines in the timeline, never truncated in data).
   achievements: [
     {
       title: 'Mautician of the Year',
       year: 2025,
       org: 'Mautic',
+      url: 'https://mautic.org/', // TODO(adiati98): link the award announcement
+      description:
+        'Recognized by the Mautic community for sustained leadership of the documentation program — reviews, releases, and mentoring across both user and developer docs.',
     },
     {
       title: 'Course Creator: Becoming a Maintainer',
       year: 2024,
       org: 'Open Source Communities',
+      url: 'https://github.com/OpenSource-Communities', // TODO(adiati98): link the course
+      description:
+        'Authored and shipped a full course walking contributors through the path from first PR to co-maintainership: triage, review etiquette, and community health.',
     },
   ],
   roles: [
