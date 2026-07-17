@@ -165,11 +165,8 @@ async function main() {
     // Pass a fresh Map() instead of commitCacheFromDisk.
     // This forces a fresh look at the commits for OPEN PRs only,
     // ensuring the 'web-flow' fix is applied to the Workbench without affecting historical data.
-    const rawOngoingCoAuthoredPRs = await fetchOngoingCoAuthoredPrs(
-      new Map(),
-      activityCache,
-      failedFetchCache
-    );
+    const { prs: rawOngoingCoAuthoredPRs, examinedRejectedUrls: coAuthoredRejectedUrls } =
+      await fetchOngoingCoAuthoredPrs(new Map(), activityCache, failedFetchCache);
 
     const ongoingCoAuthoredPRs = rawOngoingCoAuthoredPRs.filter((pr) => {
       const repoName = pr.repo.toLowerCase();
@@ -335,6 +332,38 @@ async function main() {
             }
           }
         }
+      }
+    }
+
+    // --- Self-heal stale co-authored entries ---
+    // Co-authored is the only category whose evidence (a commit in the PR
+    // branch) can be erased after the fact by a force-push, squash, or rebase.
+    // When that happens the preserve step above would otherwise re-add the old
+    // "co-authored" entry forever, since nothing in a normal merge removes it
+    // (that's how mautic/user-documentation#838 got stuck). The live workbench
+    // just re-checked every OPEN commented-on PR against fresh commits, so any
+    // still-open co-authored entry it examined and rejected is now known-bad and
+    // is dropped here. Removing it from globalLoadedBy too lets the merge below
+    // re-file the PR into its rightful bucket (e.g. collaborations) this run.
+    // Only open PRs are touched: merged/closed history is frozen and can't rot.
+    if (coAuthoredRejectedUrls && coAuthoredRejectedUrls.size > 0) {
+      const before = finalContributions.coAuthoredPrs.length;
+      finalContributions.coAuthoredPrs = finalContributions.coAuthoredPrs.filter((item) => {
+        const stale = item.state === 'open' && coAuthoredRejectedUrls.has(item.url);
+        if (stale) {
+          const seen = globalLoadedBy.get(item.url);
+          if (seen) {
+            seen.delete('coAuthoredPrs');
+            if (seen.size === 0) globalLoadedBy.delete(item.url);
+          }
+        }
+        return !stale;
+      });
+      const removed = before - finalContributions.coAuthoredPrs.length;
+      if (removed > 0) {
+        console.log(
+          `Self-healed ${removed} stale co-authored PR(s) no longer authored by the user.`
+        );
       }
     }
 
