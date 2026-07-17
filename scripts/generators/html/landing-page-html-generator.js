@@ -193,7 +193,19 @@ function renderHero() {
  * The impact band. Lifetime framing throughout: every number counts the
  * whole history, not the current quarter — that's the Workbench's job.
  */
-function renderImpact({ displayTotal, earliestYear, helpedShipCount, contentCount, repoCount, orgCount }) {
+function renderImpact({
+  displayTotal,
+  earliestYear,
+  helpedShipCount,
+  articleCount,
+  talkCount,
+  repoCount,
+  orgCount,
+}) {
+  // The caption follows the data rather than promising a category that's
+  // empty: talks only enter the label once talks.js actually has one.
+  const contentCount = articleCount + talkCount;
+  const contentCaption = talkCount > 0 ? 'articles &amp; talks published' : 'articles published';
   const helpedTile =
     helpedShipCount > 0
       ? `<span class="n">${helpedShipCount}</span><span class="c">contributions you helped ship</span>`
@@ -213,7 +225,7 @@ function renderImpact({ displayTotal, earliestYear, helpedShipCount, contentCoun
         <div class="lp-tile">${helpedTile}</div>
         <div class="lp-tile">
           <span class="n">${contentCount}</span>
-          <span class="c">articles &amp; talks published</span>
+          <span class="c">${contentCaption}</span>
         </div>
         <div class="lp-tile">
           <span class="n">${repoCount}</span>
@@ -313,7 +325,8 @@ async function createIndexHtml(
     ? finalContributions.coAuthoredPrs.length
     : 0;
 
-  const contentCount = (articles.length || 0) + (talks.length || 0);
+  const articleCount = articles.length || 0;
+  const talkCount = talks.length || 0;
 
   // grandTotal drives the persona/percentage math below, so it's kept to
   // contributions we could fully categorize. Confirmed-403 PRs (see
@@ -410,7 +423,8 @@ async function createIndexHtml(
               displayTotal,
               earliestYear,
               helpedShipCount: impact.helpedShipCount || 0,
-              contentCount,
+              articleCount,
+              talkCount,
               repoCount: uniqueRepos.size,
               orgCount: uniqueOrgs.size,
             })}

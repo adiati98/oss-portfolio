@@ -8,6 +8,7 @@ const {
   computeImpact,
   isValidTrackerShape,
   extractLinkedCodePr,
+  extractIssueRefs,
 } = require('./workbench-merge');
 
 const NOW = new Date('2026-07-11T12:00:00Z');
@@ -240,6 +241,65 @@ run(
     assert.equal(records[0].ball, 'To Write');
   }
 );
+
+// 12b. An assigned issue with no PR stays actionable however long it sits.
+// Regression: staleness used to win, burying it in a folded lane that read
+// "nudge or close" — the opposite of "write this".
+run(
+  'assigned issue idle 50d, no PR → still To Write, never stalled',
+  { issues: [{ title: 'Add docs', url: 'u', repo: 'x/y', number: 731, updatedAt: daysAgo(50) }] },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action');
+    assert.equal(records[0].ball, 'To Write');
+    assert.ok(/no PR yet/i.test(records[0].nextStep), records[0].nextStep);
+    assert.ok(/50d/.test(records[0].nextStep), records[0].nextStep);
+  }
+);
+
+// 12c. Once a PR of yours addresses the issue, it stops nagging
+run(
+  'assigned issue with a linked PR → watching, not To Write',
+  {
+    issues: [{ title: 'Add docs', url: 'u', repo: 'x/y', number: 731, updatedAt: daysAgo(50) }],
+    prs: [local({ repo: 'x/y', number: 900, body: 'Closes #731', lastActor: ME, author: ME })],
+  },
+  ({ records }) => {
+    const issue = records.find((r) => r.relationship === 'assigned issue');
+    assert.equal(issue.lane, 'waiting');
+    assert.equal(issue.ball, 'Watching');
+    assert.equal(issue.linkedPr.ref, 'x/y#900');
+    assert.ok(/x\/y#900/.test(issue.nextStep), issue.nextStep);
+  }
+);
+
+// 12d. PR-template boilerplate must not silence a real issue. Unedited
+// templates ship "Closes: #123" across unrelated PRs; #123 is assigned to
+// nobody, so the placeholder is dropped and #731 still reads To Write.
+run(
+  'template placeholder ref does not link',
+  {
+    issues: [{ title: 'Add docs', url: 'u', repo: 'x/y', number: 731, updatedAt: daysAgo(3) }],
+    prs: [
+      local({ repo: 'x/y', number: 848, body: 'Closes: #123', lastActor: ME, author: ME }),
+      local({ repo: 'x/y', number: 841, body: 'Closes: #123', lastActor: ME, author: ME }),
+    ],
+  },
+  ({ records }) => {
+    const issue = records.find((r) => r.relationship === 'assigned issue');
+    assert.equal(issue.linkedPr, null);
+    assert.equal(issue.ball, 'To Write');
+  }
+);
+
+// 12e. Cross-repo and URL-shaped issue refs both resolve
+{
+  const refs = extractIssueRefs('see https://github.com/a/b/issues/5 and c/d#7 plus #9', 'x/y');
+  assert.ok(refs.has('a/b#5'), 'issue URL');
+  assert.ok(refs.has('c/d#7'), 'cross-repo shorthand');
+  assert.ok(refs.has('x/y#9'), 'bare ref resolves to own repo');
+  assert.ok(!refs.has('x/y#7'), 'cross-repo ref must not resolve to own repo');
+  console.log('  ok  issue ref extraction');
+}
 
 // 13. Impact numbers
 {

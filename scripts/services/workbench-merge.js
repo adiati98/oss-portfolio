@@ -130,6 +130,57 @@ function extractLinkedCodePr(body, ownRepo) {
   return null;
 }
 
+/**
+ * Every issue a PR body points at, as `owner/repo#number` keys. Catches
+ * issue URLs, cross-repo `owner/repo#n`, and bare `#n` (resolved against the
+ * PR's own repo). Deliberately looser than a closing-keyword match: "linked
+ * on the PR" is the signal we want, and templates vary too much per project
+ * to rely on `Closes:` being present.
+ */
+function extractIssueRefs(body, ownRepo) {
+  const keys = new Set();
+  const add = (repo, num) => {
+    if (repo && num) keys.add(`${repo}#${num}`);
+  };
+  if (!body) return keys;
+  for (const m of body.matchAll(/github\.com\/([\w.-]+\/[\w.-]+)\/issues\/(\d+)/gi)) add(m[1], m[2]);
+  for (const m of body.matchAll(/([\w.-]+\/[\w.-]+)#(\d+)/g)) add(m[1], m[2]);
+  // Bare `#n`, but not the tail of `owner/repo#n` already handled above.
+  for (const m of body.matchAll(/(?:^|[^\w/#])#(\d+)/g)) add(ownRepo, m[1]);
+  return keys;
+}
+
+/**
+ * Maps each ASSIGNED issue to the PR of yours that addresses it.
+ *
+ * Only issues in `assignedKeys` can be matched, and that constraint is the
+ * guard against PR-template boilerplate: unedited templates ship placeholder
+ * refs (`Closes: #123`) that several unrelated PRs "close" at once. Those
+ * resolve to keys nobody is assigned, so they're dropped instead of
+ * silencing a real issue. When two PRs point at the same issue, the most
+ * recently updated one wins — splitting one issue across PRs is normal.
+ */
+function buildIssuePrLinks(prs, assignedKeys) {
+  const links = new Map();
+  if (assignedKeys.size === 0) return links;
+  for (const pr of prs) {
+    if (!pr || !pr.repo || pr.number == null) continue;
+    for (const key of extractIssueRefs(pr.body, pr.repo)) {
+      if (!assignedKeys.has(key)) continue;
+      const current = links.get(key);
+      if (!current || new Date(pr.updatedAt || 0) > new Date(current.updatedAt || 0)) {
+        links.set(key, {
+          ref: `${pr.repo}#${pr.number}`,
+          url: pr.url || null,
+          updatedAt: pr.updatedAt || null,
+          isDraft: pr.isDraft === true,
+        });
+      }
+    }
+  }
+  return links;
+}
+
 function isBotRecord(record) {
   const username = typeof record.user === 'object' ? record.user?.login : record.user;
   if (isAllowedBotLogin(username)) return false;
@@ -201,13 +252,41 @@ function idleHint(idleDays) {
 
 /**
  * Assigns lane, ball label, and nextStep for one merged record.
- * Precedence: bot → approved (ready/action) → stalled → turn-based.
+ * Precedence: bot → assigned issue → approved (ready/action) → stalled →
+ * turn-based.
+ *
+ * Assigned issues are resolved BEFORE the staleness rule on purpose. An
+ * issue you haven't started has nobody touching it, so it always ages past
+ * the stalled threshold — which used to drop it into a folded lane reading
+ * "nudge or close", the exact opposite of "write this". Age is not evidence
+ * of staleness here; it's evidence of backlog, so it's carried as urgency
+ * inside the row instead.
  */
 function deriveLane(record, me) {
   const { relationship, approval, idleDays, linkedCodePr, upstream } = record;
 
   if (record.isBot) {
     return { lane: 'bot', ball: 'Bot', nextStep: null };
+  }
+
+  if (relationship === 'assigned issue') {
+    if (record.linkedPr) {
+      const draft = record.linkedPr.isDraft ? ' (draft)' : '';
+      return {
+        lane: 'waiting',
+        ball: 'Watching',
+        nextStep: `Covered by ${record.linkedPr.ref}${draft} — finish it there`,
+      };
+    }
+    const age = Math.floor(idleDays);
+    return {
+      lane: 'action',
+      ball: 'To Write',
+      nextStep:
+        age >= REMIND_AFTER_DAYS
+          ? `Assigned ${age}d ago, no PR yet — start the work`
+          : 'Assigned to you, no PR yet — start the work',
+    };
   }
 
   if (approval) {
@@ -233,10 +312,6 @@ function deriveLane(record, me) {
       ball: 'Stale',
       nextStep: `Idle ${Math.floor(idleDays)}d — decide: nudge or close`,
     };
-  }
-
-  if (relationship === 'assigned issue') {
-    return { lane: 'action', ball: 'To Write', nextStep: 'Assigned to you — start the work' };
   }
 
   const lastActor = String(record.lastActor || '').toLowerCase();
@@ -321,6 +396,11 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
     ...issues.map((r) => ({ ...r, relationship: 'assigned issue' })),
   ];
 
+  // Which assigned issues already have a PR of yours addressing them. Issues
+  // carry no body, so the link can only be read from the PR side.
+  const assignedIssueKeys = new Set(issues.map((i) => taskKey(i)).filter(Boolean));
+  const issuePrLinks = buildIssuePrLinks([...prs, ...coauthored], assignedIssueKeys);
+
   const matchedKeys = new Set();
   const records = locals.map((local) => {
     const key = taskKey(local);
@@ -362,6 +442,8 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       idleDays,
       updatedAt: local.updatedAt || null,
       desync: Boolean(!upstream && local.repo && trackedRepos.has(local.repo)),
+      linkedPr:
+        local.relationship === 'assigned issue' && key ? issuePrLinks.get(key) || null : null,
     };
 
     Object.assign(record, deriveLane(record, me));
@@ -404,6 +486,7 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       idleDays,
       updatedAt: upstream.docsUpdatedAt || null,
       desync: false,
+      linkedPr: null,
     };
 
     Object.assign(record, deriveLane(record, me));
@@ -505,6 +588,8 @@ module.exports = {
   fetchTrackerFeed,
   isValidTrackerShape,
   extractLinkedCodePr,
+  extractIssueRefs,
+  buildIssuePrLinks,
   deriveApproval,
   deriveLane,
   mergeWorkbench,
