@@ -19,13 +19,18 @@ const path = require('path');
 const { BASE_DIR } = require('../../config/config');
 
 function stubHtml(target, label) {
+  // A JS redirect instead of <meta http-equiv="refresh"> — axe/Lighthouse's
+  // meta-refresh rule fails on ANY http-equiv refresh under 20 hours, zero
+  // delay included, with no exception. This still forwards instantly for
+  // everyone with JS, and the visible link below is the fallback (and the
+  // only path) for anyone without it.
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=${target}">
   <link rel="canonical" href="${target}">
   <title>Moved — ${label}</title>
+  <script>window.location.replace(${JSON.stringify(target)});</script>
 </head>
 <body>
   <p>This page moved to <a href="${target}">${label}</a>.</p>

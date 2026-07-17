@@ -78,7 +78,7 @@ const WORKBENCH_CSS = `
     background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
   .wbx-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
   .wbx-impact-top h2 span{color:var(--t-ink-3);font-weight:400;font-size:.86rem}
-  .wbx-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
+  .wbx-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
   .wbx-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
   .wbx-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:wbx-ping 2.4s ease-out infinite}
   @keyframes wbx-ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
@@ -95,7 +95,7 @@ const WORKBENCH_CSS = `
   .wbx-tile--hero .c{opacity:.85}
   .wbx-tile--hot .n{color:var(--t-caution)}
   .wbx-tile--good .n{color:var(--t-positive)}
-  .wbx-sync{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+  .wbx-sync{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .wbx-banner{display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:13px 16px;font-size:.85rem;margin-bottom:16px;color:var(--t-ink-2)}
   .wbx-banner--warn{background:var(--t-caution-wash);border:1px solid var(--t-caution-line)}
   .wbx-banner--warn .ic{color:var(--t-caution);font-family:ui-monospace,monospace}
@@ -108,13 +108,13 @@ const WORKBENCH_CSS = `
   .wbx-lane[open] summary::after{transform:rotate(90deg)}
   @media (prefers-reduced-motion: reduce){.wbx-lane summary::after{transition:none}}
   .wbx-lane-title{font-size:1.02rem;font-weight:800;color:var(--t-ink)}
-  .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
+  .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
   .wbx-lane-explain{flex-basis:100%;margin:2px 0 0;color:var(--t-ink-3);font-size:.82rem}
   .wbx-rows{border-top:1px solid var(--t-line)}
   .wbx-row{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;padding:12px 16px;border-top:1px solid var(--t-line);align-items:start;background:var(--t-card)}
   .wbx-row:first-child{border-top:0}
   @media (max-width:620px){.wbx-row{grid-template-columns:1fr}}
-  .wbx-pill{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--t-line);white-space:nowrap;align-self:start}
+  .wbx-pill{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--t-line);white-space:nowrap;align-self:start}
   .wbx-pill i{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
   .wbx-pill--act{color:var(--t-caution);border-color:var(--t-caution-line);background:var(--t-caution-wash)}.wbx-pill--act i{background:var(--t-caution)}
   .wbx-pill--ok{color:var(--t-positive);border-color:var(--t-positive-line);background:var(--t-positive-wash)}.wbx-pill--ok i{background:var(--t-positive)}
@@ -122,13 +122,13 @@ const WORKBENCH_CSS = `
   .wbx-pill--wait{color:var(--t-positive);border-color:var(--t-positive-line);background:var(--t-positive-wash)}.wbx-pill--wait i{background:var(--t-positive)}
   .wbx-pill--stale{color:var(--t-neutral);background:var(--t-neutral-wash)}.wbx-pill--stale i{background:var(--t-neutral)}
   .wbx-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px}
-  .wbx-repo{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:5px;padding:1px 7px}
-  .wbx-rel{font-family:ui-monospace,monospace;font-size:.64rem;letter-spacing:.05em;color:var(--t-ink-3)}
+  .wbx-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:5px;padding:1px 7px}
+  .wbx-rel{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;color:var(--t-ink-3)}
   .wbx-task{font-size:.92rem;line-height:1.4}
   .wbx-task a{color:var(--t-ink);font-weight:600;text-decoration:none}
   .wbx-task a:hover{color:var(--t-brand)}
   .wbx-next{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px;font-size:.78rem;color:var(--t-ink-2)}
-  .wbx-step{font-family:ui-monospace,monospace;font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
+  .wbx-step{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
   .wbx-step--do{color:var(--t-caution);background:var(--t-caution-wash)}
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
@@ -159,7 +159,7 @@ function renderRow(record) {
     nextBits.push(`approved by <b>${record.approval.by}</b>`);
   }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
-    nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.72rem">🔗 code PR <b>${record.linkedCodePr.ref}</b></span>`);
+    nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.75rem">🔗 code PR <b>${record.linkedCodePr.ref}</b></span>`);
   }
   if (record.nextStep) {
     const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
@@ -277,7 +277,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-6xl mx-auto">
             <header class="mt-16 mb-10">
-              <p style="font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)">active workbench</p>
+              <p style="font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)">active workbench</p>
               <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color:var(--t-ink);letter-spacing:-.01em">Organized by what happens next</h1>
             </header>
             ${renderImpact(impact, feed)}

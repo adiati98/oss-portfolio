@@ -86,7 +86,7 @@ function getCommonBaseCss() {
         height: 0.75rem;
       }
       .breakdown-label {
-        font-size: 0.7rem !important; /* slightly smaller than xs */
+        font-size: 0.75rem !important;
       }
     }
   `;
@@ -364,7 +364,27 @@ function getReportStyleCss() {
       gap: 4px;
       vertical-align: middle;
     }
-    
+
+    .th-sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      margin: 0;
+      padding: 2px 4px;
+      font: inherit;
+      font-weight: inherit;
+      color: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .th-sort-btn:focus-visible {
+      outline: 2px solid ${COLORS.primaryText};
+      outline-offset: 2px;
+    }
+
     .sort-icon {
       display: inline-flex;
       align-items: center;

@@ -13,8 +13,11 @@
  *   per seed   text  — the seed itself (light) / ensureReadableOn(seed,
  *                      darkCard, 4.5) (dark)
  *              wash  — seed mixed into the card at low opacity; the mix
- *                      ratio is *searched* until the seed text clears 3:1
- *                      on top of it (pills = large/bold text, AA large)
+ *                      ratio is *searched* until the seed text clears 4.5:1
+ *                      on top of it. Every pill/badge consumer in this repo
+ *                      renders at 11-12px, well under the AA-large threshold
+ *                      (18pt / 14pt bold), so wash must clear full AA, not
+ *                      the 3:1 large-text minimum.
  *              line  — a stronger mix for borders/hairlines
  *   accent     defaults to brand hue-rotated -55° (an analogous warm)
  *   on-brand   text color for solid brand fills: white if it clears 4.5,
@@ -51,14 +54,36 @@ function mixHex(a, b, t) {
   return `#${ch(ca.r, cb.r)}${ch(ca.g, cb.g)}${ch(ca.b, cb.b)}`.toUpperCase();
 }
 
-/** Darkens `hex` in HSL space until it clears `minRatio` against `bgHex`. */
-function ensureReadableDarkOn(hex, bgHex, minRatio = 4.5) {
+/**
+ * Darkens `hex` in HSL space until it clears `minRatio` against every
+ * background in `bgHexes` (a single hex or an array — a color can render on
+ * more than one surface, e.g. both the page background and a card).
+ */
+function ensureReadableDarkOn(hex, bgHexes, minRatio = 4.5) {
+  const bgs = Array.isArray(bgHexes) ? bgHexes : [bgHexes];
+  const worstRatio = (c) => Math.min(...bgs.map((bg) => getContrastRatio(c, bg)));
   const { h, s, l } = hexToHsl(hex);
   let lightness = l;
   let candidate = hex;
   let iterations = 0;
-  while (getContrastRatio(candidate, bgHex) < minRatio && lightness > 4 && iterations < 25) {
+  while (worstRatio(candidate) < minRatio && lightness > 4 && iterations < 25) {
     lightness -= 4;
+    candidate = hslToHex(h, s, lightness);
+    iterations++;
+  }
+  return candidate;
+}
+
+/** Lightening counterpart of ensureReadableDarkOn — same multi-bg contract. */
+function ensureReadableOnAll(hex, bgHexes, minRatio = 4.5) {
+  const bgs = Array.isArray(bgHexes) ? bgHexes : [bgHexes];
+  const worstRatio = (c) => Math.min(...bgs.map((bg) => getContrastRatio(c, bg)));
+  const { h, s, l } = hexToHsl(hex);
+  let lightness = l;
+  let candidate = hex;
+  let iterations = 0;
+  while (worstRatio(candidate) < minRatio && lightness < 96 && iterations < 25) {
+    lightness += 4;
     candidate = hslToHex(h, s, lightness);
     iterations++;
   }
@@ -68,9 +93,10 @@ function ensureReadableDarkOn(hex, bgHex, minRatio = 4.5) {
 /**
  * Finds the strongest wash (highest seed share) that still leaves `textHex`
  * readable on top of it at `minRatio`. Starts rich and backs off toward the
- * plain card, so failure is impossible as long as text-on-card passes.
+ * plain card, so failure is impossible as long as text-on-card passes (as
+ * t -> 0, wash -> card, and text-on-card is already gated at 4.5:1).
  */
-function deriveWash(seedHex, cardHex, textHex, start = 0.14, minRatio = 3.0) {
+function deriveWash(seedHex, cardHex, textHex, start = 0.14, minRatio = 4.5) {
   let t = start;
   let wash = mixHex(seedHex, cardHex, t);
   while (getContrastRatio(textHex, wash) < minRatio && t > 0.02) {
@@ -126,7 +152,11 @@ function deriveTheme(seeds = SEEDS) {
   const card2 = mixHex(surface, card, 0.35);
   const ink = seeds.ink || hslToHex(brandHsl.h, 20, 13);
   const ink2 = mixHex(ink, seeds.neutral, 0.45);
-  const ink3 = mixHex(seeds.neutral, card, 0.82);
+  // ink3 is used directly as small (11-14px) text across Home/Journey/
+  // Workbench (eyebrows, org labels, repo tags) — it needs full AA, not
+  // just "a bit muted". It renders on both the page (surface) and cards, so
+  // it's darkened until it clears 4.5:1 against whichever is harder.
+  const ink3 = ensureReadableDarkOn(mixHex(seeds.neutral, card, 0.82), [card, surface], 4.5);
   const line = mixHex(seeds.neutral, card, 0.18);
   const line2 = mixHex(seeds.neutral, card, 0.3);
 
@@ -136,7 +166,7 @@ function deriveTheme(seeds = SEEDS) {
   const dCard2 = hslToHex(brandHsl.h, Math.min(brandHsl.s, 24), 16);
   const dInk = ensureReadableOn(hslToHex(brandHsl.h, 25, 88), dCard, 7);
   const dInk2 = ensureReadableOn(hslToHex(neutralHsl.h, neutralHsl.s, 68), dCard, 4.5);
-  const dInk3 = mixHex(dInk2, dCard, 0.7);
+  const dInk3 = ensureReadableOnAll(mixHex(dInk2, dCard, 0.7), [dCard, dSurface], 4.5);
   const dLine = mixHex(seeds.neutral, dSurface, 0.28);
   const dLine2 = mixHex(seeds.neutral, dSurface, 0.42);
 
@@ -232,10 +262,12 @@ function runWcagGate(theme) {
     const g = theme[mode];
     check(`${mode} ink/card`, g.ink, g.card, 4.5);
     check(`${mode} ink2/card`, g.ink2, g.card, 4.5);
+    check(`${mode} ink3/card`, g.ink3, g.card, 4.5);
+    check(`${mode} ink3/surface`, g.ink3, g.surface, 4.5);
     for (const [name, ladder] of Object.entries(theme.semantic)) {
       const l = ladder[mode];
       check(`${mode} ${name} text/card`, l.text, g.card, 4.5);
-      check(`${mode} ${name} text/wash (pill)`, l.text, l.wash, 3.0);
+      check(`${mode} ${name} text/wash (pill)`, l.text, l.wash, 4.5);
     }
     const brandFill = mode === 'light' ? theme.seeds.brand : theme.semantic.brand[mode].text;
     check(`${mode} on-brand/brand fill`, g.onBrand, brandFill, 4.5);

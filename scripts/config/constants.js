@@ -84,6 +84,23 @@ const { colors: COLORS, cssVarsBlock: PALETTE_CSS_VARS } = generateColorsObject(
   FLAT_COLOR_TOKENS
 );
 
+/**
+ * Status badges (quarterly report tables) render at 12px — small text, so
+ * they need the full 4.5:1 AA ratio. `generateColorsObject`'s generic
+ * opacity ladder (a fixed 10% tint) isn't searched for readability and can
+ * fail that at arbitrary seed colors. Route status colors through the
+ * theme-engine's semantic ladder instead: its `wash` is already searched
+ * per-seed to keep `text` readable on top of it (see theme-engine.js), so
+ * this stays safe for any brand colors a fork configures, not just the
+ * ones shipped here.
+ */
+COLORS.status = {
+  green: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  purple: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  red: { bg: 'var(--t-critical-wash)', text: 'var(--t-critical)' },
+  gray: { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' },
+};
+
 // Generate browser-ready favicon
 const FAVICON_SVG_ENCODED = encodeSvg(
   generateFaviconSvg(FAVICON_SVG_RAW_TEMPLATE, COLOR_PALETTE.primary)

@@ -40,9 +40,12 @@ class ReportTableManager {
   init() {
     this.headers.forEach((th, index) => {
       if (th.hasAttribute('data-type')) {
-        th.addEventListener('click', () => this.handleSort(th, index));
-        th.style.cursor = 'pointer';
-        th.title = 'Click to sort';
+        // The <button> inside the <th> is the actual interactive control
+        // (see quarterly-reports-html-generator.js) — native buttons are
+        // keyboard-operable for free, so sort is reachable via Tab/Enter/
+        // Space, not just a mouse click.
+        const btn = th.querySelector('.th-sort-btn');
+        if (btn) btn.addEventListener('click', () => this.handleSort(th, index));
       }
     });
 
@@ -106,6 +109,7 @@ class ReportTableManager {
 
     this.headers.forEach((h) => {
       h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+      if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
       const icon = h.querySelector('.sort-icon');
       if (icon) icon.textContent = '↕';
     });
@@ -125,6 +129,13 @@ class ReportTableManager {
         icon.textContent = nextDir === 'desc' || nextDir === 'custom2' ? '▼' : '▲';
       }
       th.classList.add(`sort-${nextDir}`);
+      // aria-sort only accepts none/ascending/descending/other — the status
+      // column's custom priority order (open > merged > closed, or the
+      // reverse) isn't alphabetical/numeric, so it maps to "other" rather
+      // than a direction that would misdescribe it.
+      const ariaSortValue =
+        nextDir === 'asc' ? 'ascending' : nextDir === 'desc' ? 'descending' : 'other';
+      th.setAttribute('aria-sort', ariaSortValue);
 
       // Find indices if they exist in this table for tie-breaking
       const headerArray = Array.from(this.headers);
@@ -226,6 +237,7 @@ class ReportTableManager {
     this.currentSort = { column: null, direction: 'default' };
     this.headers.forEach((h) => {
       h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+      if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
       const icon = h.querySelector('.sort-icon');
       if (icon) icon.textContent = '↕';
     });

@@ -237,7 +237,7 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' rel="noopener noreferrer" class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
         `
       )
       .join('');
@@ -464,7 +464,7 @@ ${navHtmlForReports}
                 id="${searchInputId}"
                 placeholder="${visualPlaceholder}"
                 aria-label="${accessibleLabel}"
-                class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500
+                class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400
                 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
                 style="border-color: ${getColorValue(COLORS.primaryText)};"
               />
@@ -485,18 +485,23 @@ ${navHtmlForReports}
         tableContent += `  <thead class="bg-white dark:bg-slate-800">\n`;
         tableContent += `   <tr>\n`;
 
-        // Generate table headers with sorting attributes (data-type).
+        // Generate table headers with sorting attributes (data-type). Sortable
+        // columns expose a real <button> so the sort is reachable and
+        // operable by keyboard, not just a click handler on a <th>; aria-sort
+        // on the <th> itself follows the WAI-ARIA sortable-table pattern and
+        // is kept in sync by table-filters.js as the sort state changes.
         for (let i = 0; i < sectionInfo.headers.length; i++) {
           const type = sectionInfo.colTypes[i];
           const isStaticColumn = i === 0; // The 'No.' column is static (not sortable).
 
-          const thAttributes = isStaticColumn ? '' : `data-type="${type}" title="Click to sort"`;
+          const thAttributes = isStaticColumn
+            ? ''
+            : `data-type="${type}" aria-sort="none"`;
           const headerContent = isStaticColumn
             ? sectionInfo.headers[i]
-            : `<span class="th-content">${sectionInfo.headers[i]} <span class="sort-icon ml-1">↕</span></span>`;
-          const cursorStyle = isStaticColumn ? 'cursor: default;' : 'cursor: pointer;';
+            : `<button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">${sectionInfo.headers[i]}</span><span class="sort-icon" aria-hidden="true">↕</span></button>`;
 
-          tableContent += `    <th ${thAttributes} class="py-3 px-4" style="color: ${getColorValue(COLORS.primaryText)}; ${cursorStyle}">
+          tableContent += `    <th ${thAttributes} scope="col" class="py-3 px-4" style="color: ${getColorValue(COLORS.primaryText)};">
               ${headerContent}
           </th>\n`;
         }
@@ -507,7 +512,12 @@ ${navHtmlForReports}
         let counter = 1;
         // Generate table rows, mapping data properties to columns.
         for (const item of items) {
-          const rowBg = counter % 2 === 1 ? 'bg-white' : 'bg-gray-50';
+          // Both stripe colors need an explicit dark: variant — a <tr>'s own
+          // background paints over the <table>'s dark:bg-slate-800, so
+          // without one every row would render on a light bg in dark mode
+          // and strand the dark:text-* cell colors with no contrast.
+          const rowBg =
+            counter % 2 === 1 ? 'bg-white dark:bg-slate-800' : 'bg-gray-50 dark:bg-slate-800/60';
           const safeTitle = sanitizeAttribute(item.title);
 
           // Row with data-href to enable click navigation.
@@ -524,7 +534,7 @@ ${navHtmlForReports}
           tableContent += `    <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`;
 
           // Title column (String type, contains hyperlink).
-          const linkHtml = `<a href='${item.url}' target='_blank' class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline">${item.title}</a>`;
+          const linkHtml = `<a href='${item.url}' target='_blank' rel="noopener noreferrer" class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline">${item.title}</a>`;
           tableContent += `    <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
 
           // Handle the remaining columns based on the contribution type.

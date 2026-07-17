@@ -68,7 +68,7 @@ function createNavHtml(relativePath = './') {
 
             <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer"
               class="nav-link nav-desktop-link nav-github-link flex items-center"
-              title="View Repository">
+              aria-label="View source on GitHub (opens in a new tab)" title="View Repository">
               <span class="w-7 h-7 inline-block">${GITHUB_ICON}</span>
             </a>
 
@@ -96,7 +96,7 @@ function createNavHtml(relativePath = './') {
         <div class="mt-3 pt-3 flex items-center justify-between" style="border-top-color: ${COLORS.nav.bg}; border-top-width: 1px;">
           <a href="${GITHUB_REPO_URL}" target="_blank" rel="noopener noreferrer"
             class="nav-link nav-mobile-github-link block w-fit hover:text-gray-200 transition duration-150 ml-3"
-            title="View Repository">
+            aria-label="View source on GitHub (opens in a new tab)" title="View Repository">
             <span class="w-6 h-6 inline-block">${GITHUB_ICON}</span>
           </a>
 

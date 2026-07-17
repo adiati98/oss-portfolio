@@ -27,12 +27,12 @@ const FLAT_TIMELINE_MAX = 10;
 
 const JOURNEY_CSS = `
   ${THEME_CSS_VARS}
-  .jy-eyebrow{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
+  .jy-eyebrow{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
   .jy-h2{font-family:inherit;font-weight:800;letter-spacing:-.01em;color:var(--t-ink)}
   .jy-tl{position:relative;padding-left:26px;max-width:660px}
   .jy-tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;border-radius:2px;
     background:linear-gradient(var(--t-brand-line),var(--t-line))}
-  .jy-yr{font-family:ui-monospace,monospace;font-size:.7rem;letter-spacing:.14em;color:var(--t-ink-3);margin:26px 0 4px;position:relative}
+  .jy-yr{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;color:var(--t-ink-3);margin:26px 0 4px;position:relative}
   .jy-yr::before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:2px;background:var(--t-line-2)}
   .jy-ms{position:relative;padding:14px 0 10px}
   .jy-ms::before{content:"";position:absolute;left:-24.5px;top:23px;width:11px;height:11px;border-radius:50%;
@@ -44,14 +44,14 @@ const JOURNEY_CSS = `
   .jy-ms h3 a:hover{color:var(--t-brand)}
   .jy-ms .jy-arr{display:inline-block;color:var(--t-brand);transition:transform .18s ease;margin-left:4px}
   .jy-ms:hover .jy-arr{transform:translate(3px,-3px)}
-  .jy-org{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.08em;color:var(--t-ink-3);margin:4px 0 6px}
+  .jy-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:4px 0 6px}
   .jy-org b{color:var(--t-accent);font-weight:400}
   .jy-desc{font-size:.9rem;color:var(--t-ink-2);margin:0;max-width:56ch;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .jy-index{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
-  .jy-index a{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);border:1px solid var(--t-line);border-radius:6px;padding:2px 9px;text-decoration:none}
+  .jy-index a{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);border:1px solid var(--t-line);border-radius:6px;padding:2px 9px;text-decoration:none}
   .jy-index a:hover{color:var(--t-brand);border-color:var(--t-brand-line)}
   .jy-more{margin:20px 0 4px}
-  .jy-more button{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-brand);background:none;border:1px dashed var(--t-brand-line);border-radius:8px;padding:7px 16px;cursor:pointer}
+  .jy-more button{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-brand);background:none;border:1px dashed var(--t-brand-line);border-radius:8px;padding:7px 16px;cursor:pointer}
   .jy-more button:hover{background:var(--t-brand-wash)}
   .jy-hidden{display:none}
   .jy-craft{padding:13px 0;border-bottom:1px solid var(--t-line)}
@@ -69,7 +69,7 @@ const JOURNEY_CSS = `
   .jy-xp h3{font-size:1rem;font-weight:800;margin:0;color:var(--t-ink)}
   .jy-xp .jy-xp-org{font-size:.85rem;color:var(--t-ink-2)}
   .jy-xp .jy-xp-org a{color:var(--t-accent)}
-  .jy-xp .jy-xp-per{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--t-ink-3);margin-top:2px}
+  .jy-xp .jy-xp-per{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:2px}
   .jy-xp .jy-xp-per b{color:var(--t-positive);font-weight:400}
   .jy-sec-label{font-family:ui-monospace,monospace;font-size:.78rem;font-weight:400;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin-bottom:16px}
 `;

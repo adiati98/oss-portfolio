@@ -38,7 +38,7 @@ const HTML_OUTPUT_PATH = path.join(htmlBaseDir, 'index.html');
 
 const LANDING_CSS = `
   ${THEME_CSS_VARS}
-  .lp-eyebrow{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
+  .lp-eyebrow{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
   .lp-hero{background:
       radial-gradient(130% 170% at 10% -10%,var(--t-brand-wash),transparent 62%),
       radial-gradient(90% 140% at 100% 0%,var(--t-accent-wash),transparent 55%);
@@ -51,7 +51,7 @@ const LANDING_CSS = `
     background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
   .lp-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
   .lp-impact-top h2 span{color:var(--t-ink-3);font-weight:400;font-size:.86rem}
-  .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
+  .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
   .lp-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
   .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}
   @keyframes lp-ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
@@ -70,12 +70,12 @@ const LANDING_CSS = `
   @media (prefers-reduced-motion: reduce){.lp-tile{transition:none}}
   .lp-cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:30px}
   @media (max-width:860px){.lp-cols{grid-template-columns:1fr;gap:30px}}
-  .lp-h3{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin:0 0 12px}
+  .lp-h3{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin:0 0 12px}
   .lp-meters{max-width:520px}
   .lp-m{display:flex;flex-direction:column;gap:4px;padding:7px 0}
   .lp-m .r{display:flex;justify-content:space-between;gap:10px;font-size:.82rem}
   .lp-m .r b{font-weight:600;color:var(--t-ink)}
-  .lp-m .r span{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3)}
+  .lp-m .r span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3)}
   .lp-m .bar{height:4px;border-radius:2px;background:var(--t-neutral-wash)}
   .lp-m .bar i{display:block;height:100%;border-radius:2px;background:var(--t-brand);opacity:.85}
   .lp-focus{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--t-line);max-width:520px}
@@ -83,7 +83,7 @@ const LANDING_CSS = `
   .lp-focus a{font-weight:600;color:var(--t-ink);text-decoration:none}
   .lp-focus a:hover{color:var(--t-brand)}
   .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
-  .lp-focus span{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);white-space:nowrap}
+  .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap}
   .lp-persona{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:center}
   .lp-seal{width:72px;height:72px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
     background:conic-gradient(from 210deg,var(--t-brand),var(--t-accent),var(--t-brand));animation:lp-spin 26s linear infinite}
@@ -93,7 +93,7 @@ const LANDING_CSS = `
   .lp-seal b{position:relative;z-index:1;font-size:1.2rem;font-weight:800;color:var(--t-brand)}
   .lp-persona h3{font-size:1.25rem;font-weight:800;margin:0 0 4px;color:var(--t-ink)}
   .lp-persona p{font-size:.85rem;color:var(--t-ink-2);margin:0}
-  .lp-how{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);margin-top:14px;max-width:46ch;line-height:1.5}
+  .lp-how{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:14px;max-width:46ch;line-height:1.5}
   .lp-how a{color:var(--t-brand);text-decoration:none;border-bottom:1px solid var(--t-brand-line)}
   .lp-how a:hover{border-bottom-color:var(--t-brand)}
   .lp-index{margin-top:44px;padding-top:14px;border-top:1px solid var(--t-line)}
@@ -101,7 +101,7 @@ const LANDING_CSS = `
   .lp-idx:last-child{border-bottom:0}
   .lp-idx b{font-size:.98rem;font-weight:700;color:var(--t-ink);min-width:118px}
   .lp-idx span{font-size:.82rem;color:var(--t-ink-2);flex:1}
-  .lp-idx .go{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3);transition:transform .18s ease,color .18s ease}
+  .lp-idx .go{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);transition:transform .18s ease,color .18s ease}
   .lp-idx:hover b{color:var(--t-brand)}
   .lp-idx:hover .go{color:var(--t-brand);transform:translateX(3px)}
   @media (prefers-reduced-motion: reduce){.lp-idx .go{transition:none}}
