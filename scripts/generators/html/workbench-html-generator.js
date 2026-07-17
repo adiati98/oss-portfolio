@@ -9,8 +9,8 @@
  *
  * "Approved is not done": every ready-lane row shows who approved and its
  * remaining step (final review, backport check, maintainer nudge).
- * Degraded tracker feed renders a cached-data banner; desync rows carry an
- * "upstream unmatched" chip; an empty board is a positive state.
+ * Degraded tracker feed renders a cached-data banner; an empty board is a
+ * positive state.
  */
 const fs = require('fs/promises');
 const path = require('path');
@@ -135,7 +135,6 @@ const WORKBENCH_CSS = `
   .wbx-step{font-family:ui-monospace,monospace;font-size:.64rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
   .wbx-step--do{color:var(--t-caution);background:var(--t-caution-wash)}
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
-  .wbx-miss{font-family:ui-monospace,monospace;font-size:.64rem;color:var(--t-critical);background:var(--t-critical-wash);border:1px dashed var(--t-critical-line);border-radius:4px;padding:1px 7px}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
 `;
@@ -171,9 +170,6 @@ function renderRow(record) {
   }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
     nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.72rem">🔗 code PR <b>${record.linkedCodePr.ref}</b></span>`);
-  }
-  if (record.desync) {
-    nextBits.push(`<span class="wbx-miss">upstream unmatched — key not in tracker</span>`);
   }
   if (record.nextStep) {
     const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
@@ -216,10 +212,13 @@ function renderLane(lane, records) {
 }
 
 function renderImpact(impact, feed) {
+  // Every tile below the hero is scoped to the current calendar month and
+  // says so in its caption — this board answers "what's happening right
+  // now," not a running lifetime total (that's Home's job).
   const helpedTile =
-    impact.contributorsHelped > 0
-      ? { n: `${impact.contributorsHelped}`, c: `contributors' work you're helping ship` }
-      : { n: `${impact.helpedShipCount}`, c: `contributions you helped ship` };
+    impact.contributorsHelpedThisMonth > 0
+      ? { n: `${impact.contributorsHelpedThisMonth}`, c: `contributors' work you've helped ship this month` }
+      : { n: `${impact.helpedShipThisMonth}`, c: `contributions you helped ship this month` };
   const sync = feed.fetchedAt
     ? `tracker synced ${new Date(feed.fetchedAt).toISOString().slice(0, 16).replace('T', ' ')}`
     : 'tracker feed unavailable';
@@ -234,7 +233,7 @@ function renderImpact(impact, feed) {
         <div class="wbx-tile wbx-tile--good"><span class="n">${impact.approvedLanding}</span><span class="c">approved &amp; heading to merge</span></div>
         <div class="wbx-tile wbx-tile--hot"><span class="n">${impact.needAction}</span><span class="c">need your action now</span></div>
         <div class="wbx-tile"><span class="n">${helpedTile.n}</span><span class="c">${helpedTile.c}</span></div>
-        <div class="wbx-tile"><span class="n">${impact.projects}</span><span class="c">projects across ${impact.organizations} organization${impact.organizations === 1 ? '' : 's'}</span></div>
+        <div class="wbx-tile"><span class="n">${impact.projectsThisMonth}</span><span class="c">projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month</span></div>
       </div>
     </div>
     <div class="wbx-sync">${sync} · sources: <span class="wbx-src wbx-src--local">local</span> <span class="wbx-src wbx-src--up">tracker</span> <span class="wbx-src wbx-src--both">merged</span></div>

@@ -375,10 +375,10 @@ async function createIndexHtml(
     { label: 'Collaborations', count: collaborationCount },
   ].map((row) => ({ ...row, ...getStats(row.count) }));
 
-  // The impact band is lifetime, so its project/organization counts come from
-  // the full contribution history. `impact.projects` counts only what's open
-  // on the workbench right now — right for that board, wrong under a
-  // "lifetime" heading.
+  // The impact band is lifetime, so its project/organization counts come
+  // from the full contribution history rather than anything computed by the
+  // workbench merge (which is scoped to what's currently open or to the
+  // current month — right for that board, wrong under a "lifetime" heading).
   const uniqueRepos = new Set(allItems.map((item) => item.repo).filter(Boolean));
   const uniqueOrgs = new Set([...uniqueRepos].map((repo) => String(repo).split('/')[0]));
 

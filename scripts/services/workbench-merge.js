@@ -386,9 +386,6 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
   const nowDate = now || new Date();
   const tracker = (feed && feed.data) || {};
 
-  // Repos the tracker knows about — local rows in these repos EXPECT a match.
-  const trackedRepos = new Set(Object.keys(tracker).map((k) => k.split('#')[0]));
-
   const locals = [
     ...prs.map((r) => ({ ...r, relationship: 'authored' })),
     ...coauthored.map((r) => ({ ...r, relationship: 'co-authoring' })),
@@ -441,7 +438,6 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
         : null,
       idleDays,
       updatedAt: local.updatedAt || null,
-      desync: Boolean(!upstream && local.repo && trackedRepos.has(local.repo)),
       linkedPr:
         local.relationship === 'assigned issue' && key ? issuePrLinks.get(key) || null : null,
     };
@@ -485,7 +481,6 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       },
       idleDays,
       updatedAt: upstream.docsUpdatedAt || null,
-      desync: false,
       linkedPr: null,
     };
 
@@ -514,45 +509,83 @@ function quarterStart(date) {
   return new Date(date.getFullYear(), q, 1);
 }
 
+function monthStart(date) {
+  return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+/** Counts merged reviewed/co-authored PRs on or after `since`, plus the
+ * unique non-bot authors among them. Shared by the lifetime and
+ * this-month "helped ship" figures below — only the cutoff differs. */
+function tallyHelpedShip(contributions, since) {
+  const authors = new Set();
+  let count = 0;
+  for (const list of [contributions.reviewedPrs, contributions.coAuthoredPrs]) {
+    for (const item of list || []) {
+      if (!item.mergedAt || (since && new Date(item.mergedAt) < since)) continue;
+      count++;
+      const author =
+        item.author || (typeof item.user === 'object' ? item.user?.login : item.user) || null;
+      if (author && !isBotLogin(author)) authors.add(String(author).toLowerCase());
+    }
+  }
+  return { count, authors };
+}
+
 /**
  * Plain-language numbers for the impact header, computed from data the
  * pipeline already has. `contributions` is all-contributions.json.
+ *
+ * Two time scopes ship side by side: LIFETIME figures (`helpedShipCount`,
+ * `contributorsHelped`) are what the Home page shows — the whole career
+ * footprint. THIS-MONTH figures (the `*ThisMonth` fields) are what the
+ * Workbench shows — resets on the 1st, because the Workbench's job is
+ * "what's happening right now," not a running lifetime total. Reusing the
+ * same numbers on both pages under the same label was the original bug this
+ * split fixes: 52 projects (lifetime) and 9 projects (whatever the board
+ * happened to have open) looked like the same metric measured twice.
  */
 function computeImpact(records, contributions = {}, now = new Date()) {
   const qStart = quarterStart(now);
+  const mStart = monthStart(now);
   const inQuarter = (item) => item.date && new Date(item.date) >= qStart;
+  const inMonth = (item) => item.date && new Date(item.date) >= mStart;
 
   const shippedThisQuarter =
     (contributions.pullRequests || []).filter(inQuarter).length +
     (contributions.coAuthoredPrs || []).filter(inQuarter).length;
 
-  // Unique authors whose work I reviewed/co-authored — when the records carry
-  // identity. Historical records don't (title/url/repo/dates only), so
-  // `helpedShipCount` is the honest fallback: the NUMBER of other people's
-  // PRs brought to merge. Renderers show "N contributors" when
-  // contributorsHelped > 0, else "N contributions you helped ship".
-  const helped = new Set();
-  let helpedShipCount = 0;
-  for (const list of [contributions.reviewedPrs, contributions.coAuthoredPrs]) {
-    for (const item of list || []) {
-      helpedShipCount++;
-      const author =
-        item.author || (typeof item.user === 'object' ? item.user?.login : item.user) || null;
-      if (author && !isBotLogin(author)) helped.add(String(author).toLowerCase());
-    }
-  }
+  // Both phrasings ("N contributors' work you're helping ship" / "N
+  // contributions you helped ship") claim the work actually shipped, so only
+  // merged items count — a reviewed/co-authored PR still open or closed
+  // without merging wasn't "helped ship" yet. See tallyHelpedShip above.
+  const lifetime = tallyHelpedShip(contributions, null);
+  const thisMonth = tallyHelpedShip(contributions, mStart);
 
-  const activeRepos = new Set(records.filter((r) => !r.isBot).map((r) => r.repo).filter(Boolean));
-  const activeOrgs = new Set([...activeRepos].map((r) => r.split('/')[0]));
+  // Projects/orgs touched THIS MONTH, across every contribution type — the
+  // Workbench's answer to "how spread am I right now." Uses each record's
+  // own `.date` (the project-wide "when this happened" field — see
+  // shippedThisQuarter above and Home's yearsActive), the same convention
+  // Home uses for its lifetime figure, just windowed to the current month.
+  const allThisMonth = [
+    ...(contributions.pullRequests || []),
+    ...(contributions.issues || []),
+    ...(contributions.reviewedPrs || []),
+    ...(Array.isArray(contributions.coAuthoredPrs) ? contributions.coAuthoredPrs : []),
+    ...(contributions.collaborations || []),
+  ].filter(inMonth);
+  const reposThisMonth = new Set(allThisMonth.map((i) => i.repo).filter(Boolean));
+  const orgsThisMonth = new Set([...reposThisMonth].map((r) => r.split('/')[0]));
 
   return {
     shippedThisQuarter,
     approvedLanding: records.filter((r) => r.lane === 'ready').length,
     needAction: records.filter((r) => r.lane === 'action').length,
-    contributorsHelped: helped.size,
-    helpedShipCount,
-    projects: activeRepos.size,
-    organizations: activeOrgs.size,
+    contributorsHelped: lifetime.authors.size,
+    helpedShipCount: lifetime.count,
+    contributorsHelpedThisMonth: thisMonth.authors.size,
+    helpedShipThisMonth: thisMonth.count,
+    projectsThisMonth: reposThisMonth.size,
+    organizationsThisMonth: orgsThisMonth.size,
   };
 }
 

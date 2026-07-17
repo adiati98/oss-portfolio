@@ -61,12 +61,11 @@ run(
   ({ records }) => {
     const r = records.find((x) => x.key === 'mautic/developer-documentation-new#593');
     assert.equal(r.source, 'local+tracker');
-    assert.equal(r.desync, false);
     assert.ok(r.upstream && r.upstream.codeUpdatedAt);
   }
 );
 
-// 2. Local-only row renders without upstream, no desync outside tracked repos
+// 2. Local-only row renders without upstream
 run(
   'local-only row (untracked repo)',
   { prs: [local({ repo: 'OpenSource-Communities/oss-communities', number: 2, lastActor: ME, author: ME })] },
@@ -74,7 +73,6 @@ run(
     const r = records[0];
     assert.equal(r.source, 'local');
     assert.equal(r.upstream, null);
-    assert.equal(r.desync, false);
     assert.equal(r.lane, 'waiting'); // last actor is me → ball with others
   }
 );
@@ -206,22 +204,6 @@ assert.equal(isValidTrackerShape({ 'not a key': {} }), false);
 assert.equal(isValidTrackerShape({}), true);
 console.log('  ok  isValidTrackerShape rejects drifted shapes');
 
-// 10. Desync: local row in a tracker-covered repo with no key match
-run(
-  'unmatched key in tracked repo → desync flag',
-  {
-    prs: [local({ repo: 'mautic/user-documentation', number: 718, lastActor: ME, author: ME })],
-    tracker: {
-      'mautic/user-documentation#1': { docsUpdatedAt: daysAgo(1), rawDocsReviews: [], rawDocsComments: [] },
-    },
-  },
-  ({ records }) => {
-    const r = records.find((x) => x.key === 'mautic/user-documentation#718');
-    assert.equal(r.desync, true);
-    assert.equal(r.source, 'local');
-  }
-);
-
 // 11. Reviewing and the author moved → your turn
 run(
   'reviewing, author replied → action',
@@ -314,16 +296,80 @@ run(
     records,
     {
       pullRequests: [{ date: daysAgo(5) }, { date: '2024-01-01' }],
-      reviewedPrs: [{ author: 'alice' }, { author: 'bob' }, { author: 'dependabot[bot]' }],
-      coAuthoredPrs: [{ author: 'alice', date: daysAgo(2) }],
+      reviewedPrs: [
+        { author: 'alice', mergedAt: daysAgo(1) },
+        { author: 'bob', mergedAt: daysAgo(1) },
+        { author: 'dependabot[bot]', mergedAt: daysAgo(1) },
+      ],
+      coAuthoredPrs: [{ author: 'alice', date: daysAgo(2), mergedAt: daysAgo(1) }],
     },
     NOW
   );
   assert.equal(impact.shippedThisQuarter, 2); // 1 PR + 1 co-authored this quarter
   assert.equal(impact.contributorsHelped, 2); // alice + bob, bot excluded
+  assert.equal(impact.helpedShipCount, 4); // all 4 merged items, bot included
+  // Every item above merged within the last 2 days, so the this-month
+  // figures (what the Workbench shows) match the lifetime ones here.
+  assert.equal(impact.contributorsHelpedThisMonth, 2);
+  assert.equal(impact.helpedShipThisMonth, 4);
   assert.equal(impact.approvedLanding, 1);
   assert.equal(impact.needAction, 1);
   console.log('  ok  impact numbers');
+}
+
+// 13b. Reviewed/co-authored PRs that never merged don't count as "helped
+// ship" — regression: helpedShipCount and contributorsHelped used to count
+// every reviewed/co-authored PR regardless of outcome, so a PR still open
+// or closed without merging was claimed as shipped work.
+{
+  const impact = computeImpact(
+    [],
+    {
+      reviewedPrs: [
+        { author: 'alice', mergedAt: daysAgo(1) }, // merged → counts
+        { author: 'carol', mergedAt: null, state: 'open' }, // still open
+        { author: 'dave', mergedAt: null, state: 'closed' }, // closed, never merged
+      ],
+      coAuthoredPrs: [
+        { author: 'alice', mergedAt: daysAgo(1) }, // merged → counts
+        { author: 'erin', mergedAt: null, state: 'open' },
+      ],
+    },
+    NOW
+  );
+  assert.equal(impact.helpedShipCount, 2, `expected only the 2 merged items, got ${impact.helpedShipCount}`);
+  assert.equal(impact.contributorsHelped, 1, 'only alice merged; carol/dave/erin never shipped');
+  console.log('  ok  unmerged reviewed/co-authored PRs excluded from "helped ship"');
+}
+
+// 13c. The Workbench's "this month" figures reset by calendar month, not by
+// a rolling window — work merged/dated in a prior month must not leak into
+// the current month's count, for either the helped-ship tally or the
+// projects/organizations touched.
+{
+  const impact = computeImpact(
+    [],
+    {
+      pullRequests: [{ repo: 'solo/repo', date: daysAgo(2) }], // authored, this month; doesn't count toward "helped ship"
+      reviewedPrs: [
+        { author: 'alice', repo: 'reviewed/this-month', date: daysAgo(2), mergedAt: daysAgo(2) },
+        { author: 'bob', repo: 'reviewed/last-month', date: '2026-05-15T00:00:00Z', mergedAt: '2026-05-15T00:00:00Z' },
+      ],
+      coAuthoredPrs: [
+        { author: 'alice', repo: 'reviewed/this-month', date: daysAgo(3), mergedAt: daysAgo(1) },
+      ],
+    },
+    NOW
+  );
+  assert.equal(impact.helpedShipThisMonth, 2, "bob's May merge must not count in July");
+  assert.equal(impact.contributorsHelpedThisMonth, 1, 'only alice shipped this month');
+  assert.equal(
+    impact.projectsThisMonth,
+    2,
+    "solo/repo + reviewed/this-month; reviewed/last-month wasn't touched this month"
+  );
+  assert.equal(impact.organizationsThisMonth, 2);
+  console.log('  ok  "this month" figures reset by calendar month, not a rolling window');
 }
 
 // 14. Linked code PR extraction ignores self-references
