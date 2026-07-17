@@ -124,10 +124,6 @@ const WORKBENCH_CSS = `
   .wbx-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px}
   .wbx-repo{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:5px;padding:1px 7px}
   .wbx-rel{font-family:ui-monospace,monospace;font-size:.64rem;letter-spacing:.05em;color:var(--t-ink-3)}
-  .wbx-src{font-family:ui-monospace,monospace;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:5px;white-space:nowrap;border:1px solid var(--t-line)}
-  .wbx-src--local{color:var(--t-ink-2);background:var(--t-neutral-wash)}
-  .wbx-src--up{color:var(--t-brand);background:var(--t-brand-wash);border-color:var(--t-brand-line)}
-  .wbx-src--both{color:var(--t-accent);background:var(--t-accent-wash);border-color:var(--t-accent-line)}
   .wbx-task{font-size:.92rem;line-height:1.4}
   .wbx-task a{color:var(--t-ink);font-weight:600;text-decoration:none}
   .wbx-task a:hover{color:var(--t-brand)}
@@ -138,12 +134,6 @@ const WORKBENCH_CSS = `
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
 `;
-
-function srcChip(record) {
-  if (record.source === 'local+tracker') return `<span class="wbx-src wbx-src--both">merged</span>`;
-  if (record.source === 'tracker') return `<span class="wbx-src wbx-src--up">tracker</span>`;
-  return `<span class="wbx-src wbx-src--local">local</span>`;
-}
 
 function relLabel(record) {
   const map = {
@@ -184,7 +174,6 @@ function renderRow(record) {
         <div class="wbx-meta">
           <span class="wbx-repo">${record.repo || ''}</span>
           <span class="wbx-rel">${relLabel(record)}</span>
-          ${srcChip(record)}
         </div>
         <div class="wbx-task"><a href="${record.url}" target="_blank" rel="noopener noreferrer">${title}</a></div>
         ${nextHtml}
@@ -236,7 +225,7 @@ function renderImpact(impact, feed) {
         <div class="wbx-tile"><span class="n">${impact.projectsThisMonth}</span><span class="c">projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month</span></div>
       </div>
     </div>
-    <div class="wbx-sync">${sync} · sources: <span class="wbx-src wbx-src--local">local</span> <span class="wbx-src wbx-src--up">tracker</span> <span class="wbx-src wbx-src--both">merged</span></div>
+    <div class="wbx-sync">${sync}</div>
   `;
 }
 
