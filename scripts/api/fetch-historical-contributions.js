@@ -8,6 +8,7 @@ const {
   withRateLimitRetry,
   keepAliveAgent,
 } = require('../utils/http-helpers');
+const { isCommitByUser } = require('../utils/commit-helpers');
 
 /**
  * Fetches the year the user joined GitHub to set the baseline for discovery.
@@ -257,42 +258,10 @@ async function fetchContributions(
         }
       }
 
-      function isCommitByUser(c) {
-        try {
-          // --- Ignore stale historical commits from wrong base branches ---
-          if (prCreatedAt && new Date(c.commit?.author?.date) < new Date(prCreatedAt)) {
-            return false;
-          }
-
-          const lowerUsername = username.toLowerCase();
-          const commitMessage = c.commit?.message || '';
-          const isBranchUpdate = /^Merge branch '.+' into .+/i.test(commitMessage);
-          if (isBranchUpdate) return false;
-          if (c.author?.login === username) return true;
-          const authorEmail = c.commit?.author?.email?.toLowerCase();
-          if (authorEmail) {
-            if (
-              authorEmail.endsWith('@users.noreply.github.com') &&
-              authorEmail.includes(`+${lowerUsername}@`)
-            )
-              return true;
-            if (authorEmail === `${lowerUsername}@users.noreply.github.com`) return true;
-            if (authorEmail.includes(lowerUsername)) return true;
-          }
-          if (c.commit?.author?.name && c.commit.author.name.toLowerCase().includes(lowerUsername))
-            return true;
-          if (
-            /Co-authored-by:/i.test(commitMessage) &&
-            commitMessage.toLowerCase().includes(lowerUsername)
-          )
-            return true;
-        } catch (e) {
-          return false;
-        }
-        return false;
-      }
-
-      const userCommits = allCommits.filter(isCommitByUser);
+      // The historical record credits genuine edits the user made through the
+      // GitHub web UI, so web-flow commits are NOT excluded here (unlike the
+      // Active Workbench). See scripts/utils/commit-helpers.js.
+      const userCommits = allCommits.filter((c) => isCommitByUser(c, username, { prCreatedAt }));
 
       if (userCommits.length > 0) {
         userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));

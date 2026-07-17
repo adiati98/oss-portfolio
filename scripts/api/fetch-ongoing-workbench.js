@@ -8,6 +8,7 @@ const {
   mapWithConcurrency,
   keepAliveAgent,
 } = require('../utils/http-helpers');
+const { isCommitByUser } = require('../utils/commit-helpers');
 
 /**
  * SHARED AXIOS CONFIGURATION
@@ -63,49 +64,6 @@ async function searchAll(query) {
 }
 
 /**
- * LOCAL HELPER: isCommitByUser (Ongoing Workbench Version)
- * Strict logic to ignore web-flow and suggestions.
- */
-function isCommitByUser(c, username) {
-  try {
-    const lowerUsername = username.toLowerCase();
-    const commitMessage = c.commit?.message || '';
-
-    // Ignore GitHub Web-flow actions and branch updates
-    if (c.committer?.login === 'web-flow') return false;
-    if (/suggestion|Merge branch|Merge remote-tracking|Merge pull request/i.test(commitMessage))
-      return false;
-
-    // Author check
-    const authorLogin = c.author?.login || '';
-    const authorEmail = c.commit?.author?.email?.toLowerCase() || '';
-    const authorName = c.commit?.author?.name?.toLowerCase() || '';
-
-    const isAuthorMatch =
-      authorLogin === username ||
-      authorEmail === `${lowerUsername}@users.noreply.github.com` ||
-      (authorEmail.endsWith('@users.noreply.github.com') &&
-        authorEmail.includes(`+${lowerUsername}@`)) ||
-      authorEmail.includes(lowerUsername) ||
-      authorName.includes(lowerUsername);
-
-    if (isAuthorMatch) return true;
-
-    // Co-authored check
-    if (
-      /Co-authored-by:/i.test(commitMessage) &&
-      commitMessage.toLowerCase().includes(lowerUsername)
-    ) {
-      return true;
-    }
-
-    return false;
-  } catch (e) {
-    return false;
-  }
-}
-
-/**
  * LOCAL HELPER: getFirstCommitDetails (Ongoing Workbench Version)
  */
 async function getFirstCommitDetails(
@@ -150,16 +108,30 @@ async function getFirstCommitDetails(
       }
     }
 
-    const userCommits = allCommits.filter((c) => isCommitByUser(c, username));
+    // The Active Workbench is about current authoring tasks, so applying a
+    // reviewer's suggestion (a web-flow commit) is treated as reviewing, not
+    // authoring — excludeWebFlow keeps those off the co-authoring list.
+    const userCommits = allCommits.filter((c) =>
+      isCommitByUser(c, username, { excludeWebFlow: true })
+    );
+
+    // Separately, evaluate the same commits under the HISTORICAL rule (which
+    // does count web-flow work, e.g. a suggestion of yours the author committed
+    // — GitHub credits that with a real Co-authored-by trailer). The historical
+    // reports are pruned against this verdict, never against the workbench's
+    // stricter one; conflating them deletes genuinely co-authored PRs.
+    const historicalMatch = allCommits.some((c) => isCommitByUser(c, username));
+
     if (userCommits.length > 0) {
       userCommits.sort((a, b) => new Date(a.commit.author.date) - new Date(b.commit.author.date));
       result = {
         firstCommitDate: userCommits[0].commit.author.date,
         commitCount: userCommits.length,
         prUpdatedAt,
+        historicalMatch,
       };
     } else {
-      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
+      result = { firstCommitDate: null, commitCount: 0, prUpdatedAt, historicalMatch };
     }
   } catch (err) {
     // A confirmed permanent 403 (not a rate limit) is worth remembering so
@@ -387,6 +359,18 @@ async function fetchOngoingCoAuthoredPrs(commitCache, activityCache, failedFetch
     return owner !== GITHUB_USERNAME;
   });
 
+  // Open PRs we fetched commits for and confirmed hold NO commit by the user
+  // *under the historical rule* (a clean verdict, not a fetch we couldn't
+  // complete). This is the authoritative "not co-authored" signal for open PRs,
+  // and the caller uses it to self-heal stale historical co-authored entries —
+  // e.g. a PR that was co-authored, then force-pushed so the commit vanished.
+  //
+  // It deliberately does NOT key off this function's own workbench verdict:
+  // that rule is stricter (it ignores web-flow commits), so reusing it here
+  // would prune history by a definition history never used and silently delete
+  // real co-authored work, such as a review suggestion the PR author committed.
+  const examinedRejectedUrls = new Set();
+
   const results = await mapWithConcurrency(candidates, PR_CONCURRENCY, async (pr) => {
     const repoParts = new URL(pr.repository_url).pathname.split('/');
     const owner = repoParts[repoParts.length - 2];
@@ -403,6 +387,13 @@ async function fetchOngoingCoAuthoredPrs(commitCache, activityCache, failedFetch
       pr.title
     );
 
+    // Record the historical-rule verdict for the caller's self-healing pass.
+    // Only a clean "no" counts: a fetch we couldn't complete (fetchFailed) is
+    // "unknown", and must never demote a real entry.
+    if (!commitDetails?.fetchFailed && !commitDetails?.historicalMatch) {
+      examinedRejectedUrls.add(pr.html_url);
+    }
+
     // Only a confirmed commit by the user keeps a PR on the Active Workbench.
     // A fetch we couldn't complete (fetchFailed, e.g. a permanently-403ing
     // repo) is NOT kept here: those are almost always old, dormant PRs we
@@ -415,10 +406,11 @@ async function fetchOngoingCoAuthoredPrs(commitCache, activityCache, failedFetch
       formatted.body = pr.body;
       return formatted;
     }
+
     return null;
   });
 
-  return results.filter(Boolean);
+  return { prs: results.filter(Boolean), examinedRejectedUrls };
 }
 
 module.exports = {
