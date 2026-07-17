@@ -111,17 +111,64 @@ function getStatusBadge(task) {
   return '';
 }
 
-async function createCommunityMarkdown(
-  contributions,
-  rolesData,
+const MD_BASE_DIR = path.join(BASE_DIR, 'markdown-generated');
+
+/** Shared footer: every generated .md links back to the README hub. */
+function mdFooter(links) {
+  const nav = ['[← Back to Summary](./README.md)', ...links].join(' | ');
+  const stamp = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+  return `---\n${nav} | *Last updated: ${stamp}*\n`;
+}
+
+/**
+ * journey.md — the recruiter-facing half: milestones and roles.
+ * Mirrors journey.html (design blueprint §02).
+ */
+async function createJourneyMarkdown(rolesData) {
+  await fs.mkdir(MD_BASE_DIR, { recursive: true });
+
+  let md = `# Journey\n\n`;
+  md += `Milestones, and the leadership roles behind them, across the Open Source ecosystem.\n\n`;
+
+  md += `## 🏆 Major Milestones\n\n`;
+  (rolesData.achievements || []).forEach((ach) => {
+    const orgDisplay = ach.orgUrl ? `[${ach.org}](${ach.orgUrl})` : ach.org;
+    const title = ach.url ? `[${ach.title}](${ach.url})` : ach.title;
+    md += `* **${title}** (${ach.year}) — *${orgDisplay}*\n`;
+    if (ach.description) md += `  * ${ach.description}\n`;
+  });
+  md += `\n`;
+
+  md += `## 🏗️ Roles & Impact\n\n`;
+  (rolesData.roles || []).forEach((role) => {
+    const icon = role.active ? '🟢 **Active**' : '⚪ *Past*';
+    const orgDisplay = role.orgUrl ? `[${role.org}](${role.orgUrl})` : role.org;
+    md += `* ${icon} | **${role.title}** at ${orgDisplay} (${role.period})\n`;
+  });
+  md += `\n`;
+
+  md += mdFooter(['[Active Workbench →](./workbench.md)']);
+
+  await fs.writeFile(path.join(MD_BASE_DIR, 'journey.md'), md.trim() + '\n', 'utf8');
+  console.log(`Generated Journey Markdown at ${path.join(MD_BASE_DIR, 'journey.md')}`);
+}
+
+/**
+ * workbench.md — the maintainer-facing half: the live triage board.
+ * Mirrors workbench.html (design blueprint §02, §05).
+ */
+async function createWorkbenchMarkdown(
   ongoingTasks = [],
   ongoingIssues = [],
   ongoingPRs = [],
   ongoingCoAuthoredPRs = []
 ) {
-  const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
-  const outputPath = path.join(mdBaseDir, 'community-activity.md');
-  await fs.mkdir(mdBaseDir, { recursive: true });
+  const outputPath = path.join(MD_BASE_DIR, 'workbench.md');
+  await fs.mkdir(MD_BASE_DIR, { recursive: true });
 
   const isBot = (t) => {
     const username = typeof t.user === 'object' ? t.user?.login : t.user;
@@ -142,26 +189,8 @@ async function createCommunityMarkdown(
   const manualRequestTasks = humanTasks.filter((t) => t.status === 'Request review');
   const inProgressTasks = humanTasks.filter((t) => t.status === 'Review in progress');
 
-  let md = `# Community & Activity\n\n`;
-  md += `Leadership roles, major milestones, and active maintenance tasks across the Open Source ecosystem.\n\n`;
-
-  md += `## 🏆 Major Milestones\n\n`;
-  rolesData.achievements.forEach((ach) => {
-    const orgDisplay = ach.orgUrl ? `[${ach.org}](${ach.orgUrl})` : ach.org;
-    md += `* **${ach.title}** (${ach.year}) — *${orgDisplay}*\n`;
-  });
-  md += `\n`;
-
-  md += `## 🏗️ Roles & Impact\n\n`;
-  rolesData.roles.forEach((role) => {
-    const icon = role.active ? '🟢 **Active**' : '⚪ *Past*';
-    const orgDisplay = role.orgUrl ? `[${role.org}](${role.orgUrl})` : role.org;
-
-    md += `* ${icon} | **${role.title}** at ${orgDisplay} (${role.period})\n`;
-  });
-  md += `\n`;
-
-  md += `## 🛠️ Active Workbench\n\n`;
+  let md = `# Active Workbench\n\n`;
+  md += `Live maintainer and contribution activity, organized by what happens next.\n\n`;
 
   const buildSection = (title, icon, tasks, type) => {
     const count = tasks.length;
@@ -215,10 +244,10 @@ async function createCommunityMarkdown(
   md += buildSection('Review in progress', '🔄', inProgressTasks, 'reviewer');
   md += buildSection('Bot request review', '🤖', botTasks, 'bot');
 
-  md += `---\n`;
-  md += `*Last updated: ${new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}*\n`;
+  md += mdFooter(['[Journey →](./journey.md)']);
 
   await fs.writeFile(outputPath, md.trim() + '\n', 'utf8');
+  console.log(`Generated Workbench Markdown at ${outputPath}`);
 }
 
-module.exports = { createCommunityMarkdown };
+module.exports = { createJourneyMarkdown, createWorkbenchMarkdown };

@@ -1,25 +1,140 @@
+/**
+ * HOME PAGE (index.html) — the recruiter-facing front door (design
+ * blueprint §02, Home walkthrough tab).
+ *
+ * Reading order, top to bottom:
+ *   Hero band      — radial brand wash, name with the surname in the
+ *                    brand→accent gradient, one plain-language line.
+ *   Impact band    — lifetime framing, completed work first, liveness on
+ *                    the right. Reuses the workbench's impact tile pattern
+ *                    so Home, Workbench, and the quarterly reports all
+ *                    speak one visual language.
+ *   Contribution   — one brand hue, label + % always visible. No rainbow
+ *   mix meters       categories, no persona-colored rows.
+ *   Primary focus  — the repos the work actually lands in.
+ *   Persona seal   — compact; `determinePersona` is untouched.
+ *   Index row      — quiet, text-first links into the other pages.
+ *
+ * Dropped in the rebuild: the emoji tile cards, and the stat blocks that
+ * repeated the same five numbers the meters already carry.
+ *
+ * Every color comes from a --t-* token, so both themes and any fork's five
+ * seeds flow through without theme-specific markup.
+ */
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
-const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
+const { GITHUB_USERNAME, BASE_DIR, PROFILE } = require('../../config/config');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
-const {
-  RIGHT_ARROW_SVG,
-  FAVICON_SVG_ENCODED,
-  COLORS,
-  PULL_REQUEST_LARGE_SVG,
-  INFO_ICON_SVG,
-} = require('../../config/constants');
-const { getIndexStyleCss } = require('../css/style-generator');
-const { getColorValue } = require('../../utils/color-helpers');
+const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
+const { sanitizeAttribute } = require('../../utils/html-helpers');
 
 const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
 const HTML_OUTPUT_PATH = path.join(htmlBaseDir, 'index.html');
-const rightArrowSvg = RIGHT_ARROW_SVG;
+
+const LANDING_CSS = `
+  ${THEME_CSS_VARS}
+  .lp-eyebrow{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
+  .lp-hero{background:
+      radial-gradient(130% 170% at 10% -10%,var(--t-brand-wash),transparent 62%),
+      radial-gradient(90% 140% at 100% 0%,var(--t-accent-wash),transparent 55%);
+    border:1px solid var(--t-line);border-radius:16px;padding:30px 32px 26px}
+  .lp-hero h1{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;letter-spacing:-.015em;line-height:1.12;margin:6px 0 8px;color:var(--t-ink)}
+  .lp-grad{background:linear-gradient(98deg,var(--t-brand) 10%,var(--t-accent) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .lp-hero p{color:var(--t-ink-2);font-size:.95rem;max-width:60ch;margin:0}
+  .lp-impact{background:var(--t-card);border:1px solid var(--t-line);border-radius:14px;overflow:hidden;margin-top:22px;box-shadow:var(--t-shadow)}
+  .lp-impact-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--t-line);
+    background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
+  .lp-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
+  .lp-impact-top h2 span{color:var(--t-ink-3);font-weight:400;font-size:.86rem}
+  .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
+  .lp-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
+  .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}
+  @keyframes lp-ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+  @media (prefers-reduced-motion: reduce){.lp-live i::after{animation:none}}
+  .lp-tiles{display:grid;grid-template-columns:repeat(4,1fr)}
+  @media (max-width:760px){.lp-tiles{grid-template-columns:repeat(2,1fr)}}
+  .lp-tile{padding:16px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:3px;transition:background .18s ease}
+  .lp-tile:last-child{border-right:0}
+  @media (max-width:760px){.lp-tile{border-top:1px solid var(--t-line)}.lp-tile:nth-child(2n){border-right:0}}
+  .lp-tile .n{font-weight:800;font-size:2.05rem;line-height:1.08;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--t-ink)}
+  .lp-tile .n small{font-size:1.05rem;color:var(--t-ink-2)}
+  .lp-tile .c{font-size:.76rem;color:var(--t-ink-2);line-height:1.35}
+  .lp-tile--hero{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
+  .lp-tile--hero .n,.lp-tile--hero .n small,.lp-tile--hero .c{color:var(--t-on-brand)}
+  .lp-tile--hero .c{opacity:.85}
+  @media (prefers-reduced-motion: reduce){.lp-tile{transition:none}}
+  .lp-cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:30px}
+  @media (max-width:860px){.lp-cols{grid-template-columns:1fr;gap:30px}}
+  .lp-h3{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin:0 0 12px}
+  .lp-meters{max-width:520px}
+  .lp-m{display:flex;flex-direction:column;gap:4px;padding:7px 0}
+  .lp-m .r{display:flex;justify-content:space-between;gap:10px;font-size:.82rem}
+  .lp-m .r b{font-weight:600;color:var(--t-ink)}
+  .lp-m .r span{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3)}
+  .lp-m .bar{height:4px;border-radius:2px;background:var(--t-neutral-wash)}
+  .lp-m .bar i{display:block;height:100%;border-radius:2px;background:var(--t-brand);opacity:.85}
+  .lp-focus{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--t-line);max-width:520px}
+  .lp-focus:last-of-type{border-bottom:0}
+  .lp-focus a{font-weight:600;color:var(--t-ink);text-decoration:none}
+  .lp-focus a:hover{color:var(--t-brand)}
+  .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
+  .lp-focus span{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);white-space:nowrap}
+  .lp-persona{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:center}
+  .lp-seal{width:72px;height:72px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(from 210deg,var(--t-brand),var(--t-accent),var(--t-brand));animation:lp-spin 26s linear infinite}
+  @keyframes lp-spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion: reduce){.lp-seal{animation:none}}
+  .lp-seal::after{content:"";position:absolute;inset:4px;border-radius:50%;background:var(--t-card)}
+  .lp-seal b{position:relative;z-index:1;font-size:1.2rem;font-weight:800;color:var(--t-brand)}
+  .lp-persona h3{font-size:1.25rem;font-weight:800;margin:0 0 4px;color:var(--t-ink)}
+  .lp-persona p{font-size:.85rem;color:var(--t-ink-2);margin:0}
+  .lp-how{font-family:ui-monospace,monospace;font-size:.68rem;color:var(--t-ink-3);margin-top:14px;max-width:46ch;line-height:1.5}
+  .lp-how a{color:var(--t-brand);text-decoration:none;border-bottom:1px solid var(--t-brand-line)}
+  .lp-how a:hover{border-bottom-color:var(--t-brand)}
+  .lp-index{margin-top:44px;padding-top:14px;border-top:1px solid var(--t-line)}
+  .lp-idx{display:flex;align-items:baseline;gap:14px;padding:13px 2px;border-bottom:1px solid var(--t-line);text-decoration:none}
+  .lp-idx:last-child{border-bottom:0}
+  .lp-idx b{font-size:.98rem;font-weight:700;color:var(--t-ink);min-width:118px}
+  .lp-idx span{font-size:.82rem;color:var(--t-ink-2);flex:1}
+  .lp-idx .go{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3);transition:transform .18s ease,color .18s ease}
+  .lp-idx:hover b{color:var(--t-brand)}
+  .lp-idx:hover .go{color:var(--t-brand);transform:translateX(3px)}
+  @media (prefers-reduced-motion: reduce){.lp-idx .go{transition:none}}
+  .lp-empty{font-size:.85rem;color:var(--t-ink-3);font-style:italic}
+`;
+
+/**
+ * The other four pages, in the order the blueprint's index row lists them.
+ * Only real generated URLs — never a redirect stub.
+ */
+const PAGE_INDEX = [
+  { href: 'journey.html', label: 'Journey', blurb: 'Milestones, craft, and the roles behind them.' },
+  {
+    href: 'workbench.html',
+    label: 'Workbench',
+    blurb: 'Live maintainer activity, organized by what happens next.',
+  },
+  {
+    href: 'writing.html',
+    label: 'Writing & Talks',
+    blurb: 'Long-form guides, community essays, and conference talks.',
+  },
+  {
+    href: 'reports.html',
+    label: 'Reports',
+    blurb: 'The audit trail — every contribution, quarter by quarter.',
+  },
+  {
+    href: 'glossary.html',
+    label: 'Glossary',
+    blurb: 'How each metric on this site is defined and counted.',
+  },
+];
 
 /**
  * Determines the persona title and description based on contribution counts.
@@ -45,11 +160,150 @@ function determinePersona(counts) {
   });
 }
 
+/** "Community Mentor" → "CM"; falls back to the first two letters. */
+function personaInitials(title) {
+  const words = String(title || '').trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '—';
+  const initials = words.map((w) => w[0]).join('');
+  return (initials.length > 1 ? initials : String(title).slice(0, 2)).slice(0, 2).toUpperCase();
+}
+
+/** Splits a display name so the last word can carry the gradient. */
+function renderHeroName(name) {
+  const words = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return `@${GITHUB_USERNAME}`;
+  if (words.length === 1) return `<span class="lp-grad">${words[0]}</span>`;
+  const last = words.pop();
+  return `${words.join(' ')} <span class="lp-grad">${last}</span>`;
+}
+
+function renderHero() {
+  const name = renderHeroName(PROFILE?.name);
+  const tagline = PROFILE?.tagline || '';
+  return dedent`
+    <section class="lp-hero">
+      <p class="lp-eyebrow">open source portfolio</p>
+      <h1>${name}</h1>
+      ${tagline ? `<p>${tagline}</p>` : ''}
+    </section>
+  `;
+}
+
 /**
- * Generates the main landing page for the portfolio.
+ * The impact band. Lifetime framing throughout: every number counts the
+ * whole history, not the current quarter — that's the Workbench's job.
  */
-async function createIndexHtml(finalContributions = {}, articles = [], failedFetchCount = 0) {
+function renderImpact({ displayTotal, earliestYear, helpedShipCount, contentCount, repoCount, orgCount }) {
+  const helpedTile =
+    helpedShipCount > 0
+      ? `<span class="n">${helpedShipCount}</span><span class="c">contributions you helped ship</span>`
+      : `<span class="n">0</span><span class="c">contributions you helped ship</span>`;
+
+  return dedent`
+    <section class="lp-impact" aria-labelledby="lp-impact-h">
+      <div class="lp-impact-top">
+        <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
+        <span class="lp-live"><i></i>updated today</span>
+      </div>
+      <div class="lp-tiles">
+        <div class="lp-tile lp-tile--hero">
+          <span class="n">${displayTotal}</span>
+          <span class="c">contributions shipped since ${earliestYear}</span>
+        </div>
+        <div class="lp-tile">${helpedTile}</div>
+        <div class="lp-tile">
+          <span class="n">${contentCount}</span>
+          <span class="c">articles &amp; talks published</span>
+        </div>
+        <div class="lp-tile">
+          <span class="n">${repoCount}</span>
+          <span class="c">projects across ${orgCount} organization${orgCount === 1 ? '' : 's'}</span>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+/** One brand hue for every row; the label and % carry the meaning. */
+function renderMeters(rows) {
+  if (rows.every((r) => r.count === 0)) {
+    return `<p class="lp-empty">No contributions recorded yet.</p>`;
+  }
+  return `<div class="lp-meters">${[...rows]
+    .sort((a, b) => b.count - a.count)
+    .map(
+      (row) => dedent`
+        <div class="lp-m">
+          <div class="r"><b>${row.label}</b><span>${row.pctStr}</span></div>
+          <div class="bar"><i style="width:${row.pct.toFixed(1)}%"></i></div>
+        </div>`
+    )
+    .join('')}</div>`;
+}
+
+function renderFocus(topRepos) {
+  if (topRepos.length === 0) {
+    return `<p class="lp-empty">No activity recorded yet.</p>`;
+  }
+  return topRepos
+    .map(([repo, count]) => {
+      const [owner, name] = repo.includes('/') ? repo.split('/') : ['', repo];
+      const label = owner ? `<span class="o">${owner} /</span> ${name}` : name;
+      return dedent`
+        <div class="lp-focus">
+          <a href="https://github.com/${repo}" target="_blank" rel="noopener noreferrer" title="${sanitizeAttribute(repo)}">${label}</a>
+          <span>${count} contribution${count === 1 ? '' : 's'}</span>
+        </div>`;
+    })
+    .join('');
+}
+
+function renderPersona(personaTitle, personaDesc) {
+  return dedent`
+    <div class="lp-persona">
+      <div class="lp-seal" aria-hidden="true"><b>${personaInitials(personaTitle)}</b></div>
+      <div>
+        <h3>${personaTitle}</h3>
+        <p>${personaDesc}</p>
+      </div>
+    </div>
+    <p class="lp-how">
+      An assigned category, derived from which contribution type leads the mix above.
+      <a href="glossary.html">How it's calculated →</a>
+    </p>
+  `;
+}
+
+function renderIndexRow() {
+  return PAGE_INDEX.map(
+    (page) => dedent`
+      <a class="lp-idx" href="${page.href}">
+        <b>${page.label}</b>
+        <span>${page.blurb}</span>
+        <span class="go" aria-hidden="true">→</span>
+      </a>`
+  ).join('');
+}
+
+/**
+ * Generates the Home page.
+ *
+ * @param {object} finalContributions all-contributions.json
+ * @param {Array}  articles           published articles
+ * @param {number} failedFetchCount   confirmed-403 PRs (see failed-fetch.json)
+ * @param {object} [options]
+ * @param {object} [options.impact]   loadMergedWorkbench().impact
+ * @param {Array}  [options.talks]    contents/talks.js
+ */
+async function createIndexHtml(
+  finalContributions = {},
+  articles = [],
+  failedFetchCount = 0,
+  options = {}
+) {
   await fs.mkdir(htmlBaseDir, { recursive: true });
+
+  const { impact = {}, talks = [] } = options;
 
   const prCount = finalContributions.pullRequests?.length || 0;
   const issueCount = finalContributions.issues?.length || 0;
@@ -59,7 +313,7 @@ async function createIndexHtml(finalContributions = {}, articles = [], failedFet
     ? finalContributions.coAuthoredPrs.length
     : 0;
 
-  const articleCount = articles.length || 0;
+  const contentCount = (articles.length || 0) + (talks.length || 0);
 
   // grandTotal drives the persona/percentage math below, so it's kept to
   // contributions we could fully categorize. Confirmed-403 PRs (see
@@ -94,30 +348,26 @@ async function createIndexHtml(finalContributions = {}, articles = [], failedFet
   const currentYear = new Date().getFullYear();
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
 
-  const maxCount = Math.max(
-    prCount,
-    issueCount,
-    reviewedPrCount,
-    coAuthoredPrCount,
-    collaborationCount
-  );
-
   const getStats = (count) => {
     if (grandTotal === 0) return { pct: 0, pctStr: '0%' };
     const pct = (count / grandTotal) * 100;
-    return { pct: pct, pctStr: pct.toFixed(1) + '%' };
+    return { pct, pctStr: pct.toFixed(1) + '%' };
   };
 
-  const stats = {
-    prs: getStats(prCount),
-    issues: getStats(issueCount),
-    reviews: getStats(reviewedPrCount),
-    coauth: getStats(coAuthoredPrCount),
-    collab: getStats(collaborationCount),
-  };
+  const meterRows = [
+    { label: 'Merged PRs', count: prCount },
+    { label: 'Issues', count: issueCount },
+    { label: 'Reviewed PRs', count: reviewedPrCount },
+    { label: 'Co-authored PRs', count: coAuthoredPrCount },
+    { label: 'Collaborations', count: collaborationCount },
+  ].map((row) => ({ ...row, ...getStats(row.count) }));
 
-  const uniqueRepos = new Set(allItems.map((item) => item.repo));
-  const totalUniqueRepos = uniqueRepos.size;
+  // The impact band is lifetime, so its project/organization counts come from
+  // the full contribution history. `impact.projects` counts only what's open
+  // on the workbench right now — right for that board, wrong under a
+  // "lifetime" heading.
+  const uniqueRepos = new Set(allItems.map((item) => item.repo).filter(Boolean));
+  const uniqueOrgs = new Set([...uniqueRepos].map((repo) => String(repo).split('/')[0]));
 
   const repoActivity = allItems.reduce((acc, item) => {
     acc[item.repo] = (acc[item.repo] || 0) + 1;
@@ -128,39 +378,11 @@ async function createIndexHtml(finalContributions = {}, articles = [], failedFet
     .sort(([, a], [, b]) => b - a)
     .slice(0, 3);
 
-  const topReposHtml =
-    topThreeRepos.length > 0
-      ? topThreeRepos
-          .map(([repo, count], idx) => {
-            const isTop = idx === 0;
-            const nameClass = isTop ? 'text-base font-black' : 'text-sm font-bold';
-            const [owner, name] = repo.includes('/') ? repo.split('/') : ['', repo];
-            const repoUrl = `https://github.com/${repo}`;
-
-            return `
-        <div class="flex flex-col sm:flex-row sm:items-start justify-between py-4 border-b border-slate-100 dark:border-slate-700 last:border-0 gap-3 sm:gap-4">
-          <div class="flex flex-col min-w-0">
-            ${owner ? `<span class="text-xs uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 font-black leading-none mb-1.5 block">${owner}</span>` : ''}
-            <a href="${repoUrl}" target="_blank" rel="noopener noreferrer" class="${nameClass} break-all hover:underline underline-offset-4" style="color: ${getColorValue(COLORS.primaryText)};">
-              ${name}
-            </a>
-          </div>
-          <div class="shrink-0 mt-1 sm:mt-0 sm:self-center">
-            <span class="text-xs font-black text-slate-600 dark:text-slate-300 whitespace-nowrap px-2 py-1 bg-slate-50 dark:bg-slate-800/60 rounded-md border border-slate-200 dark:border-slate-700">
-              ${count} contributions
-            </span>
-          </div>
-        </div>`;
-          })
-          .join('')
-      : '<p class="text-sm text-slate-500 dark:text-slate-400 font-medium italic">No activity recorded yet.</p>';
-
   const chosenPersona = determinePersona(countsDict);
-  const { title: personaTitle, desc: personaDesc, key: activePersonaKey } = chosenPersona;
+  const { title: personaTitle, desc: personaDesc } = chosenPersona;
 
-  const footerHtml = createFooterHtml();
-  const indexCss = getIndexStyleCss();
   const navHtml = createNavHtml('./');
+  const footerHtml = createFooterHtml();
 
   const htmlContent = dedent`
     <!DOCTYPE html>
@@ -173,199 +395,42 @@ async function createIndexHtml(finalContributions = {}, articles = [], failedFet
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${indexCss}</style>
+      <style>${LANDING_CSS}</style>
     </head>
-    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+    <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
-        <header class="pt-24 pb-20 px-6 border-b" style="border-color: ${getColorValue(COLORS.border.light)};">
-          <div class="max-w-4xl mx-auto text-center">
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-8 mt-12" style="color: ${getColorValue(COLORS.primaryText)};">
-              Open Source Portfolio
-            </h1>
-            <h2 class="block text-4xl md:text-5xl font-bold opacity-80 mb-8" style="color: ${getColorValue(COLORS.primaryText)};">@${GITHUB_USERNAME}</h2>
-            <p class="text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style="color: ${getColorValue(COLORS.text.secondary)};">
-              A comprehensive visualization of open source contributions, from high-level impact to granular quarterly details.
-            </p>
-          </div>
-        </header>
+        <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
+          <div class="max-w-6xl mx-auto">
+            <div class="mt-16">
+              ${renderHero()}
+            </div>
 
-        <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-10 sm:py-14">
-          <div class="max-w-[120ch] mx-auto">
+            ${renderImpact({
+              displayTotal,
+              earliestYear,
+              helpedShipCount: impact.helpedShipCount || 0,
+              contentCount,
+              repoCount: uniqueRepos.size,
+              orgCount: uniqueOrgs.size,
+            })}
 
-            <section>
-              <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
-                <div style="background-color: ${getColorValue(COLORS.primary)};" class="relative overflow-hidden text-white p-6 sm:p-10 rounded-2xl shadow-xl flex flex-col justify-between border-t-4 border-white/20">
-                  <div class="absolute right-0 -top-2 opacity-10 rotate-20 w-48 h-48 pointer-events-none">${PULL_REQUEST_LARGE_SVG}</div>
-                  <div class="relative z-10 space-y-2">
-                    <p class="text-sm uppercase tracking-widest opacity-80">Total Impact</p>
-                    <p class="text-7xl font-black tracking-tight">${displayTotal}</p>
-                    <p class="text-lg opacity-90 font-semibold">Lifetime Contributions on GitHub</p>
-                  </div>
-                  <div class="relative z-10 h-px bg-white/20 my-8"></div>
-                  <div class="relative z-10 grid grid-cols-2 gap-4">
-                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">${totalUniqueRepos}</p></div>
-                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Impacted Repos</p>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-4 backdrop-blur-sm">
-                      <div class="h-8 flex items-end"><p class="text-3xl sm:text-4xl font-black leading-none tracking-tighter">${articleCount}</p></div>
-                      <p class="text-xs uppercase tracking-widest text-white opacity-80 leading-tight mt-2">Articles</p>
-                    </div>
-                    <div class="bg-white/10 rounded-xl p-4 col-span-2 backdrop-blur-sm flex justify-between items-center">
-                      <span class="text-xs uppercase tracking-widest text-white">Active Since</span>
-                      <span class="text-2xl font-black font-mono tracking-tighter">${earliestYear}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="lg:col-span-2 flex flex-col bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden"> 
-                  ${['Merged PRs', 'Issues', 'Reviewed PRs', 'Co-Authored PRs', 'Collaborations']
-                    .map((label, idx) => {
-                      const key = [
-                        'prCount',
-                        'issueCount',
-                        'reviewedPrCount',
-                        'coAuthoredPrCount',
-                        'collaborationCount',
-                      ][idx];
-                      const count = [
-                        prCount,
-                        issueCount,
-                        reviewedPrCount,
-                        coAuthoredPrCount,
-                        collaborationCount,
-                      ][idx];
-                      const statsKey = ['prs', 'issues', 'reviews', 'coauth', 'collab'][idx];
-                      const s = stats[statsKey];
-                      const isHighest = grandTotal > 0 && key === activePersonaKey;
-
-                      const rowStyle = isHighest
-                        ? `style="background-color: ${getColorValue(COLORS.primary[10] || '#f5f3ff')};"`
-                        : '';
-
-                      const labelClass = isHighest
-                        ? 'text-lg sm:text-xl font-black self-start tracking-tighter'
-                        : 'text-slate-800 dark:text-slate-100 font-bold text-md-lg sm:text-lg self-start tracking-tighter';
-
-                      const labelInlineStyle = isHighest
-                        ? `style="color: ${getColorValue(COLORS.primaryText)};"`
-                        : '';
-
-                      const trackClass = isHighest
-                        ? 'bg-white dark:bg-slate-900'
-                        : 'bg-slate-100 dark:bg-slate-700';
-
-                      return `
-                    <div ${rowStyle} class="flex-1 flex flex-col justify-center px-8 py-4 border-b border-slate-100 dark:border-slate-700 hover:opacity-95 transition-all last:border-0 relative">
-                      <div class="flex justify-between items-center mb-2">
-                        <span class="${labelClass}" ${labelInlineStyle}>${label}</span>
-                        <div class="flex flex-col sm:flex-row items-end sm:items-baseline">
-                          <span style="color: ${getColorValue(COLORS.primaryText)};" class="tracking-tighter ${
-                            isHighest
-                              ? 'font-black text-3xl sm:text-4xl'
-                              : 'font-bold text-2xl sm:text-3xl'
-                          } leading-none">${count}</span>
-                          <span class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-1 sm:mt-0 ml-0 sm:ml-2 font-mono font-semibold">${s.pctStr}</span>
-                        </div>
-                      </div>
-                      <div class="w-full ${trackClass} rounded-full h-3 overflow-hidden flex">
-                        <div style="width: ${s.pct}%; max-width: ${s.pct}%; background-color: ${getColorValue(COLORS.primary)}; ${s.pct === 0 ? 'display: none;' : ''}" 
-                             class="progress-bar h-3 rounded-full ${isHighest ? 'opacity-100' : 'opacity-60'} transition-all duration-300">
-                        </div>
-                      </div>
-                    </div>`;
-                    })
-                    .join('')}
-                </div> 
-              </div> 
-
-              <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
-                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm min-w-0">
-                  <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4">Primary Focus Projects</h2>
-                  <div class="divide-y divide-slate-100 dark:divide-slate-700 min-w-0">${topReposHtml}</div>
-                </div>
-                
-                <div class="bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col justify-between">
-                  <div>
-                    <h2 class="text-sm uppercase tracking-widest font-black text-slate-800 dark:text-slate-100 mb-4">
-                      Collaboration Profile
-                    </h2>
-                    <div>
-                      <p style="color: ${getColorValue(COLORS.primaryText)};" class="text-3xl font-black mb-2 tracking-tight">${personaTitle}</p>
-                      <p class="text-md text-slate-500 dark:text-slate-400 leading-relaxed">${personaDesc}</p>
-                    </div>
-                  </div>
-                  
-                  <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-700 flex items-start">
-                    <span style="color: ${getColorValue(COLORS.primaryText)};" class="mr-3 mt-0.5 shrink-0">
-                      ${INFO_ICON_SVG}
-                    </span>
-                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-snug">
-                      This profile is an assigned category based on contribution activity. 
-                      <a href="glossary.html" class="font-bold underline decoration-slate-300 dark:decoration-slate-600 hover:decoration-current transition-colors" style="color: ${getColorValue(COLORS.primaryText)};">
-                        Learn more in the Glossary.
-                      </a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <section class="mt-16 pt-12 border-t border-slate-100 dark:border-slate-800">
-                <h2 class="text-sm uppercase tracking-[0.2em] font-black text-slate-800 dark:text-slate-100 mb-8 text-center">Explore Detailed Metrics & Activities</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  
-                  <a href="reports.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
-                    <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                        📊
-                      </div>
-                      <div>
-                        <h3 class="font-black text-slate-900 dark:text-slate-100">Reports</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">Seasonal breakdown</p>
-                      </div>
-                    </div>
-                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>View Reports</span>
-                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
-                    </div>
-                  </a>
-
-                  <a href="community-activity.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
-                    <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                        🤝
-                      </div>
-                      <div>
-                        <h3 class="font-black text-slate-900 dark:text-slate-100">Community</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">Roles & Active Tasks</p>
-                      </div>
-                    </div>
-                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>View Activity</span>
-                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
-                    </div>
-                  </a>
-
-                  <a href="blog.html" class="group p-6 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 transition-all flex flex-col justify-between shadow-sm">
-                    <div class="flex items-center space-x-4 mb-4">
-                      <div class="p-3 bg-white dark:bg-slate-700 rounded-xl shadow-sm group-hover:scale-110 transition-transform text-xl">
-                        ✍️
-                      </div>
-                      <div>
-                        <h3 class="font-black text-slate-900 dark:text-slate-100">Articles</h3>
-                        <p class="text-xs text-slate-600 dark:text-slate-300 font-bold">${articleCount} Tutorials & Posts</p>
-                      </div>
-                    </div>
-                    <div style="color: ${getColorValue(COLORS.primaryText)};" class="flex items-center text-xs font-black uppercase tracking-wider opacity-80 group-hover:opacity-100 transition-opacity">
-                      <span>Read Articles</span>
-                      <span class="ml-2 group-hover:translate-x-1 transition-transform">${rightArrowSvg}</span>
-                    </div>
-                  </a>
-
-                </div>
+            <div class="lp-cols">
+              <section aria-labelledby="lp-mix">
+                <h2 id="lp-mix" class="lp-h3">Contribution mix</h2>
+                ${renderMeters(meterRows)}
+                <h2 class="lp-h3" style="margin-top:26px">Primary focus</h2>
+                ${renderFocus(topThreeRepos)}
               </section>
-            </section>
+              <section aria-labelledby="lp-persona">
+                <h2 id="lp-persona" class="lp-h3">Collaboration profile</h2>
+                ${renderPersona(personaTitle, personaDesc)}
+              </section>
+            </div>
+
+            <nav class="lp-index" aria-label="Portfolio pages">
+              ${renderIndexRow()}
+            </nav>
           </div>
         </div>
       </main>
@@ -380,4 +445,4 @@ async function createIndexHtml(finalContributions = {}, articles = [], failedFet
   console.log('Generated landing page successfully at: ' + HTML_OUTPUT_PATH);
 }
 
-module.exports = { createIndexHtml, determinePersona };
+module.exports = { createIndexHtml, determinePersona, personaInitials, renderHeroName };

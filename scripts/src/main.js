@@ -34,7 +34,10 @@ const { groupContributionsByQuarter } = require('../utils/contributions-groupers
 const { writeMarkdownFiles } = require('../generators/markdown/quarterly-reports-generator');
 const { createStatsReadme } = require('../generators/markdown/contributions-readme-generator');
 const { writeArticlesMarkdown } = require('../generators/markdown/blog-markdown-generator');
-const { createCommunityMarkdown } = require('../generators/markdown/community-markdown-generator');
+const {
+  createJourneyMarkdown,
+  createWorkbenchMarkdown,
+} = require('../generators/markdown/community-markdown-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
@@ -47,6 +50,7 @@ const { createRedirectStubs } = require('../generators/html/redirect-stub-genera
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 const { loadMergedWorkbench } = require('../services/workbench-merge');
 const skillsData = require('../../contents/skills');
+const talksData = require('../../contents/talks');
 
 async function main() {
   // Define the data directory path.
@@ -477,9 +481,20 @@ async function main() {
 
     await createStatsReadme(finalContributions, articles, uncountedFailedFetch);
 
+    // The merged workbench model feeds both the Home impact band and the
+    // Workbench board, so it's loaded once here, before either renders.
+    console.log('Merging local records with the docs-PR tracker...');
+    const workbenchModel = await loadMergedWorkbench();
+    if (workbenchModel.feed.degraded) {
+      console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
+    }
+
     // 4. Generate landing page (index.html)
     console.log('Generating landing page...');
-    await createIndexHtml(finalContributions, articles, uncountedFailedFetch);
+    await createIndexHtml(finalContributions, articles, uncountedFailedFetch, {
+      impact: workbenchModel.impact,
+      talks: talksData,
+    });
 
     // 5. Generate the Glossary page
     console.log('Generating Glossary...');
@@ -488,9 +503,9 @@ async function main() {
     // 6. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
 
-    // 7. Generate Blog Reports (HTML and Markdown)
+    // 7. Generate Writing & Talks (HTML and Markdown)
     await createBlogHtml(articles);
-    await writeArticlesMarkdown(articles);
+    await writeArticlesMarkdown(articles, talksData);
 
     // --- 8. Generate Journey + Workbench pages (IA split of the old
     // Community & Activity page — design blueprint §02) ---
@@ -498,23 +513,14 @@ async function main() {
     await createJourneyHtml(leadershipData, skillsData);
 
     console.log('Generating Workbench page (local records ⨝ docs-PR tracker)...');
-    const workbenchModel = await loadMergedWorkbench();
-    if (workbenchModel.feed.degraded) {
-      console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
-    }
     await createWorkbenchHtml(workbenchModel);
 
     // Old URLs keep resolving
     await createRedirectStubs();
 
-    await createCommunityMarkdown(
-      finalContributions,
-      leadershipData,
-      ongoingTasks,
-      ongoingIssues,
-      ongoingPRs,
-      ongoingCoAuthoredPRs
-    );
+    // The markdown mirror splits the same way the HTML does (blueprint §02)
+    await createJourneyMarkdown(leadershipData);
+    await createWorkbenchMarkdown(ongoingTasks, ongoingIssues, ongoingPRs, ongoingCoAuthoredPRs);
 
     console.log('Contributions update completed successfully.');
   } catch (e) {

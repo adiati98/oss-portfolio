@@ -288,8 +288,9 @@ ${article} ${lowerDesc}
 
 Beyond code contributions, I maintain active roles in community leadership and technical content creation around open source.
 
-* ✍️ **Technical Writing:** [**View full articles list (${articleCount})**](./blog.md)
-* 🏗️ **Roles & Impact:** [**View community leadership & activity**](./community-activity.md)
+* ✍️ **Writing & Talks:** [**View full articles list (${articleCount})**](./writing.md)
+* 🏆 **Journey:** [**View milestones, roles & impact**](./journey.md)
+* 🛠️ **Active Workbench:** [**View live tasks, organized by what happens next**](./workbench.md)
 
 ---
 
