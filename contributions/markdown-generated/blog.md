@@ -2,6 +2,9 @@
 
 A collection of articles that **adiati98** wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
 
+- **[Wanted: Beginners-Friendly Open Source Projects](https://dev.to/adiatiayu/wanted-beginners-friendly-open-source-projects-59k9)**
+  - Published on **Dev.to** — July 16, 2026
+
 - **[From Helping Out to Taking Ownership: The Art of Sticking Around](https://dev.to/adiatiayu/from-helping-out-to-taking-ownership-the-art-of-sticking-around-55h1)**
   - Published on **Dev.to** — April 8, 2026
 
