@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.12.1] - 2026-07-17
+
+### Fixed
+
+- **Overly Loose Co-Authorship Matching**: A commit could be attributed to the user from a substring match against an email or name, or from a `Co-authored-by:` trailer that merely mentioned the username anywhere in the message — false-flagging PRs the user only reviewed or commented on as co-authored. Commit authorship is now resolved by one strict matcher shared by the historical crawler and the Active Workbench: a GitHub-resolved account, an unambiguous `noreply` email, or an actual `Co-authored-by:` trailer line. Merge commits no longer count as authorship.
+- **Self-Healing Gap for Merged PRs**: A co-authored PR wrongly flagged before this fix could never be corrected once it merged or closed — the only re-verification path, the Active Workbench, re-examines exclusively PRs that are still open. The historical crawler's own fresh, per-run commit check is now used to prune a stale co-authored entry regardless of the PR's current state.
+
 ## [2.12.0] - 2026-07-13
 
 ### Fixed
