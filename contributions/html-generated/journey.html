@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Open Source Portfolio | adiati98</title>
+    <title>Journey | adiati98 Portfolio</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -336,402 +336,254 @@
         --t-shadow-lg:
           0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
-      .lp-eyebrow {
+      .jy-eyebrow {
         font-family: ui-monospace, monospace;
         font-size: 0.72rem;
         letter-spacing: 0.14em;
         text-transform: uppercase;
         color: var(--t-ink-3);
       }
-      .lp-hero {
-        background:
-          radial-gradient(
-            130% 170% at 10% -10%,
-            var(--t-brand-wash),
-            transparent 62%
-          ),
-          radial-gradient(
-            90% 140% at 100% 0%,
-            var(--t-accent-wash),
-            transparent 55%
-          );
-        border: 1px solid var(--t-line);
-        border-radius: 16px;
-        padding: 30px 32px 26px;
-      }
-      .lp-hero h1 {
-        font-size: clamp(1.9rem, 4.4vw, 3rem);
+      .jy-h2 {
+        font-family: inherit;
         font-weight: 800;
-        letter-spacing: -0.015em;
-        line-height: 1.12;
-        margin: 6px 0 8px;
+        letter-spacing: -0.01em;
         color: var(--t-ink);
       }
-      .lp-grad {
-        background: linear-gradient(
-          98deg,
-          var(--t-brand) 10%,
-          var(--t-accent) 90%
-        );
-        -webkit-background-clip: text;
-        background-clip: text;
-        color: transparent;
+      .jy-tl {
+        position: relative;
+        padding-left: 26px;
+        max-width: 660px;
       }
-      .lp-hero p {
-        color: var(--t-ink-2);
-        font-size: 0.95rem;
-        max-width: 60ch;
-        margin: 0;
+      .jy-tl::before {
+        content: "";
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        bottom: 6px;
+        width: 2px;
+        border-radius: 2px;
+        background: linear-gradient(var(--t-brand-line), var(--t-line));
       }
-      .lp-impact {
-        background: var(--t-card);
-        border: 1px solid var(--t-line);
-        border-radius: 14px;
-        overflow: hidden;
-        margin-top: 22px;
-        box-shadow: var(--t-shadow);
-      }
-      .lp-impact-top {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        flex-wrap: wrap;
-        padding: 14px 18px;
-        border-bottom: 1px solid var(--t-line);
-        background: linear-gradient(
-          120deg,
-          var(--t-brand-wash),
-          var(--t-card-2) 62%
-        );
-      }
-      .lp-impact-top h2 {
-        font-size: 1.05rem;
-        font-weight: 800;
-        margin: 0;
-        color: var(--t-ink);
-      }
-      .lp-impact-top h2 span {
-        color: var(--t-ink-3);
-        font-weight: 400;
-        font-size: 0.86rem;
-      }
-      .lp-live {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
+      .jy-yr {
         font-family: ui-monospace, monospace;
-        font-size: 0.66rem;
-        letter-spacing: 0.09em;
-        text-transform: uppercase;
-        color: var(--t-positive);
+        font-size: 0.7rem;
+        letter-spacing: 0.14em;
+        color: var(--t-ink-3);
+        margin: 26px 0 4px;
+        position: relative;
       }
-      .lp-live i {
+      .jy-yr::before {
+        content: "";
+        position: absolute;
+        left: -24px;
+        top: 6px;
+        width: 10px;
+        height: 2px;
+        background: var(--t-line-2);
+      }
+      .jy-ms {
+        position: relative;
+        padding: 14px 0 10px;
+      }
+      .jy-ms::before {
+        content: "";
+        position: absolute;
+        left: -24.5px;
+        top: 23px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--t-card);
+        border: 2.5px solid var(--t-brand);
+        transition: transform 0.15s ease;
+      }
+      .jy-ms:hover::before {
+        transform: scale(1.25);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .jy-ms::before {
+          transition: none;
+        }
+      }
+      .jy-ms h3 {
+        font-size: 1.16rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1.25;
+      }
+      .jy-ms h3 a {
+        color: var(--t-ink);
+        text-decoration: none;
+      }
+      .jy-ms h3 a:hover {
+        color: var(--t-brand);
+      }
+      .jy-ms .jy-arr {
+        display: inline-block;
+        color: var(--t-brand);
+        transition: transform 0.18s ease;
+        margin-left: 4px;
+      }
+      .jy-ms:hover .jy-arr {
+        transform: translate(3px, -3px);
+      }
+      .jy-org {
+        font-family: ui-monospace, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        color: var(--t-ink-3);
+        margin: 4px 0 6px;
+      }
+      .jy-org b {
+        color: var(--t-accent);
+        font-weight: 400;
+      }
+      .jy-desc {
+        font-size: 0.9rem;
+        color: var(--t-ink-2);
+        margin: 0;
+        max-width: 56ch;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .jy-index {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin: 0 0 18px;
+      }
+      .jy-index a {
+        font-family: ui-monospace, monospace;
+        font-size: 0.68rem;
+        color: var(--t-ink-3);
+        border: 1px solid var(--t-line);
+        border-radius: 6px;
+        padding: 2px 9px;
+        text-decoration: none;
+      }
+      .jy-index a:hover {
+        color: var(--t-brand);
+        border-color: var(--t-brand-line);
+      }
+      .jy-more {
+        margin: 20px 0 4px;
+      }
+      .jy-more button {
+        font-family: ui-monospace, monospace;
+        font-size: 0.72rem;
+        color: var(--t-brand);
+        background: none;
+        border: 1px dashed var(--t-brand-line);
+        border-radius: 8px;
+        padding: 7px 16px;
+        cursor: pointer;
+      }
+      .jy-more button:hover {
+        background: var(--t-brand-wash);
+      }
+      .jy-hidden {
+        display: none;
+      }
+      .jy-craft {
+        padding: 13px 0;
+        border-bottom: 1px solid var(--t-line);
+      }
+      .jy-craft:last-of-type {
+        border-bottom: 0;
+      }
+      .jy-craft b {
+        display: block;
+        font-size: 1.02rem;
+        font-weight: 800;
+        color: var(--t-ink);
+      }
+      .jy-craft span {
+        font-size: 0.85rem;
+        color: var(--t-ink-2);
+        display: block;
+        margin-top: 3px;
+        max-width: 52ch;
+      }
+      .jy-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .jy-chip {
+        font-family: ui-monospace, monospace;
+        font-size: 0.76rem;
+        color: var(--t-ink-2);
+        background: var(--t-card-2);
+        border: 1px solid var(--t-line);
+        border-radius: 8px;
+        padding: 5px 13px;
+        transition:
+          border-color 0.15s ease,
+          color 0.15s ease;
+      }
+      .jy-chip:hover {
+        border-color: var(--t-brand-line);
+        color: var(--t-brand);
+      }
+      .jy-chip--hd {
+        color: var(--t-brand);
+        background: var(--t-brand-wash);
+        border-color: var(--t-brand-line);
+      }
+      .jy-xp {
+        padding: 12px 0 12px 18px;
+        border-left: 2px solid var(--t-line);
+        position: relative;
+      }
+      .jy-xp::before {
+        content: "";
+        position: absolute;
+        left: -5px;
+        top: 20px;
         width: 8px;
         height: 8px;
         border-radius: 50%;
+        background: var(--t-neutral);
+      }
+      .jy-xp--active::before {
         background: var(--t-positive);
-        position: relative;
       }
-      .lp-live i::after {
-        content: "";
-        position: absolute;
-        inset: -4px;
-        border-radius: 50%;
-        border: 1px solid var(--t-positive);
-        animation: lp-ping 2.4s ease-out infinite;
+      .jy-xp--active {
+        border-left-color: var(--t-positive-line);
       }
-      @keyframes lp-ping {
-        0% {
-          transform: scale(0.6);
-          opacity: 0.8;
-        }
-        100% {
-          transform: scale(1.6);
-          opacity: 0;
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .lp-live i::after {
-          animation: none;
-        }
-      }
-      .lp-tiles {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-      }
-      @media (max-width: 760px) {
-        .lp-tiles {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-      .lp-tile {
-        padding: 16px 18px;
-        border-right: 1px solid var(--t-line);
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-        transition: background 0.18s ease;
-      }
-      .lp-tile:last-child {
-        border-right: 0;
-      }
-      @media (max-width: 760px) {
-        .lp-tile {
-          border-top: 1px solid var(--t-line);
-        }
-        .lp-tile:nth-child(2n) {
-          border-right: 0;
-        }
-      }
-      .lp-tile .n {
+      .jy-xp h3 {
+        font-size: 1rem;
         font-weight: 800;
-        font-size: 2.05rem;
-        line-height: 1.08;
-        letter-spacing: -0.02em;
-        font-variant-numeric: tabular-nums;
+        margin: 0;
         color: var(--t-ink);
       }
-      .lp-tile .n small {
-        font-size: 1.05rem;
+      .jy-xp .jy-xp-org {
+        font-size: 0.85rem;
         color: var(--t-ink-2);
       }
-      .lp-tile .c {
-        font-size: 0.76rem;
-        color: var(--t-ink-2);
-        line-height: 1.35;
+      .jy-xp .jy-xp-org a {
+        color: var(--t-accent);
       }
-      .lp-tile--hero {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
-      }
-      .lp-tile--hero .n,
-      .lp-tile--hero .n small,
-      .lp-tile--hero .c {
-        color: var(--t-on-brand);
-      }
-      .lp-tile--hero .c {
-        opacity: 0.85;
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .lp-tile {
-          transition: none;
-        }
-      }
-      .lp-cols {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
-        align-items: start;
-        margin-top: 30px;
-      }
-      @media (max-width: 860px) {
-        .lp-cols {
-          grid-template-columns: 1fr;
-          gap: 30px;
-        }
-      }
-      .lp-h3 {
+      .jy-xp .jy-xp-per {
         font-family: ui-monospace, monospace;
-        font-size: 0.72rem;
+        font-size: 0.7rem;
+        color: var(--t-ink-3);
+        margin-top: 2px;
+      }
+      .jy-xp .jy-xp-per b {
+        color: var(--t-positive);
+        font-weight: 400;
+      }
+      .jy-sec-label {
+        font-family: ui-monospace, monospace;
+        font-size: 0.78rem;
+        font-weight: 400;
         letter-spacing: 0.13em;
         text-transform: uppercase;
         color: var(--t-ink-3);
-        margin: 0 0 12px;
-      }
-      .lp-meters {
-        max-width: 520px;
-      }
-      .lp-m {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        padding: 7px 0;
-      }
-      .lp-m .r {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        font-size: 0.82rem;
-      }
-      .lp-m .r b {
-        font-weight: 600;
-        color: var(--t-ink);
-      }
-      .lp-m .r span {
-        font-family: ui-monospace, monospace;
-        font-size: 0.72rem;
-        color: var(--t-ink-3);
-      }
-      .lp-m .bar {
-        height: 4px;
-        border-radius: 2px;
-        background: var(--t-neutral-wash);
-      }
-      .lp-m .bar i {
-        display: block;
-        height: 100%;
-        border-radius: 2px;
-        background: var(--t-brand);
-        opacity: 0.85;
-      }
-      .lp-focus {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: baseline;
-        padding: 9px 0;
-        border-bottom: 1px solid var(--t-line);
-        max-width: 520px;
-      }
-      .lp-focus:last-of-type {
-        border-bottom: 0;
-      }
-      .lp-focus a {
-        font-weight: 600;
-        color: var(--t-ink);
-        text-decoration: none;
-      }
-      .lp-focus a:hover {
-        color: var(--t-brand);
-      }
-      .lp-focus a .o {
-        color: var(--t-ink-3);
-        font-weight: 400;
-      }
-      .lp-focus span {
-        font-family: ui-monospace, monospace;
-        font-size: 0.68rem;
-        color: var(--t-ink-3);
-        white-space: nowrap;
-      }
-      .lp-persona {
-        display: grid;
-        grid-template-columns: 72px 1fr;
-        gap: 18px;
-        align-items: center;
-      }
-      .lp-seal {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: conic-gradient(
-          from 210deg,
-          var(--t-brand),
-          var(--t-accent),
-          var(--t-brand)
-        );
-        animation: lp-spin 26s linear infinite;
-      }
-      @keyframes lp-spin {
-        to {
-          transform: rotate(360deg);
-        }
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .lp-seal {
-          animation: none;
-        }
-      }
-      .lp-seal::after {
-        content: "";
-        position: absolute;
-        inset: 4px;
-        border-radius: 50%;
-        background: var(--t-card);
-      }
-      .lp-seal b {
-        position: relative;
-        z-index: 1;
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--t-brand);
-      }
-      .lp-persona h3 {
-        font-size: 1.25rem;
-        font-weight: 800;
-        margin: 0 0 4px;
-        color: var(--t-ink);
-      }
-      .lp-persona p {
-        font-size: 0.85rem;
-        color: var(--t-ink-2);
-        margin: 0;
-      }
-      .lp-how {
-        font-family: ui-monospace, monospace;
-        font-size: 0.68rem;
-        color: var(--t-ink-3);
-        margin-top: 14px;
-        max-width: 46ch;
-        line-height: 1.5;
-      }
-      .lp-how a {
-        color: var(--t-brand);
-        text-decoration: none;
-        border-bottom: 1px solid var(--t-brand-line);
-      }
-      .lp-how a:hover {
-        border-bottom-color: var(--t-brand);
-      }
-      .lp-index {
-        margin-top: 44px;
-        padding-top: 14px;
-        border-top: 1px solid var(--t-line);
-      }
-      .lp-idx {
-        display: flex;
-        align-items: baseline;
-        gap: 14px;
-        padding: 13px 2px;
-        border-bottom: 1px solid var(--t-line);
-        text-decoration: none;
-      }
-      .lp-idx:last-child {
-        border-bottom: 0;
-      }
-      .lp-idx b {
-        font-size: 0.98rem;
-        font-weight: 700;
-        color: var(--t-ink);
-        min-width: 118px;
-      }
-      .lp-idx span {
-        font-size: 0.82rem;
-        color: var(--t-ink-2);
-        flex: 1;
-      }
-      .lp-idx .go {
-        font-family: ui-monospace, monospace;
-        font-size: 0.72rem;
-        color: var(--t-ink-3);
-        transition:
-          transform 0.18s ease,
-          color 0.18s ease;
-      }
-      .lp-idx:hover b {
-        color: var(--t-brand);
-      }
-      .lp-idx:hover .go {
-        color: var(--t-brand);
-        transform: translateX(3px);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .lp-idx .go {
-          transition: none;
-        }
-      }
-      .lp-empty {
-        font-size: 0.85rem;
-        color: var(--t-ink-3);
-        font-style: italic;
+        margin-bottom: 16px;
       }
     </style>
   </head>
@@ -1409,155 +1261,219 @@
     <main class="grow w-full">
       <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
         <div class="max-w-6xl mx-auto">
-          <div class="mt-16">
-            <section class="lp-hero">
-              <p class="lp-eyebrow">open source portfolio</p>
-              <h1>Ayu <span class="lp-grad">Adiati</span></h1>
-              <p>
-                Documentation maintainer and community lead. Everything below is
-                generated from real GitHub activity.
-              </p>
-            </section>
-          </div>
+          <header class="mt-16 mb-14">
+            <p class="jy-eyebrow">journey</p>
+            <h1 class="jy-h2 text-4xl sm:text-5xl mt-2 mb-4">
+              Milestones, craft, and the roles behind them
+            </h1>
+          </header>
 
-          <section class="lp-impact" aria-labelledby="lp-impact-h">
-            <div class="lp-impact-top">
-              <h2 id="lp-impact-h">
-                Impact <span>— lifetime, across the ecosystem</span>
-              </h2>
-              <span class="lp-live"><i></i>updated today</span>
-            </div>
-            <div class="lp-tiles">
-              <div class="lp-tile lp-tile--hero">
-                <span class="n">2760</span>
-                <span class="c">contributions shipped since 2019</span>
-              </div>
-              <div class="lp-tile">
-                <span class="n">1099</span
-                ><span class="c">contributions you helped ship</span>
-              </div>
-              <div class="lp-tile">
-                <span class="n">48</span>
-                <span class="c">articles &amp; talks published</span>
-              </div>
-              <div class="lp-tile">
-                <span class="n">52</span>
-                <span class="c">projects across 21 organizations</span>
-              </div>
+          <section aria-labelledby="jy-milestones" class="mb-20">
+            <h2 id="jy-milestones" class="jy-sec-label">Milestones</h2>
+            <div class="jy-tl">
+              <article class="jy-ms" data-earlier="0">
+                <h3>
+                  <a
+                    href="https://mautic.org/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Mautician of the Year<span
+                      class="jy-arr"
+                      aria-hidden="true"
+                      >↗</span
+                    ></a
+                  >
+                </h3>
+                <div class="jy-org"><b>Mautic</b> · 2025</div>
+                <p
+                  class="jy-desc"
+                  title="Recognized by the Mautic community for sustained leadership of the documentation program — reviews, releases, and mentoring across both user and developer docs."
+                >
+                  Recognized by the Mautic community for sustained leadership of
+                  the documentation program — reviews, releases, and mentoring
+                  across both user and developer docs.
+                </p>
+              </article>
+              <article class="jy-ms" data-earlier="0">
+                <h3>
+                  <a
+                    href="https://github.com/OpenSource-Communities"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Course Creator: Becoming a Maintainer<span
+                      class="jy-arr"
+                      aria-hidden="true"
+                      >↗</span
+                    ></a
+                  >
+                </h3>
+                <div class="jy-org"><b>Open Source Communities</b> · 2024</div>
+                <p
+                  class="jy-desc"
+                  title="Authored and shipped a full course walking contributors through the path from first PR to co-maintainership: triage, review etiquette, and community health."
+                >
+                  Authored and shipped a full course walking contributors
+                  through the path from first PR to co-maintainership: triage,
+                  review etiquette, and community health.
+                </p>
+              </article>
             </div>
           </section>
 
-          <div class="lp-cols">
-            <section aria-labelledby="lp-mix">
-              <h2 id="lp-mix" class="lp-h3">Contribution mix</h2>
-              <div class="lp-meters">
-                <div class="lp-m">
-                  <div class="r"><b>Reviewed PRs</b><span>30.0%</span></div>
-                  <div class="bar"><i style="width: 30%"></i></div>
-                </div>
-                <div class="lp-m">
-                  <div class="r"><b>Issues</b><span>23.7%</span></div>
-                  <div class="bar"><i style="width: 23.7%"></i></div>
-                </div>
-                <div class="lp-m">
-                  <div class="r"><b>Merged PRs</b><span>20.0%</span></div>
-                  <div class="bar"><i style="width: 20%"></i></div>
-                </div>
-                <div class="lp-m">
-                  <div class="r"><b>Collaborations</b><span>16.3%</span></div>
-                  <div class="bar"><i style="width: 16.3%"></i></div>
-                </div>
-                <div class="lp-m">
-                  <div class="r"><b>Co-authored PRs</b><span>10.0%</span></div>
-                  <div class="bar"><i style="width: 10%"></i></div>
-                </div>
-              </div>
-              <h2 class="lp-h3" style="margin-top: 26px">Primary focus</h2>
-              <div class="lp-focus">
-                <a
-                  href="https://github.com/OpenSource-Communities/guestbook"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="OpenSource-Communities/guestbook"
-                  ><span class="o">OpenSource-Communities /</span> guestbook</a
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
+            <section aria-labelledby="jy-craft">
+              <h2 id="jy-craft" class="jy-sec-label">Craft</h2>
+              <div class="jy-craft">
+                <b>Technical writing & docs architecture</b>
+                <span
+                  >Information architecture, style guides, and versioned docs
+                  programs for user- and developer-facing documentation.</span
                 >
-                <span>661 contributions</span>
               </div>
-              <div class="lp-focus">
-                <a
-                  href="https://github.com/mautic/user-documentation"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="mautic/user-documentation"
-                  ><span class="o">mautic /</span> user-documentation</a
+              <div class="jy-craft">
+                <b>Code review & contributor mentoring</b>
+                <span
+                  >Reviewing docs and code PRs, and guiding first-time
+                  contributors to merged work.</span
                 >
-                <span>446 contributions</span>
               </div>
-              <div class="lp-focus">
-                <a
-                  href="https://github.com/mautic/developer-documentation-new"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title="mautic/developer-documentation-new"
-                  ><span class="o">mautic /</span>
-                  developer-documentation-new</a
+              <div class="jy-craft">
+                <b>Docs leadership</b>
+                <span
+                  >Leading documentation teams and programs across Mautic,
+                  Virtual Coffee, and Open Source Communities.</span
                 >
-                <span>319 contributions</span>
+              </div>
+              <h2 class="jy-sec-label" style="margin-top: 26px">Tools</h2>
+              <div class="jy-chips">
+                <span class="jy-chip jy-chip--hd">Git</span
+                ><span class="jy-chip jy-chip--hd">GitHub</span
+                ><span class="jy-chip">Docusaurus</span
+                ><span class="jy-chip">Sphinx</span
+                ><span class="jy-chip">Markdown</span
+                ><span class="jy-chip">MDX</span><span class="jy-chip">RST</span
+                ><span class="jy-chip">GitHub Actions</span
+                ><span class="jy-chip">Node.js</span>
               </div>
             </section>
-            <section aria-labelledby="lp-persona">
-              <h2 id="lp-persona" class="lp-h3">Collaboration profile</h2>
-              <div class="lp-persona">
-                <div class="lp-seal" aria-hidden="true"><b>CM</b></div>
-                <div>
-                  <h3>Community Mentor</h3>
-                  <p>
-                    Expert advocate for code quality and peer development. Code
-                    review and technical guidance ensure high standards across
-                    the community.
-                  </p>
+            <section aria-labelledby="jy-xp">
+              <h2 id="jy-xp" class="jy-sec-label">Experience &amp; roles</h2>
+              <div class="jy-xp jy-xp--active">
+                <h3>Education Team Lead</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://mautic.org/leadership/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Mautic</a
+                  >
                 </div>
+                <div class="jy-xp-per">January 2026 — <b>present</b></div>
               </div>
-              <p class="lp-how">
-                An assigned category, derived from which contribution type leads
-                the mix above.
-                <a href="glossary.html">How it's calculated →</a>
-              </p>
+              <div class="jy-xp jy-xp--active">
+                <h3>Documentation Team Lead</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://virtualcoffee.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Virtual Coffee</a
+                  >
+                </div>
+                <div class="jy-xp-per">December 2021 — <b>present</b></div>
+              </div>
+              <div class="jy-xp jy-xp--active">
+                <h3>Co-Maintainer</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://github.com/OpenSource-Communities"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Open Source Communities</a
+                  >
+                </div>
+                <div class="jy-xp-per">June 2025 — <b>present</b></div>
+              </div>
+              <div class="jy-xp jy-xp--active">
+                <h3>Monthly Challenge Team Lead</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://virtualcoffee.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Virtual Coffee</a
+                  >
+                </div>
+                <div class="jy-xp-per">December 2023 — <b>present</b></div>
+              </div>
+              <div class="jy-xp jy-xp--active">
+                <h3>Community Advisor</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://virtualcoffee.io"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Virtual Coffee</a
+                  >
+                </div>
+                <div class="jy-xp-per">April 2022 — <b>present</b></div>
+              </div>
+              <div class="jy-xp">
+                <h3>Assistant Team Lead, Education Team</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://mautic.org/leadership/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Mautic</a
+                  >
+                </div>
+                <div class="jy-xp-per">June 2025 - December 2025</div>
+              </div>
+              <div class="jy-xp">
+                <h3>Docs Maintainer</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://github.com/open-sauced"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >OpenSauced</a
+                  >
+                </div>
+                <div class="jy-xp-per">October 2023 - November 2024</div>
+              </div>
+              <div class="jy-xp">
+                <h3>Hacktoberfest Support</h3>
+                <div class="jy-xp-org">
+                  <a
+                    href="https://www.shesharp.co"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >SheSharp</a
+                  >
+                </div>
+                <div class="jy-xp-per">September 2023 - November 2023</div>
+              </div>
             </section>
           </div>
-
-          <nav class="lp-index" aria-label="Portfolio pages">
-            <a class="lp-idx" href="journey.html">
-              <b>Journey</b>
-              <span>Milestones, craft, and the roles behind them.</span>
-              <span class="go" aria-hidden="true">→</span> </a
-            ><a class="lp-idx" href="workbench.html">
-              <b>Workbench</b>
-              <span
-                >Live maintainer activity, organized by what happens next.</span
-              >
-              <span class="go" aria-hidden="true">→</span> </a
-            ><a class="lp-idx" href="writing.html">
-              <b>Writing & Talks</b>
-              <span
-                >Long-form guides, community essays, and conference talks.</span
-              >
-              <span class="go" aria-hidden="true">→</span> </a
-            ><a class="lp-idx" href="reports.html">
-              <b>Reports</b>
-              <span
-                >The audit trail — every contribution, quarter by quarter.</span
-              >
-              <span class="go" aria-hidden="true">→</span> </a
-            ><a class="lp-idx" href="glossary.html">
-              <b>Glossary</b>
-              <span>How each metric on this site is defined and counted.</span>
-              <span class="go" aria-hidden="true">→</span>
-            </a>
-          </nav>
         </div>
       </div>
     </main>
+    <script>
+      (function () {
+        var btn = document.getElementById("jy-show-earlier");
+        if (!btn) return;
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll('[data-earlier="1"]')
+            .forEach(function (el) {
+              el.classList.remove("jy-hidden");
+            });
+          btn.setAttribute("aria-expanded", "true");
+          btn.parentElement.remove();
+        });
+      })();
+    </script>
     <footer
       style="
         border-top-color: var(--c-neutral-10);

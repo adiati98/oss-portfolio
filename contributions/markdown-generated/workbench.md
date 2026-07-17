@@ -1,0 +1,158 @@
+# Active Workbench
+
+Live maintainer and contribution activity, organized by what happens next.
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📝 To do issues (1)</h3></summary>
+
+| Repository | Task |
+| :--- | :--- |
+| **user-documentation** | [[DOCS]: Add Note and Notes to Mautic features list in branch 7.2](https://github.com/mautic/user-documentation/issues/731) |
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📥 Request review (39)</h3></summary>
+
+| Repository | Task |
+| :--- | :--- |
+| **intro** | [docs: update team management and contributor tracking documentation](https://github.com/OpenSource-Communities/intro/pull/318) |
+| **user-documentation** | [docs: Document Reply-To resolution hierarchy for queued Email sends](https://github.com/mautic/user-documentation/pull/853) |
+| **user-documentation** | [docs: Document Contact and Owner field tokens in Email link URLs](https://github.com/mautic/user-documentation/pull/852) |
+| **user-documentation** | [docs: Document Preference Center Segment ordering by Public name](https://github.com/mautic/user-documentation/pull/851) |
+| **developer-documentation-new** | [docs: Port "Manipulating Contacts" extension page to 7.2](https://github.com/mautic/developer-documentation-new/pull/592) |
+| **developer-documentation-new** | [docs: Port "Webhooks" extension page to 7.2](https://github.com/mautic/developer-documentation-new/pull/591) |
+| **developer-documentation-new** | [docs: Port "Integrations" extension page to 7.2](https://github.com/mautic/developer-documentation-new/pull/590) |
+| **developer-documentation-new** | [docs: Port "Mail helper" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/589) |
+| **developer-documentation-new** | [docs: Port "Event dispatcher" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/588) |
+| **developer-documentation-new** | [docs: Port "Database or entity manager" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/587) |
+| **developer-documentation-new** | [docs: Port "Factory" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/586) |
+| **developer-documentation-new** | [docs: Port "Model factory" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/585) |
+| **developer-documentation-new** | [docs: Port "Commands" page from legacy dev docs into RST (7.2)](https://github.com/mautic/developer-documentation-new/pull/584) |
+| **developer-documentation-new** | [docs: Port "Paths helper" plugin service page from legacy dev docs](https://github.com/mautic/developer-documentation-new/pull/583) |
+| **developer-documentation-new** | [docs: Port "Plugin config helper" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/581) |
+| **developer-documentation-new** | [docs: Port "Request" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/580) |
+| **developer-documentation-new** | [docs: Port "Router" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/579) |
+| **developer-documentation-new** | [docs: Port "User" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/578) |
+| **developer-documentation-new** | [docs: Port "Session" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/577) |
+| **developer-documentation-new** | [docs: Port "Implementing translation support to entities" page to 7.2](https://github.com/mautic/developer-documentation-new/pull/576) |
+| **developer-documentation-new** | [docs: Port "Implementing variant - A/B test - support to entities" dev docs page](https://github.com/mautic/developer-documentation-new/pull/575) |
+| **developer-documentation-new** | [docs: Port REST API Landing Pages endpoint from legacy docs](https://github.com/mautic/developer-documentation-new/pull/574) |
+| **developer-documentation-new** | [docs: Port "Flash messages" page to 7.2](https://github.com/mautic/developer-documentation-new/pull/573) |
+| **developer-documentation-new** | [docs: Port "Helpers" page to 7.2](https://github.com/mautic/developer-documentation-new/pull/572) |
+| **developer-documentation-new** | [docs: Port "Marketing Messages" REST API page to 7.2](https://github.com/mautic/developer-documentation-new/pull/571) |
+| **developer-documentation-new** | [docs: Port Dynamic Content REST API page from legacy docs](https://github.com/mautic/developer-documentation-new/pull/570) |
+| **developer-documentation-new** | [docs: Port "Dashboard widget data" REST API page to RST](https://github.com/mautic/developer-documentation-new/pull/569) |
+| **developer-documentation-new** | [docs: Port "Focus" REST API page to 7.2](https://github.com/mautic/developer-documentation-new/pull/568) |
+| **developer-documentation-new** | [docs: Port Point Triggers REST API page from legacy docs](https://github.com/mautic/developer-documentation-new/pull/567) |
+| **developer-documentation-new** | [docs: Port "Files" REST API page to 7.2](https://github.com/mautic/developer-documentation-new/pull/566) |
+| **developer-documentation-new** | [docs: Port "Roles" REST API page from legacy docs](https://github.com/mautic/developer-documentation-new/pull/565) |
+| **developer-documentation-new** | [docs: Add default Dashboard screenshot to the DDEV install page](https://github.com/mautic/developer-documentation-new/pull/562) |
+| **guestbook** | [feat: Add @iamstanleyblack as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/990) |
+| **virtualcoffee.io** | [Add a new profile for georgekobaidze](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1525) |
+| **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document the form: contact search filter](https://github.com/mautic/user-documentation/pull/788) |
+| **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Clarify global default Preference Center resolves live at unsubscribe time](https://github.com/mautic/user-documentation/pull/787) |
+| **intro** | [docs: update guestbook contribution process ](https://github.com/OpenSource-Communities/intro/pull/314) |
+| **intro**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: fix typo in why-open-source.md](https://github.com/OpenSource-Communities/intro/pull/311) |
+| **intro** | [Updated outdated screenshots and gifs (GitHub UI updated)](https://github.com/OpenSource-Communities/intro/pull/310) |
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">📤 Ongoing PRs (3)</h3></summary>
+
+| Status | Last Interaction | Repository | Task |
+| :--- | :--- | :--- | :--- |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Discussion</sub> |  | **user-documentation** | [Cherry pick #842 to branch 4.x](https://github.com/mautic/user-documentation/pull/848) |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Discussion</sub> |  | **user-documentation** | [Cherry pick: "Docs for https://github.com/mautic/mautic/pull/16123" to 7.2](https://github.com/mautic/user-documentation/pull/841) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>297 days</sub> |  | **oss-communities**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [Chores: Restructure website](https://github.com/OpenSource-Communities/oss-communities/pull/2) |
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">🤝 Moving Co-authored PRs Forward (4)</h3></summary>
+
+| Status | Last Interaction | Repository | Task |
+| :--- | :--- | :--- | :--- |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>21 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [docs: Clarify that value 0 is valid when setting contact fields via API](https://github.com/mautic/developer-documentation-new/pull/297) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | vukovicpredrag | **user-documentation** | [Campaign import export user docs](https://github.com/mautic/user-documentation/pull/361) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>87 days</sub> |  | **developer-documentation-new** | [Navigating UI resources](https://github.com/mautic/developer-documentation-new/pull/250) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | RCheesley | **user-documentation** | [Add an overview of local.php for mautic 4 documentation](https://github.com/mautic/user-documentation/pull/138) |
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">🔄 Review in progress (52)</h3></summary>
+
+| Status | Last Interaction | Repository | Task |
+| :--- | :--- | :--- | :--- |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | andersonjeccel | **developer-documentation-new** | [Document CSS and frontend asset build workflow](https://github.com/mautic/developer-documentation-new/pull/505) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new** | [docs: Port "Config parameters" service page to 7.2](https://github.com/mautic/developer-documentation-new/pull/582) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation** | [docs: Document the Stage merge feature](https://github.com/mautic/user-documentation/pull/849) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation** | [Document Find and Replace bulk action for Contacts and Companies](https://github.com/mautic/user-documentation/pull/750) |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub> |  | **user-documentation** | [EVERYTHING about UTM tags in Mautic](https://github.com/mautic/user-documentation/pull/712) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | andersonjeccel | **user-documentation** | [Fix contradictory note about duplicate Stage weights](https://github.com/mautic/user-documentation/pull/774) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | andersonjeccel | **user-documentation** | [Document Email details stat cards and Pending card scope for Segment vs. triggered Emails](https://github.com/mautic/user-documentation/pull/782) |
+| <img src="https://img.shields.io/badge/WATCHING-1d4ed8?style=flat-square" alt="Watching"><br><sub>Review</sub> | escopecz | **user-documentation** | [Document Tag removal confirmation and expandable Tags tile on Contact detail page](https://github.com/mautic/user-documentation/pull/779) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation** | [docs: Document A/B testing for Segment Emails](https://github.com/mautic/user-documentation/pull/811) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document dedicated Notes permissions](https://github.com/mautic/user-documentation/pull/704) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new** | [docs: Port "Point Actions" REST API page to 7.2](https://github.com/mautic/developer-documentation-new/pull/564) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: Document Batch add Contacts to Companies REST API endpoint](https://github.com/mautic/developer-documentation-new/pull/593) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new** | [docs: Document GrapesJS Builder asset build workflow](https://github.com/mautic/developer-documentation-new/pull/563) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Segment detail stat cards and source: contact search filter](https://github.com/mautic/user-documentation/pull/786) |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub> |  | **user-documentation** | [Document Campaign event ID display in the Campaign Builder](https://github.com/mautic/user-documentation/pull/783) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: Document mautic:campaigns:summarize command with --campaign-id option](https://github.com/mautic/user-documentation/pull/801) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation** | [docs: Document token category prefixes in Email builder](https://github.com/mautic/user-documentation/pull/805) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: Add Projects REST API reference](https://github.com/mautic/developer-documentation-new/pull/554) |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub> |  | **user-documentation** | [Add documentation for mautic:campaigns:resume-stuck command](https://github.com/mautic/user-documentation/pull/709) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | CBID2 | **VC-Community-Docs** | [docs: add mermaid diagrams redo ](https://github.com/Virtual-Coffee/VC-Community-Docs/pull/521) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **user-documentation**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: Document Company Segments for Account-Based Marketing](https://github.com/mautic/user-documentation/pull/809) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: Add Company Segments REST API documentation](https://github.com/mautic/developer-documentation-new/pull/552) |
+| <img src="https://img.shields.io/badge/TAKE%20ACTION-b45309?style=flat-square" alt="Take Action"><br><sub>Review</sub> | promptless-for-oss | **developer-documentation-new** | [docs: Document entity token formatting with getFormattedTokens() method](https://github.com/mautic/developer-documentation-new/pull/551) |
+| <img src="https://img.shields.io/badge/WAITING-4338ca?style=flat-square" alt="Waiting"><br><sub>Review</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document form style-only Theme import requirements](https://github.com/mautic/developer-documentation-new/pull/527) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>21 days</sub> |  | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [docs: Document PostgreSQL database support for Mautic 7.x](https://github.com/mautic/user-documentation/pull/697) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>21 days</sub> |  | **user-documentation** | [Document Support Mautic navigation menu item and support_mautic_enabled option](https://github.com/mautic/user-documentation/pull/784) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>21 days</sub> |  | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document same-role permissions for team-based access control](https://github.com/mautic/user-documentation/pull/728) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>22 days</sub> |  | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Custom Field Groups for Contacts and Companies](https://github.com/mautic/user-documentation/pull/768) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>22 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Field Groups REST API and FIELD_GROUP_LIST_ON_GENERATE event](https://github.com/mautic/developer-documentation-new/pull/531) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | escopecz | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document uri and linkAttributes keys for menu items](https://github.com/mautic/developer-documentation-new/pull/547) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>23 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document same-role permissions for group-based access control](https://github.com/mautic/developer-documentation-new/pull/502) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>24 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Send example Email REST API endpoint](https://github.com/mautic/developer-documentation-new/pull/540) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>30 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document MauticJS tracking API functions for contact-specific content](https://github.com/mautic/developer-documentation-new/pull/521) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub> |  | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Contact filters for Focus Items](https://github.com/mautic/user-documentation/pull/756) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>32 days</sub> |  | **virtualcoffee.io**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [feat: migrate events to Google Calendar API](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1511) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | adiux | **user-documentation**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Campaign condition event details in Contact history](https://github.com/mautic/user-documentation/pull/752) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>38 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [docs: Document PostgreSQL database support for Mautic 7.x](https://github.com/mautic/developer-documentation-new/pull/310) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>43 days</sub> |  | **developer-documentation-new**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Document Notes API permissions and endpoints](https://github.com/mautic/developer-documentation-new/pull/516) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>47 days</sub> |  | **pizza-verse** | [docs: add Tibet traditional food](https://github.com/OpenSource-Communities/pizza-verse/pull/137) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>49 days</sub> |  | **guestbook**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [feat: Add new process and move contributors](https://github.com/OpenSource-Communities/guestbook/pull/828) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>53 days</sub> |  | **guestbook**<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft"> | [docs: add @Dearxinxin as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/971) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>80 days</sub> |  | **guestbook** | [feat: add @Logicrithm as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/951) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>97 days</sub> |  | **guestbook** | [Add Aakash Neupane to contributors list in README](https://github.com/OpenSource-Communities/guestbook/pull/947) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>102 days</sub> |  | **guestbook** | [docs: add @aaronthomas-09 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/937) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>102 days</sub> |  | **guestbook** | [feat: Add @rachelanchan as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/941) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>102 days</sub> |  | **guestbook** | [docs: add @Yashrajsinh-Kanchva as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/934) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>102 days</sub> |  | **guestbook** | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>108 days</sub> |  | **intro** | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>120 days</sub> |  | **intro** | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307) |
+| <img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle"><br><sub>183 days</sub> |  | **user-documentation** | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | escopecz | **mautic-community-handbook**<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending"> | [Add statement about re-election (don't merge until approved at the General Assembly)](https://github.com/mautic/mautic-community-handbook/pull/418) |
+| <img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved"> | adiati98 | **VC-Community-Docs** | [Process Docs for Virtual Coffee Newsletter](https://github.com/Virtual-Coffee/VC-Community-Docs/pull/412) |
+
+</details>
+
+<details>
+  <summary><h3 style="display: inline-block; cursor: pointer;">🤖 Bot request review (5)</h3></summary>
+
+| Repository | Task |
+| :--- | :--- |
+| **virtualcoffee.io** | [chore(deps): bump markdown-it from 14.1.1 to 14.2.0](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1524) |
+| **virtualcoffee.io** | [chore(deps-dev): bump esbuild from 0.25.12 to 0.28.1](https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1519) |
+| **intro** | [[Snyk] Upgrade @mdx-js/react from 3.0.1 to 3.1.1](https://github.com/OpenSource-Communities/intro/pull/289) |
+| **intro** | [[Snyk] Upgrade prism-react-renderer from 2.3.1 to 2.4.1](https://github.com/OpenSource-Communities/intro/pull/288) |
+| **oss-communities** | [[Snyk] Security upgrade astro from 5.10.1 to 5.16.10](https://github.com/OpenSource-Communities/oss-communities/pull/13) |
+
+</details>
+
+---
+[← Back to Summary](./README.md) | [Journey →](./journey.md) | *Last updated: July 17, 2026*

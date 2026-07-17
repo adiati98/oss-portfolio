@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+          var mq = window.matchMedia("(prefers-color-scheme: dark)");
 
           function isDark() {
-            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
-            if (stored === 'dark') return true;
-            if (stored === 'light') return false;
+            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
+            if (stored === "dark") return true;
+            if (stored === "light") return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle('dark', isDark());
+          document.documentElement.classList.toggle("dark", isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener('change', function () {
-            document.documentElement.classList.toggle('dark', isDark());
+          mq.addEventListener("change", function () {
+            document.documentElement.classList.toggle("dark", isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
       :root {
         --c-primary-hex: #4338ca;
         --c-primary-rgb: rgb(67, 56, 202);
@@ -48,85 +48,85 @@
         --c-primary-50: rgba(67, 56, 202, 0.5);
         --c-primary-75: rgba(67, 56, 202, 0.75);
         --c-primary-100: rgba(67, 56, 202, 1);
-        --c-primary900-hex: #312e81;
-        --c-primary900-rgb: rgb(49, 46, 129);
-        --c-primary900-5: rgba(49, 46, 129, 0.05);
-        --c-primary900-10: rgba(49, 46, 129, 0.1);
-        --c-primary900-15: rgba(49, 46, 129, 0.15);
-        --c-primary900-25: rgba(49, 46, 129, 0.25);
-        --c-primary900-50: rgba(49, 46, 129, 0.5);
-        --c-primary900-75: rgba(49, 46, 129, 0.75);
-        --c-primary900-100: rgba(49, 46, 129, 1);
-        --c-neutral-hex: #6b7280;
-        --c-neutral-rgb: rgb(107, 114, 128);
-        --c-neutral-5: rgba(107, 114, 128, 0.05);
-        --c-neutral-10: rgba(107, 114, 128, 0.1);
-        --c-neutral-15: rgba(107, 114, 128, 0.15);
-        --c-neutral-25: rgba(107, 114, 128, 0.25);
-        --c-neutral-50: rgba(107, 114, 128, 0.5);
-        --c-neutral-75: rgba(107, 114, 128, 0.75);
-        --c-neutral-100: rgba(107, 114, 128, 1);
-        --c-success-hex: #10b981;
-        --c-success-rgb: rgb(16, 185, 129);
-        --c-success-5: rgba(16, 185, 129, 0.05);
-        --c-success-10: rgba(16, 185, 129, 0.1);
-        --c-success-15: rgba(16, 185, 129, 0.15);
-        --c-success-25: rgba(16, 185, 129, 0.25);
-        --c-success-50: rgba(16, 185, 129, 0.5);
-        --c-success-75: rgba(16, 185, 129, 0.75);
-        --c-success-100: rgba(16, 185, 129, 1);
-        --c-merged-hex: #8b5cf6;
-        --c-merged-rgb: rgb(139, 92, 246);
-        --c-merged-5: rgba(139, 92, 246, 0.05);
-        --c-merged-10: rgba(139, 92, 246, 0.1);
-        --c-merged-15: rgba(139, 92, 246, 0.15);
-        --c-merged-25: rgba(139, 92, 246, 0.25);
-        --c-merged-50: rgba(139, 92, 246, 0.5);
-        --c-merged-75: rgba(139, 92, 246, 0.75);
-        --c-merged-100: rgba(139, 92, 246, 1);
-        --c-error-hex: #ef4444;
-        --c-error-rgb: rgb(239, 68, 68);
-        --c-error-5: rgba(239, 68, 68, 0.05);
-        --c-error-10: rgba(239, 68, 68, 0.1);
-        --c-error-15: rgba(239, 68, 68, 0.15);
-        --c-error-25: rgba(239, 68, 68, 0.25);
-        --c-error-50: rgba(239, 68, 68, 0.5);
-        --c-error-75: rgba(239, 68, 68, 0.75);
-        --c-error-100: rgba(239, 68, 68, 1);
-        --c-text-primary-hex: #1f2937;
-        --c-text-primary-rgb: rgb(31, 41, 55);
-        --c-text-primary-5: rgba(31, 41, 55, 0.05);
-        --c-text-primary-10: rgba(31, 41, 55, 0.1);
-        --c-text-primary-15: rgba(31, 41, 55, 0.15);
-        --c-text-primary-25: rgba(31, 41, 55, 0.25);
-        --c-text-primary-50: rgba(31, 41, 55, 0.5);
-        --c-text-primary-75: rgba(31, 41, 55, 0.75);
-        --c-text-primary-100: rgba(31, 41, 55, 1);
-        --c-text-secondary-hex: #374151;
-        --c-text-secondary-rgb: rgb(55, 65, 81);
-        --c-text-secondary-5: rgba(55, 65, 81, 0.05);
-        --c-text-secondary-10: rgba(55, 65, 81, 0.1);
-        --c-text-secondary-15: rgba(55, 65, 81, 0.15);
-        --c-text-secondary-25: rgba(55, 65, 81, 0.25);
-        --c-text-secondary-50: rgba(55, 65, 81, 0.5);
-        --c-text-secondary-75: rgba(55, 65, 81, 0.75);
-        --c-text-secondary-100: rgba(55, 65, 81, 1);
-        --c-text-muted-hex: #6b7280;
-        --c-text-muted-rgb: rgb(107, 114, 128);
-        --c-text-muted-5: rgba(107, 114, 128, 0.05);
-        --c-text-muted-10: rgba(107, 114, 128, 0.1);
-        --c-text-muted-15: rgba(107, 114, 128, 0.15);
-        --c-text-muted-25: rgba(107, 114, 128, 0.25);
-        --c-text-muted-50: rgba(107, 114, 128, 0.5);
-        --c-text-muted-75: rgba(107, 114, 128, 0.75);
-        --c-text-muted-100: rgba(107, 114, 128, 1);
+        --c-primary900-hex: #32299b;
+        --c-primary900-rgb: rgb(50, 41, 155);
+        --c-primary900-5: rgba(50, 41, 155, 0.05);
+        --c-primary900-10: rgba(50, 41, 155, 0.1);
+        --c-primary900-15: rgba(50, 41, 155, 0.15);
+        --c-primary900-25: rgba(50, 41, 155, 0.25);
+        --c-primary900-50: rgba(50, 41, 155, 0.5);
+        --c-primary900-75: rgba(50, 41, 155, 0.75);
+        --c-primary900-100: rgba(50, 41, 155, 1);
+        --c-neutral-hex: #5d6172;
+        --c-neutral-rgb: rgb(93, 97, 114);
+        --c-neutral-5: rgba(93, 97, 114, 0.05);
+        --c-neutral-10: rgba(93, 97, 114, 0.1);
+        --c-neutral-15: rgba(93, 97, 114, 0.15);
+        --c-neutral-25: rgba(93, 97, 114, 0.25);
+        --c-neutral-50: rgba(93, 97, 114, 0.5);
+        --c-neutral-75: rgba(93, 97, 114, 0.75);
+        --c-neutral-100: rgba(93, 97, 114, 1);
+        --c-success-hex: #0f8a63;
+        --c-success-rgb: rgb(15, 138, 99);
+        --c-success-5: rgba(15, 138, 99, 0.05);
+        --c-success-10: rgba(15, 138, 99, 0.1);
+        --c-success-15: rgba(15, 138, 99, 0.15);
+        --c-success-25: rgba(15, 138, 99, 0.25);
+        --c-success-50: rgba(15, 138, 99, 0.5);
+        --c-success-75: rgba(15, 138, 99, 0.75);
+        --c-success-100: rgba(15, 138, 99, 1);
+        --c-merged-hex: #0f8a63;
+        --c-merged-rgb: rgb(15, 138, 99);
+        --c-merged-5: rgba(15, 138, 99, 0.05);
+        --c-merged-10: rgba(15, 138, 99, 0.1);
+        --c-merged-15: rgba(15, 138, 99, 0.15);
+        --c-merged-25: rgba(15, 138, 99, 0.25);
+        --c-merged-50: rgba(15, 138, 99, 0.5);
+        --c-merged-75: rgba(15, 138, 99, 0.75);
+        --c-merged-100: rgba(15, 138, 99, 1);
+        --c-error-hex: #b3323f;
+        --c-error-rgb: rgb(179, 50, 63);
+        --c-error-5: rgba(179, 50, 63, 0.05);
+        --c-error-10: rgba(179, 50, 63, 0.1);
+        --c-error-15: rgba(179, 50, 63, 0.15);
+        --c-error-25: rgba(179, 50, 63, 0.25);
+        --c-error-50: rgba(179, 50, 63, 0.5);
+        --c-error-75: rgba(179, 50, 63, 0.75);
+        --c-error-100: rgba(179, 50, 63, 1);
+        --c-text-primary-hex: #1c1b28;
+        --c-text-primary-rgb: rgb(28, 27, 40);
+        --c-text-primary-5: rgba(28, 27, 40, 0.05);
+        --c-text-primary-10: rgba(28, 27, 40, 0.1);
+        --c-text-primary-15: rgba(28, 27, 40, 0.15);
+        --c-text-primary-25: rgba(28, 27, 40, 0.25);
+        --c-text-primary-50: rgba(28, 27, 40, 0.5);
+        --c-text-primary-75: rgba(28, 27, 40, 0.75);
+        --c-text-primary-100: rgba(28, 27, 40, 1);
+        --c-text-secondary-hex: #404251;
+        --c-text-secondary-rgb: rgb(64, 66, 81);
+        --c-text-secondary-5: rgba(64, 66, 81, 0.05);
+        --c-text-secondary-10: rgba(64, 66, 81, 0.1);
+        --c-text-secondary-15: rgba(64, 66, 81, 0.15);
+        --c-text-secondary-25: rgba(64, 66, 81, 0.25);
+        --c-text-secondary-50: rgba(64, 66, 81, 0.5);
+        --c-text-secondary-75: rgba(64, 66, 81, 0.75);
+        --c-text-secondary-100: rgba(64, 66, 81, 1);
+        --c-text-muted-hex: #5d606e;
+        --c-text-muted-rgb: rgb(93, 96, 110);
+        --c-text-muted-5: rgba(93, 96, 110, 0.05);
+        --c-text-muted-10: rgba(93, 96, 110, 0.1);
+        --c-text-muted-15: rgba(93, 96, 110, 0.15);
+        --c-text-muted-25: rgba(93, 96, 110, 0.25);
+        --c-text-muted-50: rgba(93, 96, 110, 0.5);
+        --c-text-muted-75: rgba(93, 96, 110, 0.75);
+        --c-text-muted-100: rgba(93, 96, 110, 1);
         --c-bg-surface: #ffffff;
-        --c-accent-yellow: #eab308;
-        --c-accent-strong: #3730a3;
+        --c-accent-yellow: #a16207;
+        --c-accent-strong: #32299b;
         --c-primary-text: #4338ca;
-        --c-draft-bg: #f1f5f9;
-        --c-draft-text: #475569;
-        --c-draft-border: #cbd5e1;
+        --c-draft-bg: #e8e9eb;
+        --c-draft-text: #404251;
+        --c-draft-border: #ced0d5;
       }
       html.dark {
         --c-primary-hex: #4338ca;
@@ -138,125 +138,204 @@
         --c-primary-50: rgba(67, 56, 202, 0.5);
         --c-primary-75: rgba(67, 56, 202, 0.75);
         --c-primary-100: rgba(67, 56, 202, 1);
-        --c-primary900-hex: #312e81;
-        --c-primary900-rgb: rgb(49, 46, 129);
-        --c-primary900-5: rgba(49, 46, 129, 0.05);
-        --c-primary900-10: rgba(49, 46, 129, 0.1);
-        --c-primary900-15: rgba(49, 46, 129, 0.15);
-        --c-primary900-25: rgba(49, 46, 129, 0.25);
-        --c-primary900-50: rgba(49, 46, 129, 0.5);
-        --c-primary900-75: rgba(49, 46, 129, 0.75);
-        --c-primary900-100: rgba(49, 46, 129, 1);
-        --c-neutral-hex: #94a3b8;
-        --c-neutral-rgb: rgb(148, 163, 184);
-        --c-neutral-5: rgba(148, 163, 184, 0.05);
-        --c-neutral-10: rgba(148, 163, 184, 0.1);
-        --c-neutral-15: rgba(148, 163, 184, 0.15);
-        --c-neutral-25: rgba(148, 163, 184, 0.25);
-        --c-neutral-50: rgba(148, 163, 184, 0.5);
-        --c-neutral-75: rgba(148, 163, 184, 0.75);
-        --c-neutral-100: rgba(148, 163, 184, 1);
-        --c-success-hex: #34d399;
-        --c-success-rgb: rgb(52, 211, 153);
-        --c-success-5: rgba(52, 211, 153, 0.05);
-        --c-success-10: rgba(52, 211, 153, 0.1);
-        --c-success-15: rgba(52, 211, 153, 0.15);
-        --c-success-25: rgba(52, 211, 153, 0.25);
-        --c-success-50: rgba(52, 211, 153, 0.5);
-        --c-success-75: rgba(52, 211, 153, 0.75);
-        --c-success-100: rgba(52, 211, 153, 1);
-        --c-merged-hex: #a78bfa;
-        --c-merged-rgb: rgb(167, 139, 250);
-        --c-merged-5: rgba(167, 139, 250, 0.05);
-        --c-merged-10: rgba(167, 139, 250, 0.1);
-        --c-merged-15: rgba(167, 139, 250, 0.15);
-        --c-merged-25: rgba(167, 139, 250, 0.25);
-        --c-merged-50: rgba(167, 139, 250, 0.5);
-        --c-merged-75: rgba(167, 139, 250, 0.75);
-        --c-merged-100: rgba(167, 139, 250, 1);
-        --c-error-hex: #f87171;
-        --c-error-rgb: rgb(248, 113, 113);
-        --c-error-5: rgba(248, 113, 113, 0.05);
-        --c-error-10: rgba(248, 113, 113, 0.1);
-        --c-error-15: rgba(248, 113, 113, 0.15);
-        --c-error-25: rgba(248, 113, 113, 0.25);
-        --c-error-50: rgba(248, 113, 113, 0.5);
-        --c-error-75: rgba(248, 113, 113, 0.75);
-        --c-error-100: rgba(248, 113, 113, 1);
-        --c-text-primary-hex: #f1f5f9;
-        --c-text-primary-rgb: rgb(241, 245, 249);
-        --c-text-primary-5: rgba(241, 245, 249, 0.05);
-        --c-text-primary-10: rgba(241, 245, 249, 0.1);
-        --c-text-primary-15: rgba(241, 245, 249, 0.15);
-        --c-text-primary-25: rgba(241, 245, 249, 0.25);
-        --c-text-primary-50: rgba(241, 245, 249, 0.5);
-        --c-text-primary-75: rgba(241, 245, 249, 0.75);
-        --c-text-primary-100: rgba(241, 245, 249, 1);
-        --c-text-secondary-hex: #cbd5e1;
-        --c-text-secondary-rgb: rgb(203, 213, 225);
-        --c-text-secondary-5: rgba(203, 213, 225, 0.05);
-        --c-text-secondary-10: rgba(203, 213, 225, 0.1);
-        --c-text-secondary-15: rgba(203, 213, 225, 0.15);
-        --c-text-secondary-25: rgba(203, 213, 225, 0.25);
-        --c-text-secondary-50: rgba(203, 213, 225, 0.5);
-        --c-text-secondary-75: rgba(203, 213, 225, 0.75);
-        --c-text-secondary-100: rgba(203, 213, 225, 1);
-        --c-text-muted-hex: #94a3b8;
-        --c-text-muted-rgb: rgb(148, 163, 184);
-        --c-text-muted-5: rgba(148, 163, 184, 0.05);
-        --c-text-muted-10: rgba(148, 163, 184, 0.1);
-        --c-text-muted-15: rgba(148, 163, 184, 0.15);
-        --c-text-muted-25: rgba(148, 163, 184, 0.25);
-        --c-text-muted-50: rgba(148, 163, 184, 0.5);
-        --c-text-muted-75: rgba(148, 163, 184, 0.75);
-        --c-text-muted-100: rgba(148, 163, 184, 1);
-        --c-bg-surface: #1e293b;
-        --c-accent-yellow: #facc15;
-        --c-accent-strong: #928fd7;
-        --c-primary-text: #8f89df;
-        --c-draft-bg: #334155;
-        --c-draft-text: #e2e8f0;
-        --c-draft-border: #64748b;
+        --c-primary900-hex: #32299b;
+        --c-primary900-rgb: rgb(50, 41, 155);
+        --c-primary900-5: rgba(50, 41, 155, 0.05);
+        --c-primary900-10: rgba(50, 41, 155, 0.1);
+        --c-primary900-15: rgba(50, 41, 155, 0.15);
+        --c-primary900-25: rgba(50, 41, 155, 0.25);
+        --c-primary900-50: rgba(50, 41, 155, 0.5);
+        --c-primary900-75: rgba(50, 41, 155, 0.75);
+        --c-primary900-100: rgba(50, 41, 155, 1);
+        --c-neutral-hex: #85899c;
+        --c-neutral-rgb: rgb(133, 137, 156);
+        --c-neutral-5: rgba(133, 137, 156, 0.05);
+        --c-neutral-10: rgba(133, 137, 156, 0.1);
+        --c-neutral-15: rgba(133, 137, 156, 0.15);
+        --c-neutral-25: rgba(133, 137, 156, 0.25);
+        --c-neutral-50: rgba(133, 137, 156, 0.5);
+        --c-neutral-75: rgba(133, 137, 156, 0.75);
+        --c-neutral-100: rgba(133, 137, 156, 1);
+        --c-success-hex: #119c70;
+        --c-success-rgb: rgb(17, 156, 112);
+        --c-success-5: rgba(17, 156, 112, 0.05);
+        --c-success-10: rgba(17, 156, 112, 0.1);
+        --c-success-15: rgba(17, 156, 112, 0.15);
+        --c-success-25: rgba(17, 156, 112, 0.25);
+        --c-success-50: rgba(17, 156, 112, 0.5);
+        --c-success-75: rgba(17, 156, 112, 0.75);
+        --c-success-100: rgba(17, 156, 112, 1);
+        --c-merged-hex: #119c70;
+        --c-merged-rgb: rgb(17, 156, 112);
+        --c-merged-5: rgba(17, 156, 112, 0.05);
+        --c-merged-10: rgba(17, 156, 112, 0.1);
+        --c-merged-15: rgba(17, 156, 112, 0.15);
+        --c-merged-25: rgba(17, 156, 112, 0.25);
+        --c-merged-50: rgba(17, 156, 112, 0.5);
+        --c-merged-75: rgba(17, 156, 112, 0.75);
+        --c-merged-100: rgba(17, 156, 112, 1);
+        --c-error-hex: #d3636e;
+        --c-error-rgb: rgb(211, 99, 110);
+        --c-error-5: rgba(211, 99, 110, 0.05);
+        --c-error-10: rgba(211, 99, 110, 0.1);
+        --c-error-15: rgba(211, 99, 110, 0.15);
+        --c-error-25: rgba(211, 99, 110, 0.25);
+        --c-error-50: rgba(211, 99, 110, 0.5);
+        --c-error-75: rgba(211, 99, 110, 0.75);
+        --c-error-100: rgba(211, 99, 110, 1);
+        --c-text-primary-hex: #dad9e8;
+        --c-text-primary-rgb: rgb(218, 217, 232);
+        --c-text-primary-5: rgba(218, 217, 232, 0.05);
+        --c-text-primary-10: rgba(218, 217, 232, 0.1);
+        --c-text-primary-15: rgba(218, 217, 232, 0.15);
+        --c-text-primary-25: rgba(218, 217, 232, 0.25);
+        --c-text-primary-50: rgba(218, 217, 232, 0.5);
+        --c-text-primary-75: rgba(218, 217, 232, 0.75);
+        --c-text-primary-100: rgba(218, 217, 232, 1);
+        --c-text-secondary-hex: #a5a8b6;
+        --c-text-secondary-rgb: rgb(165, 168, 182);
+        --c-text-secondary-5: rgba(165, 168, 182, 0.05);
+        --c-text-secondary-10: rgba(165, 168, 182, 0.1);
+        --c-text-secondary-15: rgba(165, 168, 182, 0.15);
+        --c-text-secondary-25: rgba(165, 168, 182, 0.25);
+        --c-text-secondary-50: rgba(165, 168, 182, 0.5);
+        --c-text-secondary-75: rgba(165, 168, 182, 0.75);
+        --c-text-secondary-100: rgba(165, 168, 182, 1);
+        --c-text-muted-hex: #7b7d8c;
+        --c-text-muted-rgb: rgb(123, 125, 140);
+        --c-text-muted-5: rgba(123, 125, 140, 0.05);
+        --c-text-muted-10: rgba(123, 125, 140, 0.1);
+        --c-text-muted-15: rgba(123, 125, 140, 0.15);
+        --c-text-muted-25: rgba(123, 125, 140, 0.25);
+        --c-text-muted-50: rgba(123, 125, 140, 0.5);
+        --c-text-muted-75: rgba(123, 125, 140, 0.75);
+        --c-text-muted-100: rgba(123, 125, 140, 1);
+        --c-bg-surface: #1a192a;
+        --c-accent-yellow: #c87a09;
+        --c-accent-strong: #8078db;
+        --c-primary-text: #8078db;
+        --c-draft-bg: #2f2f41;
+        --c-draft-text: #dad9e8;
+        --c-draft-border: #313341;
       }
       :root {
-        --wb-ongoing-bg: #ecfeff;
-        --wb-ongoing-text: #086788;
-        --wb-ongoing-border: #a5f3fc;
-        --wb-todo-bg: #fff7ed;
-        --wb-todo-text: #c2410c;
-        --wb-todo-border: #fdba74;
-        --wb-bot-bg: #f8fafc;
-        --wb-bot-text: #475569;
-        --wb-bot-border: #e2e8f0;
-        --wb-empty-text: #991b1b;
-        --wb-waiting-dot: #84cc16;
-        --wb-waiting-text: #4d7c0f;
-        --wb-takeaction-dot: #d946ef;
-        --wb-takeaction-text: #a21caf;
-        --wb-watching-dot: #0ea5e9;
-        --wb-watching-text: #0369a1;
-        --wb-stale-dot: #94a3b8;
-        --wb-stale-text: #64748b;
+        --wb-ongoing-bg: #e5e3f8;
+        --wb-ongoing-text: #4338ca;
+        --wb-ongoing-border: #c3bfee;
+        --wb-todo-bg: #f2e9dc;
+        --wb-todo-text: #a16207;
+        --wb-todo-border: #e1cdb0;
+        --wb-bot-bg: #e8e9eb;
+        --wb-bot-text: #5d6172;
+        --wb-bot-border: #cbccd2;
+        --wb-empty-text: #0d7856;
+        --wb-waiting-dot: #0d7856;
+        --wb-waiting-text: #0d7856;
+        --wb-takeaction-dot: #a16207;
+        --wb-takeaction-text: #a16207;
+        --wb-watching-dot: #4338ca;
+        --wb-watching-text: #4338ca;
+        --wb-stale-dot: #5d6172;
+        --wb-stale-text: #5d6172;
       }
       html.dark {
-        --wb-ongoing-bg: #083344;
-        --wb-ongoing-text: #67e8f9;
-        --wb-ongoing-border: #0e7490;
-        --wb-todo-bg: #431407;
-        --wb-todo-text: #fdba74;
-        --wb-todo-border: #c2410c;
-        --wb-bot-bg: #1e293b;
-        --wb-bot-text: #cbd5e1;
-        --wb-bot-border: #475569;
-        --wb-empty-text: #fca5a5;
-        --wb-waiting-dot: #a3e635;
-        --wb-waiting-text: #bef264;
-        --wb-takeaction-dot: #e879f9;
-        --wb-takeaction-text: #f0abfc;
-        --wb-watching-dot: #38bdf8;
-        --wb-watching-text: #7dd3fc;
-        --wb-stale-dot: #cbd5e1;
-        --wb-stale-text: #94a3b8;
+        --wb-ongoing-bg: #2e2c4d;
+        --wb-ongoing-text: #8078db;
+        --wb-ongoing-border: #3b3865;
+        --wb-todo-bg: #3d2c23;
+        --wb-todo-text: #c87a09;
+        --wb-todo-border: #573915;
+        --wb-bot-bg: #2f2f41;
+        --wb-bot-text: #85899c;
+        --wb-bot-border: #3d3f4d;
+        --wb-empty-text: #119c70;
+        --wb-waiting-dot: #119c70;
+        --wb-waiting-text: #119c70;
+        --wb-takeaction-dot: #c87a09;
+        --wb-takeaction-text: #c87a09;
+        --wb-watching-dot: #8078db;
+        --wb-watching-text: #8078db;
+        --wb-stale-dot: #85899c;
+        --wb-stale-text: #85899c;
+      }
+      :root {
+        --t-surface: #f6f6f9;
+        --t-card: #ffffff;
+        --t-card-2: #fcfcfd;
+        --t-ink: #1c1b28;
+        --t-ink-2: #404251;
+        --t-ink-3: #7a7d8b;
+        --t-line: #e2e3e6;
+        --t-line-2: #ced0d5;
+        --t-on-brand: #ffffff;
+        --t-brand: #4338ca;
+        --t-brand-wash: #e5e3f8;
+        --t-brand-line: #c3bfee;
+        --t-brand-strong: #32299b;
+        --t-accent: #267483;
+        --t-accent-wash: #e3f1f4;
+        --t-accent-line: #bee0e6;
+        --t-accent-strong: #267483;
+        --t-positive: #0d7856;
+        --t-positive-wash: #ddefe9;
+        --t-positive-line: #b2dacd;
+        --t-positive-strong: #09533b;
+        --t-caution: #a16207;
+        --t-caution-wash: #f2e9dc;
+        --t-caution-line: #e1cdb0;
+        --t-caution-strong: #663e04;
+        --t-critical: #b3323f;
+        --t-critical-wash: #f4e2e4;
+        --t-critical-line: #e7bdc2;
+        --t-critical-strong: #83252e;
+        --t-neutral: #5d6172;
+        --t-neutral-wash: #e8e9eb;
+        --t-neutral-line: #cbccd2;
+        --t-neutral-strong: #424450;
+        --t-shadow:
+          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg:
+          0 2px 4px rgba(20, 20, 30, 0.04),
+          0 22px 60px -24px rgba(67, 56, 202, 0.22);
+      }
+      html.dark {
+        --t-surface: #11111d;
+        --t-card: #1a192a;
+        --t-card-2: #201f33;
+        --t-ink: #dad9e8;
+        --t-ink-2: #a5a8b6;
+        --t-ink-3: #7b7d8c;
+        --t-line: #262735;
+        --t-line-2: #313341;
+        --t-on-brand: #11111d;
+        --t-brand: #8078db;
+        --t-brand-wash: #2e2c4d;
+        --t-brand-line: #3b3865;
+        --t-brand-strong: #8078db;
+        --t-accent: #349eb2;
+        --t-accent-wash: #1f3445;
+        --t-accent-line: #1e4756;
+        --t-accent-strong: #349eb2;
+        --t-positive: #119c70;
+        --t-positive-wash: #183338;
+        --t-positive-line: #11463d;
+        --t-positive-strong: #119c70;
+        --t-caution: #c87a09;
+        --t-caution-wash: #3d2c23;
+        --t-caution-line: #573915;
+        --t-caution-strong: #c87a09;
+        --t-critical: #d3636e;
+        --t-critical-wash: #3f2838;
+        --t-critical-line: #5b303c;
+        --t-critical-strong: #d3636e;
+        --t-neutral: #85899c;
+        --t-neutral-wash: #2f2f41;
+        --t-neutral-line: #3d3f4d;
+        --t-neutral-strong: #85899c;
+        --t-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg:
+          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -268,7 +347,7 @@
         position: relative;
       }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: "Inter", sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -373,7 +452,10 @@
         top: 0;
         z-index: 10;
         background-color: var(--c-bg-surface);
-        background-image: linear-gradient(var(--c-primary-5), var(--c-primary-5));
+        background-image: linear-gradient(
+          var(--c-primary-5),
+          var(--c-primary-5)
+        );
         font-weight: 700;
         padding: 12px;
         text-align: left;
@@ -486,12 +568,16 @@
       }
     </style>
   </head>
-  <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+  <body
+    class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full"
+  >
     <nav
       style="background-color: var(--c-primary-rgb)"
       class="fixed top-0 left-0 right-0 z-50 text-white shadow-lg"
     >
-      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div
+        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
+      >
         <div class="flex items-center space-x-4">
           <a
             href="../index.html"
@@ -505,22 +591,28 @@
         <div class="flex items-center">
           <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a
+              href="../journey.html"
+              style="background-color: var(--c-primary-10)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Journey</a
+            >
+            <a
+              href="../workbench.html"
+              style="background-color: var(--c-primary-10)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Workbench</a
+            >
+            <a
+              href="../writing.html"
+              style="background-color: var(--c-primary-10)"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
+              >Writing</a
+            >
+            <a
               href="../reports.html"
               style="background-color: var(--c-primary-10)"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >Quarterly Reports</a
-            >
-            <a
-              href="../community-activity.html"
-              style="background-color: var(--c-primary-10)"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >Community & Activity</a
-            >
-            <a
-              href="../blog.html"
-              style="background-color: var(--c-primary-10)"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md"
-              >Articles</a
+              >Reports</a
             >
             <a
               href="../glossary.html"
@@ -537,7 +629,11 @@
               title="View Repository"
             >
               <span class="w-7 h-7 inline-block"
-                ><svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                ><svg
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
                   <path
                     d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
                   /></svg
@@ -552,7 +648,10 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                <span
+                  data-theme-icon-for="light"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -568,7 +667,10 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="dark"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -581,7 +683,10 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="system"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -623,7 +728,9 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -642,11 +749,15 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                      <path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                      />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -719,19 +830,24 @@
       >
         <div class="flex flex-col space-y-2">
           <a
+            href="../journey.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Journey</a
+          >
+          <a
+            href="../workbench.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Workbench</a
+          >
+          <a
+            href="../writing.html"
+            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
+            >Writing</a
+          >
+          <a
             href="../reports.html"
             class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
             >Quarterly Reports</a
-          >
-          <a
-            href="../community-activity.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            >Community & Activity</a
-          >
-          <a
-            href="../blog.html"
-            class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md"
-            >Articles</a
           >
           <a
             href="../glossary.html"
@@ -752,7 +868,11 @@
             title="View Repository"
           >
             <span class="w-6 h-6 inline-block"
-              ><svg viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              ><svg
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
                 /></svg
@@ -767,7 +887,10 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+              <span
+                data-theme-icon-for="light"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -783,7 +906,10 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="dark"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -796,7 +922,10 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="system"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -838,7 +967,9 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -861,7 +992,9 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -893,83 +1026,97 @@
       </div>
 
       <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const button = document.getElementById('menu-button');
-          const menu = document.getElementById('mobile-menu');
-          const openIcon = document.getElementById('menu-open-icon');
-          const closeIcon = document.getElementById('menu-close-icon');
+        document.addEventListener("DOMContentLoaded", () => {
+          const button = document.getElementById("menu-button");
+          const menu = document.getElementById("mobile-menu");
+          const openIcon = document.getElementById("menu-open-icon");
+          const closeIcon = document.getElementById("menu-close-icon");
 
           if (button && menu) {
-            button.addEventListener('click', () => {
-              const isExpanded = button.getAttribute('aria-expanded') === 'true';
-              button.setAttribute('aria-expanded', String(!isExpanded));
-              menu.classList.toggle('hidden');
-              openIcon.classList.toggle('hidden', !isExpanded);
-              closeIcon.classList.toggle('hidden', isExpanded);
+            button.addEventListener("click", () => {
+              const isExpanded =
+                button.getAttribute("aria-expanded") === "true";
+              button.setAttribute("aria-expanded", String(!isExpanded));
+              menu.classList.toggle("hidden");
+              openIcon.classList.toggle("hidden", !isExpanded);
+              closeIcon.classList.toggle("hidden", isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
+          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
 
           function closeAllDropdowns() {
             dropdowns.forEach((dropdown) => {
-              dropdown.querySelector('.theme-dropdown-menu').classList.add('hidden');
               dropdown
-                .querySelector('.theme-dropdown-trigger')
-                .setAttribute('aria-expanded', 'false');
+                .querySelector(".theme-dropdown-menu")
+                .classList.add("hidden");
+              dropdown
+                .querySelector(".theme-dropdown-trigger")
+                .setAttribute("aria-expanded", "false");
             });
           }
 
           function setTheme(choice) {
-            if (choice === 'system') {
-              localStorage.removeItem('theme');
+            if (choice === "system") {
+              localStorage.removeItem("theme");
             } else {
-              localStorage.setItem('theme', choice);
+              localStorage.setItem("theme", choice);
             }
             const isDark =
-              choice === 'dark' ||
-              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.documentElement.classList.toggle('dark', isDark);
+              choice === "dark" ||
+              (choice === "system" &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches);
+            document.documentElement.classList.toggle("dark", isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem('theme') || 'system';
+            const current = localStorage.getItem("theme") || "system";
             dropdowns.forEach((dropdown) => {
-              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
-                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
-              });
-              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
-              });
+              dropdown
+                .querySelectorAll("[data-theme-icon-for]")
+                .forEach((icon) => {
+                  icon.classList.toggle(
+                    "hidden",
+                    icon.dataset.themeIconFor !== current,
+                  );
+                });
+              dropdown
+                .querySelectorAll("[data-theme-choice]")
+                .forEach((item) => {
+                  item.setAttribute(
+                    "aria-checked",
+                    String(item.dataset.themeChoice === current),
+                  );
+                });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-            const menu = dropdown.querySelector('.theme-dropdown-menu');
+            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+            const menu = dropdown.querySelector(".theme-dropdown-menu");
 
-            trigger.addEventListener('click', (e) => {
+            trigger.addEventListener("click", (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains('hidden');
+              const isOpen = !menu.classList.contains("hidden");
               closeAllDropdowns();
               if (!isOpen) {
-                menu.classList.remove('hidden');
-                trigger.setAttribute('aria-expanded', 'true');
+                menu.classList.remove("hidden");
+                trigger.setAttribute("aria-expanded", "true");
               }
             });
 
-            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-              item.addEventListener('click', () => {
+            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
+              item.addEventListener("click", () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns();
               });
             });
           });
 
-          document.addEventListener('click', closeAllDropdowns);
-          document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeAllDropdowns();
+          document.addEventListener("click", closeAllDropdowns);
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeAllDropdowns();
           });
 
           reflectActiveChoice();
@@ -1031,7 +1178,7 @@
           color 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded='true'] {
+      .theme-dropdown-trigger[aria-expanded="true"] {
         color: white;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1087,7 +1234,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
         opacity: 1;
       }
     </style>
@@ -1140,13 +1287,19 @@
             >
               Contribution Breakdown
             </h3>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
+            <div
+              class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm"
+            >
               <a
                 href="#merged-prs"
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">4</span>
+                <span
+                  class="text-2xl font-bold"
+                  style="color: var(--c-primary-text)"
+                  >4</span
+                >
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1171,7 +1324,11 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">10</span>
+                <span
+                  class="text-2xl font-bold"
+                  style="color: var(--c-primary-text)"
+                  >10</span
+                >
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1197,7 +1354,11 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">1</span>
+                <span
+                  class="text-2xl font-bold"
+                  style="color: var(--c-primary-text)"
+                  >1</span
+                >
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1222,7 +1383,11 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">0</span>
+                <span
+                  class="text-2xl font-bold"
+                  style="color: var(--c-primary-text)"
+                  >0</span
+                >
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1250,7 +1415,11 @@
                 class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-2xl font-bold" style="color: var(--c-primary-text)">3</span>
+                <span
+                  class="text-2xl font-bold"
+                  style="color: var(--c-primary-text)"
+                  >3</span
+                >
                 <div
                   class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1"
                 >
@@ -1297,8 +1466,12 @@
             >
               Top 3 Repositories
             </h3>
-            <div class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-lg shadow-sm">
-              <ol class="list-decimal list-inside pl-4 text-gray-600 dark:text-slate-300 space-y-1">
+            <div
+              class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-lg shadow-sm"
+            >
+              <ol
+                class="list-decimal list-inside pl-4 text-gray-600 dark:text-slate-300 space-y-1"
+              >
                 <li class="pl-2">
                   <a
                     href="https://github.com/Virtual-Coffee/virtualcoffee.io"
@@ -1357,7 +1530,9 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (4)</span>
+                  <span class="text-xl font-bold whitespace-nowrap"
+                    >Merged PRs (4)</span
+                  >
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1405,7 +1580,10 @@
                 >
                   <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
+                      <th
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: default"
+                      >
                         No.
                       </th>
                       <th
@@ -1424,7 +1602,9 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                        <span class="th-content"
+                          >Title <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
@@ -1442,7 +1622,9 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Merged <span class="sort-icon ml-1">↕</span></span>
+                        <span class="th-content"
+                          >Merged <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
@@ -1451,7 +1633,8 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                          >Review Period
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                     </tr>
@@ -1462,13 +1645,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add June 2023 newsletter" data-col-type="string">
+                      <td
+                        data-value="Add June 2023 newsletter"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/915"
                           target="_blank"
@@ -1503,13 +1692,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">2.</td>
-                      <td data-value="OpenSource-Communities/guestbook" data-col-type="string">
+                      <td
+                        data-value="OpenSource-Communities/guestbook"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >OpenSource-Communities/guestbook</span
                         >
                       </td>
-                      <td data-value="docs: add @adiati98 as a contributor" data-col-type="string">
+                      <td
+                        data-value="docs: add @adiati98 as a contributor"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/OpenSource-Communities/guestbook/pull/13"
                           target="_blank"
@@ -1544,13 +1739,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">3.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add May 2023 newsletter" data-col-type="string">
+                      <td
+                        data-value="Add May 2023 newsletter"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/875"
                           target="_blank"
@@ -1585,13 +1786,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">4.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add April 2023 newsletter" data-col-type="string">
+                      <td
+                        data-value="Add April 2023 newsletter"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/845"
                           target="_blank"
@@ -1651,7 +1858,9 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Issues (10)</span>
+                  <span class="text-xl font-bold whitespace-nowrap"
+                    >Issues (10)</span
+                  >
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -1699,7 +1908,10 @@
                 >
                   <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
+                      <th
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: default"
+                      >
                         No.
                       </th>
                       <th
@@ -1718,7 +1930,9 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
+                        <span class="th-content"
+                          >Title <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="date"
@@ -1736,7 +1950,9 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Closed <span class="sort-icon ml-1">↕</span></span>
+                        <span class="th-content"
+                          >Closed <span class="sort-icon ml-1">↕</span></span
+                        >
                       </th>
                       <th
                         data-type="number"
@@ -1745,7 +1961,8 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >Closing Period <span class="sort-icon ml-1">↕</span></span
+                          >Closing Period
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                     </tr>
@@ -1756,13 +1973,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Font Responsiveness in Smaller Screen" data-col-type="string">
+                      <td
+                        data-value="Font Responsiveness in Smaller Screen"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/924"
                           target="_blank"
@@ -1797,13 +2020,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">2.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/podcast-transcripts"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
                         >
                       </td>
-                      <td data-value="Update Transcriptions Guidelines" data-col-type="string">
+                      <td
+                        data-value="Update Transcriptions Guidelines"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/101"
                           target="_blank"
@@ -1838,7 +2067,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">3.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/podcast-transcripts"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
@@ -1879,13 +2111,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">4.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/podcast-transcripts"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
                         >
                       </td>
-                      <td data-value="Add CODE_OF_CONDUCT.md" data-col-type="string">
+                      <td
+                        data-value="Add CODE_OF_CONDUCT.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/97"
                           target="_blank"
@@ -1920,13 +2158,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">5.</td>
-                      <td data-value="Virtual-Coffee/podcast-transcripts" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/podcast-transcripts"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/podcast-transcripts</span
                         >
                       </td>
-                      <td data-value="Add CONTRIBUTING.md" data-col-type="string">
+                      <td
+                        data-value="Add CONTRIBUTING.md"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/96"
                           target="_blank"
@@ -1961,7 +2205,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">6.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2005,7 +2252,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">7.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2049,7 +2299,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">8.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2093,7 +2346,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">9.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2137,7 +2393,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">10.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2205,7 +2464,9 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (1)</span>
+                  <span class="text-xl font-bold whitespace-nowrap"
+                    >Reviewed PRs (1)</span
+                  >
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2253,7 +2514,10 @@
                 >
                   <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
+                      <th
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: default"
+                      >
                         No.
                       </th>
                       <th
@@ -2272,16 +2536,8 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
-                      </th>
-                      <th
-                        data-type="date"
-                        title="Click to sort"
-                        class="py-3 px-4"
-                        style="color: var(--c-primary-text); cursor: pointer"
-                      >
                         <span class="th-content"
-                          >Created At <span class="sort-icon ml-1">↕</span></span
+                          >Title <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                       <th
@@ -2291,7 +2547,19 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >First Review <span class="sort-icon ml-1">↕</span></span
+                          >Created At
+                          <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >First Review
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                       <th
@@ -2301,7 +2569,8 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >Review Period <span class="sort-icon ml-1">↕</span></span
+                          >Review Period
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                       <th
@@ -2311,7 +2580,8 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                          >Last Update / Status
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                     </tr>
@@ -2331,7 +2601,10 @@
                           >the-collab-lab/tcl-58-smart-shopping-list</span
                         >
                       </td>
-                      <td data-value="Make website look professional" data-col-type="string">
+                      <td
+                        data-value="Make website look professional"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/the-collab-lab/tcl-58-smart-shopping-list/pull/31"
                           target="_blank"
@@ -2367,7 +2640,10 @@
                       >
                         2023-05-27<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-merged-10); color: var(--c-merged-rgb)"
+                          style="
+                            background-color: var(--c-merged-10);
+                            color: var(--c-merged-rgb);
+                          "
                           >MERGED</span
                         >
                       </td>
@@ -2404,7 +2680,9 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
+                  <span class="text-xl font-bold whitespace-nowrap"
+                    >Co-Authored PRs (0)</span
+                  >
                 </div>
               </summary>
               <div
@@ -2457,7 +2735,9 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (3)</span>
+                  <span class="text-xl font-bold whitespace-nowrap"
+                    >Collaborations (3)</span
+                  >
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2505,7 +2785,10 @@
                 >
                   <thead class="bg-white dark:bg-slate-800">
                     <tr>
-                      <th class="py-3 px-4" style="color: var(--c-primary-text); cursor: default">
+                      <th
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: default"
+                      >
                         No.
                       </th>
                       <th
@@ -2524,16 +2807,8 @@
                         class="py-3 px-4"
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
-                        <span class="th-content">Title <span class="sort-icon ml-1">↕</span></span>
-                      </th>
-                      <th
-                        data-type="date"
-                        title="Click to sort"
-                        class="py-3 px-4"
-                        style="color: var(--c-primary-text); cursor: pointer"
-                      >
                         <span class="th-content"
-                          >Created At <span class="sort-icon ml-1">↕</span></span
+                          >Title <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                       <th
@@ -2543,7 +2818,19 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >First Comment <span class="sort-icon ml-1">↕</span></span
+                          >Created At
+                          <span class="sort-icon ml-1">↕</span></span
+                        >
+                      </th>
+                      <th
+                        data-type="date"
+                        title="Click to sort"
+                        class="py-3 px-4"
+                        style="color: var(--c-primary-text); cursor: pointer"
+                      >
+                        <span class="th-content"
+                          >First Comment
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                       <th
@@ -2553,7 +2840,8 @@
                         style="color: var(--c-primary-text); cursor: pointer"
                       >
                         <span class="th-content"
-                          >Last Update / Status <span class="sort-icon ml-1">↕</span></span
+                          >Last Update / Status
+                          <span class="sort-icon ml-1">↕</span></span
                         >
                       </th>
                     </tr>
@@ -2564,13 +2852,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">1.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Add your profile to our Members Page!" data-col-type="string">
+                      <td
+                        data-value="Add your profile to our Members Page!"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/13"
                           target="_blank"
@@ -2599,7 +2893,10 @@
                       >
                         2026-06-15<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-success-10); color: var(--c-success-rgb)"
+                          style="
+                            background-color: var(--c-success-10);
+                            color: var(--c-success-rgb);
+                          "
                           >OPEN</span
                         >
                       </td>
@@ -2609,7 +2906,10 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">2.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
@@ -2647,7 +2947,10 @@
                       >
                         2024-09-30<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-success-10); color: var(--c-success-rgb)"
+                          style="
+                            background-color: var(--c-success-10);
+                            color: var(--c-success-rgb);
+                          "
                           >OPEN</span
                         >
                       </td>
@@ -2657,13 +2960,19 @@
                       style="transition: background-color 0.15s ease-in-out"
                     >
                       <td class="text-blue-600 dark:text-blue-300">3.</td>
-                      <td data-value="Virtual-Coffee/virtualcoffee.io" data-col-type="string">
+                      <td
+                        data-value="Virtual-Coffee/virtualcoffee.io"
+                        data-col-type="string"
+                      >
                         <span
                           class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded"
                           >Virtual-Coffee/virtualcoffee.io</span
                         >
                       </td>
-                      <td data-value="Reorganize VC resources" data-col-type="string">
+                      <td
+                        data-value="Reorganize VC resources"
+                        data-col-type="string"
+                      >
                         <a
                           href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/880"
                           target="_blank"
@@ -2692,7 +3001,10 @@
                       >
                         2023-07-19<br /><span
                           class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold"
-                          style="background-color: var(--c-error-10); color: var(--c-error-rgb)"
+                          style="
+                            background-color: var(--c-error-10);
+                            color: var(--c-error-rgb);
+                          "
                           >CLOSED</span
                         >
                       </td>
@@ -2711,7 +3023,8 @@
                 class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 nav-report-button text-left"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
+                <span
+                  class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
                   >Previous</span
                 >
                 <span
@@ -2743,7 +3056,8 @@
                 class="w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 nav-report-button text-right"
                 style="color: var(--c-primary-text)"
               >
-                <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
+                <span
+                  class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400"
                   >Next</span
                 >
                 <span
@@ -2786,7 +3100,7 @@
         OPEN: 3,
         MERGED: 2,
         CLOSED: 1,
-        'N/A': 0,
+        "N/A": 0,
       };
 
       // Custom Priority 2: Closed -> Merged -> Open (Historical view)
@@ -2794,42 +3108,46 @@
         CLOSED: 3,
         MERGED: 2,
         OPEN: 1,
-        'N/A': 0,
+        "N/A": 0,
       };
 
       class ReportTableManager {
         constructor(detailsElement) {
           this.detailsElement = detailsElement;
-          this.table = detailsElement.querySelector('table');
-          this.tbody = this.table.querySelector('tbody');
-          this.rows = Array.from(this.tbody.querySelectorAll('tr'));
-          this.searchInput = detailsElement.querySelector('.search-input');
-          this.resetBtn = detailsElement.querySelector('.reset-btn');
-          this.headers = detailsElement.querySelectorAll('th');
+          this.table = detailsElement.querySelector("table");
+          this.tbody = this.table.querySelector("tbody");
+          this.rows = Array.from(this.tbody.querySelectorAll("tr"));
+          this.searchInput = detailsElement.querySelector(".search-input");
+          this.resetBtn = detailsElement.querySelector(".reset-btn");
+          this.headers = detailsElement.querySelectorAll("th");
 
           // Store original order for reset
-          this.rows.forEach((row, index) => row.setAttribute('data-original-index', index));
+          this.rows.forEach((row, index) =>
+            row.setAttribute("data-original-index", index),
+          );
 
-          this.currentSort = { column: null, direction: 'default' };
+          this.currentSort = { column: null, direction: "default" };
 
           this.init();
         }
 
         init() {
           this.headers.forEach((th, index) => {
-            if (th.hasAttribute('data-type')) {
-              th.addEventListener('click', () => this.handleSort(th, index));
-              th.style.cursor = 'pointer';
-              th.title = 'Click to sort';
+            if (th.hasAttribute("data-type")) {
+              th.addEventListener("click", () => this.handleSort(th, index));
+              th.style.cursor = "pointer";
+              th.title = "Click to sort";
             }
           });
 
           if (this.searchInput) {
-            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+            this.searchInput.addEventListener("input", (e) =>
+              this.handleSearch(e.target.value),
+            );
           }
 
           if (this.resetBtn) {
-            this.resetBtn.addEventListener('click', () => this.resetAll());
+            this.resetBtn.addEventListener("click", () => this.resetAll());
           }
         }
 
@@ -2837,24 +3155,24 @@
           const { column, direction } = this.currentSort;
 
           if (column !== columnIndex) {
-            if (type === 'date') return 'desc';
-            if (type === 'number') return 'asc';
-            if (type === 'status') return 'custom1';
-            return 'asc';
+            if (type === "date") return "desc";
+            if (type === "number") return "asc";
+            if (type === "status") return "custom1";
+            return "asc";
           }
 
-          if (type === 'status') {
-            if (direction === 'custom1') return 'custom2';
-            if (direction === 'custom2') return 'default';
-            return 'custom1';
-          } else if (type === 'date') {
-            if (direction === 'desc') return 'asc';
-            if (direction === 'asc') return 'default';
-            return 'desc';
+          if (type === "status") {
+            if (direction === "custom1") return "custom2";
+            if (direction === "custom2") return "default";
+            return "custom1";
+          } else if (type === "date") {
+            if (direction === "desc") return "asc";
+            if (direction === "asc") return "default";
+            return "desc";
           } else {
-            if (direction === 'asc') return 'desc';
-            if (direction === 'desc') return 'default';
-            return 'asc';
+            if (direction === "asc") return "desc";
+            if (direction === "desc") return "default";
+            return "asc";
           }
         }
 
@@ -2862,13 +3180,15 @@
           const numericVal = parseFloat(val);
           const isNumeric = !isNaN(numericVal) && isFinite(numericVal);
           if (isNumeric) return numericVal;
-          return direction === 'asc' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
+          return direction === "asc"
+            ? Number.NEGATIVE_INFINITY
+            : Number.POSITIVE_INFINITY;
         }
 
         updateRowNumbers() {
           let visibleCounter = 1;
           this.rows.forEach((row) => {
-            if (row.style.display !== 'none') {
+            if (row.style.display !== "none") {
               const firstCell = row.children[0];
               if (firstCell) {
                 firstCell.textContent = `${visibleCounter}.`;
@@ -2879,45 +3199,60 @@
         }
 
         handleSort(th, columnIndex) {
-          const type = th.getAttribute('data-type') || 'string';
+          const type = th.getAttribute("data-type") || "string";
           const nextDir = this.getNextDirection(columnIndex, type);
 
           this.headers.forEach((h) => {
-            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
-            const icon = h.querySelector('.sort-icon');
-            if (icon) icon.textContent = '↕';
+            h.classList.remove(
+              "sort-asc",
+              "sort-desc",
+              "sort-custom1",
+              "sort-custom2",
+            );
+            const icon = h.querySelector(".sort-icon");
+            if (icon) icon.textContent = "↕";
           });
 
           this.currentSort = { column: columnIndex, direction: nextDir };
 
-          if (nextDir === 'default') {
+          if (nextDir === "default") {
             this.rows.sort((a, b) => {
               return (
-                parseInt(a.getAttribute('data-original-index')) -
-                parseInt(b.getAttribute('data-original-index'))
+                parseInt(a.getAttribute("data-original-index")) -
+                parseInt(b.getAttribute("data-original-index"))
               );
             });
           } else {
-            const icon = th.querySelector('.sort-icon');
+            const icon = th.querySelector(".sort-icon");
             if (icon) {
-              icon.textContent = nextDir === 'desc' || nextDir === 'custom2' ? '▼' : '▲';
+              icon.textContent =
+                nextDir === "desc" || nextDir === "custom2" ? "▼" : "▲";
             }
             th.classList.add(`sort-${nextDir}`);
 
             // Find indices if they exist in this table for tie-breaking
             const headerArray = Array.from(this.headers);
-            const dateIdx = headerArray.findIndex((h) => h.getAttribute('data-type') === 'date');
+            const dateIdx = headerArray.findIndex(
+              (h) => h.getAttribute("data-type") === "date",
+            );
 
             this.rows.sort((rowA, rowB) => {
               const cellA = rowA.children[columnIndex];
               const cellB = rowB.children[columnIndex];
 
-              let valA = (cellA.getAttribute('data-value') || cellA.textContent).trim();
-              let valB = (cellB.getAttribute('data-value') || cellB.textContent).trim();
+              let valA = (
+                cellA.getAttribute("data-value") || cellA.textContent
+              ).trim();
+              let valB = (
+                cellB.getAttribute("data-value") || cellB.textContent
+              ).trim();
 
               // 1. Status Logic: Sort by Priority then Tie-break by Date
-              if (type === 'status') {
-                const priorityMap = nextDir === 'custom1' ? STATUS_PRIORITY_P1 : STATUS_PRIORITY_P2;
+              if (type === "status") {
+                const priorityMap =
+                  nextDir === "custom1"
+                    ? STATUS_PRIORITY_P1
+                    : STATUS_PRIORITY_P2;
                 const scoreA = priorityMap[valA.toUpperCase()] || 0;
                 const scoreB = priorityMap[valB.toUpperCase()] || 0;
 
@@ -2932,33 +3267,39 @@
                   dA = new Date(dateMatchA[0]).getTime();
                   dB = new Date(dateMatchB[0]).getTime();
                 } else if (dateIdx !== -1) {
-                  dA = new Date(rowA.children[dateIdx].getAttribute('data-value')).getTime();
-                  dB = new Date(rowB.children[dateIdx].getAttribute('data-value')).getTime();
+                  dA = new Date(
+                    rowA.children[dateIdx].getAttribute("data-value"),
+                  ).getTime();
+                  dB = new Date(
+                    rowB.children[dateIdx].getAttribute("data-value"),
+                  ).getTime();
                 }
 
-                return nextDir === 'custom1' ? dB - dA : dA - dB;
+                return nextDir === "custom1" ? dB - dA : dA - dB;
               }
 
               // 2. Date Logic: Strict Chronology
-              if (type === 'date') {
+              if (type === "date") {
                 const dA = new Date(valA).getTime();
                 const dB = new Date(valB).getTime();
-                let comp = isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
-                return nextDir === 'desc' ? comp * -1 : comp;
+                let comp =
+                  isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
+                return nextDir === "desc" ? comp * -1 : comp;
               }
 
               // 3. Number Logic: Handles N/A and Infinity
-              if (type === 'number') {
+              if (type === "number") {
                 let compA = this.getNumberComparableValue(valA, nextDir);
                 let compB = this.getNumberComparableValue(valB, nextDir);
                 let comp = compA - compB;
-                if (nextDir === 'desc' && isFinite(compA) && isFinite(compB)) comp *= -1;
+                if (nextDir === "desc" && isFinite(compA) && isFinite(compB))
+                  comp *= -1;
                 return comp;
               }
 
               // 4. String Logic
               let res = valA.toLowerCase().localeCompare(valB.toLowerCase());
-              return nextDir === 'desc' ? res * -1 : res;
+              return nextDir === "desc" ? res * -1 : res;
             });
           }
 
@@ -2971,59 +3312,68 @@
           let statusSearch = null;
           let textSearch = lowerQuery;
 
-          if (lowerQuery.startsWith('status:')) {
-            statusSearch = lowerQuery.replace('status:', '').trim();
+          if (lowerQuery.startsWith("status:")) {
+            statusSearch = lowerQuery.replace("status:", "").trim();
             textSearch = null;
           }
 
           const getColIdx = (t) =>
-            Array.from(this.headers).findIndex((th) => th.getAttribute('data-type') === t);
+            Array.from(this.headers).findIndex(
+              (th) => th.getAttribute("data-type") === t,
+            );
 
           this.rows.forEach((row) => {
             let show = false;
             if (statusSearch !== null) {
-              const idx = getColIdx('status');
+              const idx = getColIdx("status");
               if (idx !== -1) {
                 const val = (
-                  row.children[idx].getAttribute('data-value') || row.children[idx].textContent
+                  row.children[idx].getAttribute("data-value") ||
+                  row.children[idx].textContent
                 ).toLowerCase();
                 if (val.includes(statusSearch)) show = true;
               }
             } else if (textSearch) {
-              if (row.textContent.toLowerCase().includes(textSearch)) show = true;
+              if (row.textContent.toLowerCase().includes(textSearch))
+                show = true;
             } else {
               show = true;
             }
-            row.style.display = show ? '' : 'none';
+            row.style.display = show ? "" : "none";
           });
           this.updateRowNumbers();
         }
 
         resetAll() {
-          this.searchInput.value = '';
-          this.currentSort = { column: null, direction: 'default' };
+          this.searchInput.value = "";
+          this.currentSort = { column: null, direction: "default" };
           this.headers.forEach((h) => {
-            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
-            const icon = h.querySelector('.sort-icon');
-            if (icon) icon.textContent = '↕';
+            h.classList.remove(
+              "sort-asc",
+              "sort-desc",
+              "sort-custom1",
+              "sort-custom2",
+            );
+            const icon = h.querySelector(".sort-icon");
+            if (icon) icon.textContent = "↕";
           });
           this.rows.sort(
             (a, b) =>
-              parseInt(a.getAttribute('data-original-index')) -
-              parseInt(b.getAttribute('data-original-index'))
+              parseInt(a.getAttribute("data-original-index")) -
+              parseInt(b.getAttribute("data-original-index")),
           );
           this.rows.forEach((row) => {
             this.tbody.appendChild(row);
-            row.style.display = '';
+            row.style.display = "";
           });
           this.updateRowNumbers();
         }
       }
 
       // Global Initialization
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('details').forEach((details) => {
-          if (details.querySelector('table')) {
+      document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll("details").forEach((details) => {
+          if (details.querySelector("table")) {
             new ReportTableManager(details);
           }
         });
@@ -3034,29 +3384,34 @@
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === 'DETAILS') {
+          if (targetDetails && targetDetails.tagName === "DETAILS") {
             // Close all other details tags before opening the target one
-            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
+            document
+              .querySelectorAll("details")
+              .forEach((detail) => (detail.open = false));
             targetDetails.open = true;
             // Scroll to the opened section with a slight delay
             setTimeout(() => {
               targetDetails.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start',
+                behavior: "smooth",
+                block: "start",
               });
             }, 100);
           }
         } else {
           // Open 'Merged PRs' by default if no hash is present.
-          const defaultDetails = document.getElementById('merged-prs');
+          const defaultDetails = document.getElementById("merged-prs");
           if (defaultDetails) defaultDetails.open = true;
         }
       }
-      window.addEventListener('DOMContentLoaded', openSectionFromHash);
-      window.addEventListener('hashchange', openSectionFromHash);
+      window.addEventListener("DOMContentLoaded", openSectionFromHash);
+      window.addEventListener("hashchange", openSectionFromHash);
     </script>
     <footer
-      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
+      style="
+        border-top-color: var(--c-neutral-10);
+        color: var(--c-text-secondary-rgb);
+      "
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">

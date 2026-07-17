@@ -9,29 +9,29 @@ Organized by year and quarter, these reports track contributions made by **[adia
 
 ## 📊 All-Time Impact Summary
 
-### 🚀 Total Contributions: **2759**
+### 🚀 Total Contributions: **2747**
 
-| Context                    | Detail                     |
-| :------------------------- | :------------------------- |
-| 🏗️ **Unique Repositories** | **52** projects            |
-| 📅 **Active Since**        | **2019** (8 years tracked) |
-| ✍️ **Articles Written**    | **48** published articles  |
+| Context | Detail |
+| :--- | :--- |
+| 🏗️ **Unique Repositories** | **52** projects |
+| 📅 **Active Since** | **2019** (8 years tracked) |
+| ✍️ **Articles Written** | **48** published articles |
 
 ### 🧩 Contribution Distribution
 
-| Category         | Progress                         | Count   | Percentage |
-| :--------------- | :------------------------------- | :------ | :--------- |
-| Merged PRs       | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 550     | 20.0%      |
-| Issues           | `■■■■■■■□□□□□□□□□□□□□□□□□□□□□□□` | 651     | 23.7%      |
-| **Reviewed PRs** | `■■■■■■■■■□□□□□□□□□□□□□□□□□□□□□` | **824** | **30.0%**  |
-| Co-Authored PRs  | `■■■□□□□□□□□□□□□□□□□□□□□□□□□□□□` | 274     | 10.0%      |
-| Collaborations   | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 447     | 16.3%      |
+| Category | Progress | Count | Percentage |
+| :--- | :--- | :--- | :--- |
+| Merged PRs | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 550 | 20.0% |
+| Issues | `■■■■■■■□□□□□□□□□□□□□□□□□□□□□□□` | 651 | 23.7% |
+| **Reviewed PRs** | `■■■■■■■■■□□□□□□□□□□□□□□□□□□□□□` | **825** | **30.0%** |
+| Co-Authored PRs | `■■■□□□□□□□□□□□□□□□□□□□□□□□□□□□` | 274 | 10.0% |
+| Collaborations | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 447 | 16.3% |
 
 ### 🎯 Primary Focus Projects
 
 1. [**OpenSource-Communities/guestbook**](https://github.com/OpenSource-Communities/guestbook) (661 contributions)
 2. [**mautic/user-documentation**](https://github.com/mautic/user-documentation) (446 contributions)
-3. [**mautic/developer-documentation-new**](https://github.com/mautic/developer-documentation-new) (318 contributions)
+3. [**mautic/developer-documentation-new**](https://github.com/mautic/developer-documentation-new) (319 contributions)
 
 ### 🎭 Collaboration Profile: Community Mentor
 
@@ -43,62 +43,55 @@ An expert advocate for code quality and peer development. Code review and techni
 
 Beyond code contributions, I maintain active roles in community leadership and technical content creation around open source.
 
-- ✍️ **Technical Writing:** [**View full articles list (48)**](./blog.md)
-- 🏗️ **Roles & Impact:** [**View community leadership & activity**](./community-activity.md)
+* ✍️ **Writing & Talks:** [**View full articles list (48)**](./writing.md)
+* 🏆 **Journey:** [**View milestones, roles & impact**](./journey.md)
+* 🛠️ **Active Workbench:** [**View live tasks, organized by what happens next**](./workbench.md)
 
 ---
 
 ## 📂 Detailed Quarterly Reports
 
 ### 2026
-
-- [Q3-2026](./2026/Q3-2026.md)
-- [Q2-2026](./2026/Q2-2026.md)
-- [Q1-2026](./2026/Q1-2026.md)
+* [Q3-2026](./2026/Q3-2026.md)
+* [Q2-2026](./2026/Q2-2026.md)
+* [Q1-2026](./2026/Q1-2026.md)
 
 ### 2025
-
-- [Q4-2025](./2025/Q4-2025.md)
-- [Q3-2025](./2025/Q3-2025.md)
-- [Q2-2025](./2025/Q2-2025.md)
-- [Q1-2025](./2025/Q1-2025.md)
+* [Q4-2025](./2025/Q4-2025.md)
+* [Q3-2025](./2025/Q3-2025.md)
+* [Q2-2025](./2025/Q2-2025.md)
+* [Q1-2025](./2025/Q1-2025.md)
 
 ### 2024
-
-- [Q4-2024](./2024/Q4-2024.md)
-- [Q3-2024](./2024/Q3-2024.md)
-- [Q2-2024](./2024/Q2-2024.md)
-- [Q1-2024](./2024/Q1-2024.md)
+* [Q4-2024](./2024/Q4-2024.md)
+* [Q3-2024](./2024/Q3-2024.md)
+* [Q2-2024](./2024/Q2-2024.md)
+* [Q1-2024](./2024/Q1-2024.md)
 
 ### 2023
-
-- [Q4-2023](./2023/Q4-2023.md)
-- [Q3-2023](./2023/Q3-2023.md)
-- [Q2-2023](./2023/Q2-2023.md)
-- [Q1-2023](./2023/Q1-2023.md)
+* [Q4-2023](./2023/Q4-2023.md)
+* [Q3-2023](./2023/Q3-2023.md)
+* [Q2-2023](./2023/Q2-2023.md)
+* [Q1-2023](./2023/Q1-2023.md)
 
 ### 2022
-
-- [Q4-2022](./2022/Q4-2022.md)
-- [Q3-2022](./2022/Q3-2022.md)
-- [Q2-2022](./2022/Q2-2022.md)
-- [Q1-2022](./2022/Q1-2022.md)
+* [Q4-2022](./2022/Q4-2022.md)
+* [Q3-2022](./2022/Q3-2022.md)
+* [Q2-2022](./2022/Q2-2022.md)
+* [Q1-2022](./2022/Q1-2022.md)
 
 ### 2021
-
-- [Q4-2021](./2021/Q4-2021.md)
-- [Q3-2021](./2021/Q3-2021.md)
-- [Q2-2021](./2021/Q2-2021.md)
+* [Q4-2021](./2021/Q4-2021.md)
+* [Q3-2021](./2021/Q3-2021.md)
+* [Q2-2021](./2021/Q2-2021.md)
 
 ### 2020
-
-- [Q4-2020](./2020/Q4-2020.md)
+* [Q4-2020](./2020/Q4-2020.md)
 
 ### 2019
+* [Q4-2019](./2019/Q4-2019.md)
 
-- [Q4-2019](./2019/Q4-2019.md)
-- [Q3-2019](./2019/Q3-2019.md)
+
 
 ---
-
-_Report last generated on: 7/17/2026, 8:06:12 AM_
+*Report last generated on: 7/17/2026, 1:14:46 PM*
