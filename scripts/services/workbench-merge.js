@@ -181,12 +181,33 @@ function buildIssuePrLinks(prs, assignedKeys) {
   return links;
 }
 
+/**
+ * True when `login` names a bot account — INCLUDING allow-listed bots like
+ * Promptless. Used only where an automated review must be discounted (e.g. a
+ * Promptless COMMENTED review is not "a human reviewed this"). This is NOT the
+ * bot-lane test: the allowlist keeps Promptless out of the bot lane — see
+ * isBotRecord.
+ */
+function isBotActor(login) {
+  const lower = String(login || '').toLowerCase();
+  if (!lower) return false;
+  return isAllowedBotLogin(lower) || isBotLogin(lower);
+}
+
 function isBotRecord(record) {
   const username = typeof record.user === 'object' ? record.user?.login : record.user;
-  if (isAllowedBotLogin(username)) return false;
+  const author = record.author;
+  // Allow-listed bots (Promptless) are treated as human actors — their PRs are
+  // active review work, NEVER bot-lane clutter. Honor the allowlist for the
+  // author and the recorded user alike before any bot test runs.
+  if (isAllowedBotLogin(author) || isAllowedBotLogin(username)) return false;
   const userStr = String(username || '').toLowerCase();
   const titleStr = String(record.title || '').toLowerCase();
+  // Route to the bot lane by AUTHOR, not only by last actor: a row a
+  // (non-allow-listed) bot authored is automated work no matter who touched it
+  // last — so a genuine bot's PR still folds away even when a human replied.
   return (
+    isBotLogin(author) ||
     isBotLogin(userStr) ||
     titleStr.startsWith('[snyk]') ||
     (titleStr.startsWith('bump') && userStr.includes('dependabot'))
@@ -206,28 +227,58 @@ function deriveApproval(local, upstream) {
   let state = null;
   let by = null;
   let approvedAt = null;
+  let dismissed = false;
+  let dismissedAt = null;
 
   if (local && (local.reviewState === 'APPROVED' || local.status === 'APPROVED')) {
     state = 'APPROVED';
     by = local.approvedBy ? String(local.approvedBy).trim() : null;
   }
 
+  // Read the latest APPROVED/DISMISSED review from the tracker. A dismissed
+  // approval no longer shows as APPROVED in GitHub's reviews list — it flips
+  // to DISMISSED while still carrying the original approver's login — so
+  // filtering to APPROVED alone silently drops it. We keep it and mark it
+  // `dismissed` so the lane can route it to "re-request" instead.
   if (upstream && Array.isArray(upstream.rawDocsReviews)) {
-    const approvals = upstream.rawDocsReviews.filter((r) => r && r.state === 'APPROVED');
-    if (approvals.length > 0) {
-      const latest = approvals.reduce((a, b) =>
+    const reviews = upstream.rawDocsReviews;
+    const decisive = reviews.filter((r) => r && (r.state === 'APPROVED' || r.state === 'DISMISSED'));
+    if (decisive.length > 0) {
+      const latest = decisive.reduce((a, b) =>
         new Date(a.submitted_at || 0) >= new Date(b.submitted_at || 0) ? a : b
       );
-      state = 'APPROVED';
-      by = by || latest.user?.login || null;
-      approvedAt = latest.submitted_at || null;
+      // A change request landing AFTER the last approval/dismissal supersedes
+      // it — the PR is no longer approved (the reviewed-again case, e.g. an
+      // approval dismissed on push and then changes requested). Drop the
+      // approval and let the turn-based logic take over.
+      const supersededByChanges = reviews.some(
+        (r) =>
+          r &&
+          r.state === 'CHANGES_REQUESTED' &&
+          new Date(r.submitted_at || 0) > new Date(latest.submitted_at || 0)
+      );
+      if (supersededByChanges) {
+        state = null;
+        by = null;
+        approvedAt = null;
+      } else {
+        state = 'APPROVED';
+        approvedAt = latest.submitted_at || null;
+        dismissed = latest.state === 'DISMISSED';
+        dismissedAt = dismissed ? latest.submitted_at || null : null;
+        // A dismissed review names the approver whose approval was dropped;
+        // prefer it so "re-request from <login>" points at the right person.
+        by = dismissed ? latest.user?.login || by : by || latest.user?.login || null;
+      }
     }
   }
 
   if (!state) return null;
 
+  // "Note since approval" only applies to a live approval — a dismissed one
+  // already routes to "re-request", which supersedes any later note.
   let noteSince = false;
-  if (approvedAt && upstream && Array.isArray(upstream.rawDocsComments)) {
+  if (!dismissed && approvedAt && upstream && Array.isArray(upstream.rawDocsComments)) {
     noteSince = upstream.rawDocsComments.some(
       (c) =>
         c &&
@@ -236,7 +287,54 @@ function deriveApproval(local, upstream) {
     );
   }
 
-  return { state, by, approvedAt, noteSince };
+  return { state, by, approvedAt, noteSince, dismissed, dismissedAt };
+}
+
+/**
+ * A formal review request aimed at YOU (the workbench owner) — the tracker's
+ * rawReviewRequests, filtered to `requested_reviewer === me`. Team requests
+ * and requests aimed at other reviewers are ignored: this is the "you've been
+ * pinged to review" signal, the review-side equivalent of an @-mention.
+ * Returns the most recent such request, or null.
+ */
+function deriveReviewRequest(upstream, me) {
+  if (!upstream || !Array.isArray(upstream.rawReviewRequests)) return null;
+  const mine = upstream.rawReviewRequests.filter(
+    (r) =>
+      r && r.requested_reviewer && String(r.requested_reviewer.login || '').toLowerCase() === me
+  );
+  if (mine.length === 0) return null;
+  const latest = mine.reduce((a, b) =>
+    new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
+  );
+  return {
+    of: latest.requested_reviewer.login || null,
+    by: latest.actor?.login || null,
+    at: latest.created_at || null,
+  };
+}
+
+/**
+ * Muted "someone reviewed this" context: when a human other than you left a
+ * review (a comment or a change request) but there's no approval to show,
+ * name the latest such reviewer. Purely informational — it NEVER changes the
+ * lane. Suppressed when an approval (live or dismissed) is already surfaced,
+ * and it skips your own reviews and bot reviews (incl. allow-listed bots).
+ */
+function deriveReviewedNote(upstream, approval, me) {
+  if (approval) return null;
+  if (!upstream || !Array.isArray(upstream.rawDocsReviews)) return null;
+  const reviews = upstream.rawDocsReviews.filter((r) => {
+    if (!r) return false;
+    const login = String(r.user?.login || '').toLowerCase();
+    if (!login || login === me || isBotActor(login)) return false;
+    return r.state === 'COMMENTED' || r.state === 'CHANGES_REQUESTED';
+  });
+  if (reviews.length === 0) return null;
+  const latest = reviews.reduce((a, b) =>
+    new Date(a.submitted_at || 0) >= new Date(b.submitted_at || 0) ? a : b
+  );
+  return latest.user?.login ? { by: latest.user.login } : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -290,6 +388,18 @@ function deriveLane(record, me) {
   }
 
   if (approval) {
+    if (approval.dismissed) {
+      // The approval was dismissed after an update — the work is essentially
+      // done, it just needs the approver to look again. Keep it in the ready
+      // lane (not action) and point at re-requesting the review.
+      return {
+        lane: 'ready',
+        ball: 'Approved',
+        nextStep: approval.by
+          ? `Re-request review from ${approval.by}`
+          : 'Re-request a review — the approval was dismissed',
+      };
+    }
     if (approval.noteSince) {
       return {
         lane: 'action',
@@ -320,6 +430,7 @@ function deriveLane(record, me) {
   const isAuthor = lastActor && lastActor === prAuthor;
   const actorIsBot = !isAllowedBotLogin(lastActor) && (record.isLastActorBot || isBotLogin(lastActor));
   const reminder = idleHint(record.idleDays);
+  const reviewRequestedOfMe = Boolean(record.reviewRequest);
 
   if (relationship === 'reviewing') {
     if (isMe) return { lane: 'waiting', ball: 'Waiting', nextStep: null };
@@ -330,7 +441,12 @@ function deriveLane(record, me) {
         nextStep: reminder || 'Author replied — review the latest changes',
       };
     }
-    if (record.status === 'Request review') {
+    // A formal review request aimed at you is a "your turn" ping — treat it
+    // like an @-mention. It lands in the action lane and escalates with age
+    // (remind → follow up → escalate) through `reminder`. This generalizes the
+    // local `status === 'Request review'` flag to the tracker's
+    // rawReviewRequests so tracker-augmented rows get the same signal.
+    if (record.status === 'Request review' || reviewRequestedOfMe) {
       return { lane: 'action', ball: 'Take Action', nextStep: reminder || 'Review requested — review it' };
     }
     return { lane: 'waiting', ball: 'Watching', nextStep: null };
@@ -408,6 +524,8 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
     const linkedCodePr = extractLinkedCodePr(local.body, local.repo);
     const approval = deriveApproval(local, upstream);
+    const reviewRequest = deriveReviewRequest(upstream, me);
+    const reviewedNote = deriveReviewedNote(upstream, approval, me);
 
     const record = {
       key,
@@ -425,6 +543,8 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       author: local.author || null,
       status: local.status || null,
       approval,
+      reviewRequest,
+      reviewedNote,
       linkedCodePr: linkedCodePr
         ? { ref: linkedCodePr, hasActivity: Boolean(upstream && upstream.codeUpdatedAt) }
         : null,
@@ -453,6 +573,8 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
     if (matchedKeys.has(key)) continue;
     const [repo, number] = key.split('#');
     const approval = deriveApproval(null, upstream);
+    const reviewRequest = deriveReviewRequest(upstream, me);
+    const reviewedNote = deriveReviewedNote(upstream, approval, me);
     const effectiveDate = upstream.docsUpdatedAt || null;
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
 
@@ -472,6 +594,8 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       author: null,
       status: null,
       approval,
+      reviewRequest,
+      reviewedNote,
       linkedCodePr: upstream.codeUpdatedAt ? { ref: null, hasActivity: true } : null,
       upstream: {
         docsUpdatedAt: upstream.docsUpdatedAt || null,
@@ -635,6 +759,8 @@ module.exports = {
   extractIssueRefs,
   buildIssuePrLinks,
   deriveApproval,
+  deriveReviewRequest,
+  deriveReviewedNote,
   deriveLane,
   mergeWorkbench,
   computeImpact,

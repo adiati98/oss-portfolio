@@ -384,6 +384,273 @@ assert.equal(extractLinkedCodePr('see mautic/mautic#161', 'mautic/docs'), 'mauti
 assert.equal(extractLinkedCodePr('fixes x/y#5', 'x/y'), null);
 console.log('  ok  linked code PR extraction');
 
+// ===========================================================================
+// New tracker semantics, generalized to all repos (§ tracker parity)
+// ===========================================================================
+
+// 15. Approval dismissed after a push → stays ready, re-request the approver.
+// A dismissed approval no longer shows as APPROVED in GitHub's reviews list
+// (it flips to DISMISSED, keeping the approver's login), so it must not be
+// silently dropped into the turn-based/stalled logic.
+run(
+  'dismissed approval → ready, re-request from the approver',
+  {
+    tasks: [local({ repo: 'mautic/user-documentation', number: 704, lastActor: 'author1', author: 'author1' })],
+    tracker: {
+      'mautic/user-documentation#704': {
+        docsUpdatedAt: daysAgo(1),
+        codeUpdatedAt: null,
+        rawDocsReviews: [{ user: { login: 'escopecz' }, state: 'DISMISSED', submitted_at: daysAgo(2) }],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#704');
+    assert.equal(r.approval.state, 'APPROVED');
+    assert.equal(r.approval.dismissed, true);
+    assert.equal(r.approval.by, 'escopecz');
+    assert.equal(r.lane, 'ready', `expected ready, got ${r.lane}`);
+    assert.ok(/re-request review from escopecz/i.test(r.nextStep), r.nextStep);
+  }
+);
+
+// 15b. Boundary: a change request landing AFTER the dismissal supersedes it —
+// the PR is no longer approved, so it falls to the turn-based lane, not ready.
+run(
+  'dismissed approval then changes requested → not ready (turn-based)',
+  {
+    tasks: [local({ repo: 'mautic/user-documentation', number: 741, lastActor: 'author2', author: 'author2' })],
+    tracker: {
+      'mautic/user-documentation#741': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [
+          { user: { login: 'escopecz' }, state: 'DISMISSED', submitted_at: daysAgo(6) },
+          { user: { login: 'adiati98' }, state: 'CHANGES_REQUESTED', submitted_at: daysAgo(2) },
+        ],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#741');
+    assert.equal(r.approval, null, 'later change request supersedes the dismissed approval');
+    assert.notEqual(r.lane, 'ready');
+    assert.equal(r.lane, 'action'); // author is the last actor → your turn
+  }
+);
+
+// 16. Formal review request aimed at me → action lane, like an @-mention.
+// The team request and the non-existent reviewer entries are ignored.
+run(
+  'review request aimed at me → action (Review requested)',
+  {
+    tasks: [local({ repo: 'someorg/human-docs', number: 42, lastActor: 'maintainerX', author: 'writer2' })],
+    tracker: {
+      'someorg/human-docs#42': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+        rawReviewRequests: [
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(1), requested_reviewer: { login: 'adiati98' }, requested_team: null },
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(1), requested_reviewer: null, requested_team: { slug: 'docs-team' } },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/human-docs#42');
+    assert.ok(r.reviewRequest && r.reviewRequest.of === 'adiati98', 'review request of me captured');
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.ok(/review requested/i.test(r.nextStep), r.nextStep);
+  }
+);
+
+// 16b. A review request aimed only at a team or another reviewer is NOT my
+// ping — it must not force a row into the action lane.
+run(
+  'review request aimed at others only → no review-request signal',
+  {
+    tasks: [local({ repo: 'someorg/human-docs', number: 43, lastActor: 'writer2', author: 'writer2', status: 'Review in progress' })],
+    tracker: {
+      'someorg/human-docs#43': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+        rawReviewRequests: [
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(1), requested_reviewer: { login: 'favour-chibueze' }, requested_team: null },
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(1), requested_reviewer: null, requested_team: { slug: 'docs-team' } },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/human-docs#43');
+    assert.equal(r.reviewRequest, null, 'no request aimed at me');
+  }
+);
+
+// 17. Reviewed-but-not-approved → muted "<login> reviewed this" context that
+// does NOT change the lane. Bot reviews (incl. allow-listed Promptless) and
+// my own reviews are skipped when picking the reviewer to surface.
+run(
+  'human reviewed, no approval → muted "reviewed this", lane unchanged',
+  {
+    prs: [local({ repo: 'someorg/human-docs', number: 55, lastActor: 'adiati98', author: 'adiati98' })],
+    tracker: {
+      'someorg/human-docs#55': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [
+          { user: { login: 'promptless-for-oss' }, state: 'COMMENTED', submitted_at: daysAgo(3) },
+          { user: { login: 'escopecz' }, state: 'COMMENTED', submitted_at: daysAgo(2) },
+        ],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/human-docs#55');
+    assert.equal(r.approval, null);
+    assert.ok(r.reviewedNote && r.reviewedNote.by === 'escopecz', 'latest human reviewer surfaced (bot skipped)');
+    assert.equal(r.lane, 'waiting', 'muted context must not move the lane');
+  }
+);
+
+// 18. Allow-listed bot (Promptless) authorship must NOT route to the bot lane.
+// Promptless PRs are active review work — the allowlist exists precisely to
+// keep them in the human lanes. Here Promptless pushed last, so it's her turn
+// to review: action, never folded away.
+run(
+  'Promptless-authored PR I review → active lane, NOT bot',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/developer-documentation-new',
+        number: 592,
+        user: { login: 'promptless-for-oss' },
+        author: 'promptless-for-oss',
+        lastActor: 'promptless-for-oss',
+        title: 'docs: automated update',
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.notEqual(records[0].lane, 'bot', 'allow-listed bot author stays out of the bot lane');
+    assert.equal(records[0].lane, 'action');
+    assert.equal(records[0].ball, 'Take Action');
+  }
+);
+
+// 18b. A GENUINE (non-allow-listed) bot author still folds to the bot lane BY
+// AUTHOR, not last actor — here a human (me) touched it last, yet the bot
+// authored it, so it's automated work and stays out of the way.
+run(
+  'non-allow-listed bot author → bot lane (by author, not last actor)',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 77,
+        user: { login: 'renovate[bot]' },
+        author: 'renovate[bot]',
+        lastActor: 'adiati98',
+        title: 'chore(deps): update dependency',
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'bot');
+    assert.equal(records[0].ball, 'Bot');
+  }
+);
+
+// ===========================================================================
+// Standing-rule regressions — the new signals must not disturb these.
+// ===========================================================================
+
+// SR1. Assigned issues resolve BEFORE the staleness check: an old assigned
+// issue with no PR stays "To Write" in the action lane, never demoted.
+run(
+  'SR1 · assigned issue idle 40d, no PR → action/To Write, never stalled',
+  { issues: [{ title: 'Add docs', url: 'u', repo: 'x/y', number: 4001, updatedAt: daysAgo(40) }] },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action');
+    assert.equal(records[0].ball, 'To Write');
+    assert.notEqual(records[0].lane, 'stalled');
+  }
+);
+
+// SR2. Age is urgency text INSIDE a row, never demotion to a folded lane. A
+// reviewing row the author last touched 12d ago stays in the action lane and
+// carries the escalation in its nextStep.
+run(
+  'SR2 · author replied 12d ago → still action, age shown as follow-up text',
+  { tasks: [local({ number: 4002, updatedAt: daysAgo(12), lastSubstantiveDate: daysAgo(12), lastActor: 'writer3', author: 'writer3' })] },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action');
+    assert.ok(/12d/.test(records[0].nextStep), records[0].nextStep);
+    assert.ok(/follow up|escalate|reminder/i.test(records[0].nextStep), records[0].nextStep);
+  }
+);
+
+// SR3. "Shipped" phrasing counts only mergedAt-bearing items. A PR dated this
+// quarter but never merged must not inflate shippedThisQuarter.
+{
+  const impact = computeImpact(
+    [],
+    {
+      pullRequests: [
+        { date: daysAgo(3), mergedAt: daysAgo(3) }, // merged → counts
+        { date: daysAgo(2), mergedAt: null }, // open, dated this quarter → must NOT count
+      ],
+      reviewedPrs: [],
+      coAuthoredPrs: [],
+    },
+    NOW
+  );
+  assert.equal(impact.shippedThisQuarter, 1, 'only the merged PR ships');
+  console.log('  ok  SR3 · "shipped" counts only mergedAt-bearing items');
+}
+
+// SR4. Home is lifetime-scoped, the Workbench is this-month — kept as distinct
+// fields, never one number readable both ways. A prior-month merge counts
+// lifetime but not this month.
+{
+  const impact = computeImpact(
+    [],
+    {
+      reviewedPrs: [
+        { author: 'alice', mergedAt: daysAgo(1) }, // this month
+        { author: 'bob', mergedAt: '2026-04-02T00:00:00Z' }, // April, prior month
+      ],
+      coAuthoredPrs: [],
+    },
+    NOW
+  );
+  assert.equal(impact.helpedShipCount, 2, 'lifetime counts both');
+  assert.equal(impact.helpedShipThisMonth, 1, 'this-month counts only July');
+  assert.notEqual(impact.helpedShipCount, impact.helpedShipThisMonth);
+  console.log('  ok  SR4 · lifetime and this-month stay separate scopes');
+}
+
+// SR5. The removed source chips and desync flag must not creep back into the
+// record contract. (`source` is an internal provenance string, not a chip.)
+run(
+  'SR5 · records carry no desync flag and no source-chip field',
+  {
+    tasks: [local({ number: 4005, lastActor: 'someone', author: 'someone' })],
+    tracker: { 'x/y#4005': { docsUpdatedAt: daysAgo(1), rawDocsReviews: [], rawDocsComments: [] } },
+  },
+  ({ records }) => {
+    for (const r of records) {
+      assert.ok(!('desync' in r), 'no desync flag on record');
+      assert.ok(!('sourceChip' in r), 'no source-chip field on record');
+      assert.ok(!('sourceChips' in r), 'no source-chip field on record');
+    }
+  }
+);
+
 if (process.exitCode) {
   console.error('\nfixture run FAILED');
 } else {

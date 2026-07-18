@@ -156,7 +156,15 @@ function renderRow(record) {
   const title = record.title || record.key;
   const nextBits = [];
   if (record.approval && record.approval.by) {
-    nextBits.push(`approved by <b>${record.approval.by}</b>`);
+    // An approval dismissed after a push is still worth surfacing — it just
+    // needs a fresh look, not a re-review from scratch.
+    const dismissedNote = record.approval.dismissed ? ' — dismissed after update' : '';
+    nextBits.push(`approved by <b>${record.approval.by}</b>${dismissedNote}`);
+  }
+  if (record.reviewedNote && record.reviewedNote.by) {
+    // Muted context: a human looked at this but didn't approve. Never a lane
+    // change — just a hint of where the review stands.
+    nextBits.push(`<span style="color:var(--t-ink-3)">${record.reviewedNote.by} reviewed this</span>`);
   }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
     nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.75rem">🔗 code PR <b>${record.linkedCodePr.ref}</b></span>`);
