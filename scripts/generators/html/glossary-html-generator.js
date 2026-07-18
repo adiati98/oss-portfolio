@@ -5,9 +5,8 @@ const { dedent } = require('../../utils/dedent');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-const { COLORS, FAVICON_SVG_ENCODED } = require('../../config/constants');
+const { FAVICON_SVG_ENCODED } = require('../../config/constants');
 const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
-const { getColorValue } = require('../../utils/color-helpers');
 const { getGlossaryStyleCss } = require('../css/style-generator');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
@@ -70,7 +69,7 @@ async function createGlossaryHtml() {
 
           return dedent`
             <div id="${item.id}" class="mb-16 last:mb-0">
-              <h3 style="color: ${getColorValue(COLORS.primaryText)}; border-bottom: 2px solid ${getColorValue(COLORS.primary[15])};"
+              <h3 style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line);"
                   class="text-xl font-extrabold mb-6 pb-2 inline-block">
                 ${item.title}
               </h3>
@@ -97,7 +96,7 @@ async function createGlossaryHtml() {
       return dedent`
         <section id="${group.id}" class="mb-24 last:mb-0">
           <div class="mb-10">
-            <h2 style="color: ${getColorValue(COLORS.primaryText)};" class="text-3xl sm:text-4xl font-black mb-2">
+            <h2 style="color: var(--t-brand);" class="text-3xl sm:text-4xl font-black mb-2">
               ${group.title}
             </h2>
             <p class="text-slate-500 dark:text-slate-400 text-lg font-medium italic">${processText(group.description)}</p>
@@ -128,8 +127,8 @@ async function createGlossaryHtml() {
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+            <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-16 pb-12 border-b-2">
+              <h1 style="color: var(--t-brand);" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 ${GLOSSARY_CONTENT.title}
               </h1>
               <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600 dark:text-slate-300">

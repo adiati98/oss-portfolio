@@ -20,7 +20,6 @@ const {
   FAVICON_SVG_ENCODED,
   COLORS,
 } = require('../../config/constants');
-const { getColorValue } = require('../../utils/color-helpers');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
@@ -66,29 +65,29 @@ async function writeHtmlFiles(groupedContributions) {
    */
   function getStatusBadgeHtml(status) {
     const cleanedStatus = status.toUpperCase().trim();
-    let bgColor = COLORS.status?.gray?.bg || '#f1f5f9';
-    let textColor = COLORS.status?.gray?.text || '#475569';
+    let bgColor = COLORS.status?.gray?.bg || 'var(--t-neutral-wash)';
+    let textColor = COLORS.status?.gray?.text || 'var(--t-neutral)';
     let fontWeight = 'font-medium';
 
     switch (cleanedStatus) {
       case 'OPEN':
-        bgColor = COLORS.status?.green?.bg || '#dcfce7';
-        textColor = COLORS.status?.green?.text || '#166534';
+        bgColor = COLORS.status?.green?.bg || 'var(--t-positive-wash)';
+        textColor = COLORS.status?.green?.text || 'var(--t-positive)';
         fontWeight = 'font-semibold';
         break;
       case 'MERGED':
-        bgColor = COLORS.status?.purple?.bg || '#f3e8ff';
-        textColor = COLORS.status?.purple?.text || '#6b21a8';
+        bgColor = COLORS.status?.purple?.bg || 'var(--t-positive-wash)';
+        textColor = COLORS.status?.purple?.text || 'var(--t-positive)';
         fontWeight = 'font-semibold';
         break;
       case 'CLOSED':
-        bgColor = COLORS.status?.red?.bg || '#fee2e2';
-        textColor = COLORS.status?.red?.text || '#991b1b';
+        bgColor = COLORS.status?.red?.bg || 'var(--t-critical-wash)';
+        textColor = COLORS.status?.red?.text || 'var(--t-critical)';
         fontWeight = 'font-semibold';
         break;
       case 'RECORDED':
-        bgColor = COLORS.status?.gray?.bg || '#f1f5f9';
-        textColor = COLORS.status?.gray?.text || '#475569';
+        bgColor = COLORS.status?.gray?.bg || 'var(--t-neutral-wash)';
+        textColor = COLORS.status?.gray?.text || 'var(--t-neutral)';
         fontWeight = 'font-semibold';
         break;
       default:
@@ -124,6 +123,39 @@ async function writeHtmlFiles(groupedContributions) {
   }
 
   /**
+   * Generates the impact-band tile markup for a single quarter's report,
+   * mirroring the workbench board's renderImpact tiles (design blueprint
+   * §05) but for a closed, historical period: every caption names the exact
+   * quarter instead of "this month"/lifetime phrasing, since a quarterly
+   * report is read long after that quarter has ended.
+   */
+  function renderQuarterlyImpact({
+    quarter,
+    year,
+    totalContributions,
+    totalRepos,
+    prCount,
+    issueCount,
+    reviewedPrCount,
+  }) {
+    const period = `${quarter} ${year}`;
+    return dedent`
+      <div class="qr-impact">
+        <div class="qr-impact-top">
+          <h2>Quarterly snapshot <span>— contributions recorded in ${period}</span></h2>
+        </div>
+        <div class="qr-tiles">
+          <a href="#merged-prs" class="qr-tile qr-tile--hero"><span class="n">${totalContributions}</span><span class="c">contributions shipped in ${period}</span></a>
+          <div class="qr-tile"><span class="n">${totalRepos}</span><span class="c">repositories touched in ${period}</span></div>
+          <a href="#merged-prs" class="qr-tile qr-tile--good"><span class="n">${prCount}</span><span class="c">PRs merged in ${period}</span></a>
+          <a href="#issues" class="qr-tile"><span class="n">${issueCount}</span><span class="c">issues closed in ${period}</span></a>
+          <a href="#reviewed-prs" class="qr-tile"><span class="n">${reviewedPrCount}</span><span class="c">PRs reviewed in ${period}</span></a>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
    * Generates the HTML block for navigating to the previous and next quarterly reports.
    * @param {number} index - The index of the current report in the `allReports` array.
    * @returns {string} The HTML string for the navigation buttons.
@@ -148,9 +180,9 @@ async function writeHtmlFiles(groupedContributions) {
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-        <a href="${prevPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-left" style="color: ${getColorValue(COLORS.primaryText)};">
+        <a href="${prevPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-left" style="color: var(--t-brand);">
           <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Previous</span>
-          <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primaryText)};">
+          <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             ${LEFT_ARROW_SVG}
             <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
           </span>
@@ -165,9 +197,9 @@ async function writeHtmlFiles(groupedContributions) {
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-        <a href="${nextPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-right" style="color: ${getColorValue(COLORS.primaryText)};">
+        <a href="${nextPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-right" style="color: var(--t-brand);">
           <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Next</span>
-          <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: ${getColorValue(COLORS.primaryText)};">
+          <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
             ${RIGHT_ARROW_SVG}
           </span>
@@ -334,23 +366,21 @@ ${navHtmlForReports}
   <main class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
-        <header style="border-bottom-color: ${COLORS.primary[15] || '#e2e8f0'};" class="text-center mt-16 mb-12 pb-4 border-b-2">
-          <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
+        <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-12 pb-4 border-b-2">
+          <h1 style="color: var(--t-brand);" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
           <p class="text-lg text-gray-500 dark:text-slate-400 mt-2">Open Source Contributions Report</p>
         </header>
 
         <section class="mb-8">
-          <h2 style="border-left-color: ${getColorValue(COLORS.primaryText)};" class="text-3xl font-semibold text-gray-800 dark:text-slate-100 mb-12 border-l-4 pl-3">📊 Quarterly Statistics</h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div style="background-color: ${getColorValue(COLORS.primary)};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-            <p class="text-4xl font-extrabold">${totalContributions}</p>
-            <p class="text-lg mt-2 font-medium">Total Contributions</p>
-          </div>
-          <div style="background-color: ${getColorValue(COLORS.primary)};" class="text-white p-6 rounded-xl shadow-lg flex flex-col items-center justify-center">
-            <p class="text-4xl font-extrabold">${totalRepos}</p>
-            <p class="text-lg mt-2 font-medium">Total Repositories</p>
-          </div>
-          </div>
+          ${renderQuarterlyImpact({
+            quarter,
+            year,
+            totalContributions,
+            totalRepos,
+            prCount,
+            issueCount,
+            reviewedPrCount,
+          })}
         </section>
 
         <section class="mb-8">
@@ -390,8 +420,8 @@ ${navHtmlForReports}
             ]
               .map(
                 (item) => `
-              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: ${getColorValue(COLORS.primaryText)};">
-                <span class="text-2xl font-bold" style="color: ${getColorValue(COLORS.primaryText)};">${item.count}</span>
+              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: var(--t-brand);">
+                <span class="text-2xl font-bold" style="color: var(--t-brand);">${item.count}</span>
                 <div class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     ${item.icon}
@@ -436,7 +466,7 @@ ${navHtmlForReports}
 
       // Details tag is used for collapsible sections.
       htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">\n`;
-      htmlContent += ` <summary style="color: ${getColorValue(COLORS.primaryText)};" class="text-xl font-bold cursor-pointer outline-none">\n`;
+      htmlContent += ` <summary style="color: var(--t-brand);" class="text-xl font-bold cursor-pointer outline-none">\n`;
       htmlContent += `  <div class="inline-flex items-center flex-nowrap gap-2 ml-3" style="vertical-align: middle;">\n`;
       htmlContent += `    <span class="w-6 h-6 flex items-center shrink-0">${sectionInfo.icon}</span>\n`;
       htmlContent += `    <span class="text-xl font-bold whitespace-nowrap">${sectionInfo.title} (${items.length})</span>\n`;
@@ -455,7 +485,7 @@ ${navHtmlForReports}
           <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
             
             <div class="icon-input-container grow">
-              <div class="input-icon" style="color: ${getColorValue(COLORS.primaryText)};">
+              <div class="input-icon" style="color: var(--t-brand);">
                 ${SEARCH_SVG}
               </div>
               
@@ -466,7 +496,7 @@ ${navHtmlForReports}
                 aria-label="${accessibleLabel}"
                 class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400
                 px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
-                style="border-color: ${getColorValue(COLORS.primaryText)};"
+                style="border-color: var(--t-brand);"
               />
             </div>
 
@@ -501,7 +531,7 @@ ${navHtmlForReports}
             ? sectionInfo.headers[i]
             : `<button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">${sectionInfo.headers[i]}</span><span class="sort-icon" aria-hidden="true">↕</span></button>`;
 
-          tableContent += `    <th ${thAttributes} scope="col" class="py-3 px-4" style="color: ${getColorValue(COLORS.primaryText)};">
+          tableContent += `    <th ${thAttributes} scope="col" class="py-3 px-4" style="color: var(--t-brand);">
               ${headerContent}
           </th>\n`;
         }
