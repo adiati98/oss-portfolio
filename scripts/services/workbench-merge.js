@@ -444,15 +444,21 @@ function idleHint(idleDays) {
 
 /**
  * Assigns lane, ball label, and nextStep for one merged record.
- * Precedence: bot → assigned issue → approved (ready/action) → stalled →
- * turn-based.
+ * Precedence: bot → assigned issue → approved (ready/action) → WHOSE TURN →
+ * stalled.
  *
- * Assigned issues are resolved BEFORE the staleness rule on purpose. An
- * issue you haven't started has nobody touching it, so it always ages past
- * the stalled threshold — which used to drop it into a folded lane reading
- * "nudge or close", the exact opposite of "write this". Age is not evidence
- * of staleness here; it's evidence of backlog, so it's carried as urgency
- * inside the row instead.
+ * Staleness runs LAST, and only over rows the turn logic left with someone
+ * else. Age is not evidence that a row is dead — it's evidence of how overdue
+ * it is — so it can never override whose turn it is. Ordering it before the
+ * turn logic is what used to bury live work in a folded lane reading "nudge or
+ * close": a review whose author replied 40 days ago, a review request aimed at
+ * you 45 days ago, and your own PR carrying month-old maintainer feedback all
+ * read as "stale" when every one of them was waiting on YOU. Assigned issues
+ * were carved out of that rule first (an issue you haven't started has nobody
+ * touching it, so it always ages past the threshold); this generalizes the
+ * carve-out to every path where the ball is yours. Age still shows: the row
+ * carries idleDays, the reviewing steps escalate through idleHint, and the
+ * action lane sorts oldest-first.
  */
 function deriveLane(record, me, botPingSignal = null) {
   const { relationship, approval, idleDays, linkedCodePr, upstream } = record;
@@ -510,14 +516,36 @@ function deriveLane(record, me, botPingSignal = null) {
     return { lane: 'ready', ball: 'Approved', nextStep };
   }
 
+  // Whose turn is it? Resolved BEFORE staleness (see the note above), so a row
+  // where the ball is yours keeps its action lane no matter how old it is.
+  const turn = deriveTurn(record, me, botPingSignal);
+  if (turn.lane === 'action') return turn;
+
+  // Waiting on someone else, and untouched for a month — fold it away. The
+  // contextual signals the turn logic derived have to survive the demotion:
+  // botPing is the only one deriveLane owns (approval and reviewedNote already
+  // live on the record), and without it a stalled row loses its explanation of
+  // who it's actually waiting on.
   if (idleDays >= STALLED_AFTER_DAYS) {
     return {
       lane: 'stalled',
       ball: 'Stale',
       nextStep: `Idle ${Math.floor(idleDays)}d — decide: nudge or close`,
+      ...(turn.botPing ? { botPing: turn.botPing } : {}),
     };
   }
 
+  return turn;
+}
+
+/**
+ * The turn-based half of deriveLane: given a row that isn't a bot, an assigned
+ * issue, or approved, decides whether the ball is YOURS (action) or someone
+ * else's (waiting), and what the remaining step is. Split out so deriveLane can
+ * run it ahead of the staleness rule — see the precedence note there.
+ */
+function deriveTurn(record, me, botPingSignal = null) {
+  const { relationship, linkedCodePr } = record;
   const lastActor = String(record.lastActor || '').toLowerCase();
   const prAuthor = String(record.author || '').toLowerCase();
   const isMe = lastActor === me;
@@ -755,46 +783,58 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
 // Impact header numbers
 // ---------------------------------------------------------------------------
 
+/**
+ * Period boundaries are computed in UTC, not runner-local time. The same build
+ * runs on CI (UTC) and on a laptop (CEST, UTC+2), and a local-midnight boundary
+ * makes those two disagree about which period an item belongs to for the first
+ * hours of every month and quarter: a PR merged at 2026-07-01T00:30Z is "this
+ * month" on CI and "last month" locally, so the published numbers change
+ * depending on where the build ran. The stored timestamps are UTC ISO strings,
+ * so comparing them against UTC boundaries is the consistent reading.
+ */
 function quarterStart(date) {
-  const q = Math.floor(date.getMonth() / 3) * 3;
-  return new Date(date.getFullYear(), q, 1);
+  const q = Math.floor(date.getUTCMonth() / 3) * 3;
+  return new Date(Date.UTC(date.getUTCFullYear(), q, 1));
 }
 
 function monthStart(date) {
-  return new Date(date.getFullYear(), date.getMonth(), 1);
+  return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1));
 }
 
-/** Counts merged items across `lists` on or after `since`, plus the unique
- * non-bot authors among them. Only counts items that actually merged —
- * "shipped"/"helped ship" both claim the work landed, so a still-open or
- * closed-without-merging item doesn't qualify yet. */
+/** Counts merged items across `lists` on or after `since`. Only counts items
+ * that actually merged — "shipped"/"helped ship" both claim the work landed, so
+ * a still-open or closed-without-merging item doesn't qualify yet. */
 function tallyMerged(lists, since) {
-  const authors = new Set();
   let count = 0;
   for (const list of lists) {
     for (const item of list || []) {
       if (!item.mergedAt || (since && new Date(item.mergedAt) < since)) continue;
       count++;
-      const author =
-        item.author || (typeof item.user === 'object' ? item.user?.login : item.user) || null;
-      if (author && !isBotLogin(author)) authors.add(String(author).toLowerCase());
     }
   }
-  return { count, authors };
+  return count;
 }
 
 /**
  * Plain-language numbers for the impact header, computed from data the
  * pipeline already has. `contributions` is all-contributions.json.
  *
- * Two time scopes ship side by side: LIFETIME figures (`helpedShipCount`,
- * `contributorsHelped`) are what the Home page shows — the whole career
- * footprint. THIS-MONTH figures (the `*ThisMonth` fields) are what the
- * Workbench shows — resets on the 1st, because the Workbench's job is
- * "what's happening right now," not a running lifetime total. Reusing the
- * same numbers on both pages under the same label was the original bug this
- * split fixes: 52 projects (lifetime) and 9 projects (whatever the board
- * happened to have open) looked like the same metric measured twice.
+ * Two time scopes ship side by side: the LIFETIME figure (`helpedShipCount`)
+ * is what the Home page shows — the whole career footprint. THIS-MONTH figures
+ * (the `*ThisMonth` fields) are what the Workbench shows — resets on the 1st,
+ * because the Workbench's job is "what's happening right now," not a running
+ * lifetime total. Reusing the same numbers on both pages under the same label
+ * was the original bug this split fixes: 52 projects (lifetime) and 9 projects
+ * (whatever the board happened to have open) looked like the same metric
+ * measured twice.
+ *
+ * There is deliberately no "contributors helped" figure. It was counted from
+ * `item.author` / `item.user` on historical records, and no historical record
+ * carries either field — all-contributions.json stores title/url/repo/date/
+ * mergedAt and nothing about who wrote the thing — so the stat and its
+ * this-month twin were structurally pinned at 0 and every renderer fell through
+ * to its zero-fallback. Reviving it means teaching the fetch layer to record
+ * PR authors first; until then a count of contributions is the honest number.
  */
 function computeImpact(records, contributions = {}, now = new Date()) {
   const qStart = quarterStart(now);
@@ -813,15 +853,17 @@ function computeImpact(records, contributions = {}, now = new Date()) {
   const shippedThisQuarter = tallyMerged(
     [contributions.pullRequests, contributions.reviewedPrs, contributions.coAuthoredPrs],
     qStart
-  ).count;
+  );
 
-  // Both phrasings ("N contributors' work you're helping ship" / "N
-  // contributions you helped ship") claim the work actually shipped, so only
-  // merged items count — a reviewed/co-authored PR still open or closed
+  // "N contributions you helped ship" claims the work actually shipped, so
+  // only merged items count — a reviewed/co-authored PR still open or closed
   // without merging wasn't "helped ship" yet. Deliberately excludes your own
   // solo pullRequests — this tile is about work you helped OTHERS ship.
-  const lifetime = tallyMerged([contributions.reviewedPrs, contributions.coAuthoredPrs], null);
-  const thisMonth = tallyMerged([contributions.reviewedPrs, contributions.coAuthoredPrs], mStart);
+  const helpedShipCount = tallyMerged([contributions.reviewedPrs, contributions.coAuthoredPrs], null);
+  const helpedShipThisMonth = tallyMerged(
+    [contributions.reviewedPrs, contributions.coAuthoredPrs],
+    mStart
+  );
 
   // Projects/orgs touched THIS MONTH, across every contribution type — the
   // Workbench's answer to "how spread am I right now." Uses each record's
@@ -842,10 +884,8 @@ function computeImpact(records, contributions = {}, now = new Date()) {
     shippedThisQuarter,
     approvedLanding: records.filter((r) => r.lane === 'ready').length,
     needAction: records.filter((r) => r.lane === 'action').length,
-    contributorsHelped: lifetime.authors.size,
-    helpedShipCount: lifetime.count,
-    contributorsHelpedThisMonth: thisMonth.authors.size,
-    helpedShipThisMonth: thisMonth.count,
+    helpedShipCount,
+    helpedShipThisMonth,
     projectsThisMonth: reposThisMonth.size,
     organizationsThisMonth: orgsThisMonth.size,
   };

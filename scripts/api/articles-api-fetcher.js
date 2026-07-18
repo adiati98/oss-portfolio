@@ -28,6 +28,20 @@ function hostOf(url) {
   }
 }
 
+/**
+ * Case-, whitespace-, and padding-insensitive title key for dedup. The backstop
+ * for a cross-post that carries no canonical_url at all: without one the URL
+ * match can't fire, and the same article ships twice — once as a freeCodeCamp
+ * org piece, once as an own Dev.to post. Titles are what a human would match on
+ * there, and a same-titled pair across these two sources is the cross-post.
+ */
+function normalizeTitle(title) {
+  return String(title || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+
 /** Scheme-, www-, and trailing-slash-insensitive URL key for dedup/matching. */
 function normalizeUrl(url) {
   return String(url || '')
@@ -105,7 +119,10 @@ async function fetchDevTo() {
     while (hasMore) {
       console.log(`Fetching Dev.to page ${page}...`);
       const { data } = await axios.get(
-        `https://dev.to/api/articles?username=${BLOG.devToUser}&page=${page}&per_page=100`
+        `https://dev.to/api/articles?username=${BLOG.devToUser}&page=${page}&per_page=100`,
+        // Without a timeout a hung Dev.to connection stalls the whole build
+        // indefinitely — axios defaults to no timeout at all.
+        { timeout: 15000 }
       );
 
       if (!data || data.length === 0) {
@@ -151,13 +168,18 @@ async function fetchStrictOssArticles() {
     canonical: a.link || null,
   }));
 
-  // 3. Drop Dev.to copies of a manual freeCodeCamp article (matched on
-  // canonical, scheme/www/trailing-slash-insensitively) so it can't appear both
-  // as an org article and as an own article.
+  // 3. Drop Dev.to copies of a manual freeCodeCamp article so it can't appear
+  // both as an org article and as an own article. Matched on canonical first
+  // (scheme/www/trailing-slash-insensitively), then on normalized title — a
+  // cross-post published without a canonical_url set is invisible to the URL
+  // match, and used to slip through as a duplicate.
   const fccCanonicals = new Set(fccArticles.map((a) => normalizeUrl(a.canonical)));
-  const devToDeduped = devToFiltered.filter(
-    (a) => !(a.canonical && fccCanonicals.has(normalizeUrl(a.canonical)))
-  );
+  const fccTitles = new Set(fccArticles.map((a) => normalizeTitle(a.title)).filter(Boolean));
+  const devToDeduped = devToFiltered.filter((a) => {
+    if (a.canonical && fccCanonicals.has(normalizeUrl(a.canonical))) return false;
+    const title = normalizeTitle(a.title);
+    return !(title && fccTitles.has(title));
+  });
   const droppedCrossPosts = devToFiltered.length - devToDeduped.length;
   if (droppedCrossPosts > 0) {
     console.log(`Dropped ${droppedCrossPosts} Dev.to cross-post(s) of manual freeCodeCamp entries.`);

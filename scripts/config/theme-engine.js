@@ -8,10 +8,13 @@
  *   surfaces   light: user override or a 2% brand-biased off-white.
  *              dark:  same hue family, lightness 8/12/14 (page/card/card-2).
  *   inks       light: user override or brand-biased near-black, plus two
- *              muted steps. dark: derived from the dark card via
- *              ensureReadableOn so any hue stays readable.
- *   per seed   text  — the seed itself (light) / ensureReadableOn(seed,
- *                      darkCard, 4.5) (dark)
+ *              muted steps. dark: derived via ensureReadableOnAll against
+ *              every ground it can land on so any hue stays readable.
+ *   per seed   text  — derived against BOTH the card and card-2 of its theme
+ *                      (ensureReadableDarkOn light / ensureReadableOnAll
+ *                      dark, 4.5). Text lands on card-2 too — raised rows,
+ *                      hovered chips — and in dark mode card-2 is the
+ *                      lightest ground, so it is the binding constraint.
  *              wash  — seed mixed into the card at low opacity; the mix
  *                      ratio is *searched* until the seed text clears 4.5:1
  *                      on top of it. Every pill/badge consumer in this repo
@@ -27,13 +30,7 @@
  * name and a concrete suggestion, so `npm run build` fails loudly instead
  * of shipping unreadable pills.
  */
-const {
-  hexToHsl,
-  hslToHex,
-  hexToRgb,
-  getContrastRatio,
-  ensureReadableOn,
-} = require('../utils/color-helpers');
+const { hexToHsl, hslToHex, hexToRgb, getContrastRatio } = require('../utils/color-helpers');
 const SEEDS = require('./theme');
 
 const REQUIRED_SEEDS = ['brand', 'positive', 'caution', 'critical', 'neutral'];
@@ -164,9 +161,15 @@ function deriveTheme(seeds = SEEDS) {
   const dSurface = hslToHex(brandHsl.h, Math.min(brandHsl.s, 28), 9);
   const dCard = hslToHex(brandHsl.h, Math.min(brandHsl.s, 26), 13);
   const dCard2 = hslToHex(brandHsl.h, Math.min(brandHsl.s, 24), 16);
-  const dInk = ensureReadableOn(hslToHex(brandHsl.h, 25, 88), dCard, 7);
-  const dInk2 = ensureReadableOn(hslToHex(neutralHsl.h, neutralHsl.s, 68), dCard, 4.5);
-  const dInk3 = ensureReadableOnAll(mixHex(dInk2, dCard, 0.7), [dCard, dSurface], 4.5);
+  // Every dark text step is derived against card-2 as well as the card. card-2
+  // is the LIGHTEST dark ground (lightness 16 vs the card's 13), so it is the
+  // hardest background in this theme — and it is a real text surface: chips and
+  // rows raise to it on hover. Deriving against the card alone left tokens that
+  // passed on their nominal background and failed the moment a row lifted.
+  const dGrounds = [dCard, dCard2];
+  const dInk = ensureReadableOnAll(hslToHex(brandHsl.h, 25, 88), dGrounds, 7);
+  const dInk2 = ensureReadableOnAll(hslToHex(neutralHsl.h, neutralHsl.s, 68), dGrounds, 4.5);
+  const dInk3 = ensureReadableOnAll(mixHex(dInk2, dCard, 0.7), [...dGrounds, dSurface], 4.5);
   const dLine = mixHex(seeds.neutral, dSurface, 0.28);
   const dLine2 = mixHex(seeds.neutral, dSurface, 0.42);
 
@@ -175,10 +178,13 @@ function deriveTheme(seeds = SEEDS) {
   const familyOf = { brand: seeds.brand, accent, ...pickSeeds(seeds) };
   for (const [name, hex] of Object.entries(familyOf)) {
     // Text steps are derived readable in BOTH directions: darkened until AA
-    // on the light card, lightened until AA on the dark card. The seed itself
-    // stays untouched for fills; only its text step shifts.
-    const text = ensureReadableDarkOn(hex, card, 4.5);
-    const textDark = ensureReadableOn(hex, dCard, 4.5);
+    // on the light grounds, lightened until AA on the dark ones. Each side is
+    // gated against its card AND its card-2 — a semantic pill sits on both (a
+    // chip on a card, the same chip on a hover-raised row), and card-2 is the
+    // harder of the pair in dark mode. The seed itself stays untouched for
+    // fills; only its text step shifts.
+    const text = ensureReadableDarkOn(hex, [card, card2], 4.5);
+    const textDark = ensureReadableOnAll(hex, dGrounds, 4.5);
     semantic[name] = {
       light: {
         text,
@@ -260,13 +266,22 @@ function runWcagGate(theme) {
 
   for (const mode of ['light', 'dark']) {
     const g = theme[mode];
+    // card-2 is checked alongside card for every text token. It is a genuine
+    // text ground — raised rows, hovered chips, inset panels all render on it —
+    // and in dark mode it is the LIGHTEST ground, so it is where text fails
+    // first. Gating only against card let --t-brand (4.31:1) and --t-critical
+    // (4.43:1) ship as sub-AA on a hover state nobody was measuring.
     check(`${mode} ink/card`, g.ink, g.card, 4.5);
+    check(`${mode} ink/card-2`, g.ink, g.card2, 4.5);
     check(`${mode} ink2/card`, g.ink2, g.card, 4.5);
+    check(`${mode} ink2/card-2`, g.ink2, g.card2, 4.5);
     check(`${mode} ink3/card`, g.ink3, g.card, 4.5);
+    check(`${mode} ink3/card-2`, g.ink3, g.card2, 4.5);
     check(`${mode} ink3/surface`, g.ink3, g.surface, 4.5);
     for (const [name, ladder] of Object.entries(theme.semantic)) {
       const l = ladder[mode];
       check(`${mode} ${name} text/card`, l.text, g.card, 4.5);
+      check(`${mode} ${name} text/card-2`, l.text, g.card2, 4.5);
       check(`${mode} ${name} text/wash (pill)`, l.text, l.wash, 4.5);
     }
     const brandFill = mode === 'light' ? theme.seeds.brand : theme.semantic.brand[mode].text;

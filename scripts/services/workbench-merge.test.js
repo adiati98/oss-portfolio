@@ -168,10 +168,19 @@ run(
   }
 );
 
-// 7. 31 days idle, not approved → stalled with decision hint
+// 7. 31 days idle, not approved, and WAITING ON SOMEONE ELSE → stalled with a
+// decision hint. The last-actor is you: you've said your piece and nobody has
+// come back, which is what "stale" is supposed to mean.
+//
+// This fixture used to use `lastActor: 'other'` — a human replying on your own
+// PR — and assert that it stalled. That is the case the turn rule now rejects:
+// a reply you haven't answered is YOUR move, so it belongs in the action lane
+// however old it is (see TA3). Staleness needs a row where the ball genuinely
+// sits with someone else, so the fixture moves the ball rather than dropping
+// the check.
 run(
-  '31d idle → stalled',
-  { prs: [local({ number: 31, updatedAt: daysAgo(31), lastSubstantiveDate: daysAgo(31), lastActor: 'other', author: ME })] },
+  '31d idle, waiting on others → stalled',
+  { prs: [local({ number: 31, updatedAt: daysAgo(31), lastSubstantiveDate: daysAgo(31), lastActor: ME, author: ME })] },
   ({ records }) => {
     assert.equal(records[0].lane, 'stalled');
     assert.equal(records[0].ball, 'Stale');
@@ -299,12 +308,14 @@ run(
         { date: daysAgo(5), mergedAt: daysAgo(5) },
         { date: '2024-01-01', mergedAt: '2024-01-01' },
       ],
+      // Shaped like the real all-contributions.json records: no author/user
+      // field, because the historical fetch layer never records one.
       reviewedPrs: [
-        { author: 'alice', mergedAt: daysAgo(1) },
-        { author: 'bob', mergedAt: daysAgo(1) },
-        { author: 'dependabot[bot]', mergedAt: daysAgo(1) },
+        { mergedAt: daysAgo(1) },
+        { mergedAt: daysAgo(1) },
+        { mergedAt: daysAgo(1) },
       ],
-      coAuthoredPrs: [{ author: 'alice', date: daysAgo(2), mergedAt: daysAgo(1) }],
+      coAuthoredPrs: [{ date: daysAgo(2), mergedAt: daysAgo(1) }],
     },
     NOW
   );
@@ -313,39 +324,51 @@ run(
   // (own/reviewed/co-authored), unlike helpedShipCount below which is
   // deliberately reviewed/co-authored only.
   assert.equal(impact.shippedThisQuarter, 5);
-  assert.equal(impact.contributorsHelped, 2); // alice + bob, bot excluded
-  assert.equal(impact.helpedShipCount, 4); // all 4 merged items, bot included
+  assert.equal(impact.helpedShipCount, 4); // all 4 merged items
   // Every item above merged within the last 2 days, so the this-month
-  // figures (what the Workbench shows) match the lifetime ones here.
-  assert.equal(impact.contributorsHelpedThisMonth, 2);
+  // figure (what the Workbench shows) matches the lifetime one here.
   assert.equal(impact.helpedShipThisMonth, 4);
   assert.equal(impact.approvedLanding, 1);
   assert.equal(impact.needAction, 1);
   console.log('  ok  impact numbers');
 }
 
+// 13a. No "contributors helped" figure is emitted. It was derived from
+// `item.author` / `item.user`, which no historical record carries, so it was
+// structurally pinned at 0 — a stat that could only ever report zero is worse
+// than no stat. Asserting its ABSENCE keeps it from being reintroduced without
+// the fetch-layer change that would make it real.
+{
+  const impact = computeImpact([], { reviewedPrs: [{ mergedAt: daysAgo(1) }] }, NOW);
+  assert.ok(
+    !('contributorsHelped' in impact),
+    'contributorsHelped must not be emitted — no record carries an author'
+  );
+  assert.ok(!('contributorsHelpedThisMonth' in impact), 'nor its this-month twin');
+  console.log('  ok  no structurally-zero contributorsHelped stat');
+}
+
 // 13b. Reviewed/co-authored PRs that never merged don't count as "helped
-// ship" — regression: helpedShipCount and contributorsHelped used to count
-// every reviewed/co-authored PR regardless of outcome, so a PR still open
-// or closed without merging was claimed as shipped work.
+// ship" — regression: helpedShipCount used to count every reviewed/co-authored
+// PR regardless of outcome, so a PR still open or closed without merging was
+// claimed as shipped work.
 {
   const impact = computeImpact(
     [],
     {
       reviewedPrs: [
-        { author: 'alice', mergedAt: daysAgo(1) }, // merged → counts
-        { author: 'carol', mergedAt: null, state: 'open' }, // still open
-        { author: 'dave', mergedAt: null, state: 'closed' }, // closed, never merged
+        { mergedAt: daysAgo(1) }, // merged → counts
+        { mergedAt: null, state: 'open' }, // still open
+        { mergedAt: null, state: 'closed' }, // closed, never merged
       ],
       coAuthoredPrs: [
-        { author: 'alice', mergedAt: daysAgo(1) }, // merged → counts
-        { author: 'erin', mergedAt: null, state: 'open' },
+        { mergedAt: daysAgo(1) }, // merged → counts
+        { mergedAt: null, state: 'open' },
       ],
     },
     NOW
   );
   assert.equal(impact.helpedShipCount, 2, `expected only the 2 merged items, got ${impact.helpedShipCount}`);
-  assert.equal(impact.contributorsHelped, 1, 'only alice merged; carol/dave/erin never shipped');
   console.log('  ok  unmerged reviewed/co-authored PRs excluded from "helped ship"');
 }
 
@@ -359,17 +382,14 @@ run(
     {
       pullRequests: [{ repo: 'solo/repo', date: daysAgo(2) }], // authored, this month; doesn't count toward "helped ship"
       reviewedPrs: [
-        { author: 'alice', repo: 'reviewed/this-month', date: daysAgo(2), mergedAt: daysAgo(2) },
-        { author: 'bob', repo: 'reviewed/last-month', date: '2026-05-15T00:00:00Z', mergedAt: '2026-05-15T00:00:00Z' },
+        { repo: 'reviewed/this-month', date: daysAgo(2), mergedAt: daysAgo(2) },
+        { repo: 'reviewed/last-month', date: '2026-05-15T00:00:00Z', mergedAt: '2026-05-15T00:00:00Z' },
       ],
-      coAuthoredPrs: [
-        { author: 'alice', repo: 'reviewed/this-month', date: daysAgo(3), mergedAt: daysAgo(1) },
-      ],
+      coAuthoredPrs: [{ repo: 'reviewed/this-month', date: daysAgo(3), mergedAt: daysAgo(1) }],
     },
     NOW
   );
-  assert.equal(impact.helpedShipThisMonth, 2, "bob's May merge must not count in July");
-  assert.equal(impact.contributorsHelpedThisMonth, 1, 'only alice shipped this month');
+  assert.equal(impact.helpedShipThisMonth, 2, "the May merge must not count in July");
   assert.equal(
     impact.projectsThisMonth,
     2,
@@ -813,8 +833,8 @@ run(
     [],
     {
       reviewedPrs: [
-        { author: 'alice', mergedAt: daysAgo(1) }, // this month
-        { author: 'bob', mergedAt: '2026-04-02T00:00:00Z' }, // April, prior month
+        { mergedAt: daysAgo(1) }, // this month
+        { mergedAt: '2026-04-02T00:00:00Z' }, // April, prior month
       ],
       coAuthoredPrs: [],
     },
@@ -842,6 +862,244 @@ run(
     }
   }
 );
+
+// ===========================================================================
+// Turn beats age — a row whose ball is YOURS never folds into Stalled.
+// Regression: the idleDays >= 30 check ran before the turn logic, so live work
+// aged into a folded lane reading "nudge or close". Only assigned issues were
+// carved out; every path below reaches the action lane and must survive age.
+// ===========================================================================
+
+// TA1. Reviewing, the author replied — 40 days ago. Still your review to do.
+run(
+  'TA1 · reviewing, author replied, idle 40d → action, not stalled',
+  {
+    tasks: [
+      local({
+        number: 5001,
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        lastActor: 'writer1',
+        author: 'writer1',
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].ball, 'Take Action');
+    // Age is not lost — it escalates inside the row instead of demoting it.
+    assert.ok(/40d/.test(records[0].nextStep), records[0].nextStep);
+    assert.ok(/escalate/i.test(records[0].nextStep), records[0].nextStep);
+  }
+);
+
+// TA2. A LIVE review request aimed at you, unanswered for 45 days. The oldest
+// ping is the most urgent, not the most stale.
+run(
+  'TA2 · live review request of me, idle 45d → action, not stalled',
+  {
+    tasks: [
+      local({
+        number: 5002,
+        updatedAt: daysAgo(45),
+        lastSubstantiveDate: daysAgo(45),
+        lastActor: 'other',
+        author: 'someone-else',
+      }),
+    ],
+    tracker: {
+      'x/y#5002': {
+        docsUpdatedAt: daysAgo(45),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+        rawReviewRequests: [
+          { requested_reviewer: { login: ME }, actor: { login: 'maint' }, created_at: daysAgo(45) },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.ok(records[0].reviewRequest, 'the review request must survive on the record');
+    assert.ok(/45d/.test(records[0].nextStep), records[0].nextStep);
+  }
+);
+
+// TA3. Your own PR carrying maintainer feedback from two months ago. Overdue,
+// not dead — the next step is still yours to take.
+run(
+  'TA3 · authored PR with maintainer feedback, idle 60d → action, not stalled',
+  {
+    prs: [
+      local({
+        number: 5003,
+        updatedAt: daysAgo(60),
+        lastSubstantiveDate: daysAgo(60),
+        lastActor: 'maintainer1',
+        author: ME,
+        hasFormalReview: true,
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.ok(/review feedback/i.test(records[0].nextStep), records[0].nextStep);
+    assert.ok(records[0].idleDays >= 30, 'the row is genuinely old — it just is not stale');
+  }
+);
+
+// TA4. An allow-listed bot pinged YOU. Its own push is not "someone else's
+// turn", so age must not fold it away either.
+run(
+  'TA4 · allow-listed bot pinged me, idle 50d → action, not stalled',
+  {
+    tasks: [
+      local({
+        number: 5004,
+        updatedAt: daysAgo(50),
+        lastSubstantiveDate: daysAgo(50),
+        lastActor: 'promptless-app[bot]',
+        author: 'promptless-app[bot]',
+      }),
+    ],
+    tracker: {
+      'x/y#5004': {
+        docsUpdatedAt: daysAgo(50),
+        rawDocsReviews: [],
+        rawDocsComments: [
+          {
+            user: { login: 'promptless-app[bot]' },
+            created_at: daysAgo(50),
+            body: `Thanks @${ME}, addressed your comments!`,
+          },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].botPing, null, 'a ping AT me is my turn, not a "waiting on" note');
+  }
+);
+
+// TA5. The counter-case: waiting on someone else and untouched for 35 days
+// still folds. The staleness rule is narrowed, not removed.
+run(
+  'TA5 · waiting on others, idle 35d → still stalled',
+  {
+    prs: [
+      local({
+        number: 5005,
+        updatedAt: daysAgo(35),
+        lastSubstantiveDate: daysAgo(35),
+        lastActor: ME,
+        author: ME,
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'stalled');
+    assert.equal(records[0].ball, 'Stale');
+    assert.ok(/nudge or close/.test(records[0].nextStep), records[0].nextStep);
+  }
+);
+
+// TA6. Contextual fields survive the demotion. A stalled row that a bot pinged
+// SOMEONE ELSE on still has to be able to say who it's waiting on.
+run(
+  'TA6 · botPing survives a stalled demotion',
+  {
+    tasks: [
+      local({
+        number: 5006,
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        lastActor: 'promptless-app[bot]',
+        author: 'promptless-app[bot]',
+      }),
+    ],
+    tracker: {
+      'x/y#5006': {
+        docsUpdatedAt: daysAgo(40),
+        rawDocsReviews: [],
+        rawDocsComments: [
+          {
+            user: { login: 'promptless-app[bot]' },
+            created_at: daysAgo(40),
+            body: 'Hi @maintainer1, this is ready for your review',
+          },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'stalled', 'pinged at others → their turn → stalls with age');
+    assert.ok(records[0].botPing, 'botPing must survive the demotion');
+    assert.equal(records[0].botPing.of, 'maintainer1');
+    assert.equal(records[0].botPing.by, 'promptless-app[bot]');
+  }
+);
+
+// TA7. reviewedNote and approval are record-level fields, so a demotion can
+// never strip them either.
+run(
+  'TA7 · reviewedNote survives a stalled demotion',
+  {
+    prs: [
+      local({
+        number: 5007,
+        updatedAt: daysAgo(38),
+        lastSubstantiveDate: daysAgo(38),
+        lastActor: ME,
+        author: ME,
+      }),
+    ],
+    tracker: {
+      'x/y#5007': {
+        docsUpdatedAt: daysAgo(38),
+        rawDocsReviews: [
+          { state: 'CHANGES_REQUESTED', user: { login: 'reviewer9' }, submitted_at: daysAgo(38) },
+        ],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'stalled');
+    assert.ok(records[0].reviewedNote, 'reviewedNote must survive the demotion');
+    assert.equal(records[0].reviewedNote.by, 'reviewer9');
+  }
+);
+
+// ===========================================================================
+// UTC period boundaries
+// ===========================================================================
+
+// UTC1. Month and quarter boundaries are UTC instants, so the same data yields
+// the same numbers on a UTC CI runner and on a UTC+2 laptop. Pinned to the
+// sharpest instant available: 30 minutes into 2026-07-01, which starts both a
+// month and a quarter. Under runner-local boundaries the June 30 23:00Z merge
+// lands inside "this month" for any timezone east of UTC, silently inflating
+// the Workbench's figures for the first hours of every period.
+{
+  const boundaryNow = new Date('2026-07-01T00:30:00Z');
+  const impact = computeImpact(
+    [],
+    {
+      pullRequests: [{ date: '2026-06-30T23:00:00Z', mergedAt: '2026-06-30T23:00:00Z' }],
+      reviewedPrs: [
+        { repo: 'a/june', date: '2026-06-30T23:00:00Z', mergedAt: '2026-06-30T23:00:00Z' },
+        { repo: 'a/july', date: '2026-07-01T00:10:00Z', mergedAt: '2026-07-01T00:10:00Z' },
+      ],
+      coAuthoredPrs: [],
+    },
+    boundaryNow
+  );
+  assert.equal(impact.helpedShipThisMonth, 1, 'only the 00:10Z July merge is in July (UTC)');
+  assert.equal(impact.shippedThisQuarter, 1, 'the 23:00Z June merge belongs to Q2, not Q3');
+  assert.equal(impact.projectsThisMonth, 1, 'a/july only');
+  console.log('  ok  UTC1 · month/quarter boundaries are UTC, not runner-local');
+}
 
 if (process.exitCode) {
   console.error('\nfixture run FAILED');
