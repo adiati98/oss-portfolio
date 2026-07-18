@@ -566,6 +566,198 @@ run(
 );
 
 // ===========================================================================
+// Review-request liveness (§ A) — rawReviewRequests persist after fulfillment,
+// so a request is live ONLY when I haven't already answered it.
+// ===========================================================================
+
+// A1. A request I already answered (my review after it) must NOT resurface,
+// even when a third party comments later. It stays out of the action lane.
+run(
+  'fulfilled review request + later third-party comment → not action',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/human-docs',
+        number: 60,
+        lastActor: 'thirdparty',
+        author: 'writerX',
+        status: 'Review in progress',
+      }),
+    ],
+    tracker: {
+      'someorg/human-docs#60': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [{ user: { login: 'adiati98' }, state: 'COMMENTED', submitted_at: daysAgo(4) }],
+        rawDocsComments: [{ user: { login: 'thirdparty' }, created_at: daysAgo(2), body: 'looks good to me' }],
+        rawReviewRequests: [
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(5), requested_reviewer: { login: 'adiati98' }, requested_team: null },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/human-docs#60');
+    assert.equal(r.reviewRequest, null, 'a request I already answered is not live');
+    assert.notEqual(r.lane, 'action');
+    assert.equal(r.lane, 'waiting');
+  }
+);
+
+// A2. A genuinely unanswered request (no review/comment of mine after it, only a
+// third party spoke) is still live → action.
+run(
+  'unanswered review request (only others spoke after) → action, still live',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/human-docs',
+        number: 61,
+        lastActor: 'maintainerX',
+        author: 'writerX',
+        status: 'Review in progress',
+      }),
+    ],
+    tracker: {
+      'someorg/human-docs#61': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [{ user: { login: 'writerX' }, created_at: daysAgo(2), body: 'friendly ping' }],
+        rawReviewRequests: [
+          { actor: { login: 'maintainerX' }, created_at: daysAgo(3), requested_reviewer: { login: 'adiati98' }, requested_team: null },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/human-docs#61');
+    assert.ok(r.reviewRequest && r.reviewRequest.of === 'adiati98', 'unanswered request stays live');
+    assert.equal(r.lane, 'action');
+  }
+);
+
+// ===========================================================================
+// Promptless ping routing (§ B) — an allow-listed bot that authored a row and
+// pushed last routes by who it pinged, never the human "author replied" step.
+// ===========================================================================
+
+const AUTHOR_REPLIED = 'Author replied — review the latest changes';
+
+// B1. Bot's latest comment @-mentions me → my turn: action, no chip, no botPing,
+// and never the forbidden "author replied" step.
+run(
+  'Promptless last actor @-mentions me → action (no chip)',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 900,
+        user: { login: 'promptless-for-oss' },
+        author: 'promptless-for-oss',
+        lastActor: 'promptless-for-oss',
+        status: 'Review in progress',
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#900': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [
+          { user: { login: 'promptless-for-oss' }, created_at: daysAgo(3), body: '@favour-chibueze ptal' },
+          { user: { login: 'promptless-for-oss' }, created_at: daysAgo(1), body: 'Thanks @adiati98! Addressed all three points.' },
+        ],
+        rawReviewRequests: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#900');
+    assert.notEqual(r.lane, 'bot');
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, null, 'no chip — the lane already says it is my turn');
+    assert.ok(!r.botPing, 'no botPing when the bot pinged me');
+    assert.notEqual(r.nextStep, AUTHOR_REPLIED);
+  }
+);
+
+// B1b. Bot pinged me via a live review request (its latest comment names nobody)
+// → still my turn: action, no chip, no botPing. Mirrors real #592.
+run(
+  'Promptless last actor with live review request aimed at me → action',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/developer-documentation-new',
+        number: 592,
+        user: { login: 'promptless-for-oss' },
+        author: 'promptless-for-oss',
+        lastActor: 'promptless-for-oss',
+        status: 'Request review',
+      }),
+    ],
+    tracker: {
+      'mautic/developer-documentation-new#592': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+        rawReviewRequests: [
+          { actor: { login: 'promptless-for-oss' }, created_at: daysAgo(1), requested_reviewer: { login: 'adiati98' }, requested_team: null },
+          { actor: { login: 'promptless-for-oss' }, created_at: daysAgo(1), requested_reviewer: { login: 'favour-chibueze' }, requested_team: null },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/developer-documentation-new#592');
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, null);
+    assert.ok(!r.botPing, 'pinged me too → my turn, not a "pinged others" row');
+  }
+);
+
+// B2. Bot pings ONLY someone else (its latest comment @-mentions another human,
+// no request/mention aimed at me) → their turn: waiting + botPing { by, of }.
+run(
+  'Promptless last actor pings only others → waiting + botPing',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 901,
+        user: { login: 'promptless-for-oss' },
+        author: 'promptless-for-oss',
+        lastActor: 'promptless-for-oss',
+        status: 'Review in progress',
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#901': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [
+          { user: { login: 'promptless-for-oss' }, created_at: daysAgo(1), body: 'Thanks @favour-chibueze! Addressed your comments.' },
+        ],
+        rawReviewRequests: [
+          { actor: { login: 'promptless-for-oss' }, created_at: daysAgo(1), requested_reviewer: { login: 'favour-chibueze' }, requested_team: null },
+        ],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#901');
+    assert.notEqual(r.lane, 'action');
+    assert.equal(r.lane, 'waiting');
+    assert.ok(
+      r.botPing && r.botPing.by === 'promptless-for-oss' && r.botPing.of === 'favour-chibueze',
+      `botPing was ${JSON.stringify(r.botPing)}`
+    );
+    assert.equal(r.reviewRequest, null, 'no live request aimed at me');
+    assert.notEqual(r.nextStep, AUTHOR_REPLIED);
+  }
+);
+
+// ===========================================================================
 // Standing-rule regressions — the new signals must not disturb these.
 // ===========================================================================
 

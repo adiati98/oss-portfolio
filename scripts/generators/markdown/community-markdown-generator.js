@@ -4,6 +4,19 @@ const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
 const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
 const { WORKBENCH_BALL_STATUS } = require('../../config/constants');
 const { isAllowedBotLogin, isBotLogin } = require('../../utils/bot-helpers');
+const { extractLinkedCodePr } = require('../../services/workbench-merge');
+
+/**
+ * A docs PR's body pointing at its code PR, rendered as a full-URL markdown
+ * link (mirrors the 🔗 code PR chip on workbench.html).
+ */
+function linkedCodePrMarkdown(task) {
+  const ref = extractLinkedCodePr(task.body, task.repo);
+  if (!ref) return '';
+  const match = ref.match(/^([\w.-]+\/[\w.-]+)#(\d+)$/);
+  if (!match) return '';
+  return ` · 🔗 code PR [${ref}](https://github.com/${match[1]}/pull/${match[2]})`;
+}
 
 /**
  * Maps ball status to GitHub-friendly indicators (using Shields.io for consistency).
@@ -222,14 +235,15 @@ async function createWorkbenchMarkdown(
         .forEach((task) => {
           const repoName = task.repo.split('/')[1] || task.repo;
           const extraBadge = getStatusBadge(task);
+          const linkedCodePr = linkedCodePrMarkdown(task);
 
           if (hasStatus) {
             const ballData = getBallTrackingBadge(task, type);
             const statusCell = ballData ? `${ballData.badge}${ballData.child}` : `—`;
             const lastInteractionCell = ballData?.lastActorDisplay || '';
-            section += `| ${statusCell} | ${lastInteractionCell} | **${repoName}**${extraBadge} | [${task.title}](${task.url}) |\n`;
+            section += `| ${statusCell} | ${lastInteractionCell} | **${repoName}**${extraBadge} | [${task.title}](${task.url})${linkedCodePr} |\n`;
           } else {
-            section += `| **${repoName}**${extraBadge} | [${task.title}](${task.url}) |\n`;
+            section += `| **${repoName}**${extraBadge} | [${task.title}](${task.url})${linkedCodePr} |\n`;
           }
         });
     }

@@ -3,9 +3,10 @@
  *
  * No proficiency bars or self-graded levels — the portfolio's own pages are
  * the evidence. `craft` entries are the named competency areas (display
- * type); `tools` render as a flat chip row; entries listed in `highlight`
- * get the accented chip style (keep it to the two or three most
- * identity-defining tools).
+ * type); `tools` and `skills` each render as their own flat chip row (only
+ * when non-empty); entries listed in `highlight` get the accented chip
+ * style in either row (keep it to the two or three most identity-defining
+ * items).
  */
 module.exports = {
   craft: [
@@ -24,6 +25,7 @@ module.exports = {
         'Leading documentation teams and programs across Mautic, Virtual Coffee, and Open Source Communities.',
     },
   ],
-  tools: ['Git', 'GitHub', 'Docusaurus', 'Sphinx', 'Markdown', 'MDX', 'RST', 'JavaScript', 'React'],
+  tools: ['Git', 'GitHub', 'Docusaurus', 'Sphinx', 'Markdown', 'MDX', 'RST'],
+  skills: ['JavaScript', 'React'],
   highlight: ['Git', 'GitHub'],
 };

@@ -291,11 +291,20 @@ function deriveApproval(local, upstream) {
 }
 
 /**
- * A formal review request aimed at YOU (the workbench owner) — the tracker's
- * rawReviewRequests, filtered to `requested_reviewer === me`. Team requests
- * and requests aimed at other reviewers are ignored: this is the "you've been
- * pinged to review" signal, the review-side equivalent of an @-mention.
- * Returns the most recent such request, or null.
+ * A LIVE formal review request aimed at YOU (the workbench owner) — the
+ * tracker's rawReviewRequests, filtered to `requested_reviewer === me`. Team
+ * requests and requests aimed at other reviewers are ignored: this is the
+ * "you've been pinged to review" signal, the review-side equivalent of an
+ * @-mention. Returns the most recent such LIVE request, or null.
+ *
+ * Liveness is the crux. rawReviewRequests are historical GitHub timeline events
+ * that PERSIST after the request is fulfilled: GitHub clears the live
+ * `requested_reviewers` the instant you review, but the upstream tracker caches
+ * the `review_requested` issue event for good — which is exactly why we can see
+ * it at all. So a request counts as live ONLY when you have not already answered
+ * it: no review (rawDocsReviews) or comment (rawDocsComments) of yours is dated
+ * after the request was made. A later comment by someone ELSE does not revive a
+ * request you already handled — only your own activity fulfills it.
  */
 function deriveReviewRequest(upstream, me) {
   if (!upstream || !Array.isArray(upstream.rawReviewRequests)) return null;
@@ -307,6 +316,23 @@ function deriveReviewRequest(upstream, me) {
   const latest = mine.reduce((a, b) =>
     new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
   );
+
+  // Fulfilled? A review or comment of MINE dated after the request was made.
+  const requestedAt = new Date(latest.created_at || 0);
+  const answeredByMe = (arr, dateField) =>
+    (Array.isArray(arr) ? arr : []).some(
+      (x) =>
+        x &&
+        String(x.user?.login || '').toLowerCase() === me &&
+        new Date(x[dateField] || 0) > requestedAt
+    );
+  if (
+    answeredByMe(upstream.rawDocsReviews, 'submitted_at') ||
+    answeredByMe(upstream.rawDocsComments, 'created_at')
+  ) {
+    return null;
+  }
+
   return {
     of: latest.requested_reviewer.login || null,
     by: latest.actor?.login || null,
@@ -337,6 +363,74 @@ function deriveReviewedNote(upstream, approval, me) {
   return latest.user?.login ? { by: latest.user.login } : null;
 }
 
+/** Logins @-mentioned in a comment body, in their original case. Loose match
+ * on GitHub's handle charset — enough to tell "pinged me" from "pinged someone
+ * else". */
+function extractMentions(body) {
+  if (!body || typeof body !== 'string') return [];
+  return [...body.matchAll(/@([a-z\d](?:[a-z\d-]{0,37}[a-z\d])?)/gi)].map((m) => m[1]);
+}
+
+/**
+ * Ping routing for a record an allow-listed bot (Promptless) authored AND is
+ * the last actor on. Its "reply" is an automated push, so the board must route
+ * by WHO the bot pinged — never the generic human "author replied — review the
+ * latest changes" step. Returns null when this isn't a bot-last-actor case;
+ * otherwise `{ mentionsMe, of }`:
+ *
+ *   - mentionsMe  the bot's most recent docs comment @-mentions you (a
+ *                 "Thanks @you, addressed…" reply). The caller ALSO treats a
+ *                 live review request aimed at you (deriveReviewRequest) as a
+ *                 ping to you.
+ *   - of          the other login the bot pinged (original case), or null —
+ *                 an @-mention of someone else in its latest comment, else a
+ *                 review request aimed at someone other than you.
+ *
+ * A ping to you is your turn (the caller routes it to the action lane); a ping
+ * aimed only at others is their turn, surfaced to the renderer as botPing.
+ */
+function deriveBotPing(upstream, local, me) {
+  const author = String(local?.author || '').toLowerCase();
+  const lastActor = String(
+    local?.lastActor ||
+      (typeof local?.user === 'object' ? local?.user?.login : local?.user) ||
+      ''
+  ).toLowerCase();
+  if (!author || !isAllowedBotLogin(author) || lastActor !== author) return null;
+
+  // The bot's most recent docs comment — where a "Thanks @you…" ping lives.
+  const botComments = (Array.isArray(upstream?.rawDocsComments) ? upstream.rawDocsComments : []).filter(
+    (c) => c && String(c.user?.login || '').toLowerCase() === author
+  );
+  const latestComment = botComments.length
+    ? botComments.reduce((a, b) =>
+        new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
+      )
+    : null;
+  const mentions = latestComment ? extractMentions(latestComment.body) : [];
+  const mentionsMe = mentions.some((m) => m.toLowerCase() === me);
+
+  // Who else did it ping? Prefer an @-mention of another human in the latest
+  // comment; fall back to a review request aimed at someone other than you.
+  let of = mentions.find((m) => m.toLowerCase() !== me && m.toLowerCase() !== author) || null;
+  if (!of && Array.isArray(upstream?.rawReviewRequests)) {
+    const others = upstream.rawReviewRequests.filter(
+      (r) =>
+        r &&
+        r.requested_reviewer &&
+        String(r.requested_reviewer.login || '').toLowerCase() !== me
+    );
+    if (others.length) {
+      const latestReq = others.reduce((a, b) =>
+        new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
+      );
+      of = latestReq.requested_reviewer.login || null;
+    }
+  }
+
+  return { mentionsMe, of };
+}
+
 // ---------------------------------------------------------------------------
 // Lane + next-step derivation (the tracker's model, generalized)
 // ---------------------------------------------------------------------------
@@ -360,7 +454,7 @@ function idleHint(idleDays) {
  * of staleness here; it's evidence of backlog, so it's carried as urgency
  * inside the row instead.
  */
-function deriveLane(record, me) {
+function deriveLane(record, me, botPingSignal = null) {
   const { relationship, approval, idleDays, linkedCodePr, upstream } = record;
 
   if (record.isBot) {
@@ -431,6 +525,28 @@ function deriveLane(record, me) {
   const actorIsBot = !isAllowedBotLogin(lastActor) && (record.isLastActorBot || isBotLogin(lastActor));
   const reminder = idleHint(record.idleDays);
   const reviewRequestedOfMe = Boolean(record.reviewRequest);
+
+  // An allow-listed bot (Promptless) authored this AND pushed last — its
+  // "reply" is automated, so route by who it pinged instead of the human
+  // "author replied" step (which we must never emit for a bot). A ping aimed
+  // ONLY at someone else is their turn (waiting), recorded as botPing so the
+  // board can show "Promptless pinged <who>". Otherwise it's my turn — it
+  // @-mentioned me, or requested my review, or there's simply no ping pointing
+  // elsewhere and the review is still mine to do — routed to the action lane
+  // with no next-step chip, since the lane already says it's my move.
+  if (botPingSignal) {
+    const pingsOnlyOthers =
+      !botPingSignal.mentionsMe && !reviewRequestedOfMe && Boolean(botPingSignal.of);
+    if (pingsOnlyOthers) {
+      return {
+        lane: 'waiting',
+        ball: 'Watching',
+        nextStep: null,
+        botPing: { by: record.author, of: botPingSignal.of },
+      };
+    }
+    return { lane: 'action', ball: 'Take Action', nextStep: null };
+  }
 
   if (relationship === 'reviewing') {
     if (isMe) return { lane: 'waiting', ball: 'Waiting', nextStep: null };
@@ -526,6 +642,7 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
     const approval = deriveApproval(local, upstream);
     const reviewRequest = deriveReviewRequest(upstream, me);
     const reviewedNote = deriveReviewedNote(upstream, approval, me);
+    const botPingSignal = deriveBotPing(upstream, local, me);
 
     const record = {
       key,
@@ -545,6 +662,9 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       approval,
       reviewRequest,
       reviewedNote,
+      // Set by deriveLane only when an allow-listed bot pinged someone other
+      // than you; null otherwise. Always present so renderers can rely on it.
+      botPing: null,
       linkedCodePr: linkedCodePr
         ? { ref: linkedCodePr, hasActivity: Boolean(upstream && upstream.codeUpdatedAt) }
         : null,
@@ -562,7 +682,7 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
         local.relationship === 'assigned issue' && key ? issuePrLinks.get(key) || null : null,
     };
 
-    Object.assign(record, deriveLane(record, me));
+    Object.assign(record, deriveLane(record, me, botPingSignal));
     return record;
   });
 
@@ -586,6 +706,10 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       repo,
       relationship: 'reviewing',
       labels: [],
+      // Draft state lives in the local fetch layer (a PR's `draft` flag), which
+      // tracker-only rows never pass through — the tracker cache stores activity
+      // arrays, not PR state. A docs PR you merely triage as maintainer also
+      // isn't a draft of yours, so false is the correct, safe default here.
       isDraft: false,
       isBot: false,
       lastActor: null,
@@ -596,6 +720,9 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       approval,
       reviewRequest,
       reviewedNote,
+      // Tracker-only rows have no local author/last-actor, so no bot-ping can be
+      // derived — kept present and null for a uniform record contract.
+      botPing: null,
       linkedCodePr: upstream.codeUpdatedAt ? { ref: null, hasActivity: true } : null,
       upstream: {
         docsUpdatedAt: upstream.docsUpdatedAt || null,
@@ -761,6 +888,8 @@ module.exports = {
   deriveApproval,
   deriveReviewRequest,
   deriveReviewedNote,
+  deriveBotPing,
+  extractMentions,
   deriveLane,
   mergeWorkbench,
   computeImpact,

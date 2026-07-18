@@ -46,6 +46,7 @@ const JOURNEY_CSS = `
   .jy-ms:hover .jy-arr{transform:translate(3px,-3px)}
   .jy-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:4px 0 6px}
   .jy-org b{color:var(--t-accent);font-weight:400}
+  .jy-ms-tag{display:inline-flex;align-items:center;gap:4px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-accent);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 8px;margin-right:6px}
   .jy-desc{font-size:.9rem;color:var(--t-ink-2);margin:0;max-width:56ch;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
   .jy-index{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
   .jy-index a{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);border:1px solid var(--t-line);border-radius:6px;padding:2px 9px;text-decoration:none}
@@ -82,13 +83,31 @@ function renderMilestone(ach, hidden) {
   const descHtml = ach.description
     ? `<p class="jy-desc" title="${sanitizeAttribute(ach.description)}">${ach.description}</p>`
     : '';
+  const tagHtml = ach.tag ? `<span class="jy-ms-tag">${ach.tag}</span>` : '';
   return dedent`
     <article class="jy-ms${hidden ? ' jy-hidden' : ''}" data-earlier="${hidden ? '1' : '0'}">
       <h3>${titleHtml}</h3>
-      <div class="jy-org"><b>${org}</b> · ${ach.year}</div>
+      <div class="jy-org">${tagHtml}<b>${org}</b> · ${ach.year}</div>
       ${descHtml}
     </article>
   `;
+}
+
+/**
+ * Talks (contents/talks.js) join the timeline as milestones with a 🎤 Talk
+ * chip — same shape as achievements, just mapped from the talk fields
+ * (event → org, blurb → description). An empty talks list contributes
+ * nothing.
+ */
+function normalizeTalks(talks) {
+  return (talks || []).map((t) => ({
+    title: t.title,
+    year: t.year,
+    org: t.event,
+    url: t.url,
+    description: t.blurb,
+    tag: '🎤 Talk',
+  }));
 }
 
 /**
@@ -138,6 +157,17 @@ function renderTimeline(achievements) {
   return `${index}<div class="jy-tl">${groups}${more}</div>`;
 }
 
+function renderChipSection(label, items, highlight) {
+  if (!items || items.length === 0) return '';
+  const chips = items
+    .map(
+      (t) =>
+        `<span class="jy-chip${highlight.has(t.toLowerCase()) ? ' jy-chip--hd' : ''}">${t}</span>`
+    )
+    .join('');
+  return `<h2 class="jy-sec-label" style="margin-top:26px">${label}</h2><div class="jy-chips">${chips}</div>`;
+}
+
 function renderCraftAndTools(skills) {
   const craft = (skills.craft || [])
     .map(
@@ -149,13 +179,9 @@ function renderCraftAndTools(skills) {
     )
     .join('');
   const highlight = new Set((skills.highlight || []).map((t) => t.toLowerCase()));
-  const chips = (skills.tools || [])
-    .map(
-      (t) =>
-        `<span class="jy-chip${highlight.has(t.toLowerCase()) ? ' jy-chip--hd' : ''}">${t}</span>`
-    )
-    .join('');
-  return { craft, chips };
+  const toolsSection = renderChipSection('Tools', skills.tools, highlight);
+  const skillsSection = renderChipSection('Skills', skills.skills, highlight);
+  return { craft, toolsSection, skillsSection };
 }
 
 function renderExperience(roles) {
@@ -177,15 +203,16 @@ function renderExperience(roles) {
     .join('');
 }
 
-async function createJourneyHtml(rolesData, skills) {
+async function createJourneyHtml(rolesData, skills, talks) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'journey.html');
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
-  const timeline = renderTimeline(rolesData.achievements || []);
-  const { craft, chips } = renderCraftAndTools(skills || {});
+  const milestones = [...(rolesData.achievements || []), ...normalizeTalks(talks)];
+  const timeline = renderTimeline(milestones);
+  const { craft, toolsSection, skillsSection } = renderCraftAndTools(skills || {});
   const experience = renderExperience(rolesData.roles || []);
 
   const htmlContent = dedent`
@@ -220,8 +247,8 @@ async function createJourneyHtml(rolesData, skills) {
               <section aria-labelledby="jy-craft">
                 <h2 id="jy-craft" class="jy-sec-label">Craft</h2>
                 ${craft}
-                <h2 class="jy-sec-label" style="margin-top:26px">Tools</h2>
-                <div class="jy-chips">${chips}</div>
+                ${toolsSection}
+                ${skillsSection}
               </section>
               <section aria-labelledby="jy-xp">
                 <h2 id="jy-xp" class="jy-sec-label">Experience &amp; roles</h2>

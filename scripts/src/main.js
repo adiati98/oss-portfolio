@@ -510,7 +510,7 @@ async function main() {
     // --- 8. Generate Journey + Workbench pages (IA split of the old
     // Community & Activity page — design blueprint §02) ---
     console.log('Generating Journey page...');
-    await createJourneyHtml(leadershipData, skillsData);
+    await createJourneyHtml(leadershipData, skillsData, talksData);
 
     console.log('Generating Workbench page (local records ⨝ docs-PR tracker)...');
     await createWorkbenchHtml(workbenchModel);

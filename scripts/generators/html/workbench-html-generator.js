@@ -133,6 +133,10 @@ const WORKBENCH_CSS = `
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
+  .wbx-chip-draft{display:inline-flex;align-items:center;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.03em;color:var(--t-neutral);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);border-radius:999px;padding:1px 9px}
+  .wbx-live--stale{color:var(--t-caution)}
+  .wbx-live--stale i{background:var(--t-caution)}
+  .wbx-live--stale i::after{content:none}
 `;
 
 function relLabel(record) {
@@ -142,9 +146,7 @@ function relLabel(record) {
     reviewing: '👀 reviewing',
     'assigned issue': '📝 assigned issue',
   };
-  let label = map[record.relationship] || record.relationship || '';
-  if (record.isDraft) label += ' · draft';
-  return label;
+  return map[record.relationship] || record.relationship || '';
 }
 
 function renderRow(record) {
@@ -166,8 +168,16 @@ function renderRow(record) {
     // change — just a hint of where the review stands.
     nextBits.push(`<span style="color:var(--t-ink-3)">${record.reviewedNote.by} reviewed this</span>`);
   }
+  if (record.botPing && record.botPing.of) {
+    nextBits.push(`<span style="color:var(--t-ink-3)">Promptless pinged <b>${record.botPing.of}</b></span>`);
+  }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
-    nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.75rem">🔗 code PR <b>${record.linkedCodePr.ref}</b></span>`);
+    const ref = record.linkedCodePr.ref;
+    const refMatch = ref.match(/^([\w.-]+\/[\w.-]+)#(\d+)$/);
+    const refHtml = refMatch
+      ? `<a href="https://github.com/${refMatch[1]}/pull/${refMatch[2]}" target="_blank" rel="noopener noreferrer">${ref}</a>`
+      : ref;
+    nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.75rem">🔗 code PR <b>${refHtml}</b></span>`);
   }
   if (record.nextStep) {
     const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
@@ -182,6 +192,7 @@ function renderRow(record) {
         <div class="wbx-meta">
           <span class="wbx-repo">${record.repo || ''}</span>
           <span class="wbx-rel">${relLabel(record)}</span>
+          ${record.isDraft ? '<span class="wbx-chip-draft">Draft</span>' : ''}
         </div>
         <div class="wbx-task"><a href="${record.url}" target="_blank" rel="noopener noreferrer">${title}</a></div>
         ${nextHtml}
@@ -219,11 +230,22 @@ function renderImpact(impact, feed) {
   const sync = feed.fetchedAt
     ? `tracker synced ${new Date(feed.fetchedAt).toISOString().slice(0, 16).replace('T', ' ')}`
     : 'tracker feed unavailable';
+  // Server-rendered fallback is always the absolute build time — a static
+  // page can be viewed long after generation, so "just now" would go stale
+  // silently with no JS to correct it. The inline script below recomputes
+  // relative freshness at view-time and only then swaps the text.
+  const buildIso = new Date().toISOString();
+  const buildAbsolute = buildIso.slice(0, 16).replace('T', ' ');
+  const stale = Boolean(feed.degraded);
+  const liveClass = stale ? 'wbx-live wbx-live--stale' : 'wbx-live';
+  const liveText = stale ? `cached · ${buildAbsolute}` : `Updated ${buildAbsolute}`;
   return dedent`
     <div class="wbx-impact">
       <div class="wbx-impact-top">
         <h2>Active across open source <span>— live maintainer &amp; contribution activity</span></h2>
-        <span class="wbx-live"><i></i>${feed.degraded ? 'cached data' : 'updated today'}</span>
+        <span class="${liveClass}" data-build-ts="${buildIso}" data-degraded="${stale ? '1' : '0'}">
+          <i aria-hidden="true"></i><time class="wbx-live-text" datetime="${buildIso}">${liveText}</time>
+        </span>
       </div>
       <div class="wbx-tiles">
         <div class="wbx-tile wbx-tile--hero"><span class="n">${impact.shippedThisQuarter}</span><span class="c">changes shipped this quarter</span></div>
@@ -294,6 +316,31 @@ async function createWorkbenchHtml({ records, impact, feed }) {
           </div>
         </div>
       </main>
+      <script>
+        (function () {
+          var el = document.querySelector('.wbx-live[data-build-ts]');
+          if (!el) return;
+          var textEl = el.querySelector('.wbx-live-text');
+          var built = new Date(el.getAttribute('data-build-ts'));
+          if (!textEl || isNaN(built.getTime())) return;
+          var degraded = el.getAttribute('data-degraded') === '1';
+          var diffH = (Date.now() - built.getTime()) / 3600000;
+          var diffD = Math.floor(diffH / 24);
+          el.classList.toggle('wbx-live--stale', degraded || diffH >= 24);
+          if (degraded) {
+            textEl.textContent = 'cached · ' + Math.max(diffD, 0) + 'd old';
+          } else if (diffH < 24) {
+            if (diffH < 1 / 60) textEl.textContent = 'Updated just now';
+            else if (diffH < 1) textEl.textContent = 'Updated ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
+            else textEl.textContent = 'Updated ' + Math.round(diffH) + 'h ago';
+          } else if (diffD === 1) {
+            textEl.textContent = 'Updated yesterday';
+          } else if (diffD < 7) {
+            textEl.textContent = 'cached · ' + diffD + 'd old';
+          }
+          // Beyond 7 days the server-rendered absolute date stays as-is.
+        })();
+      </script>
       ${footerHtml}
     </body>
     </html>
