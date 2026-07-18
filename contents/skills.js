@@ -24,6 +24,6 @@ module.exports = {
         'Leading documentation teams and programs across Mautic, Virtual Coffee, and Open Source Communities.',
     },
   ],
-  tools: ['Git', 'GitHub', 'Docusaurus', 'Sphinx', 'Markdown', 'MDX', 'RST', 'GitHub Actions', 'Node.js'],
+  tools: ['Git', 'GitHub', 'Docusaurus', 'Sphinx', 'Markdown', 'MDX', 'RST', 'JavaScript', 'React'],
   highlight: ['Git', 'GitHub'],
 };
