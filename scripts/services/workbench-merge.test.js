@@ -295,7 +295,10 @@ run(
   const impact = computeImpact(
     records,
     {
-      pullRequests: [{ date: daysAgo(5) }, { date: '2024-01-01' }],
+      pullRequests: [
+        { date: daysAgo(5), mergedAt: daysAgo(5) },
+        { date: '2024-01-01', mergedAt: '2024-01-01' },
+      ],
       reviewedPrs: [
         { author: 'alice', mergedAt: daysAgo(1) },
         { author: 'bob', mergedAt: daysAgo(1) },
@@ -305,7 +308,11 @@ run(
     },
     NOW
   );
-  assert.equal(impact.shippedThisQuarter, 2); // 1 PR + 1 co-authored this quarter
+  // 1 own PR + 3 reviewed + 1 co-authored merged this quarter; the 2024 PR
+  // is out of quarter. shippedThisQuarter counts every way work ships
+  // (own/reviewed/co-authored), unlike helpedShipCount below which is
+  // deliberately reviewed/co-authored only.
+  assert.equal(impact.shippedThisQuarter, 5);
   assert.equal(impact.contributorsHelped, 2); // alice + bob, bot excluded
   assert.equal(impact.helpedShipCount, 4); // all 4 merged items, bot included
   // Every item above merged within the last 2 days, so the this-month

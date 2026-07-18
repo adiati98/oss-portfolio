@@ -513,13 +513,14 @@ function monthStart(date) {
   return new Date(date.getFullYear(), date.getMonth(), 1);
 }
 
-/** Counts merged reviewed/co-authored PRs on or after `since`, plus the
- * unique non-bot authors among them. Shared by the lifetime and
- * this-month "helped ship" figures below — only the cutoff differs. */
-function tallyHelpedShip(contributions, since) {
+/** Counts merged items across `lists` on or after `since`, plus the unique
+ * non-bot authors among them. Only counts items that actually merged —
+ * "shipped"/"helped ship" both claim the work landed, so a still-open or
+ * closed-without-merging item doesn't qualify yet. */
+function tallyMerged(lists, since) {
   const authors = new Set();
   let count = 0;
-  for (const list of [contributions.reviewedPrs, contributions.coAuthoredPrs]) {
+  for (const list of lists) {
     for (const item of list || []) {
       if (!item.mergedAt || (since && new Date(item.mergedAt) < since)) continue;
       count++;
@@ -547,19 +548,29 @@ function tallyHelpedShip(contributions, since) {
 function computeImpact(records, contributions = {}, now = new Date()) {
   const qStart = quarterStart(now);
   const mStart = monthStart(now);
-  const inQuarter = (item) => item.date && new Date(item.date) >= qStart;
   const inMonth = (item) => item.date && new Date(item.date) >= mStart;
 
-  const shippedThisQuarter =
-    (contributions.pullRequests || []).filter(inQuarter).length +
-    (contributions.coAuthoredPrs || []).filter(inQuarter).length;
+  // The hero number: everything that actually merged this quarter, across
+  // every way you ship something — your own PRs, PRs you reviewed, PRs you
+  // co-authored. It used to only count pullRequests + coAuthoredPrs (by
+  // `.date`, not `mergedAt`, so an unmerged item could still count) and
+  // left reviewedPrs out entirely. For a reviewer-heavy contributor that
+  // made the quarterly hero number smaller than the "helped ship this
+  // month" tile below it — a month inside the quarter outscoring the
+  // quarter itself, purely because they measured different activity, not
+  // different time windows.
+  const shippedThisQuarter = tallyMerged(
+    [contributions.pullRequests, contributions.reviewedPrs, contributions.coAuthoredPrs],
+    qStart
+  ).count;
 
   // Both phrasings ("N contributors' work you're helping ship" / "N
   // contributions you helped ship") claim the work actually shipped, so only
   // merged items count — a reviewed/co-authored PR still open or closed
-  // without merging wasn't "helped ship" yet. See tallyHelpedShip above.
-  const lifetime = tallyHelpedShip(contributions, null);
-  const thisMonth = tallyHelpedShip(contributions, mStart);
+  // without merging wasn't "helped ship" yet. Deliberately excludes your own
+  // solo pullRequests — this tile is about work you helped OTHERS ship.
+  const lifetime = tallyMerged([contributions.reviewedPrs, contributions.coAuthoredPrs], null);
+  const thisMonth = tallyMerged([contributions.reviewedPrs, contributions.coAuthoredPrs], mStart);
 
   // Projects/orgs touched THIS MONTH, across every contribution type — the
   // Workbench's answer to "how spread am I right now." Uses each record's
