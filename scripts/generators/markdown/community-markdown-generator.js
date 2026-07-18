@@ -1,128 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
-const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
-const { WORKBENCH_SUCCESS_MESSAGES } = require('../../metadata/workbench-messages');
-const { WORKBENCH_BALL_STATUS } = require('../../config/constants');
-const { isAllowedBotLogin, isBotLogin } = require('../../utils/bot-helpers');
-const { extractLinkedCodePr } = require('../../services/workbench-merge');
-
-/**
- * A docs PR's body pointing at its code PR, rendered as a full-URL markdown
- * link (mirrors the 🔗 code PR chip on workbench.html).
- */
-function linkedCodePrMarkdown(task) {
-  const ref = extractLinkedCodePr(task.body, task.repo);
-  if (!ref) return '';
-  const match = ref.match(/^([\w.-]+\/[\w.-]+)#(\d+)$/);
-  if (!match) return '';
-  return ` · 🔗 code PR [${ref}](https://github.com/${match[1]}/pull/${match[2]})`;
-}
-
-/**
- * Maps ball status to GitHub-friendly indicators (using Shields.io for consistency).
- * @param {Object} task - The task data
- * @param {string} role - 'owner' or 'reviewer'
- */
-function getBallTrackingBadge(task, role = 'owner') {
-  // 1. Approved logic - HIGHEST PRIORITY
-  if (task.reviewState === 'APPROVED' || task.status === 'APPROVED') {
-    return {
-      badge: `<img src="https://img.shields.io/badge/APPROVED-15803d?style=flat-square" alt="Approved">`,
-      child: ``,
-      lastActorDisplay: task.approvedBy ? String(task.approvedBy).trim() : '',
-    };
-  }
-
-  const now = new Date();
-  const lastUpdate = new Date(task.lastSubstantiveDate || task.updatedAt);
-  const diffDays = (now - lastUpdate) / (1000 * 60 * 60 * 24);
-
-  // 2. Stale logic
-  if (diffDays >= 21) {
-    const dayCount = Math.floor(diffDays);
-    return {
-      badge: `<img src="https://img.shields.io/badge/IDLE-334155?style=flat-square" alt="Idle">`,
-      child: `<br><sub>${dayCount} days</sub>`,
-      lastActorDisplay: '',
-    };
-  }
-
-  // 3. Normalization with Fallback (Matches HTML logic)
-  const rawLastActor =
-    task.lastActor || (task.user && typeof task.user === 'object' ? task.user.login : task.user);
-
-  const lastActor = String(rawLastActor || '')
-    .toLowerCase()
-    .trim();
-  const prAuthor = String(task.author || '')
-    .toLowerCase()
-    .trim();
-  const me = String(GITHUB_USERNAME || '')
-    .toLowerCase()
-    .trim();
-
-  const isMe = lastActor === me;
-  const isAuthor = lastActor === prAuthor;
-
-  // 4. Sub-label logic
-  let child = task.hasFormalReview ? 'Review' : 'Discussion';
-  const isBotActor =
-    !isAllowedBotLogin(lastActor) && (task.isLastActorBot || isBotLogin(lastActor));
-  if (isBotActor) child += ' + BOT';
-
-  // 5. Branching Logic by Role
-  let statusKey = 'watching';
-
-  if (role === 'reviewer') {
-    if (isMe) statusKey = 'waiting';
-    else if (isAuthor) statusKey = 'takeAction';
-  } else {
-    // Scenario: Owner/Co-Author
-    if (isMe) statusKey = 'waiting';
-    else if (!isMe && !isBotActor) statusKey = 'takeAction';
-  }
-
-  const colorMap = {
-    waiting: '4338ca', // Indigo 700
-    takeAction: 'b45309', // Amber 700
-    watching: '1d4ed8', // Blue 700
-  };
-
-  const config = WORKBENCH_BALL_STATUS[statusKey];
-  const color = colorMap[statusKey] || '334155';
-  const label = config.label.toUpperCase().replace(/ /g, '%20');
-
-  // Only surface the actor's username when there's an action to track (Take Action / Watching).
-  const lastActorDisplay =
-    statusKey === 'takeAction' || statusKey === 'watching' ? String(rawLastActor || '').trim() : '';
-
-  return {
-    badge: `<img src="https://img.shields.io/badge/${label}-${color}?style=flat-square" alt="${config.label}">`,
-    child: `<br><sub>${child}</sub>`,
-    lastActorDisplay,
-  };
-}
-
-/**
- * Helper to render secondary status labels (Draft, Blocked, etc.).
- */
-function getStatusBadge(task) {
-  const labels = (task.labels || []).map((l) => (typeof l === 'string' ? l : l.name).toLowerCase());
-  const isDraft = task.isDraft === true;
-  const isPendingMerge = labels.some((l) => l.includes('pending') && l.includes('merge'));
-  const isBlocked =
-    !isPendingMerge &&
-    labels.some((l) => l.includes('blocked') || l.includes('stalled') || l.includes('wait'));
-
-  if (isDraft)
-    return `<br><img src="https://img.shields.io/badge/DRAFT-334155?style=flat-square" alt="Draft">`;
-  if (isPendingMerge)
-    return `<br><img src="https://img.shields.io/badge/PENDING%20MERGE-15803d?style=flat-square" alt="Pending">`;
-  if (isBlocked)
-    return `<br><img src="https://img.shields.io/badge/BLOCKED-b91c1c?style=flat-square" alt="Blocked">`;
-
-  return '';
-}
+const { BASE_DIR } = require('../../config/config');
+const { LANES } = require('../html/workbench-html-generator');
 
 const MD_BASE_DIR = path.join(BASE_DIR, 'markdown-generated');
 
@@ -170,93 +49,157 @@ async function createJourneyMarkdown(rolesData) {
   console.log(`Generated Journey Markdown at ${path.join(MD_BASE_DIR, 'journey.md')}`);
 }
 
+// ---------------------------------------------------------------------------
+// workbench.md — mirrors workbench.html's structure exactly: the same
+// records/impact/feed model (loadMergedWorkbench()) and the same LANES
+// config (imported from workbench-html-generator.js, not redefined), so the
+// two outputs can't drift out of sync.
+// ---------------------------------------------------------------------------
+
+const LANE_ICON = { action: '🔥', ready: '✅', waiting: '👀', stalled: '⏳', bot: '🤖' };
+
+const BALL_COLOR = {
+  'Take Action': 'b45309',
+  'To Write': 'b45309',
+  Approved: '15803d',
+  Watching: '1d4ed8',
+  Waiting: '4338ca',
+  Stale: '334155',
+  Bot: '334155',
+};
+
+const REL_LABEL = {
+  authored: '✍ authored',
+  'co-authoring': '🤝 co-authoring',
+  reviewing: '👀 reviewing',
+  'assigned issue': '📝 assigned issue',
+};
+
+/** A `|` in a title/body would corrupt the table row; strip line breaks too. */
+function escapeCell(str) {
+  return String(str || '').replace(/\r?\n/g, ' ').replace(/\|/g, '\\|');
+}
+
+/** Mirrors the wbx-pill: ball label as a badge, plus the same idle-day suffix rule as renderRow. */
+function statusCell(record) {
+  const color = BALL_COLOR[record.ball] || '334155';
+  const label = String(record.ball).toUpperCase().replace(/ /g, '%20');
+  const badge = `![${record.ball}](https://img.shields.io/badge/${label}-${color}?style=flat-square)`;
+  const idleBadge =
+    record.lane === 'stalled' || record.idleDays >= 7 ? `<br><sub>${Math.floor(record.idleDays)}d</sub>` : '';
+  return `${badge}${idleBadge}`;
+}
+
+/** Mirrors the wbx-meta row: repo chip, relationship label, Draft badge. */
+function repoCell(record) {
+  const bits = [`**${escapeCell(record.repo || '')}**`];
+  const rel = REL_LABEL[record.relationship] || record.relationship;
+  if (rel) bits.push(rel);
+  if (record.isDraft) bits.push('`Draft`');
+  return bits.join('<br>');
+}
+
+/** Mirrors renderRow's nextBits: approval note, reviewed note, bot ping, linked code PR, next step. */
+function nextCell(record) {
+  const bits = [];
+  if (record.approval && record.approval.by) {
+    const dismissedNote = record.approval.dismissed ? ' — dismissed after update' : '';
+    bits.push(`approved by **${escapeCell(record.approval.by)}**${dismissedNote}`);
+  }
+  if (record.reviewedNote && record.reviewedNote.by) {
+    bits.push(`**${escapeCell(record.reviewedNote.by)}** reviewed this`);
+  }
+  if (record.botPing && record.botPing.of) {
+    bits.push(`Promptless pinged **${escapeCell(record.botPing.of)}**`);
+  }
+  if (record.linkedCodePr && record.linkedCodePr.ref) {
+    const ref = record.linkedCodePr.ref;
+    const match = ref.match(/^([\w.-]+\/[\w.-]+)#(\d+)$/);
+    const refMd = match ? `[${ref}](https://github.com/${match[1]}/pull/${match[2]})` : escapeCell(ref);
+    bits.push(`🔗 code PR ${refMd}`);
+  }
+  if (record.nextStep) bits.push(escapeCell(record.nextStep));
+  return bits.length ? bits.map((bit) => `• ${bit}`).join('<br>') : '—';
+}
+
+function taskCell(record) {
+  const title = escapeCell(record.title || record.key || '');
+  return record.url ? `[${title}](${record.url})` : title;
+}
+
+/** One `<details>` block per lane — title/explain/open/order all come from the shared LANES config. */
+function renderLaneSection(lane, records) {
+  let section = `<details${lane.open && records.length > 0 ? ' open' : ''}>\n`;
+  section += `  <summary><h3 style="display: inline-block; cursor: pointer;">${LANE_ICON[lane.id]} ${lane.title} (${records.length})</h3></summary>\n\n`;
+  section += `  <sub>${lane.explain}</sub>\n\n`;
+
+  if (records.length > 0) {
+    section += `  | Status | Repo | Task | Next |\n`;
+    section += `  | :--- | :--- | :--- | :--- |\n`;
+    records.forEach((record) => {
+      section += `  | ${statusCell(record)} | ${repoCell(record)} | ${taskCell(record)} | ${nextCell(record)} |\n`;
+    });
+    section += `\n`;
+  }
+
+  section += `</details>\n\n`;
+  return section;
+}
+
+/** Mirrors renderImpact's five tiles — same "this month/quarter" framing, not Home's lifetime figures. */
+function renderImpactSection(impact, feed) {
+  const helpedTile =
+    impact.contributorsHelpedThisMonth > 0
+      ? [`${impact.contributorsHelpedThisMonth}`, `contributors' work you've helped ship this month`]
+      : [`${impact.helpedShipThisMonth}`, `contributions you helped ship this month`];
+
+  let md = `## 📊 Active across open source — this month & quarter\n\n`;
+  md += `| Metric | Activity |\n| :--- | :--- |\n`;
+  md += `| 🚀 **${impact.shippedThisQuarter}** | changes shipped this quarter |\n`;
+  md += `| ✅ **${impact.approvedLanding}** | approved & heading to merge |\n`;
+  md += `| 🔥 **${impact.needAction}** | need your action now |\n`;
+  md += `| 🤝 **${helpedTile[0]}** | ${helpedTile[1]} |\n`;
+  md += `| 🌐 **${impact.projectsThisMonth}** | projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month |\n\n`;
+
+  if (feed.degraded) {
+    md += `> ⚠️ **Tracker feed degraded.** ${feed.reason || 'Live fetch failed.'} Local records are current as of this build; lane placement keeps working from the last good data.\n\n`;
+  }
+
+  return md;
+}
+
 /**
  * workbench.md — the maintainer-facing half: the live triage board.
- * Mirrors workbench.html (design blueprint §02, §05).
+ * Mirrors workbench.html exactly: same impact tiles, same five lanes (title,
+ * explain text, open/folded state, and order all read from the LANES
+ * config workbench.html itself uses), same per-row fields. Consumes the
+ * merged `{ records, impact, feed }` model from loadMergedWorkbench() —
+ * the same object passed to createWorkbenchHtml — rather than the raw
+ * pre-merge task lists.
  */
-async function createWorkbenchMarkdown(
-  ongoingTasks = [],
-  ongoingIssues = [],
-  ongoingPRs = [],
-  ongoingCoAuthoredPRs = []
-) {
+async function createWorkbenchMarkdown({ records, impact, feed }) {
   const outputPath = path.join(MD_BASE_DIR, 'workbench.md');
   await fs.mkdir(MD_BASE_DIR, { recursive: true });
 
-  const isBot = (t) => {
-    const username = typeof t.user === 'object' ? t.user?.login : t.user;
-    if (isAllowedBotLogin(username)) return false;
-    const userStr = String(username || '').toLowerCase();
-    const titleStr = String(t.title || '').toLowerCase();
-    return (
-      userStr.includes('dependabot') ||
-      titleStr.startsWith('[snyk]') ||
-      (titleStr.startsWith('bump') && userStr.includes('dependabot')) ||
-      userStr.includes('[bot]')
-    );
-  };
-
-  const botTasks = ongoingTasks.filter((t) => isBot(t));
-  const humanTasks = ongoingTasks.filter((t) => !isBot(t));
-
-  const manualRequestTasks = humanTasks.filter((t) => t.status === 'Request review');
-  const inProgressTasks = humanTasks.filter((t) => t.status === 'Review in progress');
-
   let md = `# Active Workbench\n\n`;
   md += `Live maintainer and contribution activity, organized by what happens next.\n\n`;
+  md += renderImpactSection(impact, feed);
 
-  const buildSection = (title, icon, tasks, type) => {
-    const count = tasks.length;
-    const randomMsg =
-      WORKBENCH_SUCCESS_MESSAGES[Math.floor(Math.random() * WORKBENCH_SUCCESS_MESSAGES.length)];
+  // "Approved is not done": every ready-lane row still needs a final review,
+  // a backport check, or a maintainer nudge — see workbench-html-generator.js.
+  const humanRecords = records.filter((r) => r.lane !== 'bot');
 
-    const hasStatus = type !== 'todo' && type !== 'bot';
-
-    let section = `<details>\n`;
-    section += `  <summary><h3 style="display: inline-block; cursor: pointer;">${icon} ${title} (${count})</h3></summary>\n\n`;
-
-    if (count === 0) {
-      section += `> ***${randomMsg}***\n`;
-    } else {
-      if (hasStatus) {
-        section += `| Status | Last Interaction | Repository | Task |\n`;
-        section += `| :--- | :--- | :--- | :--- |\n`;
-      } else {
-        section += `| Repository | Task |\n`;
-        section += `| :--- | :--- |\n`;
-      }
-
-      tasks
-        .sort((a, b) => {
-          const dateA = new Date(a.lastSubstantiveDate || a.updatedAt);
-          const dateB = new Date(b.lastSubstantiveDate || b.updatedAt);
-          return dateB - dateA;
-        })
-        .forEach((task) => {
-          const repoName = task.repo.split('/')[1] || task.repo;
-          const extraBadge = getStatusBadge(task);
-          const linkedCodePr = linkedCodePrMarkdown(task);
-
-          if (hasStatus) {
-            const ballData = getBallTrackingBadge(task, type);
-            const statusCell = ballData ? `${ballData.badge}${ballData.child}` : `—`;
-            const lastInteractionCell = ballData?.lastActorDisplay || '';
-            section += `| ${statusCell} | ${lastInteractionCell} | **${repoName}**${extraBadge} | [${task.title}](${task.url})${linkedCodePr} |\n`;
-          } else {
-            section += `| **${repoName}**${extraBadge} | [${task.title}](${task.url})${linkedCodePr} |\n`;
-          }
-        });
-    }
-    section += `\n</details>\n\n`;
-    return section;
-  };
-
-  md += buildSection('To do issues', '📝', ongoingIssues, 'todo');
-  md += buildSection('Request review', '📥', manualRequestTasks, 'todo');
-  md += buildSection('Ongoing PRs', '📤', ongoingPRs, 'owner');
-  md += buildSection('Moving Co-authored PRs Forward', '🤝', ongoingCoAuthoredPRs, 'owner');
-  md += buildSection('Review in progress', '🔄', inProgressTasks, 'reviewer');
-  md += buildSection('Bot request review', '🤖', botTasks, 'bot');
+  if (humanRecords.length === 0) {
+    md += `## ✅ Your court is clear.\n\n`;
+    md += `No open tasks locally, and the tracker has nothing waiting on you.\n\n`;
+  } else {
+    LANES.forEach((lane) => {
+      md += renderLaneSection(
+        lane,
+        records.filter((r) => r.lane === lane.id)
+      );
+    });
+  }
 
   md += mdFooter(['[Journey →](./journey.md)']);
 

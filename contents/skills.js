@@ -2,14 +2,14 @@
  * Skills & tools shown on the Journey page (design blueprint §04).
  *
  * No proficiency bars or self-graded levels — the portfolio's own pages are
- * the evidence. `craft` entries are the named competency areas (display
+ * the evidence. `expertise` entries are the named competency areas (display
  * type); `tools` and `skills` each render as their own flat chip row (only
  * when non-empty); entries listed in `highlight` get the accented chip
  * style in either row (keep it to the two or three most identity-defining
  * items).
  */
 module.exports = {
-  craft: [
+  expertise: [
     {
       title: 'Technical writing & docs architecture',
       blurb:

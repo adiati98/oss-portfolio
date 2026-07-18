@@ -113,7 +113,7 @@ const LANDING_CSS = `
  * Only real generated URLs — never a redirect stub.
  */
 const PAGE_INDEX = [
-  { href: 'journey.html', label: 'Journey', blurb: 'Milestones, craft, and the roles behind them.' },
+  { href: 'journey.html', label: 'Journey', blurb: 'Milestones, talks, expertise, and the roles behind them.' },
   {
     href: 'workbench.html',
     label: 'Workbench',
@@ -121,8 +121,8 @@ const PAGE_INDEX = [
   },
   {
     href: 'writing.html',
-    label: 'Writing & Talks',
-    blurb: 'Long-form guides, community essays, and conference talks.',
+    label: 'Writing',
+    blurb: 'Long-form guides and community essays.',
   },
   {
     href: 'reports.html',
@@ -198,14 +198,13 @@ function renderImpact({
   earliestYear,
   helpedShipCount,
   articleCount,
-  talkCount,
   repoCount,
   orgCount,
 }) {
-  // The caption follows the data rather than promising a category that's
-  // empty: talks only enter the label once talks.js actually has one.
-  const contentCount = articleCount + talkCount;
-  const contentCaption = talkCount > 0 ? 'articles &amp; talks published' : 'articles published';
+  // Talks live on the Journey timeline, not here — this tile counts
+  // published articles only.
+  const contentCount = articleCount;
+  const contentCaption = 'articles published';
   const helpedTile =
     helpedShipCount > 0
       ? `<span class="n">${helpedShipCount}</span><span class="c">contributions you helped ship</span>`
@@ -246,7 +245,7 @@ function renderMeters(rows) {
     .map(
       (row) => dedent`
         <div class="lp-m">
-          <div class="r"><b>${row.label}</b><span>${row.pctStr}</span></div>
+          <div class="r"><b>${row.label}</b><span>${row.count} · ${row.pctStr}</span></div>
           <div class="bar"><i style="width:${row.pct.toFixed(1)}%"></i></div>
         </div>`
     )
@@ -305,7 +304,6 @@ function renderIndexRow() {
  * @param {number} failedFetchCount   confirmed-403 PRs (see failed-fetch.json)
  * @param {object} [options]
  * @param {object} [options.impact]   loadMergedWorkbench().impact
- * @param {Array}  [options.talks]    contents/talks.js
  */
 async function createIndexHtml(
   finalContributions = {},
@@ -315,7 +313,7 @@ async function createIndexHtml(
 ) {
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  const { impact = {}, talks = [] } = options;
+  const { impact = {} } = options;
 
   const prCount = finalContributions.pullRequests?.length || 0;
   const issueCount = finalContributions.issues?.length || 0;
@@ -326,7 +324,6 @@ async function createIndexHtml(
     : 0;
 
   const articleCount = articles.length || 0;
-  const talkCount = talks.length || 0;
 
   // grandTotal drives the persona/percentage math below, so it's kept to
   // contributions we could fully categorize. Confirmed-403 PRs (see
@@ -424,7 +421,6 @@ async function createIndexHtml(
               earliestYear,
               helpedShipCount: impact.helpedShipCount || 0,
               articleCount,
-              talkCount,
               repoCount: uniqueRepos.size,
               orgCount: uniqueOrgs.size,
             })}

@@ -1,15 +1,168 @@
+/**
+ * WRITING PAGE (writing.html) — articles only. Talks live exclusively on the
+ * Journey timeline (design blueprint) — no Talks chip, no talks slot here.
+ *
+ * Structural contract:
+ *   1. "Written for organizations" timeline — every article with `org` set
+ *      (freeCodeCamp + Dev.to org posts), grouped into one node per org on a
+ *      continuous spine, orgs ordered by their most recent piece. Renders
+ *      only when at least one org article exists.
+ *   2. Personal writing list — only articles with org = null/missing, newest
+ *      first: title (2-line clamp, full text in `title`), date, tags.
+ * An article renders in exactly one place — the timeline or the list, never
+ * both.
+ *
+ * Platform labels and the filter chips are data-driven: both appear only
+ * when a list actually spans more than one platform. With a single-platform
+ * list the label states nothing the reader can act on and the filter has
+ * nothing to filter, so neither renders.
+ */
 const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-const { FAVICON_SVG_ENCODED } = require('../../config/constants');
-const { COLORS } = require('../../config/constants');
+const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
 const { createNavHtml } = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
-const { getBlogStyleCss } = require('../css/style-generator');
-const { getColorValue } = require('../../utils/color-helpers');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
+const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { newestFirst, platformsIn, groupByOrg } = require('../../services/writing-model');
+
+const WRITING_CSS = `
+  ${THEME_CSS_VARS}
+  .wr-eyebrow{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
+  .wr-h1{font-weight:800;letter-spacing:-.01em;color:var(--t-ink)}
+  .wr-sub{color:var(--t-ink-2);font-size:.95rem;max-width:64ch;margin:8px 0 0}
+  .wr-sec-label{font-family:ui-monospace,monospace;font-size:.78rem;font-weight:400;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin-bottom:16px}
+  .wr-tl{position:relative;padding-left:26px;max-width:760px}
+  .wr-tl::before{content:"";position:absolute;left:6px;top:8px;bottom:8px;width:2px;border-radius:2px;
+    background:linear-gradient(var(--t-brand-line),var(--t-line))}
+  .wr-org{position:relative;padding:4px 0 20px}
+  .wr-org:last-child{padding-bottom:2px}
+  .wr-org::before{content:"";position:absolute;left:-24.5px;top:9px;width:11px;height:11px;border-radius:50%;
+    background:var(--t-card);border:2.5px solid var(--t-brand)}
+  .wr-org-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0}
+  .wr-org-name{font-size:1.06rem;font-weight:800;letter-spacing:-.01em;color:var(--t-ink);overflow-wrap:anywhere}
+  .wr-org-n{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
+  .wr-personal{max-width:760px}
+  .wr-list{list-style:none;margin:6px 0 0;padding:0}
+  .wr-item{padding:10px 0;border-bottom:1px solid var(--t-line)}
+  .wr-item:last-child{border-bottom:0}
+  .wr-item.wr-hidden{display:none}
+  .wr-item-t{font-size:.95rem;font-weight:600;margin:0;line-height:1.4}
+  .wr-item-t a{color:var(--t-ink);text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .wr-item-t a:hover{color:var(--t-brand)}
+  .wr-arr{display:inline-block;color:var(--t-brand);margin-left:4px;transition:transform .18s ease}
+  .wr-item:hover .wr-arr{transform:translate(3px,-3px)}
+  .wr-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:4px}
+  .wr-platform{color:var(--t-ink-2);font-weight:600}
+  .wr-tags{display:flex;flex-wrap:wrap;gap:6px}
+  .wr-tag{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:6px;padding:1px 8px}
+  .wr-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+  .wr-chip{font-family:ui-monospace,monospace;font-size:.78rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:border-color .15s ease,color .15s ease,background .15s ease}
+  .wr-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
+  .wr-chip:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .wr-chip[aria-pressed="true"]{color:var(--t-brand);background:var(--t-brand-wash);border-color:var(--t-brand-line)}
+  .wr-chip-n{opacity:.75}
+  .wr-empty{color:var(--t-ink-3);font-style:italic;font-size:.9rem}
+  @media (prefers-reduced-motion: reduce){.wr-arr,.wr-chip{transition:none}}
+`;
+
+function formatDate(dateStr) {
+  return new Date(dateStr).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+}
+
+function renderArticleItem(article, { showPlatform, headingTag }) {
+  const title = sanitizeAttribute(article.title);
+  const platform = article.platform || '';
+  const tagsHtml = (article.tags || [])
+    .map((t) => `<span class="wr-tag">${sanitizeAttribute(t)}</span>`)
+    .join('');
+  const platformHtml =
+    showPlatform && platform ? `<span class="wr-platform">${platform}</span>` : '';
+  return dedent`
+    <li class="wr-item" data-platform="${sanitizeAttribute(platform)}">
+      <${headingTag} class="wr-item-t" title="${title}">
+        <a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}<span class="wr-arr" aria-hidden="true">↗</span></a>
+      </${headingTag}>
+      <div class="wr-meta">
+        ${platformHtml}
+        <span>${formatDate(article.date)}</span>
+        ${tagsHtml ? `<span class="wr-tags">${tagsHtml}</span>` : ''}
+      </div>
+    </li>
+  `;
+}
+
+function renderOrgTimeline(orgArticles) {
+  if (orgArticles.length === 0) return '';
+  const nodes = groupByOrg(orgArticles)
+    .map(({ org, items }) => {
+      const showPlatform = platformsIn(items).length > 1;
+      const list = items
+        .map((a) => renderArticleItem(a, { showPlatform, headingTag: 'h4' }))
+        .join('');
+      return dedent`
+        <div class="wr-org">
+          <div class="wr-org-h">
+            <h3 class="wr-org-name">${sanitizeAttribute(org)}</h3>
+            <span class="wr-org-n">${items.length} article${items.length === 1 ? '' : 's'}</span>
+          </div>
+          <ul class="wr-list">${list}</ul>
+        </div>`;
+    })
+    .join('');
+
+  return dedent`
+    <section aria-labelledby="wr-org-h" class="mb-16">
+      <h2 id="wr-org-h" class="wr-sec-label">Written for organizations</h2>
+      <div class="wr-tl">${nodes}</div>
+    </section>
+  `;
+}
+
+/**
+ * Chips only earn their place once there's more than one platform to choose
+ * between — with a single-platform list every chip selects everything.
+ */
+function renderFilters(personalArticles) {
+  const platforms = platformsIn(personalArticles);
+  if (platforms.length < 2) return '';
+  const chips = [
+    `<button type="button" class="wr-chip" data-filter="all" aria-pressed="true">All <span class="wr-chip-n">${personalArticles.length}</span></button>`,
+  ];
+  for (const platform of platforms) {
+    const count = personalArticles.filter((a) => a.platform === platform).length;
+    chips.push(
+      `<button type="button" class="wr-chip" data-filter="${sanitizeAttribute(platform)}" aria-pressed="false">${platform} <span class="wr-chip-n">${count}</span></button>`
+    );
+  }
+  return `<div class="wr-filters" role="group" aria-label="Filter by platform">${chips.join('')}</div>`;
+}
+
+function renderPersonalSection(personalArticles, hasOrgArticles) {
+  if (personalArticles.length === 0) {
+    const msg = hasOrgArticles
+      ? 'No personal writing yet — see the organization pieces above.'
+      : 'No articles found with Open Source or GitHub tags.';
+    return `<p class="wr-empty">${msg}</p>`;
+  }
+  const showPlatform = platformsIn(personalArticles).length > 1;
+  const list = newestFirst(personalArticles)
+    .map((a) => renderArticleItem(a, { showPlatform, headingTag: 'h3' }))
+    .join('');
+  return dedent`
+    <div class="wr-personal">
+      ${renderFilters(personalArticles)}
+      <ul class="wr-list">${list}</ul>
+    </div>
+  `;
+}
 
 async function createBlogHtml(articles) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
@@ -19,33 +172,11 @@ async function createBlogHtml(articles) {
 
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  const blogCss = getBlogStyleCss();
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
 
-  const listItems = articles
-    .map((article) => {
-      const date = new Date(article.date).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      });
-
-      return dedent`
-      <div class="article-card group py-10 border-b border-slate-100 dark:border-slate-800 last:border-0 transition-colors hover:bg-indigo-50/50 dark:hover:bg-indigo-500/10">
-        <h2 class="text-xl sm:text-2xl font-bold mb-3 pl-4">
-          <a href="${article.link}" target="_blank" rel="noopener noreferrer"
-             style="color: ${getColorValue(COLORS.primaryText)};"
-             class="group-hover:text-indigo-800 dark:group-hover:text-indigo-300 transition-colors block">
-            ${article.title}
-          </a>
-        </h2>
-        <p class="article-meta text-slate-500 dark:text-slate-400 text-sm font-medium pl-4">
-          Published on <span class="platform-tag font-bold text-slate-700 dark:text-slate-200">${article.platform}</span> — ${date}
-        </p>
-      </div>`;
-    })
-    .join('\n');
+  const orgArticles = (articles || []).filter((a) => Boolean(a.org));
+  const personalArticles = (articles || []).filter((a) => !a.org);
 
   const htmlContent = dedent`
     <!DOCTYPE html>
@@ -53,42 +184,58 @@ async function createBlogHtml(articles) {
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Articles | ${GITHUB_USERNAME} Portfolio</title>
+      <title>Writing | ${GITHUB_USERNAME} Portfolio</title>
       <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${FAVICON_SVG_ENCODED}">
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${blogCss}</style>
+      <style>${WRITING_CSS}</style>
     </head>
-    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+    <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
-          <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: ${getColorValue(COLORS.primary[15]) || '#e2e8f0'};" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: ${getColorValue(COLORS.primaryText)};" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
-                Open Source and GitHub Articles
-              </h1>
-              <p style="color: ${getColorValue(COLORS.text.secondary)};" class="text-xl max-w-3xl mx-auto leading-relaxed">
-                A collection of articles that <strong>${GITHUB_USERNAME}</strong> wrote covering insights and tutorials regarding the Open Source and GitHub ecosystem.
-              </p>
+          <div class="max-w-6xl mx-auto">
+            <header class="mt-16 mb-14">
+              <p class="wr-eyebrow">writing</p>
+              <h1 class="wr-h1 text-4xl sm:text-5xl mt-2 mb-4">Articles on open source and GitHub</h1>
+              <p class="wr-sub">Guides and blog posts covering open source, its community, and the GitHub ecosystem.</p>
             </header>
 
-            <div class="max-w-[90ch] mx-auto">
-              <div class="articles-list">
-                ${listItems || '<p class="text-slate-400 dark:text-slate-500 italic text-center py-12">No articles found with Open Source or GitHub tags.</p>'}
-              </div>
-            </div>
+            ${renderOrgTimeline(orgArticles)}
+
+            <section aria-labelledby="wr-personal-h">
+              <h2 id="wr-personal-h" class="wr-sec-label">Personal writing</h2>
+              ${renderPersonalSection(personalArticles, orgArticles.length > 0)}
+            </section>
           </div>
         </div>
       </main>
+      <script>
+        (function () {
+          var buttons = document.querySelectorAll('.wr-chip');
+          var items = document.querySelectorAll('.wr-personal .wr-item');
+          if (!buttons.length || !items.length) return;
+          buttons.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+              buttons.forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+              btn.setAttribute('aria-pressed', 'true');
+              var filter = btn.getAttribute('data-filter');
+              items.forEach(function (item) {
+                var show = filter === 'all' || item.getAttribute('data-platform') === filter;
+                item.classList.toggle('wr-hidden', !show);
+              });
+            });
+          });
+        })();
+      </script>
       ${footerHtml}
     </body>
     </html>`;
 
   const formattedContent = await prettier.format(htmlContent, { parser: 'html' });
   await fs.writeFile(outputPath, formattedContent, 'utf8');
-  console.log(`Generated blog HTML page at ${outputPath}`);
+  console.log(`Generated Writing page at ${outputPath}`);
 }
 
 module.exports = { createBlogHtml };

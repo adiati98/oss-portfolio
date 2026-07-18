@@ -95,7 +95,6 @@ const WORKBENCH_CSS = `
   .wbx-tile--hero .c{opacity:.85}
   .wbx-tile--hot .n{color:var(--t-caution)}
   .wbx-tile--good .n{color:var(--t-positive)}
-  .wbx-sync{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .wbx-banner{display:flex;gap:12px;align-items:flex-start;border-radius:10px;padding:13px 16px;font-size:.85rem;margin-bottom:16px;color:var(--t-ink-2)}
   .wbx-banner--warn{background:var(--t-caution-wash);border:1px solid var(--t-caution-line)}
   .wbx-banner--warn .ic{color:var(--t-caution);font-family:ui-monospace,monospace}
@@ -166,7 +165,7 @@ function renderRow(record) {
   if (record.reviewedNote && record.reviewedNote.by) {
     // Muted context: a human looked at this but didn't approve. Never a lane
     // change — just a hint of where the review stands.
-    nextBits.push(`<span style="color:var(--t-ink-3)">${record.reviewedNote.by} reviewed this</span>`);
+    nextBits.push(`<span style="color:var(--t-ink-3)"><b>${record.reviewedNote.by}</b> reviewed this</span>`);
   }
   if (record.botPing && record.botPing.of) {
     nextBits.push(`<span style="color:var(--t-ink-3)">Promptless pinged <b>${record.botPing.of}</b></span>`);
@@ -227,9 +226,6 @@ function renderImpact(impact, feed) {
     impact.contributorsHelpedThisMonth > 0
       ? { n: `${impact.contributorsHelpedThisMonth}`, c: `contributors' work you've helped ship this month` }
       : { n: `${impact.helpedShipThisMonth}`, c: `contributions you helped ship this month` };
-  const sync = feed.fetchedAt
-    ? `tracker synced ${new Date(feed.fetchedAt).toISOString().slice(0, 16).replace('T', ' ')}`
-    : 'tracker feed unavailable';
   // Server-rendered fallback is always the absolute build time — a static
   // page can be viewed long after generation, so "just now" would go stale
   // silently with no JS to correct it. The inline script below recomputes
@@ -255,7 +251,6 @@ function renderImpact(impact, feed) {
         <div class="wbx-tile"><span class="n">${impact.projectsThisMonth}</span><span class="c">projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month</span></div>
       </div>
     </div>
-    <div class="wbx-sync">${sync}</div>
   `;
 }
 
@@ -282,7 +277,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
         <div class="wbx-empty">
           <div class="g">✓</div>
           <h2 style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--t-ink)">Your court is clear.</h2>
-          <p style="max-width:44ch;margin:10px auto 0;font-size:.9rem">No open tasks locally, and the tracker has nothing waiting on you.${feed.fetchedAt ? ` Last sync: ${new Date(feed.fetchedAt).toUTCString()}.` : ''}</p>
+          <p style="max-width:44ch;margin:10px auto 0;font-size:.9rem">No open tasks locally, and the tracker has nothing waiting on you.</p>
         </div>`
       : `<div class="wbx-lanes">${LANES.map((lane) =>
           renderLane(lane, records.filter((r) => r.lane === lane.id))

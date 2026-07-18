@@ -1,5 +1,5 @@
 /**
- * JOURNEY PAGE (journey.html) — milestones timeline, craft & tools, and
+ * JOURNEY PAGE (journey.html) — milestones timeline, expertise & tools, and
  * experience/roles. Split out of the old Community & Activity page per the
  * design blueprint §02–§04.
  *
@@ -8,7 +8,7 @@
  *   never clamp), mono org line, 3-line-clamped descriptions. ≤10 entries
  *   render flat; above that they group under year markers with a jump index
  *   and a "show earlier" collapse.
- *   Craft & tools — no proficiency bars; craft rows + flat chip row.
+ *   Expertise & tools — no proficiency bars; expertise rows + flat chip row.
  *   Experience — active roles get a positive dot + tinted rule; past roles
  *   recede to neutral. No ACTIVE/PAST badges.
  */
@@ -55,10 +55,10 @@ const JOURNEY_CSS = `
   .jy-more button{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-brand);background:none;border:1px dashed var(--t-brand-line);border-radius:8px;padding:7px 16px;cursor:pointer}
   .jy-more button:hover{background:var(--t-brand-wash)}
   .jy-hidden{display:none}
-  .jy-craft{padding:13px 0;border-bottom:1px solid var(--t-line)}
-  .jy-craft:last-of-type{border-bottom:0}
-  .jy-craft b{display:block;font-size:1.02rem;font-weight:800;color:var(--t-ink)}
-  .jy-craft span{font-size:.85rem;color:var(--t-ink-2);display:block;margin-top:3px;max-width:52ch}
+  .jy-expertise{padding:13px 0;border-bottom:1px solid var(--t-line)}
+  .jy-expertise:last-of-type{border-bottom:0}
+  .jy-expertise b{display:block;font-size:1.02rem;font-weight:800;color:var(--t-ink)}
+  .jy-expertise span{font-size:.85rem;color:var(--t-ink-2);display:block;margin-top:3px;max-width:52ch}
   .jy-chips{display:flex;flex-wrap:wrap;gap:8px}
   .jy-chip{font-family:ui-monospace,monospace;font-size:.76rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:8px;padding:5px 13px;transition:border-color .15s ease,color .15s ease}
   .jy-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
@@ -168,11 +168,11 @@ function renderChipSection(label, items, highlight) {
   return `<h2 class="jy-sec-label" style="margin-top:26px">${label}</h2><div class="jy-chips">${chips}</div>`;
 }
 
-function renderCraftAndTools(skills) {
-  const craft = (skills.craft || [])
+function renderExpertiseAndTools(skills) {
+  const expertise = (skills.expertise || [])
     .map(
       (c) => dedent`
-        <div class="jy-craft">
+        <div class="jy-expertise">
           <b>${c.title}</b>
           ${c.blurb ? `<span>${c.blurb}</span>` : ''}
         </div>`
@@ -181,7 +181,7 @@ function renderCraftAndTools(skills) {
   const highlight = new Set((skills.highlight || []).map((t) => t.toLowerCase()));
   const toolsSection = renderChipSection('Tools', skills.tools, highlight);
   const skillsSection = renderChipSection('Skills', skills.skills, highlight);
-  return { craft, toolsSection, skillsSection };
+  return { expertise, toolsSection, skillsSection };
 }
 
 function renderExperience(roles) {
@@ -212,7 +212,7 @@ async function createJourneyHtml(rolesData, skills, talks) {
   const footerHtml = createFooterHtml();
   const milestones = [...(rolesData.achievements || []), ...normalizeTalks(talks)];
   const timeline = renderTimeline(milestones);
-  const { craft, toolsSection, skillsSection } = renderCraftAndTools(skills || {});
+  const { expertise, toolsSection, skillsSection } = renderExpertiseAndTools(skills || {});
   const experience = renderExperience(rolesData.roles || []);
 
   const htmlContent = dedent`
@@ -235,7 +235,7 @@ async function createJourneyHtml(rolesData, skills, talks) {
           <div class="max-w-6xl mx-auto">
             <header class="mt-16 mb-14">
               <p class="jy-eyebrow">journey</p>
-              <h1 class="jy-h2 text-4xl sm:text-5xl mt-2 mb-4">Milestones, craft, and the roles behind them</h1>
+              <h1 class="jy-h2 text-4xl sm:text-5xl mt-2 mb-4">Milestones, expertise, and the roles behind them</h1>
             </header>
 
             <section aria-labelledby="jy-milestones" class="mb-20">
@@ -244,9 +244,9 @@ async function createJourneyHtml(rolesData, skills, talks) {
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
-              <section aria-labelledby="jy-craft">
-                <h2 id="jy-craft" class="jy-sec-label">Craft</h2>
-                ${craft}
+              <section aria-labelledby="jy-expertise">
+                <h2 id="jy-expertise" class="jy-sec-label">Expertise</h2>
+                ${expertise}
                 ${toolsSection}
                 ${skillsSection}
               </section>

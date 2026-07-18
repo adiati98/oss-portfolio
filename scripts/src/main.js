@@ -493,7 +493,6 @@ async function main() {
     console.log('Generating landing page...');
     await createIndexHtml(finalContributions, articles, uncountedFailedFetch, {
       impact: workbenchModel.impact,
-      talks: talksData,
     });
 
     // 5. Generate the Glossary page
@@ -503,9 +502,9 @@ async function main() {
     // 6. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
 
-    // 7. Generate Writing & Talks (HTML and Markdown)
+    // 7. Generate Writing (HTML and Markdown) — talks live on Journey, not here
     await createBlogHtml(articles);
-    await writeArticlesMarkdown(articles, talksData);
+    await writeArticlesMarkdown(articles);
 
     // --- 8. Generate Journey + Workbench pages (IA split of the old
     // Community & Activity page — design blueprint §02) ---
@@ -520,7 +519,7 @@ async function main() {
 
     // The markdown mirror splits the same way the HTML does (blueprint §02)
     await createJourneyMarkdown(leadershipData);
-    await createWorkbenchMarkdown(ongoingTasks, ongoingIssues, ongoingPRs, ongoingCoAuthoredPRs);
+    await createWorkbenchMarkdown(workbenchModel);
 
     console.log('Contributions update completed successfully.');
   } catch (e) {
