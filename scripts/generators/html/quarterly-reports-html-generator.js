@@ -83,10 +83,10 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-link:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .qr-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:5px;padding:2px 7px}
 
-  /* Per-category "back to top" — each table can run to hundreds of rows,
-     so jumping back to that category's own summary shouldn't require
-     scrolling past every other open section. */
-  .qr-cat-top{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);text-decoration:none;transition:color .15s ease}
+  /* Per-category "back to top" — resets that category's own table
+     scroll container back to its first row, since each table scrolls
+     independently of the page (max-h-[70vh] overflow-y-auto below). */
+  .qr-cat-top{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:none;border:none;padding:0;cursor:pointer;text-decoration:none;transition:color .15s ease}
   .qr-cat-top:hover{color:var(--t-brand)}
   .qr-cat-top:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
 
@@ -808,7 +808,7 @@ ${navHtmlForReports}
         // once a tag exceeds printWidth) inflated Q2-2026.html to 1.4MB from
         // formatting alone, not content. No behavior changes — same
         // attributes, just no inserted whitespace between tags.
-        let tableContent = `<div class="overflow-x-auto rounded-lg border max-h-[70vh] overflow-y-auto" style="border-color: var(--t-line);">`;
+        let tableContent = `<div id="${sectionInfo.id}-scroll" class="overflow-x-auto rounded-lg border max-h-[70vh] overflow-y-auto" style="border-color: var(--t-line);">`;
         tableContent += `<!-- prettier-ignore -->`;
         tableContent += `<table class="report-table min-w-full"><thead><tr>`;
 
@@ -925,10 +925,12 @@ ${navHtmlForReports}
         }
 
         tableContent += `</tbody></table></div>`;
-        // Anchors back to this category's own summary — with hundreds of
-        // rows possible per table, "back to top" should mean the top of
-        // THIS section, not a scroll past every other open category.
-        tableContent += `<a href="#${sectionInfo.id}" class="qr-cat-top">↑ Back to top</a>`;
+        // The table scrolls inside its own max-h-[70vh] box, independent of
+        // the page's scroll — "back to top" here means the first
+        // contribution row, i.e. resetting THIS box's scrollTop, not
+        // navigating anywhere. A button (not an anchor) targeting the
+        // scroll container by id, handled in the script below.
+        tableContent += `<button type="button" class="qr-cat-top" data-scroll-target="${sectionInfo.id}-scroll">↑ Back to top</button>`;
 
         htmlContent += tableContent;
       }
@@ -972,21 +974,18 @@ ${navHtmlForReports}
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
 
-      // Per-category "back to top" links point at the same id as the
-      // <details> they live inside, so clicking one when that hash is
-      // already current wouldn't fire 'hashchange' (the browser only
-      // fires it on an actual value change) — relying on that event would
-      // silently no-op for the common case. Handled directly instead, so
-      // it always scrolls (smoothly, unless reduced motion is requested)
-      // regardless of the current hash.
+      // Per-category "back to top" resets that category's own table
+      // container back to its first row. Each table scrolls inside its
+      // own max-h-[70vh] overflow-y-auto box, independent of the page —
+      // scrolling the page to the <details> summary wouldn't move that
+      // box back to row one, so this scrolls the container itself.
       document.addEventListener('click', (e) => {
-        const link = e.target.closest('.qr-cat-top');
-        if (!link) return;
-        const target = document.querySelector(link.getAttribute('href'));
-        if (!target) return;
-        e.preventDefault();
+        const btn = e.target.closest('.qr-cat-top');
+        if (!btn) return;
+        const container = document.getElementById(btn.dataset.scrollTarget);
+        if (!container) return;
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        container.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       });
     </script>
 ${footerHtml}
