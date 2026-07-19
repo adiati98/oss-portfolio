@@ -2,6 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { newestFirst, platformsIn, groupByOrg } = require('../../services/writing-model');
+const { mdEscapeLinkText } = require('./md-escape');
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-US', {
@@ -18,9 +19,10 @@ function formatDate(dateStr) {
  * continuation line of the same bullet, not a nested sub-bullet.
  */
 function articleBullet(article, { showPlatform }) {
-  const title = article.title.trim();
+  const title = mdEscapeLinkText(article.title.trim());
   let md = `* **[${title}](${article.link})**\n`;
-  const platformBit = showPlatform && article.platform ? `Published on **${article.platform}** — ` : '';
+  const platformBit =
+    showPlatform && article.platform ? `Published on **${article.platform}** — ` : '';
   md += `  ${platformBit}${formatDate(article.date)}\n`;
   return md + '\n';
 }

@@ -518,7 +518,7 @@ async function main() {
     await createRedirectStubs();
 
     // The markdown mirror splits the same way the HTML does (blueprint §02)
-    await createJourneyMarkdown(leadershipData);
+    await createJourneyMarkdown(leadershipData, skillsData, talksData);
     await createWorkbenchMarkdown(workbenchModel);
 
     console.log('Contributions update completed successfully.');

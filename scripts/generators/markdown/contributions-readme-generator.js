@@ -3,6 +3,7 @@ const path = require('path');
 const { BASE_DIR, GITHUB_USERNAME } = require('../../config/config');
 const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
 const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
+const { mdEscapeLinkText } = require('./md-escape');
 
 const MARKDOWN_OUTPUT_DIR_NAME = 'markdown-generated';
 const MARKDOWN_README_FILENAME = 'README.md';
@@ -140,6 +141,21 @@ async function createStatsReadme(finalContributions, articles = [], failedFetchC
   ];
 
   const totalUniqueRepos = new Set(allItems.map((item) => item.repo)).size;
+  // Mirrors Home's uniqueOrgs: the part of "owner/repo" before the slash.
+  const totalUniqueOrgs = new Set(
+    allItems
+      .map((item) => item.repo)
+      .filter(Boolean)
+      .map((repo) => String(repo).split('/')[0])
+  ).size;
+
+  // Mirrors workbench-merge.js's tallyMerged([reviewedPrs, coAuthoredPrs], null) —
+  // the lifetime "contributions you helped ship" figure Home's impact band
+  // shows. Only merged items count: this is "helped ship", not "helped work on".
+  const helpedShipCount = [
+    ...(finalContributions.reviewedPrs || []),
+    ...(Array.isArray(finalContributions.coAuthoredPrs) ? finalContributions.coAuthoredPrs : []),
+  ].filter((item) => item.mergedAt).length;
 
   const repoActivity = allItems.reduce((acc, item) => {
     acc[item.repo] = (acc[item.repo] || 0) + 1;
@@ -155,7 +171,7 @@ async function createStatsReadme(finalContributions, articles = [], failedFetchC
       ? topThreeRepos
           .map(([repo, count], idx) => {
             const rank = idx + 1;
-            return `${rank}. [**${repo}**](https://github.com/${repo}) (${count} contributions)`;
+            return `${rank}. [**${mdEscapeLinkText(repo)}**](https://github.com/${repo}) (${count} contributions)`;
           })
           .join('\n')
       : '_No activity recorded yet._';
@@ -260,8 +276,9 @@ Organized by year and quarter, these reports track contributions made by **[${GI
 
 | Context | Detail |
 | :--- | :--- |
-| 🏗️ **Unique Repositories** | **${totalUniqueRepos}** projects |
+| 🏗️ **Unique Repositories** | **${totalUniqueRepos}** projects across **${totalUniqueOrgs}** organization${totalUniqueOrgs === 1 ? '' : 's'} |
 | 📅 **Active Since** | **${earliestYear}** (${yearsTracked} years tracked) |
+| 🤝 **Helped Ship** | **${helpedShipCount}** reviewed or co-authored contributions merged |
 | ✍️ **Articles Written** | **${articleCount}** published articles |
 
 ### 🧩 Contribution Distribution
@@ -271,7 +288,7 @@ Organized by year and quarter, these reports track contributions made by **[${GI
 | ${stats.prs.isHighest ? '**Merged PRs**' : 'Merged PRs'} | \`${stats.prs.bar}\` | ${stats.prs.count} | ${stats.prs.pct} |
 | ${stats.issues.isHighest ? '**Issues**' : 'Issues'} | \`${stats.issues.bar}\` | ${stats.issues.count} | ${stats.issues.pct} |
 | ${stats.reviews.isHighest ? '**Reviewed PRs**' : 'Reviewed PRs'} | \`${stats.reviews.bar}\` | ${stats.reviews.count} | ${stats.reviews.pct} |
-| ${stats.coauth.isHighest ? '**Co-Authored PRs**' : 'Co-Authored PRs'} | \`${stats.coauth.bar}\` | ${stats.coauth.count} | ${stats.coauth.pct} |
+| ${stats.coauth.isHighest ? '**Co-authored PRs**' : 'Co-authored PRs'} | \`${stats.coauth.bar}\` | ${stats.coauth.count} | ${stats.coauth.pct} |
 | ${stats.collab.isHighest ? '**Collaborations**' : 'Collaborations'} | \`${stats.collab.bar}\` | ${stats.collab.count} | ${stats.collab.pct} |
 
 ### 🎯 Primary Focus Projects
@@ -286,9 +303,9 @@ ${article} ${lowerDesc}
 
 ## 🏛️ Ecosystem Engagement
 
-Beyond code contributions, I maintain active roles in community leadership and technical content creation around open source.
+Beyond code contributions, this portfolio also reflects active roles in community leadership and technical content creation around open source.
 
-* ✍️ **Writing & Talks:** [**View full articles list (${articleCount})**](./writing.md)
+* ✍️ **Writing:** [**View full articles list (${articleCount})**](./writing.md)
 * 🏆 **Journey:** [**View milestones, roles & impact**](./journey.md)
 * 🛠️ **Active Workbench:** [**View live tasks, organized by what happens next**](./workbench.md)
 
