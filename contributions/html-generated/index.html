@@ -368,7 +368,12 @@
         max-width: 60ch;
         margin: 0;
       }
+      /* container-type lets .lp-tiles react to the card's own rendered width
+     (below) instead of the viewport's — the card no longer tracks the
+     viewport 1:1 now that it's capped to the Contribution mix column
+     width on wide screens. */
       .lp-impact {
+        container-type: inline-size;
         background: var(--t-card);
         border: 1px solid var(--t-line);
         border-radius: 14px;
@@ -396,6 +401,18 @@
         color: var(--t-ink-2);
         font-weight: 400;
         font-size: 0.86rem;
+      }
+      /* Above the .lp-cols breakpoint, match the hero/impact card width to the
+     Contribution mix column exactly: that column is one of two
+     minmax(0,1fr) tracks with a 40px gap, so its width is always
+     calc(50% - 20px) of the same container these cards sit in. Below the
+     breakpoint .lp-cols collapses to one column (full width), so the cap
+     is scoped to only apply once that second column exists. */
+      @media (min-width: 861px) {
+        .lp-hero,
+        .lp-impact {
+          max-width: calc(50% - 20px);
+        }
       }
       .lp-live {
         display: inline-flex;
@@ -448,14 +465,15 @@
       }
       .lp-tiles {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, minmax(0, 1fr));
       }
-      @media (max-width: 760px) {
+      @container (max-width:600px) {
         .lp-tiles {
-          grid-template-columns: repeat(2, 1fr);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
       .lp-tile {
+        min-width: 0;
         padding: 16px 18px;
         border-right: 1px solid var(--t-line);
         display: flex;
@@ -466,7 +484,7 @@
       .lp-tile:last-child {
         border-right: 0;
       }
-      @media (max-width: 760px) {
+      @container (max-width:600px) {
         .lp-tile {
           border-top: 1px solid var(--t-line);
         }
@@ -481,6 +499,7 @@
         letter-spacing: -0.02em;
         font-variant-numeric: tabular-nums;
         color: var(--t-ink);
+        overflow-wrap: anywhere;
       }
       .lp-tile .n small {
         font-size: 1.05rem;
@@ -512,15 +531,14 @@
       }
       .lp-cols {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
         gap: 40px;
         align-items: start;
         margin-top: 30px;
       }
       @media (max-width: 860px) {
         .lp-cols {
-          grid-template-columns: 1fr;
-          gap: 30px;
+          grid-template-columns: minmax(0, 1fr);
         }
       }
       .lp-h3 {
@@ -602,7 +620,7 @@
       }
       .lp-persona {
         display: grid;
-        grid-template-columns: 72px 1fr;
+        grid-template-columns: 72px minmax(0, 1fr);
         gap: 18px;
         align-items: center;
       }
@@ -1495,10 +1513,10 @@
           <section class="lp-impact" aria-labelledby="lp-impact-h">
             <div class="lp-impact-top">
               <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-              <span class="lp-live" data-build-ts="2026-07-19T11:58:29.393Z">
+              <span class="lp-live" data-build-ts="2026-07-19T13:41:45.147Z">
                 <i aria-hidden="true"></i
-                ><time class="lp-live-text" datetime="2026-07-19T11:58:29.393Z"
-                  >Updated 2026-07-19 11:58</time
+                ><time class="lp-live-text" datetime="2026-07-19T13:41:45.147Z"
+                  >Updated 2026-07-19 13:41</time
                 >
               </span>
             </div>

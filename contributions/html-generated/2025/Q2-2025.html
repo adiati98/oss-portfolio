@@ -960,6 +960,17 @@
           letter-spacing: 0.04em;
           color: var(--t-ink-3);
         }
+        /* A flex item's default min-width is its content's min-content size —
+       for an unbroken string (a long repo slug, a raw URL used as a PR
+       title) that can exceed the card, forcing this row (and the whole
+       table) to scroll horizontally instead of wrapping. min-width:0 lets
+       the item actually shrink; overflow-wrap:anywhere makes it wrap even
+       mid-word when there's no earlier break opportunity. */
+        .report-table td[data-label] > * {
+          flex: 1 1 0%;
+          min-width: 0;
+          overflow-wrap: anywhere;
+        }
         .report-table td:first-child {
           font-weight: 800;
           border-bottom: 0;

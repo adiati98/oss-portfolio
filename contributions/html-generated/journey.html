@@ -415,15 +415,6 @@
       .jy-ms h3 a:hover {
         color: var(--t-brand);
       }
-      .jy-ms .jy-arr {
-        display: inline-block;
-        color: var(--t-brand);
-        transition: transform 0.18s ease;
-        margin-left: 4px;
-      }
-      .jy-ms:hover .jy-arr {
-        transform: translate(3px, -3px);
-      }
       .jy-org {
         font-family: ui-monospace, monospace;
         font-size: 0.75rem;
@@ -543,8 +534,7 @@
         border-color: var(--t-brand-line);
       }
       @media (prefers-reduced-motion: reduce) {
-        .jy-chip,
-        .jy-ms .jy-arr {
+        .jy-chip {
           transition: none;
         }
       }
@@ -1363,7 +1353,7 @@
               <article class="jy-ms" data-earlier="0">
                 <h3>
                   <a href="https://mautic.org/" target="_blank" rel="noopener noreferrer"
-                    >Mautician of the Year<span class="jy-arr" aria-hidden="true">↗</span></a
+                    >Mautician of the Year</a
                   >
                 </h3>
                 <div class="jy-org"><b>Mautic</b> · 2025</div>
@@ -1381,9 +1371,7 @@
                     href="https://github.com/OpenSource-Communities"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Course Creator: Becoming a Maintainer<span class="jy-arr" aria-hidden="true"
-                      >↗</span
-                    ></a
+                    >Course Creator: Becoming a Maintainer</a
                   >
                 </h3>
                 <div class="jy-org"><b>Open Source Communities</b> · 2024</div>
