@@ -106,6 +106,14 @@ const LANDING_CSS = `
   .lp-focus a:hover{color:var(--t-brand)}
   .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
   .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap;flex-shrink:0}
+  /* On narrow screens a long org/repo name wraps onto two lines, but as a
+     row-flex sibling the count stays baseline-aligned to that first line —
+     it visually lands between the org name and the repo name instead of
+     next to the whole title. Stacking the count under the title once the
+     column is this narrow keeps the two from reading as jumbled together. */
+  @media (max-width:640px){
+    .lp-focus{flex-direction:column;align-items:flex-start;gap:2px}
+  }
   .lp-persona{display:grid;grid-template-columns:72px minmax(0,1fr);gap:18px;align-items:center}
   .lp-seal{width:72px;height:72px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
     background:conic-gradient(from 210deg,var(--t-brand),var(--t-accent),var(--t-brand));animation:lp-spin 26s linear infinite}
