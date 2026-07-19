@@ -618,6 +618,18 @@
         white-space: nowrap;
         flex-shrink: 0;
       }
+      /* On narrow screens a long org/repo name wraps onto two lines, but as a
+     row-flex sibling the count stays baseline-aligned to that first line —
+     it visually lands between the org name and the repo name instead of
+     next to the whole title. Stacking the count under the title once the
+     column is this narrow keeps the two from reading as jumbled together. */
+      @media (max-width: 640px) {
+        .lp-focus {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 2px;
+        }
+      }
       .lp-persona {
         display: grid;
         grid-template-columns: 72px minmax(0, 1fr);
@@ -1513,10 +1525,10 @@
           <section class="lp-impact" aria-labelledby="lp-impact-h">
             <div class="lp-impact-top">
               <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-              <span class="lp-live" data-build-ts="2026-07-19T13:41:45.147Z">
+              <span class="lp-live" data-build-ts="2026-07-19T14:01:16.893Z">
                 <i aria-hidden="true"></i
-                ><time class="lp-live-text" datetime="2026-07-19T13:41:45.147Z"
-                  >Updated 2026-07-19 13:41</time
+                ><time class="lp-live-text" datetime="2026-07-19T14:01:16.893Z"
+                  >Updated 2026-07-19 14:01</time
                 >
               </span>
             </div>
