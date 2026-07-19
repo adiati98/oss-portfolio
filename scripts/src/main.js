@@ -34,15 +34,23 @@ const { groupContributionsByQuarter } = require('../utils/contributions-groupers
 const { writeMarkdownFiles } = require('../generators/markdown/quarterly-reports-generator');
 const { createStatsReadme } = require('../generators/markdown/contributions-readme-generator');
 const { writeArticlesMarkdown } = require('../generators/markdown/blog-markdown-generator');
-const { createCommunityMarkdown } = require('../generators/markdown/community-markdown-generator');
+const {
+  createJourneyMarkdown,
+  createWorkbenchMarkdown,
+} = require('../generators/markdown/community-markdown-generator');
 
 // Import html generation logic
 const { writeHtmlFiles } = require('../generators/html/quarterly-reports-html-generator');
 const { createHtmlReports } = require('../generators/html/contributions-report-html-generator');
 const { createIndexHtml } = require('../generators/html/landing-page-html-generator');
 const { createBlogHtml } = require('../generators/html/blog-html-generator');
-const { createCommunityHtml } = require('../generators/html/community-html-generator');
+const { createJourneyHtml } = require('../generators/html/journey-html-generator');
+const { createWorkbenchHtml } = require('../generators/html/workbench-html-generator');
+const { createRedirectStubs } = require('../generators/html/redirect-stub-generator');
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
+const { loadMergedWorkbench } = require('../services/workbench-merge');
+const skillsData = require('../../contents/skills');
+const talksData = require('../../contents/talks');
 
 async function main() {
   // Define the data directory path.
@@ -473,9 +481,19 @@ async function main() {
 
     await createStatsReadme(finalContributions, articles, uncountedFailedFetch);
 
+    // The merged workbench model feeds both the Home impact band and the
+    // Workbench board, so it's loaded once here, before either renders.
+    console.log('Merging local records with the docs-PR tracker...');
+    const workbenchModel = await loadMergedWorkbench();
+    if (workbenchModel.feed.degraded) {
+      console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
+    }
+
     // 4. Generate landing page (index.html)
     console.log('Generating landing page...');
-    await createIndexHtml(finalContributions, articles, uncountedFailedFetch);
+    await createIndexHtml(finalContributions, articles, uncountedFailedFetch, {
+      impact: workbenchModel.impact,
+    });
 
     // 5. Generate the Glossary page
     console.log('Generating Glossary...');
@@ -484,49 +502,24 @@ async function main() {
     // 6. Generate reports page (HTML)
     await createHtmlReports(quarterlyHtmlLinks);
 
-    // 7. Generate Blog Reports (HTML and Markdown)
+    // 7. Generate Writing (HTML and Markdown) — talks live on Journey, not here
     await createBlogHtml(articles);
     await writeArticlesMarkdown(articles);
 
-    // --- 8. Generate Community & Activity Reports ---
-    console.log('Generating Community & Activity reports...');
+    // --- 8. Generate Journey + Workbench pages (IA split of the old
+    // Community & Activity page — design blueprint §02) ---
+    console.log('Generating Journey page...');
+    await createJourneyHtml(leadershipData, skillsData, talksData);
 
-    const isBot = (t) => {
-      const username = typeof t.user === 'object' ? t.user?.login : t.user;
-      const userStr = String(username || '').toLowerCase();
-      const titleStr = String(t.title || '').toLowerCase();
-      return (
-        userStr.includes('dependabot') ||
-        userStr.includes('[bot]') ||
-        titleStr.startsWith('[snyk]') ||
-        (titleStr.startsWith('bump') && userStr.includes('dependabot'))
-      );
-    };
+    console.log('Generating Workbench page (local records ⨝ docs-PR tracker)...');
+    await createWorkbenchHtml(workbenchModel);
 
-    // Use the logic to filter for the report generation
-    const manualRequestTasks = ongoingTasks.filter(
-      (t) => t.status === 'Request review' && !isBot(t)
-    );
-    const inProgressTasks = ongoingTasks.filter((t) => t.status === 'Review in progress');
-    const botRequestTasks = ongoingTasks.filter((t) => t.status === 'Request review' && isBot(t));
+    // Old URLs keep resolving
+    await createRedirectStubs();
 
-    await createCommunityHtml(
-      finalContributions,
-      leadershipData,
-      ongoingTasks,
-      ongoingIssues,
-      ongoingPRs,
-      ongoingCoAuthoredPRs
-    );
-
-    await createCommunityMarkdown(
-      finalContributions,
-      leadershipData,
-      ongoingTasks,
-      ongoingIssues,
-      ongoingPRs,
-      ongoingCoAuthoredPRs
-    );
+    // The markdown mirror splits the same way the HTML does (blueprint §02)
+    await createJourneyMarkdown(leadershipData, skillsData, talksData);
+    await createWorkbenchMarkdown(workbenchModel);
 
     console.log('Contributions update completed successfully.');
   } catch (e) {

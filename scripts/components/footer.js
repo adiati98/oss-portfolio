@@ -21,18 +21,18 @@ function createFooterHtml() {
     <footer style="border-top-color: ${COLORS.border.light}; color: ${COLORS.text.secondary};" class="mt-16 py-8 border-t text-center text-sm">
       <div class="mb-1">
         &copy; ${currentYear} 
-        <a href="https://github.com/${GITHUB_USERNAME}" 
-           target="_blank" 
+        <a href="https://github.com/${GITHUB_USERNAME}"
+           target="_blank" rel="noopener noreferrer"
            style="color: ${COLORS.primaryText};"
            class="hover:opacity-80 font-semibold transition duration-150">
             ${GITHUB_USERNAME}
-        </a>'s open source contributions, 
+        </a>'s open source contributions,
         generated on ${currentDate}.
       </div>
 
       <div class="text-xs mt-1">
-          Made with 💙 by 
-          <a href="https://github.com/adiati98" target="_blank" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold transition duration-150">
+          Made with 💙 by
+          <a href="https://github.com/adiati98" target="_blank" rel="noopener noreferrer" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold transition duration-150">
               Ayu Adiati
           </a>
       </div>

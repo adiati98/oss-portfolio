@@ -1,8 +1,5 @@
-const {
-  generateColorsObject,
-  buildFlatVarsBlock,
-  ensureReadableOn,
-} = require('../utils/color-helpers');
+const { generateColorsObject, buildFlatVarsBlock } = require('../utils/color-helpers');
+const { THEME, THEME_TOKENS_CSS, mixHex } = require('./theme-engine');
 const { generateFaviconSvg, encodeSvg } = require('../utils/icon-processor');
 const {
   LANDING_PAGE_ICONS,
@@ -16,72 +13,68 @@ const {
 } = require('./icons');
 
 /**
- * CENTRALIZED COLOR CONFIGURATION
+ * LEGACY COLOR SURFACE — derived, not configured.
+ *
+ * Every value below comes from the five seeds in scripts/config/theme.js via
+ * theme-engine.js (which also WCAG-gates the derivations). The exports keep
+ * their historical names and shapes so existing generators continue to work
+ * unchanged; new code should prefer the `--t-*` tokens in THEME_TOKENS_CSS.
+ *
+ * Semantic mapping (see design blueprint §01):
+ *   primary            → brand seed
+ *   success / merged   → positive ladder (the old violet "merged" is retired)
+ *   error              → critical ladder
+ *   take-action        → caution ladder      watching → brand ladder
+ *   waiting / approved → positive ladder     stale/bot → neutral ladder
  */
+const S = THEME.semantic;
+const L = THEME.light;
+const D = THEME.dark;
+
 const COLOR_PALETTE = {
-  primary: '#4338CA',
-  primary900: '#312E81',
-  neutral: '#6b7280',
-  success: '#10b981',
-  merged: '#8b5cf6',
-  error: '#ef4444',
-  textPrimary: '#1f2937',
-  textSecondary: '#374151',
-  textMuted: '#6b7280',
-  highlightBg: '#eef2ff',
+  primary: THEME.seeds.brand,
+  primary900: S.brand.light.strong,
+  neutral: THEME.seeds.neutral,
+  success: THEME.seeds.positive,
+  merged: THEME.seeds.positive,
+  error: THEME.seeds.critical,
+  textPrimary: L.ink,
+  textSecondary: L.ink2,
+  textMuted: mixHex(L.ink2, L.ink3, 0.5),
+  highlightBg: S.brand.light.wash,
 };
 
 /**
- * DARK-MODE COUNTERPART PALETTE
- * `primary` and `primary900` are intentionally left unchanged: both are used
- * throughout the site as solid backgrounds paired with white text (nav bar,
- * hero stat cards, progress bars) and brightening them would break that
- * contrast. Every other token is brightened for legibility on dark surfaces.
+ * Dark-mode counterparts. `primary` and `primary900` intentionally stay on
+ * the light-theme values: both are used as solid fills paired with on-brand
+ * text (nav bar, hero cards, progress bars), and brightening them would
+ * break that contrast — same rule as before, now derived.
  */
 const COLOR_PALETTE_DARK = {
-  primary: '#4338CA',
-  primary900: '#312E81',
-  neutral: '#94a3b8',
-  success: '#34d399',
-  merged: '#a78bfa',
-  error: '#f87171',
-  textPrimary: '#f1f5f9',
-  textSecondary: '#cbd5e1',
-  textMuted: '#94a3b8',
-  highlightBg: '#1e1b4b',
+  primary: THEME.seeds.brand,
+  primary900: S.brand.light.strong,
+  neutral: S.neutral.dark.text,
+  success: S.positive.dark.text,
+  merged: S.positive.dark.text,
+  error: S.critical.dark.text,
+  textPrimary: D.ink,
+  textSecondary: D.ink2,
+  textMuted: D.ink3,
+  highlightBg: S.brand.dark.wash,
 };
 
 /**
- * The dark-mode surface that primary-colored text/icon colors get checked
- * against. Most of that text sits on `dark:bg-slate-800` cards rather than
- * directly on the `dark:bg-slate-900` page background — cards are the
- * lighter (harder-to-contrast-against) of the two surfaces, so deriving
- * against this one also guarantees AA against the darker page background.
- */
-const DARK_CARD_BG = '#1e293b';
-
-/**
- * Lightened, dark-mode-readable variants of brand colors, derived
- * programmatically (not hardcoded) so this stays correct for forks that
- * configure a different `COLOR_PALETTE.primary`. `ensureReadableOn` keeps
- * the same hue/saturation and only raises lightness until it clears WCAG AA
- * (4.5:1) against the dark page background.
- */
-const PRIMARY_TEXT_DARK = ensureReadableOn(COLOR_PALETTE.primary, DARK_CARD_BG, 4.5);
-const ACCENT_STRONG_DARK = ensureReadableOn(COLOR_PALETTE.primary900, DARK_CARD_BG, 4.5);
-
-/**
- * Single-value (non-laddered) color tokens that aren't part of the main
- * opacity-variant system above.
+ * Single-value (non-laddered) tokens. The old hand-picked values are now
+ * ladder lookups; the yellow accent is retired in favor of the caution seed.
  */
 const FLAT_COLOR_TOKENS = {
-  'c-bg-surface': { light: '#ffffff', dark: '#1e293b' }, // card/table surfaces
-  'c-accent-yellow': { light: '#eab308', dark: '#facc15' },
-  'c-accent-strong': { light: '#3730a3', dark: ACCENT_STRONG_DARK }, // glossary bold text
-  'c-primary-text': { light: COLOR_PALETTE.primary, dark: PRIMARY_TEXT_DARK }, // primary-colored TEXT (not fills)
-  'c-draft-bg': { light: '#f1f5f9', dark: '#334155' }, // lighter than the slate-800 card behind it
-  'c-draft-text': { light: '#475569', dark: '#e2e8f0' },
-  'c-draft-border': { light: '#cbd5e1', dark: '#64748b' },
+  'c-bg-surface': { light: L.card, dark: D.card },
+  'c-accent-yellow': { light: S.caution.light.text, dark: S.caution.dark.text },
+  'c-accent-strong': { light: S.brand.light.strong, dark: S.brand.dark.text },
+  'c-primary-text': { light: S.brand.light.text, dark: S.brand.dark.text },
+  'c-draft-bg': { light: S.neutral.light.wash, dark: S.neutral.dark.wash },
+  'c-draft-text': { light: L.ink2, dark: D.ink },
+  'c-draft-border': { light: L.line2, dark: D.line2 },
 };
 
 // Generate theme-ready colors (every leaf is a CSS var() reference)
@@ -90,6 +83,23 @@ const { colors: COLORS, cssVarsBlock: PALETTE_CSS_VARS } = generateColorsObject(
   COLOR_PALETTE_DARK,
   FLAT_COLOR_TOKENS
 );
+
+/**
+ * Status badges (quarterly report tables) render at 12px — small text, so
+ * they need the full 4.5:1 AA ratio. `generateColorsObject`'s generic
+ * opacity ladder (a fixed 10% tint) isn't searched for readability and can
+ * fail that at arbitrary seed colors. Route status colors through the
+ * theme-engine's semantic ladder instead: its `wash` is already searched
+ * per-seed to keep `text` readable on top of it (see theme-engine.js), so
+ * this stays safe for any brand colors a fork configures, not just the
+ * ones shipped here.
+ */
+COLORS.status = {
+  green: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  purple: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  red: { bg: 'var(--t-critical-wash)', text: 'var(--t-critical)' },
+  gray: { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' },
+};
 
 // Generate browser-ready favicon
 const FAVICON_SVG_ENCODED = encodeSvg(
@@ -168,8 +178,8 @@ const WORKBENCH_BALL_STATUS = {
     label: 'Watching',
   },
   approved: {
-    dot: COLORS.primary[500],
-    text: COLORS.primary[700],
+    dot: COLORS.primary[500] || COLORS.primary.rgb,
+    text: COLORS.primaryText,
     label: 'Approved',
   },
   stale: {
@@ -180,33 +190,33 @@ const WORKBENCH_BALL_STATUS = {
 };
 
 const WORKBENCH_CSS_VARS = buildFlatVarsBlock({
-  'wb-ongoing-bg': { light: '#ecfeff', dark: '#083344' },
-  'wb-ongoing-text': { light: '#086788', dark: '#67e8f9' },
-  'wb-ongoing-border': { light: '#a5f3fc', dark: '#0e7490' },
-  'wb-todo-bg': { light: '#fff7ed', dark: '#431407' },
-  'wb-todo-text': { light: '#c2410c', dark: '#fdba74' },
-  'wb-todo-border': { light: '#fdba74', dark: '#c2410c' },
-  'wb-bot-bg': { light: '#f8fafc', dark: '#1e293b' },
-  'wb-bot-text': { light: '#475569', dark: '#cbd5e1' },
-  'wb-bot-border': { light: '#e2e8f0', dark: '#475569' },
-  'wb-empty-text': { light: '#991b1b', dark: '#fca5a5' },
-  'wb-waiting-dot': { light: '#84cc16', dark: '#a3e635' },
-  'wb-waiting-text': { light: '#4d7c0f', dark: '#bef264' },
-  'wb-takeaction-dot': { light: '#d946ef', dark: '#e879f9' },
-  'wb-takeaction-text': { light: '#a21caf', dark: '#f0abfc' },
-  'wb-watching-dot': { light: '#0ea5e9', dark: '#38bdf8' },
-  'wb-watching-text': { light: '#0369a1', dark: '#7dd3fc' },
-  'wb-stale-dot': { light: '#94a3b8', dark: '#cbd5e1' },
-  'wb-stale-text': { light: '#64748b', dark: '#94a3b8' },
+  'wb-ongoing-bg': { light: S.brand.light.wash, dark: S.brand.dark.wash },
+  'wb-ongoing-text': { light: S.brand.light.text, dark: S.brand.dark.text },
+  'wb-ongoing-border': { light: S.brand.light.line, dark: S.brand.dark.line },
+  'wb-todo-bg': { light: S.caution.light.wash, dark: S.caution.dark.wash },
+  'wb-todo-text': { light: S.caution.light.text, dark: S.caution.dark.text },
+  'wb-todo-border': { light: S.caution.light.line, dark: S.caution.dark.line },
+  'wb-bot-bg': { light: S.neutral.light.wash, dark: S.neutral.dark.wash },
+  'wb-bot-text': { light: S.neutral.light.text, dark: S.neutral.dark.text },
+  'wb-bot-border': { light: S.neutral.light.line, dark: S.neutral.dark.line },
+  // Empty workbench = success framing ("your court is clear"), not an error.
+  'wb-empty-text': { light: S.positive.light.text, dark: S.positive.dark.text },
+  'wb-waiting-dot': { light: S.positive.light.text, dark: S.positive.dark.text },
+  'wb-waiting-text': { light: S.positive.light.text, dark: S.positive.dark.text },
+  'wb-takeaction-dot': { light: S.caution.light.text, dark: S.caution.dark.text },
+  'wb-takeaction-text': { light: S.caution.light.text, dark: S.caution.dark.text },
+  'wb-watching-dot': { light: S.brand.light.text, dark: S.brand.dark.text },
+  'wb-watching-text': { light: S.brand.light.text, dark: S.brand.dark.text },
+  'wb-stale-dot': { light: S.neutral.light.text, dark: S.neutral.dark.text },
+  'wb-stale-text': { light: S.neutral.light.text, dark: S.neutral.dark.text },
 });
 
 /**
  * Combined `:root{...} html.dark{...}` CSS variable declarations for every
- * color token used across the site. Interpolated once into the shared base
- * CSS (see getCommonBaseCss in style-generator.js) so every generated page
- * picks it up.
+ * color token used across the site: the legacy laddered vars, the workbench
+ * vars, and the new `--t-*` design tokens from the theme engine.
  */
-const THEME_CSS_VARS = `${PALETTE_CSS_VARS}\n${WORKBENCH_CSS_VARS}`;
+const THEME_CSS_VARS = `${PALETTE_CSS_VARS}\n${WORKBENCH_CSS_VARS}\n${THEME_TOKENS_CSS}`;
 
 module.exports = {
   LANDING_PAGE_ICONS,
@@ -223,4 +233,5 @@ module.exports = {
   WORKBENCH_STATUS_COLORS,
   WORKBENCH_BALL_STATUS,
   THEME_CSS_VARS,
+  THEME,
 };

@@ -20,10 +20,15 @@ function getCommonBaseCss() {
       padding: 0;
       height: 100%;
       max-width: 100%;
-      overflow-x: hidden;
-      position: relative;
     }
     body {
+      /* overflow-x/position live on body, not html — overflow on the root
+         element is a well-documented trigger for browsers (notably iOS
+         Safari) to stop treating the viewport as the containing block for
+         position:fixed descendants, which silently breaks the back-to-top
+         button on every page built from this base CSS. */
+      overflow-x: hidden;
+      position: relative;
       font-family: 'Inter', sans-serif;
       min-height: 10vh;
       display: flex;
@@ -32,28 +37,28 @@ function getCommonBaseCss() {
 
     /* Navigation Buttons */
     .nav-report-button {
-      border: 1px solid ${COLORS.border.light} !important;
+      border: 1px solid var(--t-line) !important;
       transition: border-color 0.15s ease-in-out !important;
     }
     .nav-report-button:hover {
-      border-color: ${COLORS.primaryText} !important;
+      border-color: var(--t-brand) !important;
     }
     .nav-report-button:focus-visible {
-      border-color: ${COLORS.primaryText};
-      outline: 2px solid ${COLORS.primaryText};
+      border-color: var(--t-brand);
+      outline: 2px solid var(--t-brand);
       outline-offset: 2px;
     }
-        
+
     .nav-contribution-button {
-      border: 1px solid ${COLORS.border.light} !important;
+      border: 1px solid var(--t-line) !important;
       transition: border-color 0.15s ease-in-out !important;
     }
     .nav-contribution-button:hover {
-      border-color: ${COLORS.primaryText} !important;
+      border-color: var(--t-brand) !important;
     }
-    .nav-contribution-button:focus-visible { 
-      border-color: ${COLORS.primaryText};
-      outline: 2px solid ${COLORS.primaryText};
+    .nav-contribution-button:focus-visible {
+      border-color: var(--t-brand);
+      outline: 2px solid var(--t-brand);
       outline-offset: 2px;
     }
 
@@ -86,60 +91,13 @@ function getCommonBaseCss() {
         height: 0.75rem;
       }
       .breakdown-label {
-        font-size: 0.7rem !important; /* slightly smaller than xs */
+        font-size: 0.75rem !important;
       }
     }
   `;
 }
 
 // --- 2. FUNCTIONS FOR EACH HTML GENERATOR ---
-
-/**
- * Generates the CSS block for the Community & Activity page.
- */
-function getCommunityStyleCss() {
-  return dedent`
-    ${getCommonBaseCss()}
-    
-    summary {
-      cursor: pointer;
-      outline: none;
-      transition: background-color 0.15s ease-in-out;
-    }
-
-    /* The 'Tab' focus state */
-    summary:focus-visible {
-      outline: 2px solid ${COLORS.primaryText};
-      outline-offset: -2px;
-      background-color: ${COLORS.primary[5]};
-      border-radius: 0.75rem;
-    }
-
-    /* Achievement Cards */
-    .metric-card-hover {
-      transition: all 0.2s ease-in-out;
-    }
-    .metric-card-hover:hover {
-      transform: translateY(-4px);
-      border-color: ${COLORS.primaryText} !important;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Table & Row Hovers */
-    .table-row-hover {
-      transition: background-color 0.15s ease-in-out;
-    }
-    .table-row-hover:hover {
-      background-color: ${COLORS.primary[5]} !important;
-    }
-
-    /* Workbench Table custom scrollbar for mobile */
-    .overflow-x-auto {
-      scrollbar-width: thin;
-      scrollbar-color: ${COLORS.border.light} transparent;
-    }
-  `;
-}
 
 /**
  * Generates the CSS block for the blog page (blog.html).
@@ -222,28 +180,28 @@ function getReportsListStyleCss() {
     details summary {
       cursor: pointer;
       outline: none;
-      color: ${COLORS.text.primary};
+      color: var(--t-ink);
       transition: background-color 0.15s ease-in-out;
     }
     summary:focus-visible {
-      outline: 2px solid ${COLORS.primaryText};
+      outline: 2px solid var(--t-brand);
       outline-offset: 2px;
     }
 
     details[open] {
-      background-color: ${COLORS.primary[5]};
+      background-color: var(--t-brand-wash);
     }
     details[open] summary {
-      background-color: ${COLORS.primary[5]};
+      background-color: var(--t-brand-wash);
       border-radius: 0.5rem 0.5rem 0 0;
-      color: ${COLORS.primaryText};
+      color: var(--t-brand);
     }
     details[open] summary:hover,
     details[open] summary:focus-visible {
-      background-color: ${COLORS.primary[10]};
+      background-color: var(--t-brand-line);
     }
     details:not([open]) {
-      background-color: ${COLORS.background.altRows};
+      background-color: var(--t-card-2);
     }
     details:not([open]) summary {
       border-bottom: none;
@@ -251,19 +209,19 @@ function getReportsListStyleCss() {
     }
     details:not([open]) summary:hover,
     details:not([open]) summary:focus-visible {
-      background-color: ${COLORS.primary[5]};
+      background-color: var(--t-brand-wash);
     }
 
     .report-card-link {
-      border: 1px solid ${COLORS.border.light} !important;
+      border: 1px solid var(--t-line) !important;
       transition: border-color 0.15s ease-in-out !important;
     }
     .report-card-link:hover {
-      border-color: ${COLORS.primaryText} !important;
+      border-color: var(--t-brand) !important;
     }
     .report-card-link:focus-visible {
-      border-color: ${COLORS.primaryText};
-      outline: 2px solid ${COLORS.primaryText};
+      border-color: var(--t-brand);
+      outline: 2px solid var(--t-brand);
       outline-offset: 2px;
     }
   `;
@@ -275,18 +233,39 @@ function getReportsListStyleCss() {
 function getReportStyleCss() {
   return dedent`
     ${getCommonBaseCss()}
-    
+
+    /* Quarterly impact band — same tile pattern as the workbench board
+       (renderImpact), scoped to a single closed quarter instead of live
+       activity. */
+    .qr-impact{background:var(--t-card);border:1px solid var(--t-line);border-radius:14px;overflow:hidden;margin-bottom:32px;box-shadow:var(--t-shadow)}
+    .qr-impact-top{padding:14px 18px;border-bottom:1px solid var(--t-line);background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
+    .qr-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
+    .qr-impact-top h2 span{color:var(--t-ink-3);font-weight:400;font-size:.86rem}
+    .qr-tiles{display:grid;grid-template-columns:repeat(5,1fr)}
+    @media (max-width:760px){.qr-tiles{grid-template-columns:repeat(2,1fr)}}
+    .qr-tile{padding:15px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:2px;text-decoration:none;transition:background .15s ease}
+    .qr-tile:last-child{border-right:0}
+    a.qr-tile:hover{background:var(--t-card-2)}
+    @media (max-width:760px){.qr-tile{border-top:1px solid var(--t-line)}.qr-tile:nth-child(2n){border-right:0}}
+    .qr-tile .n{font-weight:800;font-size:2.05rem;line-height:1.08;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--t-ink)}
+    .qr-tile .c{font-size:.76rem;color:var(--t-ink-2);line-height:1.35}
+    .qr-tile--hero{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
+    .qr-tile--hero .n,.qr-tile--hero .c{color:var(--t-on-brand)}
+    .qr-tile--hero .c{opacity:.85}
+    a.qr-tile--hero:hover{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
+    .qr-tile--good .n{color:var(--t-positive)}
+
     summary {
       cursor: pointer;
       outline: none;
       margin: 0.5em 0;
       padding: 0.5em 0;
-      color: ${COLORS.text.primary};
+      color: var(--t-ink);
       display: list-item;
       white-space: nowrap;
     }
     summary:focus-visible {
-      outline: 2px solid ${COLORS.primaryText};
+      outline: 2px solid var(--t-brand);
       outline-offset: 2px;
     }
 
@@ -298,10 +277,10 @@ function getReportStyleCss() {
     }
 
     .details-section {
-      background-color: ${COLORS.primary[5]};
+      background-color: var(--t-brand-wash);
     }
     .details-section details:open summary {
-      color: ${COLORS.primaryText};
+      color: var(--t-brand);
     }
 
     .report-table {
@@ -314,24 +293,24 @@ function getReportStyleCss() {
       position: sticky;
       top: 0;
       z-index: 10;
-      background-color: var(--c-bg-surface);
-      background-image: linear-gradient(${COLORS.primary[5]}, ${COLORS.primary[5]});
+      background-color: var(--t-card);
+      background-image: linear-gradient(var(--t-brand-wash), var(--t-brand-wash));
       font-weight: 700;
       padding: 12px;
       text-align: left;
       border-bottom: none;
-      box-shadow: inset 0 -1px 0 0 ${COLORS.primaryText};
+      box-shadow: inset 0 -1px 0 0 var(--t-brand);
     }
 
     .report-table td {
-      background-color: var(--c-bg-surface);
+      background-color: var(--t-card);
     }
 
     .report-table th,
     .report-table td {
       padding: 12px;
       text-align: left;
-      border-bottom: 1px solid ${COLORS.border.default};
+      border-bottom: 1px solid var(--t-line);
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -340,23 +319,23 @@ function getReportStyleCss() {
     .report-table tbody tr:last-child td {
       border-bottom: none;
     }
-        
+
     .table-row-hover {
       background-color: inherit;
     }
 
     .table-row-hover:hover,
     .table-row-hover:focus-visible {
-      background-color: ${COLORS.primary[10]} !important;
+      background-color: var(--t-brand-wash) !important;
     }
 
     .table-row-hover:focus-visible {
-      outline: 2px solid ${COLORS.primaryText};
+      outline: 2px solid var(--t-brand);
       outline-offset: -2px;
     }
 
-    .report-table tbody tr.bg-white { background-color: var(--c-bg-surface); }
-    .report-table tbody tr.bg-gray-50 { background-color: ${COLORS.background.altRows}; }
+    .report-table tbody tr.bg-white { background-color: var(--t-card); }
+    .report-table tbody tr.bg-gray-50 { background-color: var(--t-card-2); }
 
     .th-content {
       display: inline-flex;
@@ -364,7 +343,27 @@ function getReportStyleCss() {
       gap: 4px;
       vertical-align: middle;
     }
-    
+
+    .th-sort-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: none;
+      margin: 0;
+      padding: 2px 4px;
+      font: inherit;
+      font-weight: inherit;
+      color: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .th-sort-btn:focus-visible {
+      outline: 2px solid var(--t-brand);
+      outline-offset: 2px;
+    }
+
     .sort-icon {
       display: inline-flex;
       align-items: center;
@@ -378,7 +377,7 @@ function getReportStyleCss() {
     th.sort-custom1 .sort-icon,
     th.sort-custom2 .sort-icon {
       opacity: 1 !important;
-      color: ${COLORS.primaryText} !important;
+      color: var(--t-brand) !important;
       font-weight: bold;
     }
 
@@ -397,13 +396,13 @@ function getReportStyleCss() {
     }
 
     .search-input {
-      border-color: ${COLORS.primaryText};
+      border-color: var(--t-brand);
       transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
     }
     .search-input:focus,
     .search-input:focus-visible {
-      border-color: ${COLORS.primary[15]} !important;
-      box-shadow: 0 0 0 1px ${COLORS.primary[25]};
+      border-color: var(--t-brand-line) !important;
+      box-shadow: 0 0 0 1px var(--t-brand-line);
       outline: none;
     }
 
@@ -438,8 +437,8 @@ function getGlossaryStyleCss() {
     .glossary-code-block {
       display: block;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      background-color: ${COLORS.background.altRows};
-      border: 1px solid ${COLORS.border.default};
+      background-color: var(--t-card-2);
+      border: 1px solid var(--t-line);
     }
 
     /* Target the text inside to ensure monospace inheritance */
@@ -449,7 +448,7 @@ function getGlossaryStyleCss() {
 
     /* Bold text: Clean, high-contrast, no background color */
     .glossary-content strong {
-      color: var(--c-accent-strong);
+      color: var(--t-brand-strong);
       font-weight: 900;
       background-color: transparent !important;
       padding: 0;
@@ -457,7 +456,7 @@ function getGlossaryStyleCss() {
 
     /* Highlight the section when navigating via URL hash (#) */
     :target {
-      background-color: ${COLORS.primary[5]};
+      background-color: var(--t-brand-wash);
       border-radius: 1rem;
       transition: background-color 0.5s ease;
       padding: 1rem;
@@ -466,7 +465,7 @@ function getGlossaryStyleCss() {
     }
 
     :target h3 {
-      color: ${COLORS.primaryText} !important;
+      color: var(--t-brand) !important;
     }
   `;
 }
@@ -476,6 +475,5 @@ module.exports = {
   getIndexStyleCss,
   getReportsListStyleCss,
   getBlogStyleCss,
-  getCommunityStyleCss,
   getGlossaryStyleCss,
 };

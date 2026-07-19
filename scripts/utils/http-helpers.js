@@ -44,11 +44,11 @@ function isRetryableNetworkError(err) {
 //   1. keepAlive reuses TCP/TLS connections instead of doing a fresh handshake
 //      per request — far fewer handshakes means far fewer resets.
 //   2. maxSockets caps how many connections can be open at once, so the
-//      per-PR fan-out (getPrActivityMeta fires 4 parallel calls) times the
-//      PR-level concurrency can't open dozens of sockets simultaneously and
-//      trip a connection reset. Extra requests queue at the socket layer. Set
-//      to 6 as a hard ceiling that matches the workbench's PR_CONCURRENCY of 3
-//      (3 PRs * up to ~2 in-flight of their 4 calls) and keeps the total
+//      per-PR fan-out (getPrActivityMeta fires 4 parallel calls, plus a 5th
+//      authoritative draft-state call) times the PR-level concurrency can't
+//      open dozens of sockets simultaneously and trip a connection reset. Extra
+//      requests queue at the socket layer. Set to 6 as a hard ceiling that
+//      matches the workbench's PR_CONCURRENCY of 3 and keeps the total
 //      simultaneous-connection count well under GitHub's abuse threshold.
 const keepAliveAgent = new https.Agent({ keepAlive: true, maxSockets: 6 });
 

@@ -118,6 +118,7 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 - **Settings:** Update `scripts/config/config.js` to personalize data fetching:
     - `GITHUB_USERNAME`: Set this to your GitHub handle.
     - `BLOG`: Configure your `devToUser` handle for automated article syncing.
+    - `PROFILE`: Set the `name` and `tagline` displayed on the Home page hero. The last word of `name` is highlighted in the brand gradient, for example, "Ayu Adiati" renders with "Adiati" accented. Leave `name` empty to fall back to `@GITHUB_USERNAME`.
 - **Leadership Metadata:** Update `contents/leadership.js` to reflect roles and achievements.
 - **Article Metadata:** Update `contents/fcc-articles.js` to add new freeCodeCamp publications.
 - **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from the Active Workbench.
