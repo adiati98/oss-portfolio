@@ -52,11 +52,24 @@ const LANDING_CSS = `
   .lp-hero h1{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;letter-spacing:-.015em;line-height:1.12;margin:6px 0 8px;color:var(--t-ink)}
   .lp-grad{background:linear-gradient(98deg,var(--t-brand) 10%,var(--t-accent) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .lp-hero p{color:var(--t-ink-2);font-size:.95rem;max-width:60ch;margin:0}
-  .lp-impact{background:var(--t-card);border:1px solid var(--t-line);border-radius:14px;overflow:hidden;margin-top:22px;box-shadow:var(--t-shadow)}
+  /* container-type lets .lp-tiles react to the card's own rendered width
+     (below) instead of the viewport's — the card no longer tracks the
+     viewport 1:1 now that it's capped to the Contribution mix column
+     width on wide screens. */
+  .lp-impact{container-type:inline-size;background:var(--t-card);border:1px solid var(--t-line);border-radius:14px;overflow:hidden;margin-top:22px;box-shadow:var(--t-shadow)}
   .lp-impact-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--t-line);
     background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
   .lp-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
   .lp-impact-top h2 span{color:var(--t-ink-2);font-weight:400;font-size:.86rem}
+  /* Above the .lp-cols breakpoint, match the hero/impact card width to the
+     Contribution mix column exactly: that column is one of two
+     minmax(0,1fr) tracks with a 40px gap, so its width is always
+     calc(50% - 20px) of the same container these cards sit in. Below the
+     breakpoint .lp-cols collapses to one column (full width), so the cap
+     is scoped to only apply once that second column exists. */
+  @media (min-width:861px){
+    .lp-hero,.lp-impact{max-width:calc(50% - 20px)}
+  }
   .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
   .lp-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
   .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}
@@ -65,20 +78,20 @@ const LANDING_CSS = `
   .lp-live--stale{color:var(--t-caution)}
   .lp-live--stale i{background:var(--t-caution)}
   .lp-live--stale i::after{content:none}
-  .lp-tiles{display:grid;grid-template-columns:repeat(4,1fr)}
-  @media (max-width:760px){.lp-tiles{grid-template-columns:repeat(2,1fr)}}
-  .lp-tile{padding:16px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:3px;transition:background .18s ease}
+  .lp-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+  @container (max-width:600px){.lp-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  .lp-tile{min-width:0;padding:16px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:3px;transition:background .18s ease}
   .lp-tile:last-child{border-right:0}
-  @media (max-width:760px){.lp-tile{border-top:1px solid var(--t-line)}.lp-tile:nth-child(2n){border-right:0}}
-  .lp-tile .n{font-weight:800;font-size:2.05rem;line-height:1.08;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--t-ink)}
+  @container (max-width:600px){.lp-tile{border-top:1px solid var(--t-line)}.lp-tile:nth-child(2n){border-right:0}}
+  .lp-tile .n{font-weight:800;font-size:2.05rem;line-height:1.08;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--t-ink);overflow-wrap:anywhere}
   .lp-tile .n small{font-size:1.05rem;color:var(--t-ink-2)}
   .lp-tile .c{font-size:.76rem;color:var(--t-ink-2);line-height:1.35}
   .lp-tile--hero{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
   .lp-tile--hero .n,.lp-tile--hero .n small,.lp-tile--hero .c{color:var(--t-on-brand)}
   .lp-tile--hero .c2{color:var(--t-on-brand);font-size:.7rem;font-weight:500;margin-top:1px}
   @media (prefers-reduced-motion: reduce){.lp-tile{transition:none}}
-  .lp-cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:30px}
-  @media (max-width:860px){.lp-cols{grid-template-columns:1fr;gap:30px}}
+  .lp-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start;margin-top:30px}
+  @media (max-width:860px){.lp-cols{grid-template-columns:minmax(0,1fr)}}
   .lp-h3{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin:0 0 12px}
   .lp-meters{max-width:520px}
   .lp-m{display:flex;flex-direction:column;gap:4px;padding:7px 0}
@@ -93,7 +106,7 @@ const LANDING_CSS = `
   .lp-focus a:hover{color:var(--t-brand)}
   .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
   .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap;flex-shrink:0}
-  .lp-persona{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:center}
+  .lp-persona{display:grid;grid-template-columns:72px minmax(0,1fr);gap:18px;align-items:center}
   .lp-seal{width:72px;height:72px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
     background:conic-gradient(from 210deg,var(--t-brand),var(--t-accent),var(--t-brand));animation:lp-spin 26s linear infinite}
   @keyframes lp-spin{to{transform:rotate(360deg)}}

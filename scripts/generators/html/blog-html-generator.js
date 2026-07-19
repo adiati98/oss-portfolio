@@ -49,7 +49,7 @@ const WRITING_CSS = `
   .wr-org::before{content:"";position:absolute;left:-24.5px;top:9px;width:11px;height:11px;border-radius:50%;
     background:var(--t-card);border:2.5px solid var(--t-brand)}
   .wr-org-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0}
-  .wr-org-name{font-size:1.06rem;font-weight:800;letter-spacing:-.01em;color:var(--t-ink);overflow-wrap:anywhere}
+  .wr-org-name{font-size:1.06rem;font-weight:800;letter-spacing:-.01em;color:var(--t-brand);overflow-wrap:anywhere}
   .wr-org-n{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
   .wr-personal-h-row{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:16px}
   .wr-personal{max-width:760px}
@@ -60,8 +60,6 @@ const WRITING_CSS = `
   .wr-item-t{font-size:.95rem;font-weight:600;margin:0;line-height:1.4}
   .wr-item-t a{color:var(--t-ink);text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
   .wr-item-t a:hover{color:var(--t-brand)}
-  .wr-arr{display:inline-block;color:var(--t-brand);margin-left:4px;transition:transform .18s ease}
-  .wr-item:hover .wr-arr{transform:translate(3px,-3px)}
   .wr-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:4px}
   .wr-platform{color:var(--t-ink-2);font-weight:600}
   .wr-tags{display:flex;flex-wrap:wrap;gap:6px}
@@ -73,7 +71,7 @@ const WRITING_CSS = `
   .wr-chip[aria-pressed="true"]{color:var(--t-brand);background:var(--t-brand-wash);border-color:var(--t-brand-line)}
   .wr-chip-n{opacity:.75}
   .wr-empty{color:var(--t-ink-3);font-style:italic;font-size:.9rem}
-  @media (prefers-reduced-motion: reduce){.wr-arr,.wr-chip{transition:none}}
+  @media (prefers-reduced-motion: reduce){.wr-chip{transition:none}}
 `;
 
 function formatDate(dateStr) {
@@ -96,7 +94,7 @@ function renderArticleItem(article, { showPlatform, headingTag }) {
   return dedent`
     <li class="wr-item" data-platform="${safePlatform}">
       <${headingTag} class="wr-item-t" title="${title}">
-        <a href="${escapeHtml(article.link)}" target="_blank" rel="noopener noreferrer">${title}<span class="wr-arr" aria-hidden="true">↗</span></a>
+        <a href="${escapeHtml(article.link)}" target="_blank" rel="noopener noreferrer">${title}</a>
       </${headingTag}>
       <div class="wr-meta">
         ${platformHtml}

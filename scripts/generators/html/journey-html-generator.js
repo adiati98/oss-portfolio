@@ -48,8 +48,6 @@ const JOURNEY_CSS = `
   .jy-ms h3{font-size:1.16rem;font-weight:800;margin:0;line-height:1.25}
   .jy-ms h3 a{color:var(--t-ink);text-decoration:none}
   .jy-ms h3 a:hover{color:var(--t-brand)}
-  .jy-ms .jy-arr{display:inline-block;color:var(--t-brand);transition:transform .18s ease;margin-left:4px}
-  .jy-ms:hover .jy-arr{transform:translate(3px,-3px)}
   .jy-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:4px 0 6px}
   .jy-org b{color:var(--t-accent);font-weight:400}
   .jy-ms-tag{display:inline-flex;align-items:center;gap:4px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-accent);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 8px;margin-right:6px}
@@ -69,7 +67,7 @@ const JOURNEY_CSS = `
   .jy-chip{font-family:ui-monospace,monospace;font-size:.76rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:8px;padding:5px 13px;transition:border-color .15s ease,color .15s ease}
   .jy-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
   .jy-chip--hd{color:var(--t-brand);background:var(--t-brand-wash);border-color:var(--t-brand-line)}
-  @media (prefers-reduced-motion: reduce){.jy-chip,.jy-ms .jy-arr{transition:none}}
+  @media (prefers-reduced-motion: reduce){.jy-chip{transition:none}}
   .jy-xp{padding:12px 0 12px 18px;border-left:2px solid var(--t-line);position:relative}
   .jy-xp::before{content:"";position:absolute;left:-5px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--t-neutral)}
   .jy-xp--active::before{background:var(--t-positive)}
@@ -85,7 +83,7 @@ const JOURNEY_CSS = `
 function renderMilestone(ach, hidden) {
   const org = escapeHtml(ach.org || '');
   const titleHtml = ach.url
-    ? `<a href="${ach.url}" target="_blank" rel="noopener noreferrer">${ach.title}<span class="jy-arr" aria-hidden="true">↗</span></a>`
+    ? `<a href="${ach.url}" target="_blank" rel="noopener noreferrer">${ach.title}</a>`
     : ach.title;
   const descHtml = ach.description
     ? `<p class="jy-desc" title="${escapeHtml(ach.description)}">${ach.description}</p>`
