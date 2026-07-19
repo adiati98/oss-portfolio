@@ -5,6 +5,32 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2026-07-19
+
+### Added
+
+- **New Journey and Workbench pages**: The old combined "Community & Activity" page is now two focused pages. **Journey** shows milestones, skills, and work history. **Workbench** shows what needs attention right now, sorted into plain groups like "Needs your action," "Waiting," and "Stalled." Old links to the previous page still work — they quietly send visitors to the right new page.
+- **Redesigned Home page**: A cleaner front page with a quick lifetime summary (total contributions, articles published, projects worked on), a simple breakdown of the kinds of contributions made, the projects worked on the most, and a short "collaboration style" badge.
+- **Writing page rebuilt**: Articles are now grouped by the organization they were written for, with a separate list for personal posts, and each group shows how many articles it has.
+- **"Back to top" and "skip to content" buttons everywhere**: Every page now has a way to jump back to the top, including a button inside each contribution category on quarterly reports, so long lists are easier to get through.
+- **Plain-language quarterly summaries**: Each quarterly report now opens with a short, human sentence explaining what happened that quarter, instead of only showing numbers.
+
+### Changed
+
+- **One consistent color system, including full dark mode**: Every page — reports, glossary, and the main site — now shares the same color system. Forking the project only requires picking five colors; everything else, light or dark, adjusts automatically while staying easy to read.
+- **Mobile-friendly report tables**: Quarterly report tables now turn into simple stacked cards on phones instead of forcing a sideways scroll to read them.
+- **Smarter Workbench task list**: Fixed several cases where the "what needs my attention" list showed the wrong thing — including tasks that were actually waiting on a reply being mislabeled as "stale," and bots being mixed in with real contributors.
+- **Tidier landing page layout**: The homepage's profile card and lifetime-summary card are now the same width as the section below them, so the page feels less cluttered. Organization names on the Writing page now show in the site's brand color.
+- **Simplified milestone and article links**: Removed the small arrow icon next to milestone and article titles for a cleaner look.
+
+### Fixed
+
+- **Security hardening**: Closed several gaps where content pulled from GitHub (like PR titles or repository names) could have broken the page layout or run unintended code if it contained unusual characters.
+- **Easier-to-read text in dark mode**: Several places had text that was too faint to read comfortably in dark mode, including the navigation bar — all of them are now clear and easy to read.
+- **Missing "back to top" button**: This button was invisible on the Glossary, Reports, and quarterly report pages because of a styling bug. It now shows up correctly everywhere.
+- **Sideways scrolling on phones**: Fixed several places — the homepage and quarterly report tables — where long text could push the page wider than the screen, forcing an awkward sideways scroll on mobile.
+- **Small counting bugs**: Fixed the Workbench "Automated" count always showing 0 instead of the real number, and a couple of other spots where the numbers shown didn't match reality.
+
 ## [2.12.1] - 2026-07-17
 
 ### Fixed
