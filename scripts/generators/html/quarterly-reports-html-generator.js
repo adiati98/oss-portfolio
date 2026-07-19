@@ -9,7 +9,13 @@ const {
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getReportStyleCss } = require('../css/style-generator');
 const {
@@ -77,6 +83,13 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-link:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .qr-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:5px;padding:2px 7px}
 
+  /* Per-category "back to top" — each table can run to hundreds of rows,
+     so jumping back to that category's own summary shouldn't require
+     scrolling past every other open section. */
+  .qr-cat-top{display:inline-flex;align-items:center;gap:5px;margin-top:12px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);text-decoration:none;transition:color .15s ease}
+  .qr-cat-top:hover{color:var(--t-brand)}
+  .qr-cat-top:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+
   /* Every non-Project/Title column shares the same accent color — styled
      structurally so it doesn't need a class repeated on every cell. */
   .report-table td:first-child,
@@ -137,7 +150,7 @@ const QUARTERLY_EXTRA_CSS = `
 
   @media (prefers-reduced-motion: reduce) {
     .qr-org-chip, .qr-highlight-card, .qr-link, .qr-row-a, .qr-row-b, .qr-reset-btn,
-    .nav-report-button, .nav-contribution-button, .search-input, summary {
+    .nav-report-button, .nav-contribution-button, .search-input, summary, .qr-cat-top {
       transition: none !important;
     }
   }
@@ -350,7 +363,7 @@ async function writeHtmlFiles(groupedContributions) {
 
   function renderHighlightCard({ item, label, date }) {
     return dedent`
-      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="qr-highlight-card">
+      <a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-highlight-card">
         <span class="qr-highlight-type">${label}</span>
         <span class="qr-highlight-repo">${sanitizeAttribute(item.repo || '')}</span>
         <span class="qr-highlight-title">${sanitizeAttribute(item.title)}</span>
@@ -545,7 +558,7 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' rel="noopener noreferrer" class="qr-link font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+          <li class="pl-2"><a href='https://github.com/${sanitizeAttribute(item[0])}' target='_blank' rel="noopener noreferrer" class="qr-link font-mono text-sm">${sanitizeAttribute(item[0])}</a> (${item[1]} contributions)</li>
         `
       )
       .join('');
@@ -635,11 +648,13 @@ async function writeHtmlFiles(groupedContributions) {
   ${getThemeStyleVariant()}
   <style>
     ${dynamicCss}
+    ${SHARED_CHROME_CSS}
   </style>
 </head>
 <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+${createSkipToContentHtml('main')}
 ${navHtmlForReports}
-  <main class="grow w-full">
+  <main id="main" class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-12 pb-4 border-b-2">
@@ -831,7 +846,7 @@ ${navHtmlForReports}
           tableContent += `<td data-label="Project"><span class="qr-repo">${sanitizeAttribute(item.repo || '')}</span></td>`;
 
           // Title column (String type, contains hyperlink). Sort falls back to textContent.
-          tableContent += `<td data-label="Title"><a href="${item.url}" target="_blank" rel="noopener noreferrer" class="qr-link">${safeTitle}</a></td>`;
+          tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link">${safeTitle}</a></td>`;
 
           // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
@@ -910,6 +925,10 @@ ${navHtmlForReports}
         }
 
         tableContent += `</tbody></table></div>`;
+        // Anchors back to this category's own summary — with hundreds of
+        // rows possible per table, "back to top" should mean the top of
+        // THIS section, not a scroll past every other open category.
+        tableContent += `<a href="#${sectionInfo.id}" class="qr-cat-top">↑ Back to top</a>`;
 
         htmlContent += tableContent;
       }
@@ -940,7 +959,8 @@ ${navHtmlForReports}
             targetDetails.open = true;
             // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              targetDetails.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+              targetDetails.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
             }, 100);
           }
         } else {
@@ -951,8 +971,27 @@ ${navHtmlForReports}
       }
       window.addEventListener('DOMContentLoaded', openSectionFromHash);
       window.addEventListener('hashchange', openSectionFromHash);
+
+      // Per-category "back to top" links point at the same id as the
+      // <details> they live inside, so clicking one when that hash is
+      // already current wouldn't fire 'hashchange' (the browser only
+      // fires it on an actual value change) — relying on that event would
+      // silently no-op for the common case. Handled directly instead, so
+      // it always scrolls (smoothly, unless reduced motion is requested)
+      // regardless of the current hash.
+      document.addEventListener('click', (e) => {
+        const link = e.target.closest('.qr-cat-top');
+        if (!link) return;
+        const target = document.querySelector(link.getAttribute('href'));
+        if (!target) return;
+        e.preventDefault();
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      });
     </script>
 ${footerHtml}
+${createBackToTopHtml()}
+${getBackToTopScript()}
     </body>
 </html>
 `;

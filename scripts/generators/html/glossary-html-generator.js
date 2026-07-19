@@ -2,7 +2,13 @@ const fs = require('fs/promises');
 const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { FAVICON_SVG_ENCODED } = require('../../config/constants');
@@ -128,11 +134,12 @@ async function createGlossaryHtml() {
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${glossaryCss}</style>
+      <style>${glossaryCss}${SHARED_CHROME_CSS}</style>
     </head>
     <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+      ${createSkipToContentHtml('main')}
       ${navHtml}
-      <main class="grow w-full">
+      <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
             <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-16 pb-12 border-b-2">
@@ -154,6 +161,8 @@ async function createGlossaryHtml() {
         </div>
       </main>
       ${footerHtml}
+      ${createBackToTopHtml()}
+      ${getBackToTopScript()}
     </body>
     </html>
   `;

@@ -3,7 +3,13 @@ const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { FAVICON_SVG_ENCODED } = require('../../config/constants');
 const { getReportsListStyleCss } = require('../css/style-generator');
@@ -137,11 +143,13 @@ async function createHtmlReports(quarterlyFileLinks = []) {
   ${getThemeStyleVariant()}
   <style>
     ${reportsListCss}
+    ${SHARED_CHROME_CSS}
   </style>
 </head>
 <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+${createSkipToContentHtml('main')}
 ${navHtml}
-  <main class="grow w-full">
+  <main id="main" class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-16 pb-12 border-b-2">
@@ -163,6 +171,8 @@ ${navHtml}
     </div>
   </main>
   ${footerHtml}
+  ${createBackToTopHtml()}
+  ${getBackToTopScript()}
 </body>
 </html>
 `;

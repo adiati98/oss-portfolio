@@ -320,7 +320,17 @@ function buildThemeCssVars(theme) {
       `--t-ink-3: ${g.ink3};`,
       `--t-line: ${g.line};`,
       `--t-line-2: ${g.line2};`,
-      `--t-on-brand: ${g.onBrand};`
+      `--t-on-brand: ${g.onBrand};`,
+      // The navbar's solid fill is COLORS.nav.bg, which is intentionally the
+      // SAME hex in both themes (see constants.js — brightening it for dark
+      // mode would break the white-text contrast it was chosen for). A
+      // theme-switching --t-on-brand is the wrong text color for that fixed
+      // fill: onBrandDark is derived to read against the dark theme's
+      // (much lighter) semantic brand color, not against this darker,
+      // unchanging seed — on real numbers that pairing measures ~2.4:1.
+      // --t-on-nav is therefore pinned to the light-theme readable value in
+      // BOTH themes, since the background it sits on never changes either.
+      `--t-on-nav: ${theme.light.onBrand};`
     );
     for (const [name, ladder] of Object.entries(theme.semantic)) {
       const l = ladder[mode];

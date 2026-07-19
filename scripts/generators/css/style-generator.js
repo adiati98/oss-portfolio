@@ -20,10 +20,15 @@ function getCommonBaseCss() {
       padding: 0;
       height: 100%;
       max-width: 100%;
-      overflow-x: hidden;
-      position: relative;
     }
     body {
+      /* overflow-x/position live on body, not html — overflow on the root
+         element is a well-documented trigger for browsers (notably iOS
+         Safari) to stop treating the viewport as the containing block for
+         position:fixed descendants, which silently breaks the back-to-top
+         button on every page built from this base CSS. */
+      overflow-x: hidden;
+      position: relative;
       font-family: 'Inter', sans-serif;
       min-height: 10vh;
       display: flex;

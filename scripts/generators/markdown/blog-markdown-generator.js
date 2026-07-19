@@ -43,7 +43,9 @@ function renderOrgSection(orgArticles) {
 
 /** Mirrors renderPersonalSection: newest-first, platform label only when the list spans more than one. */
 function renderPersonalSection(personalArticles, hasOrgArticles) {
-  let md = `## ✍️ Personal writing\n\n`;
+  const count = personalArticles.length;
+  const countSuffix = count > 0 ? ` — ${count} article${count === 1 ? '' : 's'}` : '';
+  let md = `## ✍️ Personal writing${countSuffix}\n\n`;
   if (personalArticles.length === 0) {
     const msg = hasOrgArticles
       ? 'No personal writing yet — see the organization pieces above.'

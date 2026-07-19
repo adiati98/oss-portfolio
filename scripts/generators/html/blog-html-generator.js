@@ -23,10 +23,16 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
-const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { escapeHtml } = require('../../utils/escape-html');
 const { newestFirst, platformsIn, groupByOrg } = require('../../services/writing-model');
 
 const WRITING_CSS = `
@@ -45,6 +51,7 @@ const WRITING_CSS = `
   .wr-org-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0}
   .wr-org-name{font-size:1.06rem;font-weight:800;letter-spacing:-.01em;color:var(--t-ink);overflow-wrap:anywhere}
   .wr-org-n{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
+  .wr-personal-h-row{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:16px}
   .wr-personal{max-width:760px}
   .wr-list{list-style:none;margin:6px 0 0;padding:0}
   .wr-item{padding:10px 0;border-bottom:1px solid var(--t-line)}
@@ -78,17 +85,18 @@ function formatDate(dateStr) {
 }
 
 function renderArticleItem(article, { showPlatform, headingTag }) {
-  const title = sanitizeAttribute(article.title);
+  const title = escapeHtml(article.title);
   const platform = article.platform || '';
+  const safePlatform = escapeHtml(platform);
   const tagsHtml = (article.tags || [])
-    .map((t) => `<span class="wr-tag">${sanitizeAttribute(t)}</span>`)
+    .map((t) => `<span class="wr-tag">${escapeHtml(t)}</span>`)
     .join('');
   const platformHtml =
-    showPlatform && platform ? `<span class="wr-platform">${platform}</span>` : '';
+    showPlatform && platform ? `<span class="wr-platform">${safePlatform}</span>` : '';
   return dedent`
-    <li class="wr-item" data-platform="${sanitizeAttribute(platform)}">
+    <li class="wr-item" data-platform="${safePlatform}">
       <${headingTag} class="wr-item-t" title="${title}">
-        <a href="${article.link}" target="_blank" rel="noopener noreferrer">${article.title}<span class="wr-arr" aria-hidden="true">↗</span></a>
+        <a href="${escapeHtml(article.link)}" target="_blank" rel="noopener noreferrer">${title}<span class="wr-arr" aria-hidden="true">↗</span></a>
       </${headingTag}>
       <div class="wr-meta">
         ${platformHtml}
@@ -110,7 +118,7 @@ function renderOrgTimeline(orgArticles) {
       return dedent`
         <div class="wr-org">
           <div class="wr-org-h">
-            <h3 class="wr-org-name">${sanitizeAttribute(org)}</h3>
+            <h3 class="wr-org-name">${escapeHtml(org)}</h3>
             <span class="wr-org-n">${items.length} article${items.length === 1 ? '' : 's'}</span>
           </div>
           <ul class="wr-list">${list}</ul>
@@ -139,7 +147,7 @@ function renderFilters(personalArticles) {
   for (const platform of platforms) {
     const count = personalArticles.filter((a) => a.platform === platform).length;
     chips.push(
-      `<button type="button" class="wr-chip" data-filter="${sanitizeAttribute(platform)}" aria-pressed="false">${platform} <span class="wr-chip-n">${count}</span></button>`
+      `<button type="button" class="wr-chip" data-filter="${escapeHtml(platform)}" aria-pressed="false">${escapeHtml(platform)} <span class="wr-chip-n">${count}</span></button>`
     );
   }
   return `<div class="wr-filters" role="group" aria-label="Filter by platform">${chips.join('')}</div>`;
@@ -189,11 +197,12 @@ async function createBlogHtml(articles) {
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${WRITING_CSS}</style>
+      <style>${WRITING_CSS}${SHARED_CHROME_CSS}</style>
     </head>
     <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+      ${createSkipToContentHtml('main')}
       ${navHtml}
-      <main class="grow w-full">
+      <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-6xl mx-auto">
             <header class="mt-16 mb-14">
@@ -205,7 +214,10 @@ async function createBlogHtml(articles) {
             ${renderOrgTimeline(orgArticles)}
 
             <section aria-labelledby="wr-personal-h">
-              <h2 id="wr-personal-h" class="wr-sec-label">Personal writing</h2>
+              <div class="wr-personal-h-row">
+                <h2 id="wr-personal-h" class="wr-sec-label" style="margin-bottom:0">Personal writing</h2>
+                ${personalArticles.length > 0 ? `<span class="wr-org-n">${personalArticles.length} article${personalArticles.length === 1 ? '' : 's'}</span>` : ''}
+              </div>
               ${renderPersonalSection(personalArticles, orgArticles.length > 0)}
             </section>
           </div>
@@ -230,6 +242,8 @@ async function createBlogHtml(articles) {
         })();
       </script>
       ${footerHtml}
+      ${createBackToTopHtml()}
+      ${getBackToTopScript()}
     </body>
     </html>`;
 

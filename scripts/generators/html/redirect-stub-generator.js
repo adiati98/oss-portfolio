@@ -60,7 +60,7 @@ async function createRedirectStubs() {
 
   await fs.writeFile(
     path.join(htmlBaseDir, 'blog.html'),
-    stubHtml('writing.html', 'Writing & Talks'),
+    stubHtml('writing.html', 'Writing'),
     'utf8'
   );
   await fs.writeFile(
@@ -71,7 +71,7 @@ async function createRedirectStubs() {
 
   await fs.writeFile(
     path.join(mdBaseDir, 'blog.md'),
-    stubMarkdown('Open Source and GitHub Articles', [['writing.md', 'Writing & Talks']]),
+    stubMarkdown('Open Source and GitHub Articles', [['writing.md', 'Writing']]),
     'utf8'
   );
   await fs.writeFile(

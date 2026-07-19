@@ -26,12 +26,18 @@ const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR, PROFILE } = require('../../config/config');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { personaCategories, DEFAULT_PERSONA } = require('../../metadata/personas');
 const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
-const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { escapeHtml } = require('../../utils/escape-html');
 
 const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
 const HTML_OUTPUT_PATH = path.join(htmlBaseDir, 'index.html');
@@ -50,12 +56,15 @@ const LANDING_CSS = `
   .lp-impact-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:14px 18px;border-bottom:1px solid var(--t-line);
     background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
   .lp-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
-  .lp-impact-top h2 span{color:var(--t-ink-3);font-weight:400;font-size:.86rem}
+  .lp-impact-top h2 span{color:var(--t-ink-2);font-weight:400;font-size:.86rem}
   .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
   .lp-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
   .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}
   @keyframes lp-ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
   @media (prefers-reduced-motion: reduce){.lp-live i::after{animation:none}}
+  .lp-live--stale{color:var(--t-caution)}
+  .lp-live--stale i{background:var(--t-caution)}
+  .lp-live--stale i::after{content:none}
   .lp-tiles{display:grid;grid-template-columns:repeat(4,1fr)}
   @media (max-width:760px){.lp-tiles{grid-template-columns:repeat(2,1fr)}}
   .lp-tile{padding:16px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:3px;transition:background .18s ease}
@@ -66,7 +75,7 @@ const LANDING_CSS = `
   .lp-tile .c{font-size:.76rem;color:var(--t-ink-2);line-height:1.35}
   .lp-tile--hero{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
   .lp-tile--hero .n,.lp-tile--hero .n small,.lp-tile--hero .c{color:var(--t-on-brand)}
-  .lp-tile--hero .c{opacity:.85}
+  .lp-tile--hero .c2{color:var(--t-on-brand);font-size:.7rem;font-weight:500;margin-top:1px}
   @media (prefers-reduced-motion: reduce){.lp-tile{transition:none}}
   .lp-cols{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:30px}
   @media (max-width:860px){.lp-cols{grid-template-columns:1fr;gap:30px}}
@@ -80,10 +89,10 @@ const LANDING_CSS = `
   .lp-m .bar i{display:block;height:100%;border-radius:2px;background:var(--t-brand);opacity:.85}
   .lp-focus{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--t-line);max-width:520px}
   .lp-focus:last-of-type{border-bottom:0}
-  .lp-focus a{font-weight:600;color:var(--t-ink);text-decoration:none}
+  .lp-focus a{font-weight:600;color:var(--t-ink);text-decoration:none;min-width:0;overflow-wrap:anywhere}
   .lp-focus a:hover{color:var(--t-brand)}
   .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
-  .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap}
+  .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap;flex-shrink:0}
   .lp-persona{display:grid;grid-template-columns:72px 1fr;gap:18px;align-items:center}
   .lp-seal{width:72px;height:72px;border-radius:50%;position:relative;display:flex;align-items:center;justify-content:center;
     background:conic-gradient(from 210deg,var(--t-brand),var(--t-accent),var(--t-brand));animation:lp-spin 26s linear infinite}
@@ -101,7 +110,7 @@ const LANDING_CSS = `
   .lp-idx:last-child{border-bottom:0}
   .lp-idx b{font-size:.98rem;font-weight:700;color:var(--t-ink);min-width:118px}
   .lp-idx span{font-size:.82rem;color:var(--t-ink-2);flex:1}
-  .lp-idx .go{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);transition:transform .18s ease,color .18s ease}
+  .lp-idx .go{flex:0 0 auto;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);transition:transform .18s ease,color .18s ease}
   .lp-idx:hover b{color:var(--t-brand)}
   .lp-idx:hover .go{color:var(--t-brand);transform:translateX(3px)}
   @media (prefers-reduced-motion: reduce){.lp-idx .go{transition:none}}
@@ -122,7 +131,7 @@ const PAGE_INDEX = [
   {
     href: 'journey.html',
     label: 'Journey',
-    blurb: 'Milestones, talks, expertise, and the roles behind them.',
+    blurb: 'Milestones, expertise, and the roles behind them.',
   },
   {
     href: 'workbench.html',
@@ -212,6 +221,7 @@ function renderHero() {
 function renderImpact({
   displayTotal,
   earliestYear,
+  shippedCount,
   helpedShipCount,
   articleCount,
   repoCount,
@@ -226,16 +236,33 @@ function renderImpact({
       ? `<span class="n">${helpedShipCount}</span><span class="c">contributions you helped ship</span>`
       : `<span class="n">0</span><span class="c">contributions you helped ship</span>`;
 
+  // "Shipped" is a claim only mergedAt-bearing items can back up — the
+  // headline total also includes open/unmerged work (see displayTotal),
+  // so the hero caption stays verb-neutral and the shipped figure (a
+  // strict subset) gets its own quieter line instead.
+  const shippedLine =
+    shippedCount > 0 ? `<span class="c2">${shippedCount} shipped changes</span>` : '';
+
+  // Server-rendered fallback is always the absolute build time — a static
+  // page can be viewed long after generation, so a hardcoded "today" goes
+  // stale silently with no JS to correct it. The inline script recomputes
+  // relative freshness at view-time and only then swaps the text.
+  const buildIso = new Date().toISOString();
+  const buildAbsolute = buildIso.slice(0, 16).replace('T', ' ');
+
   return dedent`
     <section class="lp-impact" aria-labelledby="lp-impact-h">
       <div class="lp-impact-top">
         <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-        <span class="lp-live"><i></i>updated today</span>
+        <span class="lp-live" data-build-ts="${buildIso}">
+          <i aria-hidden="true"></i><time class="lp-live-text" datetime="${buildIso}">Updated ${buildAbsolute}</time>
+        </span>
       </div>
       <div class="lp-tiles">
         <div class="lp-tile lp-tile--hero">
           <span class="n">${displayTotal}</span>
-          <span class="c">contributions shipped since ${earliestYear}</span>
+          <span class="c">contributions since ${earliestYear}</span>
+          ${shippedLine}
         </div>
         <div class="lp-tile">${helpedTile}</div>
         <div class="lp-tile">
@@ -275,10 +302,12 @@ function renderFocus(topRepos) {
   return topRepos
     .map(([repo, count]) => {
       const [owner, name] = repo.includes('/') ? repo.split('/') : ['', repo];
-      const label = owner ? `<span class="o">${owner} /</span> ${name}` : name;
+      const safeOwner = escapeHtml(owner);
+      const safeName = escapeHtml(name);
+      const label = owner ? `<span class="o">${safeOwner} /</span> ${safeName}` : safeName;
       return dedent`
         <div class="lp-focus">
-          <a href="https://github.com/${repo}" target="_blank" rel="noopener noreferrer" title="${sanitizeAttribute(repo)}">${label}</a>
+          <a href="https://github.com/${escapeHtml(repo)}" target="_blank" rel="noopener noreferrer" title="${escapeHtml(repo)}">${label}</a>
           <span>${count} contribution${count === 1 ? '' : 's'}</span>
         </div>`;
     })
@@ -374,6 +403,11 @@ async function createIndexHtml(
   const currentYear = new Date().getFullYear();
   const earliestYear = yearsActive.length > 0 ? Math.min(...yearsActive) : currentYear;
 
+  // "Shipped" only covers items GitHub actually confirms merged — the
+  // headline total (displayTotal) also includes open/unmerged work, so
+  // "shipped" would overclaim if applied to it directly.
+  const shippedCount = allItems.filter((item) => Boolean(item.mergedAt)).length;
+
   const getStats = (count) => {
     if (grandTotal === 0) return { pct: 0, pctStr: '0%' };
     const pct = (count / grandTotal) * 100;
@@ -421,11 +455,12 @@ async function createIndexHtml(
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${LANDING_CSS}</style>
+      <style>${LANDING_CSS}${SHARED_CHROME_CSS}</style>
     </head>
     <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+      ${createSkipToContentHtml('main')}
       ${navHtml}
-      <main class="grow w-full">
+      <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-6xl mx-auto">
             <div class="mt-16">
@@ -435,6 +470,7 @@ async function createIndexHtml(
             ${renderImpact({
               displayTotal,
               earliestYear,
+              shippedCount,
               helpedShipCount: impact.helpedShipCount || 0,
               articleCount,
               repoCount: uniqueRepos.size,
@@ -454,13 +490,38 @@ async function createIndexHtml(
               </section>
             </div>
 
-            <nav class="lp-index" aria-label="Portfolio pages">
+            <nav class="lp-index" aria-labelledby="lp-index-h">
+              <h2 id="lp-index-h" class="lp-h3">See also</h2>
               ${renderIndexRow()}
             </nav>
           </div>
         </div>
       </main>
+      <script>
+        (function () {
+          var el = document.querySelector('.lp-live[data-build-ts]');
+          if (!el) return;
+          var textEl = el.querySelector('.lp-live-text');
+          var built = new Date(el.getAttribute('data-build-ts'));
+          if (!textEl || isNaN(built.getTime())) return;
+          var diffH = (Date.now() - built.getTime()) / 3600000;
+          var diffD = Math.floor(diffH / 24);
+          el.classList.toggle('lp-live--stale', diffH >= 24);
+          if (diffH < 24) {
+            if (diffH < 1 / 60) textEl.textContent = 'Updated just now';
+            else if (diffH < 1) textEl.textContent = 'Updated ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
+            else textEl.textContent = 'Updated ' + Math.floor(diffH) + 'h ago';
+          } else if (diffD === 1) {
+            textEl.textContent = 'Updated yesterday';
+          } else if (diffD < 7) {
+            textEl.textContent = 'cached · ' + diffD + 'd old';
+          }
+          // Beyond 7 days the server-rendered absolute date stays as-is.
+        })();
+      </script>
       ${footerHtml}
+      ${createBackToTopHtml()}
+      ${getBackToTopScript()}
     </body>
     </html>
   `;

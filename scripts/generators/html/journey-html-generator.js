@@ -18,10 +18,16 @@ const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
-const { createNavHtml } = require('../../components/navbar');
+const {
+  createNavHtml,
+  createSkipToContentHtml,
+  createBackToTopHtml,
+  getBackToTopScript,
+  SHARED_CHROME_CSS,
+} = require('../../components/navbar');
 const { createFooterHtml } = require('../../components/footer');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
-const { sanitizeAttribute } = require('../../utils/html-helpers');
+const { escapeHtml } = require('../../utils/escape-html');
 
 const FLAT_TIMELINE_MAX = 10;
 
@@ -63,6 +69,7 @@ const JOURNEY_CSS = `
   .jy-chip{font-family:ui-monospace,monospace;font-size:.76rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:8px;padding:5px 13px;transition:border-color .15s ease,color .15s ease}
   .jy-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
   .jy-chip--hd{color:var(--t-brand);background:var(--t-brand-wash);border-color:var(--t-brand-line)}
+  @media (prefers-reduced-motion: reduce){.jy-chip,.jy-ms .jy-arr{transition:none}}
   .jy-xp{padding:12px 0 12px 18px;border-left:2px solid var(--t-line);position:relative}
   .jy-xp::before{content:"";position:absolute;left:-5px;top:20px;width:8px;height:8px;border-radius:50%;background:var(--t-neutral)}
   .jy-xp--active::before{background:var(--t-positive)}
@@ -76,12 +83,12 @@ const JOURNEY_CSS = `
 `;
 
 function renderMilestone(ach, hidden) {
-  const org = sanitizeAttribute(ach.org || '');
+  const org = escapeHtml(ach.org || '');
   const titleHtml = ach.url
     ? `<a href="${ach.url}" target="_blank" rel="noopener noreferrer">${ach.title}<span class="jy-arr" aria-hidden="true">↗</span></a>`
     : ach.title;
   const descHtml = ach.description
-    ? `<p class="jy-desc" title="${sanitizeAttribute(ach.description)}">${ach.description}</p>`
+    ? `<p class="jy-desc" title="${escapeHtml(ach.description)}">${ach.description}</p>`
     : '';
   const tagHtml = ach.tag ? `<span class="jy-ms-tag">${ach.tag}</span>` : '';
   return dedent`
@@ -181,15 +188,25 @@ function renderExpertiseAndTools(skills) {
   const highlight = new Set((skills.highlight || []).map((t) => t.toLowerCase()));
   const toolsSection = renderChipSection('Tools', skills.tools, highlight);
   const skillsSection = renderChipSection('Skills', skills.skills, highlight);
+  if (!expertise && !toolsSection && !skillsSection) {
+    return {
+      expertise: `<p style="color:var(--t-ink-3)" class="italic">Expertise will appear here — add it in <code>contents/skills.js</code>.</p>`,
+      toolsSection: '',
+      skillsSection: '',
+    };
+  }
   return { expertise, toolsSection, skillsSection };
 }
 
 function renderExperience(roles) {
-  return (roles || [])
+  if (!roles || roles.length === 0) {
+    return `<p style="color:var(--t-ink-3)" class="italic">Roles will appear here — add them in <code>contents/leadership.js</code>.</p>`;
+  }
+  return roles
     .map((role) => {
       const orgHtml = role.orgUrl
-        ? `<a href="${role.orgUrl}" target="_blank" rel="noopener noreferrer">${sanitizeAttribute(role.org)}</a>`
-        : sanitizeAttribute(role.org || '');
+        ? `<a href="${role.orgUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(role.org)}</a>`
+        : escapeHtml(role.org || '');
       const period = role.active
         ? `${String(role.period || '').replace(/ ?- ?Present$/i, '')} — <b>present</b>`
         : role.period || '';
@@ -226,11 +243,12 @@ async function createJourneyHtml(rolesData, skills, talks) {
       ${getThemeInitScript()}
       <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
       ${getThemeStyleVariant()}
-      <style>${JOURNEY_CSS}</style>
+      <style>${JOURNEY_CSS}${SHARED_CHROME_CSS}</style>
     </head>
     <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
+      ${createSkipToContentHtml('main')}
       ${navHtml}
-      <main class="grow w-full">
+      <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-6xl mx-auto">
             <header class="mt-16 mb-14">
@@ -272,6 +290,8 @@ async function createJourneyHtml(rolesData, skills, talks) {
         })();
       </script>
       ${footerHtml}
+      ${createBackToTopHtml()}
+      ${getBackToTopScript()}
     </body>
     </html>
   `;
