@@ -10,13 +10,24 @@ const { GLOSSARY_CONTENT } = require('../../metadata/glossary');
 const { getGlossaryStyleCss } = require('../css/style-generator');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
+// Supplements getGlossaryStyleCss (shared, not owned by this generator) with
+// token-only rules for classes this page emits. `.glossary-inline-code` was
+// already referenced by processText below but had no matching rule anywhere
+// — defined here now. All colors route through --t-* tokens, no hex.
+const GLOSSARY_EXTRA_CSS = `
+  .glossary-inline-code{font-family:ui-monospace,monospace;font-size:.85em;color:var(--t-accent);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:4px;padding:1px 5px}
+  .glossary-accent{color:var(--t-accent)}
+  .glossary-body{color:var(--t-ink-2)}
+  .glossary-caption{color:var(--t-ink-3)}
+`;
+
 async function createGlossaryHtml() {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   const outputPath = path.join(htmlBaseDir, 'glossary.html');
 
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
-  const glossaryCss = getGlossaryStyleCss();
+  const glossaryCss = getGlossaryStyleCss() + GLOSSARY_EXTRA_CSS;
   const navHtml = createNavHtml('./');
   const footerHtml = createFooterHtml();
 
@@ -33,14 +44,11 @@ async function createGlossaryHtml() {
         // 3. List items: Wrap lines starting with '*' or '-' in <li>
         .replace(
           /^\s*[*|-]\s+(.*)$/gm,
-          '<li class="ml-4 list-disc list-inside text-indigo-600 dark:text-indigo-300">$1</li>'
+          '<li class="ml-4 list-disc list-inside glossary-accent">$1</li>'
         )
 
         // 4. Wrap <li> groups in <ul>
-        .replace(
-          /(<li.*?>.*?<\/li>)+/g,
-          '<ul class="my-3 space-y-1 text-indigo-600 dark:text-indigo-300">$1</ul>'
-        )
+        .replace(/(<li.*?>.*?<\/li>)+/g, '<ul class="my-3 space-y-1 glossary-accent">$1</ul>')
 
         // 5. Cleanup
         .replace(/<\/ul>\s+/g, '</ul>')
@@ -75,15 +83,15 @@ async function createGlossaryHtml() {
               </h3>
               
               <div class="space-y-6">
-                <p class="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p class="text-lg glossary-body leading-relaxed">
                   ${description}
                 </p>
 
                 <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
-                  <span class="block text-xs uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-3 font-black font-mono">
+                  <span class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono">
                     ${label}
                   </span>
-                  <div class="text-sm text-indigo-600 dark:text-indigo-300 leading-relaxed">
+                  <div class="text-sm glossary-accent leading-relaxed">
                     ${processedNote}
                   </div>
                 </div>
@@ -99,7 +107,7 @@ async function createGlossaryHtml() {
             <h2 style="color: var(--t-brand);" class="text-3xl sm:text-4xl font-black mb-2">
               ${group.title}
             </h2>
-            <p class="text-slate-500 dark:text-slate-400 text-lg font-medium italic">${processText(group.description)}</p>
+            <p class="glossary-caption text-lg font-medium italic">${processText(group.description)}</p>
           </div>
           <div class="space-y-2">
             ${itemsHtml}
@@ -122,7 +130,7 @@ async function createGlossaryHtml() {
       ${getThemeStyleVariant()}
       <style>${glossaryCss}</style>
     </head>
-    <body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+    <body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
       ${navHtml}
       <main class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
@@ -131,7 +139,7 @@ async function createGlossaryHtml() {
               <h1 style="color: var(--t-brand);" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
                 ${GLOSSARY_CONTENT.title}
               </h1>
-              <p class="text-xl max-w-3xl mx-auto leading-relaxed text-slate-600 dark:text-slate-300">
+              <p class="text-xl max-w-3xl mx-auto leading-relaxed glossary-body">
                 ${processText(GLOSSARY_CONTENT.subtitle)}
               </p>
             </header>

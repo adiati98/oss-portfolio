@@ -18,10 +18,130 @@ const {
   SEARCH_SVG,
   LANDING_PAGE_ICONS,
   FAVICON_SVG_ENCODED,
-  COLORS,
 } = require('../../config/constants');
 const { sanitizeAttribute } = require('../../utils/html-helpers');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
+
+// Status badge colors route straight through the theme engine's semantic
+// ladder (see theme-engine.js) — no hex, no fallback chain. OPEN and MERGED
+// intentionally share the positive ladder (a design decision that predates
+// this migration, preserved as-is).
+const STATUS_BADGE_TOKENS = {
+  OPEN: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  MERGED: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  CLOSED: { bg: 'var(--t-critical-wash)', text: 'var(--t-critical)' },
+  RECORDED: { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' },
+};
+const DEFAULT_STATUS_BADGE = { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' };
+
+/**
+ * Supplements getReportStyleCss (shared, not owned by this generator) with
+ * every rule this page needs that isn't already token-driven there: the
+ * Quarter-in-brief header, table link/accent colors, shared row-stripe
+ * classes (replacing a per-row inline style), the small-screen stacked-card
+ * table, and prefers-reduced-motion overrides for every transition this page
+ * renders (including the ones defined in the shared stylesheet).
+ */
+const QUARTERLY_EXTRA_CSS = `
+  .qr-brief{background:var(--t-card);border:1px solid var(--t-line);border-radius:14px;padding:20px 22px;margin-bottom:16px;box-shadow:var(--t-shadow)}
+  .qr-brief-eyebrow{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3);margin:0 0 10px}
+  .qr-brief-sentence{font-size:1.02rem;line-height:1.6;color:var(--t-ink);margin:0}
+  .qr-brief-sentence + .qr-brief-sentence{margin-top:6px}
+  .qr-brief-sentence b{color:var(--t-brand);font-weight:700}
+  .qr-worked-with{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--t-line)}
+  .qr-worked-with-label{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t-ink-3)}
+  .qr-org-chips{display:flex;flex-wrap:wrap;gap:8px}
+  .qr-org-chip{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:3px 11px;text-decoration:none;transition:border-color .15s ease,color .15s ease}
+  .qr-org-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
+  .qr-org-chip:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+
+  .qr-highlights{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  @media (max-width:760px){.qr-highlights{grid-template-columns:1fr}}
+  .qr-highlight-card{background:var(--t-card);border:1px solid var(--t-line);border-radius:12px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:border-color .15s ease,box-shadow .15s ease}
+  .qr-highlight-card:hover{border-color:var(--t-brand-line);box-shadow:var(--t-shadow)}
+  .qr-highlight-card:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .qr-highlight-type{align-self:flex-start;font-family:ui-monospace,monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--t-brand);background:var(--t-brand-wash);border-radius:5px;padding:2px 8px}
+  .qr-highlight-repo{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3)}
+  .qr-highlight-title{font-size:.92rem;font-weight:700;color:var(--t-ink);line-height:1.35}
+  .qr-highlight-card:hover .qr-highlight-title{color:var(--t-brand)}
+  .qr-highlight-meta{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--t-ink-3)}
+
+  .qr-ink2{color:var(--t-ink-2)}
+  .qr-ink3{color:var(--t-ink-3)}
+  .qr-surface2{background-color:var(--t-card-2)}
+  .qr-nav-card{background-color:var(--t-card)}
+  .qr-details{border:1px solid var(--t-line)}
+
+  .qr-link{color:var(--t-brand);text-decoration:none}
+  .qr-link:hover{color:var(--t-brand-strong);text-decoration:underline}
+  .qr-link:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .qr-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:5px;padding:2px 7px}
+
+  /* Every non-Project/Title column shares the same accent color — styled
+     structurally so it doesn't need a class repeated on every cell. */
+  .report-table td:first-child,
+  .report-table td:nth-child(n + 4) {
+    color: var(--t-brand);
+  }
+
+  /* Row stripes as shared classes instead of a per-row inline transition. */
+  .qr-row-a, .qr-row-b { transition: background-color 0.15s ease-in-out; }
+  .qr-row-a { background-color: var(--t-card); }
+  .qr-row-b { background-color: var(--t-card-2); }
+  .qr-row-a:hover, .qr-row-b:hover { background-color: var(--t-brand-wash) !important; }
+
+  .qr-search-input { background-color: var(--t-card); color: var(--t-ink); }
+  .qr-search-input::placeholder { color: var(--t-ink-3); }
+  .qr-reset-btn { background-color: var(--t-card-2); color: var(--t-ink-2); transition: background-color 0.15s ease-in-out; }
+  .qr-reset-btn:hover { background-color: var(--t-line); }
+
+  /* Below 640px, contribution tables become stacked cards: one card per
+     row, each field labeled from the column header. */
+  @media (max-width: 640px) {
+    .report-table thead {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .report-table, .report-table tbody, .report-table tr { display: block; width: 100%; }
+    .report-table tr { border: 1px solid var(--t-line); border-radius: 10px; margin-bottom: 10px; padding: 10px 12px; }
+    .report-table td {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      border-bottom: 1px solid var(--t-line);
+      padding: 6px 0;
+    }
+    .report-table td:last-child { border-bottom: 0; }
+    .report-table td[data-label]::before {
+      content: attr(data-label);
+      flex: 0 0 42%;
+      font-family: ui-monospace, monospace;
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      color: var(--t-ink-3);
+    }
+    .report-table td:first-child { font-weight: 800; border-bottom: 0; padding-bottom: 2px; }
+    .report-table td:nth-child(3) { font-weight: 600; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qr-org-chip, .qr-highlight-card, .qr-link, .qr-row-a, .qr-row-b, .qr-reset-btn,
+    .nav-report-button, .nav-contribution-button, .search-input, summary {
+      transition: none !important;
+    }
+  }
+`;
 
 /**
  * Generates and writes individual HTML report files for each quarter's contributions.
@@ -59,42 +179,16 @@ async function writeHtmlFiles(groupedContributions) {
     .sort((a, b) => a.key.localeCompare(b.key));
 
   /**
-   * Generates an HTML span for a status badge (e.g., OPEN, MERGED, CLOSED) with Tailwind-like styles.
+   * Generates an HTML span for a status badge (e.g., OPEN, MERGED, CLOSED).
    * @param {string} status - The raw status text.
    * @returns {string} HTML for the status badge.
    */
   function getStatusBadgeHtml(status) {
     const cleanedStatus = status.toUpperCase().trim();
-    let bgColor = COLORS.status?.gray?.bg || 'var(--t-neutral-wash)';
-    let textColor = COLORS.status?.gray?.text || 'var(--t-neutral)';
-    let fontWeight = 'font-medium';
+    const tokens = STATUS_BADGE_TOKENS[cleanedStatus] || DEFAULT_STATUS_BADGE;
+    const fontWeight = STATUS_BADGE_TOKENS[cleanedStatus] ? 'font-semibold' : 'font-medium';
 
-    switch (cleanedStatus) {
-      case 'OPEN':
-        bgColor = COLORS.status?.green?.bg || 'var(--t-positive-wash)';
-        textColor = COLORS.status?.green?.text || 'var(--t-positive)';
-        fontWeight = 'font-semibold';
-        break;
-      case 'MERGED':
-        bgColor = COLORS.status?.purple?.bg || 'var(--t-positive-wash)';
-        textColor = COLORS.status?.purple?.text || 'var(--t-positive)';
-        fontWeight = 'font-semibold';
-        break;
-      case 'CLOSED':
-        bgColor = COLORS.status?.red?.bg || 'var(--t-critical-wash)';
-        textColor = COLORS.status?.red?.text || 'var(--t-critical)';
-        fontWeight = 'font-semibold';
-        break;
-      case 'RECORDED':
-        bgColor = COLORS.status?.gray?.bg || 'var(--t-neutral-wash)';
-        textColor = COLORS.status?.gray?.text || 'var(--t-neutral)';
-        fontWeight = 'font-semibold';
-        break;
-      default:
-        break;
-    }
-
-    const style = `background-color: ${bgColor}; color: ${textColor};`;
+    const style = `background-color: ${tokens.bg}; color: ${tokens.text};`;
     return `<span class="inline-block px-2 py-0.5 text-xs rounded-full ${fontWeight}" style="${style}">${cleanedStatus}</span>`;
   }
 
@@ -123,35 +217,213 @@ async function writeHtmlFiles(groupedContributions) {
   }
 
   /**
-   * Generates the impact-band tile markup for a single quarter's report,
-   * mirroring the workbench board's renderImpact tiles (design blueprint
-   * §05) but for a closed, historical period: every caption names the exact
-   * quarter instead of "this month"/lifetime phrasing, since a quarterly
-   * report is read long after that quarter has ended.
+   * Finds the most-contributed-to org (the `owner` half of `owner/repo`)
+   * across a list of contribution items.
    */
-  function renderQuarterlyImpact({
+  function topOrgOf(items) {
+    const counts = {};
+    for (const item of items || []) {
+      const org = (item.repo || '').split('/')[0];
+      if (!org) continue;
+      counts[org] = (counts[org] || 0) + 1;
+    }
+    const sorted = Object.entries(counts).sort(([, a], [, b]) => b - a);
+    return sorted[0]?.[0];
+  }
+
+  /**
+   * Composes the 1-2 plain-language sentences for the Quarter-in-brief
+   * header. Only states what the data supports: a clause is included only
+   * when its count is greater than zero, and "shipped" is used only for
+   * merged PRs (mergedCount), never for reviews/co-authoring/issues.
+   */
+  function composeQuarterSentences({
+    totalContributions,
+    totalRepos,
+    mergedCount,
+    reviewedCount,
+    coAuthoredCount,
+    issuesCount,
+    topOrgReviewed,
+  }) {
+    const plural = (n) => (n === 1 ? '' : 's');
+    const clauses = [];
+
+    if (reviewedCount > 0) {
+      const orgBit = topOrgReviewed ? ` for <b>${topOrgReviewed}</b>` : '';
+      clauses.push(`reviewed ${reviewedCount} PR${plural(reviewedCount)}${orgBit}`);
+    }
+    if (coAuthoredCount > 0) {
+      clauses.push(`co-authored ${coAuthoredCount}`);
+    }
+    if (mergedCount > 0) {
+      clauses.push(
+        `shipped ${mergedCount} change${plural(mergedCount)} across ${totalRepos} repositor${totalRepos === 1 ? 'y' : 'ies'}`
+      );
+    }
+
+    const sentences = [];
+    if (clauses.length === 0) {
+      sentences.push(
+        `This quarter: ${totalContributions} contribution${plural(totalContributions)} recorded across ${totalRepos} repositor${totalRepos === 1 ? 'y' : 'ies'}.`
+      );
+    } else {
+      const joined =
+        clauses.length === 1
+          ? clauses[0]
+          : clauses.length === 2
+            ? clauses.join(' and ')
+            : `${clauses.slice(0, -1).join(', ')}, and ${clauses[clauses.length - 1]}`;
+      sentences.push(`This quarter: ${joined}.`);
+    }
+
+    if (issuesCount > 0) {
+      sentences.push(`Also opened ${issuesCount} issue${plural(issuesCount)} along the way.`);
+    }
+
+    return sentences;
+  }
+
+  // Each contribution category has its own "most recent activity" date field
+  // and its own human-readable type label for the Highlights cards.
+  const HIGHLIGHT_TYPES = {
+    pullRequests: {
+      label: 'Merged PR',
+      dateOf: (item) => item.mergedAt || item.closedAt || item.date,
+    },
+    issues: {
+      label: 'Issue',
+      dateOf: (item) => item.date,
+    },
+    reviewedPrs: {
+      label: 'Reviewed PR',
+      dateOf: (item) => item.myFirstReviewDate || item.date,
+    },
+    coAuthoredPrs: {
+      label: 'Co-Authored PR',
+      dateOf: (item) => item.firstCommitDate || item.date,
+    },
+    collaborations: {
+      label: 'Collaboration',
+      dateOf: (item) => item.updatedAt || item.firstCommentedAt || item.date,
+    },
+  };
+
+  /**
+   * Pools every contribution category (not just merged PRs) into a single
+   * list of { item, label, date } entries for the Highlights cards.
+   */
+  function buildHighlightPool(data) {
+    const pool = [];
+    for (const [type, { label, dateOf }] of Object.entries(HIGHLIGHT_TYPES)) {
+      for (const item of data[type] || []) {
+        pool.push({ item, label, date: dateOf(item) });
+      }
+    }
+    return pool;
+  }
+
+  /**
+   * Picks up to `limit` entries for the Highlights cards: most recent first
+   * across all contribution types, preferring distinct repos before
+   * repeating one.
+   */
+  function pickHighlights(pool, limit) {
+    const sorted = [...pool].sort((a, b) => new Date(b.date) - new Date(a.date));
+    const picked = [];
+    const seenRepos = new Set();
+    for (const entry of sorted) {
+      if (picked.length >= limit) break;
+      if (seenRepos.has(entry.item.repo)) continue;
+      picked.push(entry);
+      seenRepos.add(entry.item.repo);
+    }
+    if (picked.length < limit) {
+      for (const entry of sorted) {
+        if (picked.length >= limit) break;
+        if (picked.includes(entry)) continue;
+        picked.push(entry);
+      }
+    }
+    return picked;
+  }
+
+  function renderHighlightCard({ item, label, date }) {
+    return dedent`
+      <a href="${item.url}" target="_blank" rel="noopener noreferrer" class="qr-highlight-card">
+        <span class="qr-highlight-type">${label}</span>
+        <span class="qr-highlight-repo">${sanitizeAttribute(item.repo || '')}</span>
+        <span class="qr-highlight-title">${sanitizeAttribute(item.title)}</span>
+        <span class="qr-highlight-meta">${formatDate(date)}</span>
+      </a>
+    `;
+  }
+
+  /**
+   * Generates the "Quarter in brief" header for a single quarter's report
+   * (design blueprint recruiter-oriented rewrite of the old metric-tile
+   * snapshot, which duplicated the Contribution Breakdown section below).
+   */
+  function renderQuarterInBrief({
     quarter,
     year,
+    data,
+    allItems,
     totalContributions,
     totalRepos,
     prCount,
     issueCount,
     reviewedPrCount,
+    coAuthoredPrCount,
   }) {
-    const period = `${quarter} ${year}`;
+    const overallOrgCounts = {};
+    for (const item of allItems) {
+      const org = (item.repo || '').split('/')[0];
+      if (!org) continue;
+      overallOrgCounts[org] = (overallOrgCounts[org] || 0) + 1;
+    }
+    const orgsSorted = Object.entries(overallOrgCounts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([org]) => org);
+
+    const sentences = composeQuarterSentences({
+      totalContributions,
+      totalRepos,
+      mergedCount: Number(prCount) || 0,
+      reviewedCount: Number(reviewedPrCount) || 0,
+      coAuthoredCount: Number(coAuthoredPrCount) || 0,
+      issuesCount: Number(issueCount) || 0,
+      topOrgReviewed: topOrgOf(data.reviewedPrs),
+    });
+    const sentencesHtml = sentences.map((s) => `<p class="qr-brief-sentence">${s}</p>`).join('');
+
+    const workedWithHtml = orgsSorted.length
+      ? dedent`
+        <div class="qr-worked-with">
+          <span class="qr-worked-with-label">Worked with</span>
+          <div class="qr-org-chips">
+            ${orgsSorted
+              .map(
+                (org) =>
+                  `<a href="https://github.com/${org}" target="_blank" rel="noopener noreferrer" class="qr-org-chip">${org}</a>`
+              )
+              .join('')}
+          </div>
+        </div>`
+      : '';
+
+    const highlights = pickHighlights(buildHighlightPool(data), 3);
+    const highlightsHtml = highlights.length
+      ? `<div class="qr-highlights">${highlights.map(renderHighlightCard).join('')}</div>`
+      : '';
+
     return dedent`
-      <div class="qr-impact">
-        <div class="qr-impact-top">
-          <h2>Quarterly snapshot <span>— contributions recorded in ${period}</span></h2>
-        </div>
-        <div class="qr-tiles">
-          <a href="#merged-prs" class="qr-tile qr-tile--hero"><span class="n">${totalContributions}</span><span class="c">contributions shipped in ${period}</span></a>
-          <div class="qr-tile"><span class="n">${totalRepos}</span><span class="c">repositories touched in ${period}</span></div>
-          <a href="#merged-prs" class="qr-tile qr-tile--good"><span class="n">${prCount}</span><span class="c">PRs merged in ${period}</span></a>
-          <a href="#issues" class="qr-tile"><span class="n">${issueCount}</span><span class="c">issues closed in ${period}</span></a>
-          <a href="#reviewed-prs" class="qr-tile"><span class="n">${reviewedPrCount}</span><span class="c">PRs reviewed in ${period}</span></a>
-        </div>
+      <div class="qr-brief">
+        <p class="qr-brief-eyebrow">Quarter in brief — ${quarter} ${year}</p>
+        ${sentencesHtml}
+        ${workedWithHtml}
       </div>
+      ${highlightsHtml}
     `;
   }
 
@@ -174,31 +446,35 @@ async function writeHtmlFiles(groupedContributions) {
       return `../${report.year}/${fileName}`;
     };
 
+    // flex-1/min-w-0 lets each button shrink to fit at 360px instead of the
+    // fixed w-40/w-44 floor overflowing the viewport once both are present;
+    // sm: and up restores the fixed width. Border/background colors come
+    // from .nav-report-button/.qr-nav-card, not Tailwind's palette.
     const baseClasses =
-      'w-40 xs:w-44 sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border border-gray-200 dark:border-slate-700';
+      'flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card';
 
     if (previousReport) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
-        <a href="${prevPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-left" style="color: var(--t-brand);">
-          <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Previous</span>
+        <a href="${prevPath}" class="${baseClasses} nav-report-button text-left" style="color: var(--t-brand);">
+          <span class="text-[10px] sm:text-xs font-medium" style="color: var(--t-ink-3);">Previous</span>
           <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             ${LEFT_ARROW_SVG}
             <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
           </span>
-          
+
         </a>
       `;
     } else {
-      // Placeholder div maintains layout when no previous report exists
-      previousButton = '<div class="w-52 h-20"></div>';
+      // Placeholder maintains layout when no previous report exists.
+      previousButton = '<div class="flex-1 sm:flex-none sm:w-52 h-20"></div>';
     }
 
     if (nextReport) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
-        <a href="${nextPath}" class="${baseClasses} bg-white dark:bg-slate-800 nav-report-button text-right" style="color: var(--t-brand);">
-          <span class="text-[10px] sm:text-xs font-medium text-gray-500 dark:text-slate-400">Next</span>
+        <a href="${nextPath}" class="${baseClasses} nav-report-button text-right" style="color: var(--t-brand);">
+          <span class="text-[10px] sm:text-xs font-medium" style="color: var(--t-ink-3);">Next</span>
           <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
             ${RIGHT_ARROW_SVG}
@@ -206,8 +482,8 @@ async function writeHtmlFiles(groupedContributions) {
         </a>
       `;
     } else {
-      // Placeholder div maintains layout when no next report exists
-      nextButton = '<div class="w-52 h-20"></div>';
+      // Placeholder maintains layout when no next report exists.
+      nextButton = '<div class="flex-1 sm:flex-none sm:w-52 h-20"></div>';
     }
 
     return dedent`
@@ -225,7 +501,7 @@ async function writeHtmlFiles(groupedContributions) {
   await fs.mkdir(htmlBaseDir, { recursive: true });
 
   // Pre-calculate the styles string to be included in the <style> tag.
-  const dynamicCss = getReportStyleCss();
+  const dynamicCss = getReportStyleCss() + QUARTERLY_EXTRA_CSS;
 
   // Iterate over each quarterly report to generate its dedicated HTML file.
   for (let index = 0; index < allReports.length; index++) {
@@ -269,7 +545,7 @@ async function writeHtmlFiles(groupedContributions) {
       .slice(0, 3)
       .map(
         (item) => dedent`
-          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' rel="noopener noreferrer" class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
+          <li class="pl-2"><a href='https://github.com/${item[0]}' target='_blank' rel="noopener noreferrer" class="qr-link font-mono text-sm">${item[0]}</a> (${item[1]} contributions)</li>
         `
       )
       .join('');
@@ -361,30 +637,33 @@ async function writeHtmlFiles(groupedContributions) {
     ${dynamicCss}
   </style>
 </head>
-<body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+<body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
 ${navHtmlForReports}
   <main class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">
       <div class="max-w-[120ch] mx-auto">
         <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-12 pb-4 border-b-2">
           <h1 style="color: var(--t-brand);" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">${quarter} ${year}</h1>
-          <p class="text-lg text-gray-500 dark:text-slate-400 mt-2">Open Source Contributions Report</p>
+          <p class="text-lg qr-ink2 mt-2">Open Source Contributions Report</p>
         </header>
 
         <section class="mb-8">
-          ${renderQuarterlyImpact({
+          ${renderQuarterInBrief({
             quarter,
             year,
+            data,
+            allItems,
             totalContributions,
             totalRepos,
             prCount,
             issueCount,
             reviewedPrCount,
+            coAuthoredPrCount,
           })}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mt-16 mb-4 border-l-4 border-green-500 dark:border-green-400 pl-3">Contribution Breakdown</h3>
+          <h3 class="text-2xl font-semibold mt-16 mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-positive);">Contribution Breakdown</h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             ${[
               {
@@ -420,9 +699,9 @@ ${navHtmlForReports}
             ]
               .map(
                 (item) => `
-              <a href="#${item.id}" class="nav-contribution-button flex flex-col items-center p-3 bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: var(--t-brand);">
+              <a href="#${item.id}" class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center" style="color: var(--t-brand);">
                 <span class="text-2xl font-bold" style="color: var(--t-brand);">${item.count}</span>
-                <div class="flex items-center justify-center gap-1.5 text-gray-500 dark:text-slate-400 mt-1">
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     ${item.icon}
                   </span>
@@ -436,16 +715,16 @@ ${navHtmlForReports}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold text-gray-800 dark:text-slate-100 mb-4 border-l-4 border-yellow-500 dark:border-yellow-400 pl-3">Top 3 Repositories</h3>
-          <div class="p-4 bg-gray-50 dark:bg-slate-800/60 rounded-lg shadow-sm">
-            <ol class="list-decimal list-inside pl-4 text-gray-600 dark:text-slate-300 space-y-1">
+          <h3 class="text-2xl font-semibold mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-caution);">Top 3 Repositories</h3>
+          <div class="p-4 qr-surface2 rounded-lg shadow-sm">
+            <ol class="list-decimal list-inside pl-4 qr-ink2 space-y-1">
               ${top3Repos}
             </ol>
           </div>
         </section>
 
-        <hr class="my-8 border-gray-200 dark:border-slate-700">
-      
+        <hr class="my-8" style="border-color: var(--t-line);">
+
         <section class="space-y-6">
     `;
 
@@ -465,7 +744,7 @@ ${navHtmlForReports}
       }
 
       // Details tag is used for collapsible sections.
-      htmlContent += `<details id="${sectionInfo.id}" class="border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm">\n`;
+      htmlContent += `<details id="${sectionInfo.id}" class="qr-details rounded-xl p-4 shadow-sm">\n`;
       htmlContent += ` <summary style="color: var(--t-brand);" class="text-xl font-bold cursor-pointer outline-none">\n`;
       htmlContent += `  <div class="inline-flex items-center flex-nowrap gap-2 ml-3" style="vertical-align: middle;">\n`;
       htmlContent += `    <span class="w-6 h-6 flex items-center shrink-0">${sectionInfo.icon}</span>\n`;
@@ -474,7 +753,7 @@ ${navHtmlForReports}
       htmlContent += ` </summary>\n`;
 
       if (!items || items.length === 0) {
-        htmlContent += `<div class="p-4 text-gray-500 dark:text-slate-400 bg-gray-50 dark:bg-slate-800/60 rounded-lg">No contributions of this type in this quarter.</div>\n`;
+        htmlContent += `<div class="p-4 qr-ink2 qr-surface2 rounded-lg">No contributions of this type in this quarter.</div>\n`;
       } else {
         // Search bar with icon styling for the table in the current section.
         const searchInputId = `${sectionInfo.id}-search`;
@@ -483,37 +762,40 @@ ${navHtmlForReports}
 
         htmlContent += dedent`
           <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
-            
+
             <div class="icon-input-container grow">
               <div class="input-icon" style="color: var(--t-brand);">
                 ${SEARCH_SVG}
               </div>
-              
+
               <input
                 type="text"
                 id="${searchInputId}"
                 placeholder="${visualPlaceholder}"
                 aria-label="${accessibleLabel}"
-                class="search-input w-full border rounded-md bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400
-                px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
+                class="search-input qr-search-input w-full border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 transition"
                 style="border-color: var(--t-brand);"
               />
             </div>
 
-            <button 
-            class="reset-btn bg-gray-100 dark:bg-slate-700
-            hover:bg-gray-200 dark:hover:bg-slate-600 text-gray-700 dark:text-slate-200 px-3 py-2 rounded-md text-sm font-medium transition"
+            <button
+            class="reset-btn qr-reset-btn px-3 py-2 rounded-md text-sm font-medium transition"
             >
               Reset
             </button>
           </div>
         `;
 
-        // Generate the contribution table.
-        let tableContent = `<div class="overflow-x-auto rounded-lg border border-gray-100 dark:border-slate-800 max-h-[70vh] overflow-y-auto">\n`;
-        tableContent += ` <table class="report-table min-w-full divide-y divide-gray-200 dark:divide-slate-700 bg-white dark:bg-slate-800">\n`;
-        tableContent += `  <thead class="bg-white dark:bg-slate-800">\n`;
-        tableContent += `   <tr>\n`;
+        // Generate the contribution table. This markup is hand-minified and
+        // wrapped in a prettier-ignore block: with hundreds of rows per
+        // quarter, letting Prettier's HTML printer wrap every attribute of
+        // every deeply-nested <td> onto its own line (its default behavior
+        // once a tag exceeds printWidth) inflated Q2-2026.html to 1.4MB from
+        // formatting alone, not content. No behavior changes — same
+        // attributes, just no inserted whitespace between tags.
+        let tableContent = `<div class="overflow-x-auto rounded-lg border max-h-[70vh] overflow-y-auto" style="border-color: var(--t-line);">`;
+        tableContent += `<!-- prettier-ignore -->`;
+        tableContent += `<table class="report-table min-w-full"><thead><tr>`;
 
         // Generate table headers with sorting attributes (data-type). Sortable
         // columns expose a real <button> so the sort is reachable and
@@ -524,48 +806,32 @@ ${navHtmlForReports}
           const type = sectionInfo.colTypes[i];
           const isStaticColumn = i === 0; // The 'No.' column is static (not sortable).
 
-          const thAttributes = isStaticColumn
-            ? ''
-            : `data-type="${type}" aria-sort="none"`;
+          const thAttributes = isStaticColumn ? '' : `data-type="${type}" aria-sort="none" `;
           const headerContent = isStaticColumn
             ? sectionInfo.headers[i]
             : `<button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">${sectionInfo.headers[i]}</span><span class="sort-icon" aria-hidden="true">↕</span></button>`;
 
-          tableContent += `    <th ${thAttributes} scope="col" class="py-3 px-4" style="color: var(--t-brand);">
-              ${headerContent}
-          </th>\n`;
+          tableContent += `<th ${thAttributes}scope="col" class="py-3 px-4" style="color:var(--t-brand)">${headerContent}</th>`;
         }
-        tableContent += `   </tr>\n`;
-        tableContent += `  </thead>\n`;
-        tableContent += `  <tbody class="divide-y divide-gray-100 dark:divide-slate-700">\n`;
+        tableContent += `</tr></thead><tbody>`;
 
         let counter = 1;
         // Generate table rows, mapping data properties to columns.
         for (const item of items) {
-          // Both stripe colors need an explicit dark: variant — a <tr>'s own
-          // background paints over the <table>'s dark:bg-slate-800, so
-          // without one every row would render on a light bg in dark mode
-          // and strand the dark:text-* cell colors with no contrast.
-          const rowBg =
-            counter % 2 === 1 ? 'bg-white dark:bg-slate-800' : 'bg-gray-50 dark:bg-slate-800/60';
+          const rowClass = counter % 2 === 1 ? 'qr-row-a' : 'qr-row-b';
           const safeTitle = sanitizeAttribute(item.title);
 
-          // Row with data-href to enable click navigation.
-          const rowClass = item.isInaccessible
-            ? `${rowBg} table-row-hover opacity-75`
-            : `${rowBg} table-row-hover`;
-          tableContent += `   <tr class="${rowClass}" style="transition: background-color 0.15s ease-in-out;">\n`;
+          const rowInaccessibleClass = item.isInaccessible ? ' opacity-75' : '';
+          tableContent += `<tr class="${rowClass}${rowInaccessibleClass}">`;
 
-          // No. column (not sortable). Colored to match the PR title link text for contrast.
-          tableContent += `    <td class="text-blue-600 dark:text-blue-300">${counter++}.</td>\n`;
+          // No. column (not sortable, styled via the :first-child rule).
+          tableContent += `<td>${counter++}.</td>`;
 
-          // Repo column (String type). Text color paired with its background for WCAG-compliant contrast in both themes.
-          const repoSpanHtml = `<span class="font-mono text-xs bg-gray-100 dark:bg-slate-700 text-gray-700 dark:text-slate-200 p-1 rounded">${item.repo}</span>`;
-          tableContent += `    <td data-value="${item.repo}" data-col-type="string">${repoSpanHtml}</td>\n`;
+          // Repo column (String type). Sort falls back to textContent, so no data-value is needed.
+          tableContent += `<td data-label="Project"><span class="qr-repo">${sanitizeAttribute(item.repo || '')}</span></td>`;
 
-          // Title column (String type, contains hyperlink).
-          const linkHtml = `<a href='${item.url}' target='_blank' rel="noopener noreferrer" class="text-blue-600 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 hover:underline">${item.title}</a>`;
-          tableContent += `    <td data-value="${safeTitle}" data-col-type="string">${linkHtml}</td>\n`;
+          // Title column (String type, contains hyperlink). Sort falls back to textContent.
+          tableContent += `<td data-label="Title"><a href="${item.url}" target="_blank" rel="noopener noreferrer" class="qr-link">${safeTitle}</a></td>`;
 
           // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
@@ -578,9 +844,9 @@ ${navHtmlForReports}
             const reviewPeriod = calculatePeriodInDays(item.createdAt, completedAtDate);
             const daysNum = reviewPeriod.replace(/[^0-9]/g, '') || 0;
 
-            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
-            tableContent += ` <td data-value="${completedAtDate || ''}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${completedAtFormatted}</td>\n`;
-            tableContent += ` <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${reviewPeriod}</td>\n`;
+            tableContent += `<td data-value="${item.createdAt}" data-label="${sectionInfo.headers[3]}">${createdAt}</td>`;
+            tableContent += `<td data-value="${completedAtDate || ''}" data-label="${sectionInfo.headers[4]}">${completedAtFormatted}</td>`;
+            tableContent += `<td data-value="${daysNum}" data-label="${sectionInfo.headers[5]}">${reviewPeriod}</td>`;
           } else if (section === 'issues') {
             const createdAt = formatDate(item.date);
             const closedAt = formatDate(item.closedAt);
@@ -599,9 +865,9 @@ ${navHtmlForReports}
               sortValue = sortValue || '0';
             }
 
-            tableContent += `    <td data-value="${item.date}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.closedAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${closedAt}</td>\n`;
-            tableContent += `    <td data-value="${sortValue}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${closingPeriodHtml}</td>\n`;
+            tableContent += `<td data-value="${item.date}" data-label="${sectionInfo.headers[3]}">${createdAt}</td>`;
+            tableContent += `<td data-value="${item.closedAt}" data-label="${sectionInfo.headers[4]}">${closedAt}</td>`;
+            tableContent += `<td data-value="${sortValue}" data-label="${sectionInfo.headers[5]}">${closingPeriodHtml}</td>`;
           } else if (section === 'reviewedPrs') {
             const createdAt = formatDate(item.createdAt);
             const myFirstReviewAt = formatDate(item.myFirstReviewDate);
@@ -613,10 +879,10 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.myFirstReviewDate}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${myFirstReviewAt}</td>\n`;
-            tableContent += `    <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${myFirstReviewPeriod}</td>\n`;
-            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
+            tableContent += `<td data-value="${item.createdAt}" data-label="${sectionInfo.headers[3]}">${createdAt}</td>`;
+            tableContent += `<td data-value="${item.myFirstReviewDate}" data-label="${sectionInfo.headers[4]}">${myFirstReviewAt}</td>`;
+            tableContent += `<td data-value="${daysNum}" data-label="${sectionInfo.headers[5]}">${myFirstReviewPeriod}</td>`;
+            tableContent += `<td data-value="${statusObj.statusText}" data-label="${sectionInfo.headers[6]}">${statusObj.html}</td>`;
           } else if (section === 'coAuthoredPrs') {
             const createdAt = formatDate(item.createdAt);
             const firstCommitAt = formatDate(item.firstCommitDate);
@@ -625,27 +891,25 @@ ${navHtmlForReports}
 
             const statusObj = formatPrStatusWithBadge(getPrStatusContent(item));
 
-            tableContent += `    <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
-            tableContent += `    <td data-value="${item.firstCommitDate}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${firstCommitAt}</td>\n`;
-            tableContent += `    <td data-value="${daysNum}" data-col-type="number" class="text-blue-600 dark:text-blue-300">${firstCommitPeriod}</td>\n`;
-            tableContent += `    <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
+            tableContent += `<td data-value="${item.createdAt}" data-label="${sectionInfo.headers[3]}">${createdAt}</td>`;
+            tableContent += `<td data-value="${item.firstCommitDate}" data-label="${sectionInfo.headers[4]}">${firstCommitAt}</td>`;
+            tableContent += `<td data-value="${daysNum}" data-label="${sectionInfo.headers[5]}">${firstCommitPeriod}</td>`;
+            tableContent += `<td data-value="${statusObj.statusText}" data-label="${sectionInfo.headers[6]}">${statusObj.html}</td>`;
           } else if (section === 'collaborations') {
             const createdAt = formatDate(item.createdAt);
             const commentedAt = formatDate(item.firstCommentedAt);
             const statusObj = formatPrStatusWithBadge(getCollaborationStatusContent(item));
 
-            tableContent += ` <td data-value="${item.createdAt}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${createdAt}</td>\n`;
-            tableContent += ` <td data-value="${item.firstCommentedAt || ''}" data-col-type="date" class="text-blue-600 dark:text-blue-300">${commentedAt}</td>\n`;
+            tableContent += `<td data-value="${item.createdAt}" data-label="${sectionInfo.headers[3]}">${createdAt}</td>`;
+            tableContent += `<td data-value="${item.firstCommentedAt || ''}" data-label="${sectionInfo.headers[4]}">${commentedAt}</td>`;
             // Using updatedAt for the status column's date value to ensure proper sorting
-            tableContent += ` <td data-value="${statusObj.statusText}" data-col-type="status" class="text-blue-600 dark:text-blue-300">${statusObj.html}</td>\n`;
+            tableContent += `<td data-value="${statusObj.statusText}" data-label="${sectionInfo.headers[5]}">${statusObj.html}</td>`;
           }
 
-          tableContent += `   </tr>\n`;
+          tableContent += `</tr>`;
         }
 
-        tableContent += `  </tbody>\n`;
-        tableContent += ` </table>\n`;
-        tableContent += `</div>\n`;
+        tableContent += `</tbody></table></div>`;
 
         htmlContent += tableContent;
       }
@@ -664,7 +928,7 @@ ${navHtmlForReports}
     </main>
     <script>
       ${tableFiltersScript}
-      
+
       // Function to open the correct section based on the URL hash, defaulting to 'Merged PRs'.
       function openSectionFromHash() {
         const hash = window.location.hash;

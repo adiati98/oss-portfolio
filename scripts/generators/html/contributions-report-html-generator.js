@@ -12,6 +12,17 @@ const { getThemeInitScript, getThemeStyleVariant } = require('../../components/t
 const HTML_OUTPUT_DIR_NAME = 'html-generated';
 const HTML_REPORTS_FILENAME = 'reports.html';
 
+// Supplements getReportsListStyleCss (shared, not owned by this generator)
+// with a token-only rule for the quarter card link background — the only
+// element on this page whose background wasn't already driven by the
+// details[open]/:not([open]) selectors in that shared stylesheet.
+const REPORTS_EXTRA_CSS = `
+  .rpt-card-link{background-color:var(--t-card)}
+  @media (prefers-reduced-motion: reduce) {
+    .report-card-link, details, summary { transition: none !important; }
+  }
+`;
+
 /**
  * Calculates aggregate totals from all contribution data and writes the
  * all-time contributions HTML report file.
@@ -27,7 +38,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
 
   // Generate the footer HTML and dynamic CSS
   const footerHtml = createFooterHtml();
-  const reportsListCss = getReportsListStyleCss();
+  const reportsListCss = getReportsListStyleCss() + REPORTS_EXTRA_CSS;
 
   // Generate the navbar with the correct relative path to root
   const navHtml = createNavHtml('./');
@@ -80,7 +91,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       // Start a new year section with a dedicated heading
       linkHtml += dedent`
             <details ${openAttribute} class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300" style="border-color: var(--t-line);">
-                <summary style="color: var(--t-ink);" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center bg-slate-50/50 dark:bg-slate-800/60">
+                <summary style="color: var(--t-ink);" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center">
                     <span class="mr-3">📅</span> ${year} Reports
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
@@ -91,7 +102,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
         linkHtml += dedent`
                 <a href="./${link.relativePath}"
                    style="border-color: var(--t-line);"
-                   class="report-card-link bg-white dark:bg-slate-800 border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6">
+                   class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6">
                     <p style="color: var(--t-brand);" class="text-sm font-semibold">${link.quarterText}</p>
                     <p style="color: var(--t-ink);" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
                     <p style="color: var(--t-ink-3);" class="text-xs">Total Contributions</p>
@@ -128,7 +139,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
     ${reportsListCss}
   </style>
 </head>
-<body class="bg-white dark:bg-slate-900 antialiased flex flex-col h-full min-h-full">
+<body style="background-color: var(--t-surface); color: var(--t-ink);" class="antialiased flex flex-col h-full min-h-full">
 ${navHtml}
   <main class="grow w-full">
     <div class="px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 py-6 sm:py-10">

@@ -105,6 +105,12 @@ const LANDING_CSS = `
   .lp-idx:hover b{color:var(--t-brand)}
   .lp-idx:hover .go{color:var(--t-brand);transform:translateX(3px)}
   @media (prefers-reduced-motion: reduce){.lp-idx .go{transition:none}}
+  /* On narrow screens the fixed label width left almost nothing for the
+     blurb, so its text felt cramped against the label and arrow. */
+  @media (max-width:480px){
+    .lp-idx b{min-width:92px}
+    .lp-idx span:first-of-type{padding:2px 0;margin-left:2px}
+  }
   .lp-empty{font-size:.85rem;color:var(--t-ink-3);font-style:italic}
 `;
 
@@ -113,7 +119,11 @@ const LANDING_CSS = `
  * Only real generated URLs — never a redirect stub.
  */
 const PAGE_INDEX = [
-  { href: 'journey.html', label: 'Journey', blurb: 'Milestones, talks, expertise, and the roles behind them.' },
+  {
+    href: 'journey.html',
+    label: 'Journey',
+    blurb: 'Milestones, talks, expertise, and the roles behind them.',
+  },
   {
     href: 'workbench.html',
     label: 'Workbench',
@@ -162,7 +172,10 @@ function determinePersona(counts) {
 
 /** "Community Mentor" → "CM"; falls back to the first two letters. */
 function personaInitials(title) {
-  const words = String(title || '').trim().split(/\s+/).filter(Boolean);
+  const words = String(title || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
   if (words.length === 0) return '—';
   const initials = words.map((w) => w[0]).join('');
   return (initials.length > 1 ? initials : String(title).slice(0, 2)).slice(0, 2).toUpperCase();
@@ -170,7 +183,10 @@ function personaInitials(title) {
 
 /** Splits a display name so the last word can carry the gradient. */
 function renderHeroName(name) {
-  const words = String(name || '').trim().split(/\s+/).filter(Boolean);
+  const words = String(name || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
   if (words.length === 0) return `@${GITHUB_USERNAME}`;
   if (words.length === 1) return `<span class="lp-grad">${words[0]}</span>`;
   const last = words.pop();
