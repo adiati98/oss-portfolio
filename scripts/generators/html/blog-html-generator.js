@@ -93,7 +93,7 @@ function renderArticleItem(article, { showPlatform, headingTag }) {
     showPlatform && platform ? `<span class="wr-platform">${safePlatform}</span>` : '';
   return dedent`
     <li class="wr-item" data-platform="${safePlatform}">
-      <${headingTag} class="wr-item-t" title="${title}">
+      <${headingTag} class="wr-item-t">
         <a href="${escapeHtml(article.link)}" target="_blank" rel="noopener noreferrer">${title}</a>
       </${headingTag}>
       <div class="wr-meta">

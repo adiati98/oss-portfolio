@@ -202,8 +202,13 @@ function renderExperience(roles) {
   }
   return roles
     .map((role) => {
+      // Adjacent roles at the same org (e.g. two Virtual Coffee entries in a
+      // row) would otherwise produce two links with identical text and
+      // destination back to back — a "redundant link" a screen reader user
+      // can't tell apart. The aria-label folds in the role title so each
+      // link's accessible name stays unique without changing what's shown.
       const orgHtml = role.orgUrl
-        ? `<a href="${role.orgUrl}" target="_blank" rel="noopener noreferrer">${escapeHtml(role.org)}</a>`
+        ? `<a href="${role.orgUrl}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(role.org)} — ${escapeHtml(role.title)}">${escapeHtml(role.org)}</a>`
         : escapeHtml(role.org || '');
       const period = role.active
         ? `${String(role.period || '').replace(/ ?- ?Present$/i, '')} — <b>present</b>`
