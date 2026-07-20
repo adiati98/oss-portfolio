@@ -471,6 +471,10 @@
       .rpt-card-link {
         background-color: var(--t-card);
       }
+      .rpt-stat {
+        display: flex;
+        flex-direction: column-reverse;
+      }
       @media (prefers-reduced-motion: reduce) {
         .report-card-link,
         details,
@@ -1251,7 +1255,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2026 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2026 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1259,25 +1265,43 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">57</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">57</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2026/Q2-2026.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">498</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">498</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2026/Q1-2026.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 1</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">207</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 1
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">207</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1289,7 +1313,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2025 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2025 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1297,33 +1323,57 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">204</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">204</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2025/Q3-2025.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">294</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">294</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2025/Q2-2025.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">123</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">123</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2025/Q1-2025.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 1</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">106</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 1
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">106</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1335,7 +1385,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2024 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2024 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1343,33 +1395,57 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">165</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">165</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2024/Q3-2024.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">127</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">127</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2024/Q2-2024.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">273</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">273</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2024/Q1-2024.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 1</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">203</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 1
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">203</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1381,7 +1457,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2023 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2023 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1389,33 +1467,57 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">215</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">215</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2023/Q3-2023.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">73</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">73</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2023/Q2-2023.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">18</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">18</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2023/Q1-2023.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 1</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">30</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 1
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">30</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1427,7 +1529,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2022 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2022 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1435,33 +1539,57 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">28</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">28</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2022/Q3-2022.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">38</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">38</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2022/Q2-2022.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">17</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">17</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2022/Q1-2022.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 1</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">11</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 1
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">11</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1473,7 +1601,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2021 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2021 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1481,25 +1611,43 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">50</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">50</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2021/Q3-2021.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">14</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">14</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2021/Q2-2021.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 2</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">1</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 2
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1511,7 +1659,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2020 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2020 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1519,9 +1669,15 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">7</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">7</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
@@ -1533,7 +1689,9 @@
                   style="color: var(--t-ink)"
                   class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center"
                 >
-                  <span class="mr-3">📅</span> 2019 Reports
+                  <h2 class="m-0 text-2xl font-bold">
+                    <span class="mr-3" aria-hidden="true">📅</span> 2019 Reports
+                  </h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                   <a
@@ -1541,17 +1699,29 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 4</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">1</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p> </a
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 4
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl> </a
                   ><a
                     href="./2019/Q3-2019.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <p style="color: var(--t-brand)" class="text-sm font-semibold">Quarter 3</p>
-                    <p style="color: var(--t-ink)" class="text-3xl font-extrabold mt-1">1</p>
-                    <p style="color: var(--t-ink-3)" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                      Quarter 3
+                    </h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
+                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                        Total Contributions
+                      </dt>
+                    </dl>
                   </a>
                 </div>
               </details>
