@@ -61,15 +61,6 @@ const LANDING_CSS = `
     background:linear-gradient(120deg,var(--t-brand-wash),var(--t-card-2) 62%)}
   .lp-impact-top h2{font-size:1.05rem;font-weight:800;margin:0;color:var(--t-ink)}
   .lp-impact-top h2 span{color:var(--t-ink-2);font-weight:400;font-size:.86rem}
-  /* Above the .lp-cols breakpoint, match the hero/impact card width to the
-     Contribution mix column exactly: that column is one of two
-     minmax(0,1fr) tracks with a 40px gap, so its width is always
-     calc(50% - 20px) of the same container these cards sit in. Below the
-     breakpoint .lp-cols collapses to one column (full width), so the cap
-     is scoped to only apply once that second column exists. */
-  @media (min-width:861px){
-    .lp-hero,.lp-impact{max-width:calc(50% - 20px)}
-  }
   .lp-live{display:inline-flex;align-items:center;gap:7px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.09em;text-transform:uppercase;color:var(--t-positive)}
   .lp-live i{width:8px;height:8px;border-radius:50%;background:var(--t-positive);position:relative}
   .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}

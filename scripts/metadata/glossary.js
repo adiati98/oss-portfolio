@@ -21,6 +21,14 @@ const GLOSSARY_CONTENT = {
             'Adds the grand total of merged PRs, issues, reviewed PRs, co-authored PRs, and community collaborations.',
         },
         {
+          id: 'shippedChanges',
+          title: 'Shipped Changes',
+          description:
+            'How many of the Total Impact contributions were finished and accepted, not just started.',
+          howItIsCalculated:
+            'Counts contributions GitHub has marked as merged. The Total Impact number also includes work still open or in progress, so this smaller number shows what has actually been completed.',
+        },
+        {
           id: 'activeSince',
           title: 'Active Since',
           description: 'The year of the first recorded contribution found on GitHub.',

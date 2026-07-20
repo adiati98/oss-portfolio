@@ -24,6 +24,7 @@ const HTML_REPORTS_FILENAME = 'reports.html';
 // details[open]/:not([open]) selectors in that shared stylesheet.
 const REPORTS_EXTRA_CSS = `
   .rpt-card-link{background-color:var(--t-card)}
+  .rpt-stat{display:flex;flex-direction:column-reverse}
   @media (prefers-reduced-motion: reduce) {
     .report-card-link, details, summary { transition: none !important; }
   }
@@ -98,7 +99,7 @@ async function createHtmlReports(quarterlyFileLinks = []) {
       linkHtml += dedent`
             <details ${openAttribute} class="col-span-full mb-8 border rounded-2xl overflow-hidden transition duration-300" style="border-color: var(--t-line);">
                 <summary style="color: var(--t-ink);" class="text-2xl font-bold p-6 cursor-pointer transition duration-150 flex items-center">
-                    <span class="mr-3">📅</span> ${year} Reports
+                    <h2 class="m-0 text-2xl font-bold"><span class="mr-3" aria-hidden="true">📅</span> ${year} Reports</h2>
                 </summary>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
                 `;
@@ -109,9 +110,11 @@ async function createHtmlReports(quarterlyFileLinks = []) {
                 <a href="./${link.relativePath}"
                    style="border-color: var(--t-line);"
                    class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6">
-                    <p style="color: var(--t-brand);" class="text-sm font-semibold">${link.quarterText}</p>
-                    <p style="color: var(--t-ink);" class="text-3xl font-extrabold mt-1">${link.totalContributions}</p>
-                    <p style="color: var(--t-ink-3);" class="text-xs">Total Contributions</p>
+                    <h3 style="color: var(--t-brand);" class="m-0 text-sm font-semibold">${link.quarterText}</h3>
+                    <dl class="rpt-stat m-0 mt-1">
+                        <dd style="color: var(--t-ink);" class="text-3xl font-extrabold m-0">${link.totalContributions}</dd>
+                        <dt style="color: var(--t-ink-3);" class="text-xs font-normal">Total Contributions</dt>
+                    </dl>
                 </a>
                 `;
       }

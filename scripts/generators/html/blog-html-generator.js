@@ -50,7 +50,7 @@ const WRITING_CSS = `
     background:var(--t-card);border:2.5px solid var(--t-brand)}
   .wr-org-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin:0}
   .wr-org-name{font-size:1.06rem;font-weight:800;letter-spacing:-.01em;color:var(--t-brand);overflow-wrap:anywhere}
-  .wr-org-n{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
+  .wr-org-n{font-family:ui-monospace,monospace;font-size:.75rem;font-weight:600;color:var(--t-on-brand);background:var(--t-brand);border:1px solid var(--t-brand);border-radius:999px;padding:1px 9px}
   .wr-personal-h-row{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:16px}
   .wr-personal{max-width:760px}
   .wr-list{list-style:none;margin:6px 0 0;padding:0}
@@ -93,7 +93,7 @@ function renderArticleItem(article, { showPlatform, headingTag }) {
     showPlatform && platform ? `<span class="wr-platform">${safePlatform}</span>` : '';
   return dedent`
     <li class="wr-item" data-platform="${safePlatform}">
-      <${headingTag} class="wr-item-t" title="${title}">
+      <${headingTag} class="wr-item-t">
         <a href="${escapeHtml(article.link)}" target="_blank" rel="noopener noreferrer">${title}</a>
       </${headingTag}>
       <div class="wr-meta">

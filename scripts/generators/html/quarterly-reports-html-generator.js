@@ -66,11 +66,11 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-highlight-card{background:var(--t-card);border:1px solid var(--t-line);border-radius:12px;padding:16px;text-decoration:none;display:flex;flex-direction:column;gap:6px;transition:border-color .15s ease,box-shadow .15s ease}
   .qr-highlight-card:hover{border-color:var(--t-brand-line);box-shadow:var(--t-shadow)}
   .qr-highlight-card:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
-  .qr-highlight-type{align-self:flex-start;font-family:ui-monospace,monospace;font-size:.68rem;letter-spacing:.05em;text-transform:uppercase;color:var(--t-brand);background:var(--t-brand-wash);border-radius:5px;padding:2px 8px}
+  .qr-highlight-type{align-self:flex-start;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--t-brand);background:var(--t-brand-wash);border-radius:5px;padding:2px 8px}
   .qr-highlight-repo{font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3)}
   .qr-highlight-title{font-size:.92rem;font-weight:700;color:var(--t-ink);line-height:1.35}
   .qr-highlight-card:hover .qr-highlight-title{color:var(--t-brand)}
-  .qr-highlight-meta{font-family:ui-monospace,monospace;font-size:.7rem;color:var(--t-ink-3)}
+  .qr-highlight-meta{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3)}
 
   .qr-ink2{color:var(--t-ink-2)}
   .qr-ink3{color:var(--t-ink-3)}
@@ -139,7 +139,7 @@ const QUARTERLY_EXTRA_CSS = `
       content: attr(data-label);
       flex: 0 0 42%;
       font-family: ui-monospace, monospace;
-      font-size: .68rem;
+      font-size: .75rem;
       text-transform: uppercase;
       letter-spacing: .04em;
       color: var(--t-ink-3);
@@ -481,7 +481,7 @@ async function writeHtmlFiles(groupedContributions) {
       const prevPath = getReportPath(previousReport);
       previousButton = dedent`
         <a href="${prevPath}" class="${baseClasses} nav-report-button text-left" style="color: var(--t-brand);">
-          <span class="text-[10px] sm:text-xs font-medium" style="color: var(--t-ink-3);">Previous</span>
+          <span class="text-xs font-medium" style="color: var(--t-ink-3);">Previous</span>
           <span class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             ${LEFT_ARROW_SVG}
             <span class="whitespace-normal min-w-0">${previousReport.fullQuarterName}</span>
@@ -498,7 +498,7 @@ async function writeHtmlFiles(groupedContributions) {
       const nextPath = getReportPath(nextReport);
       nextButton = dedent`
         <a href="${nextPath}" class="${baseClasses} nav-report-button text-right" style="color: var(--t-brand);">
-          <span class="text-[10px] sm:text-xs font-medium" style="color: var(--t-ink-3);">Next</span>
+          <span class="text-xs font-medium" style="color: var(--t-ink-3);">Next</span>
           <span class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal" style="color: var(--t-brand);">
             <span class="whitespace-normal min-w-0">${nextReport.fullQuarterName}</span>
             ${RIGHT_ARROW_SVG}
@@ -689,7 +689,7 @@ ${navHtmlForReports}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold mt-16 mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-positive);">Contribution Breakdown</h3>
+          <h2 class="text-2xl font-semibold mt-16 mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-positive);">Contribution Breakdown</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
             ${[
               {
@@ -741,7 +741,7 @@ ${navHtmlForReports}
         </section>
 
         <section class="mb-8">
-          <h3 class="text-2xl font-semibold mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-caution);">Top 3 Repositories</h3>
+          <h2 class="text-2xl font-semibold mb-4 border-l-4 pl-3" style="color: var(--t-ink); border-left-color: var(--t-caution);">Top 3 Repositories</h2>
           <div class="p-4 qr-surface2 rounded-lg shadow-sm">
             <ol class="list-decimal list-inside pl-4 qr-ink2 space-y-1">
               ${top3Repos}
@@ -857,7 +857,17 @@ ${navHtmlForReports}
           tableContent += `<td data-label="Project"><span class="qr-repo">${sanitizeAttribute(item.repo || '')}</span></td>`;
 
           // Title column (String type, contains hyperlink). Sort falls back to textContent.
-          tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link">${safeTitle}</a></td>`;
+          // Backports/cherry-picks routinely reuse the exact same PR title
+          // across different PRs (see e.g. Q2-2026's "docs: Add Tags
+          // documentation for Contact management" filed 3 times) — two
+          // links with identical text but different destinations is
+          // exactly what WAVE's "suspicious link text" flags, since a
+          // screen reader's link list can't tell them apart. The number
+          // pulled from the PR/issue URL disambiguates the accessible name
+          // without changing what's shown.
+          const refMatch = String(item.url || '').match(/\/(pull|issues)\/(\d+)/);
+          const refSuffix = refMatch ? ` (#${refMatch[2]})` : '';
+          tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="${sanitizeAttribute(item.title || '')}${refSuffix}">${safeTitle}</a></td>`;
 
           // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
