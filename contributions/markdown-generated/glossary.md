@@ -68,4 +68,4 @@ _Terms used on the Writing page, covering published articles and how they are gr
 
 ---
 
-[← Back to Summary](./README.md) | _Last updated: 7/21/2026, 1:41:43 AM_
+[← Back to Summary](./README.md) | _Last updated: 7/21/2026, 5:32:08 AM_
