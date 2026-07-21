@@ -43,4 +43,4 @@ Milestones, expertise, and the leadership roles behind them, across the Open Sou
 
 ---
 
-[← Back to Summary](./README.md) | [Active Workbench →](./workbench.md) | _Last updated: July 20, 2026_
+[← Back to Summary](./README.md) | [Active Workbench →](./workbench.md) | _Last updated: July 21, 2026_

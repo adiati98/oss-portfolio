@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-20T18:17:08.291Z",
+  "fetchedAt": "2026-07-21T01:41:44.249Z",
   "data": {
     "mautic/developer-documentation-new#595": {
       "docsUpdatedAt": "2026-07-17T08:50:54Z",
@@ -2919,8 +2919,8 @@
       ]
     },
     "mautic/developer-documentation-new#516": {
-      "docsUpdatedAt": "2026-07-08T18:25:11Z",
-      "codeUpdatedAt": "2026-07-17T12:35:14Z",
+      "docsUpdatedAt": "2026-07-20T18:39:52Z",
+      "codeUpdatedAt": "2026-07-20T18:41:02Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -3024,6 +3024,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-17T12:35:14Z",
           "body": "Promptless prepared documentation updates related to this change now that it has merged.\n\nTriggered by this PR (#16067).\n\n**User Documentation:** Documents the new \"Notes - User has access to\" Role permission (`lead:notes`) and the per-note-owner edit/delete visibility on the Contact Notes tab, plus an upgrade note covering the migration that backfills `lead:notes` from existing `lead:leads` for non-admin Roles. Review: [Document dedicated Notes permissions](https://github.com/mautic/user-documentation/pull/704)\n\n**Developer Documentation:** Documents the Notes API permission requirements (`lead:notes`) and updates the Contacts API \"List Contact Notes\" endpoint. Review: [Document Notes API permissions](https://github.com/mautic/developer-documentation-new/pull/516)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:41:02Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created PRs at both user and developer docs based on the changes in this PR.\r\n\r\nCan you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/16067#issuecomment-5003330028"
         }
       ],
       "rawCodeReviews": [
@@ -3879,7 +3884,7 @@
       ]
     },
     "mautic/user-documentation#856": {
-      "docsUpdatedAt": "2026-07-17T11:23:45Z",
+      "docsUpdatedAt": "2026-07-20T18:49:33Z",
       "codeUpdatedAt": "2026-07-20T13:36:21Z",
       "rawDocsReviews": [
         {
@@ -3918,8 +3923,8 @@
       "rawReviewRequests": []
     },
     "mautic/user-documentation#855": {
-      "docsUpdatedAt": "2026-07-17T11:20:50Z",
-      "codeUpdatedAt": "2026-07-17T11:21:08Z",
+      "docsUpdatedAt": "2026-07-20T18:41:48Z",
+      "codeUpdatedAt": "2026-07-20T18:42:22Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -3964,6 +3969,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-17T11:21:08Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by [PR #16095](https://github.com/mautic/mautic/pull/16095)\n\nThis adds a bullet to the Export settings documentation for the new 'Notify admins about contact exports' Lead configuration setting (default Yes): what it controls (the admin in-app notification at request time and the separate admin completion email at finish), and what it doesn't change (the requesting user always receives their completion email with the download link, and audit logging is unaffected).\n\nReview: [Document the 'Notify admins about contact exports' setting](https://github.com/mautic/user-documentation/pull/855)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:42:22Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/16095#issuecomment-5002697580"
         }
       ],
       "rawCodeReviews": [
@@ -4002,7 +4012,7 @@
       ]
     },
     "mautic/user-documentation#854": {
-      "docsUpdatedAt": "2026-07-17T11:12:38Z",
+      "docsUpdatedAt": "2026-07-20T18:50:06Z",
       "codeUpdatedAt": "2026-07-20T14:43:55Z",
       "rawDocsReviews": [
         {
@@ -4059,8 +4069,8 @@
       "rawReviewRequests": []
     },
     "mautic/user-documentation#853": {
-      "docsUpdatedAt": "2026-07-16T12:12:57Z",
-      "codeUpdatedAt": "2026-07-16T12:13:10Z",
+      "docsUpdatedAt": "2026-07-20T18:42:59Z",
+      "codeUpdatedAt": "2026-07-20T18:44:09Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -4105,6 +4115,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-16T12:13:10Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by this PR — \"Add owner-based Reply-To handling for queued email sends\".\n\nAdded a 'Reply-To resolution hierarchy' section to the Email docs (mirroring the existing 'Sender resolution hierarchy' for the From address), documenting the precedence order for queued sends: (1) Email Reply-to address → (2) the Contact Owner's address when 'Use owner as mailer' is enabled → (3) Email From address (when no global reply-to is set) → (4) system/global reply-to fallback. The docs were previously silent on Reply-To precedence, so this fills a genuine gap. No developer-documentation change was needed — the change is internal mailer wiring with no plugin extension point.\n\nReview: [docs PR #853](https://github.com/mautic/user-documentation/pull/853)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:44:09Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/15945#issuecomment-4991678571"
         }
       ],
       "rawCodeReviews": [
@@ -4149,8 +4164,8 @@
       ]
     },
     "mautic/user-documentation#852": {
-      "docsUpdatedAt": "2026-07-16T12:11:49Z",
-      "codeUpdatedAt": "2026-07-16T12:12:05Z",
+      "docsUpdatedAt": "2026-07-20T18:45:43Z",
+      "codeUpdatedAt": "2026-07-20T18:45:28Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -4212,6 +4227,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-16T12:12:05Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by this PR — \"Feature (Email): support owner field tokens in tracked email URLs\".\n\nAdded a 'Tokens in link URLs' section to the Email docs explaining that `{ownerfield=...}` (and Contact field) tokens can now be placed inside a link's URL — e.g. `https://blog.example.com/author/{ownerfield=firstname}/` — and Mautic resolves them per-Contact at click/redirect time. It covers the five available Owner tokens, the tracked-link requirement, and the empty-value behavior when a Contact has no Owner. No developer-documentation change was needed — the PR only adds an internal listener to the existing `UrlTokenReplaceEvent` and introduces no new developer extension point.\n\nReview: [docs PR #852](https://github.com/mautic/user-documentation/pull/852)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:45:28Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/15924#issuecomment-4991668059"
         }
       ],
       "rawCodeReviews": [
@@ -4256,8 +4276,8 @@
       ]
     },
     "mautic/user-documentation#851": {
-      "docsUpdatedAt": "2026-07-16T12:08:43Z",
-      "codeUpdatedAt": "2026-07-16T12:08:55Z",
+      "docsUpdatedAt": "2026-07-20T18:47:08Z",
+      "codeUpdatedAt": "2026-07-20T18:46:39Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -4317,6 +4337,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-16T12:08:55Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by this PR — \"Order preference center segments by public name\".\n\nAdded a brief note to the Preference Center page: Segments now appear in alphabetical order by Public name, with a stable secondary sort by internal ID when Public names match. Since Contacts see this order, the note advises setting a clear Public name on each Segment. No developer-documentation change was needed — the change is an internal repository sort order with no event, service, hook, or API for plugin developers.\n\nReview: [docs PR #851](https://github.com/mautic/user-documentation/pull/851)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:46:39Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/15850#issuecomment-4991637965"
         }
       ],
       "rawCodeReviews": [
@@ -4367,7 +4392,7 @@
       ]
     },
     "mautic/user-documentation#850": {
-      "docsUpdatedAt": "2026-07-16T12:08:09Z",
+      "docsUpdatedAt": "2026-07-20T18:50:32Z",
       "codeUpdatedAt": "2026-07-20T11:18:31Z",
       "rawDocsReviews": [
         {
@@ -4399,8 +4424,8 @@
       "rawReviewRequests": []
     },
     "mautic/user-documentation#849": {
-      "docsUpdatedAt": "2026-07-16T13:38:11Z",
-      "codeUpdatedAt": "2026-07-16T11:57:35Z",
+      "docsUpdatedAt": "2026-07-20T18:48:22Z",
+      "codeUpdatedAt": "2026-07-20T18:48:11Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -4467,6 +4492,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-16T11:57:35Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by this PR — \"[UXUI] feat: Stage merge\".\n\nAdded a 'Merging Stages' section to the Stages page covering how to merge one Stage into another from the Stages list, the edit + delete permissions required for the merge action to appear, the target-Stage dropdown in the 'Merging current stage' modal, the confirmation message, and a warning that the merge is irreversible (Contacts and Stage change history move to the target Stage, then the merged Stage is permanently deleted). No developer-documentation change was needed, as the merge is internal code with no new event, hook, service, or API for plugin developers.\n\nReview: [docs PR #849](https://github.com/mautic/user-documentation/pull/849)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:48:11Z",
+          "body": "Hi @andersonjeccel,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/15399#issuecomment-4991534089"
         }
       ],
       "rawCodeReviews": [
@@ -4589,7 +4619,7 @@
       ]
     },
     "mautic/user-documentation#843": {
-      "docsUpdatedAt": "2026-07-15T12:23:23Z",
+      "docsUpdatedAt": "2026-07-20T18:51:02Z",
       "codeUpdatedAt": "2026-07-16T09:41:36Z",
       "rawDocsReviews": [
         {
@@ -5845,7 +5875,7 @@
     },
     "mautic/user-documentation#787": {
       "docsUpdatedAt": "2026-06-25T14:45:16Z",
-      "codeUpdatedAt": "2026-07-17T10:39:36Z",
+      "codeUpdatedAt": "2026-07-20T18:55:19Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -5917,6 +5947,12 @@
           "state": "APPROVED",
           "submitted_at": "2026-07-03T18:05:20Z",
           "body": "All good\ntested:\n\n- set global pref center\n- sent email with blank pref center\n- opened unsubs link\n- changed global pref center\n- reloaded link, new default used"
+        },
+        {
+          "user": { "login": "kniziol" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-07-20T18:55:19Z",
+          "body": ""
         }
       ],
       "rawReviewRequests": [
@@ -7938,7 +7974,7 @@
     },
     "mautic/user-documentation#704": {
       "docsUpdatedAt": "2026-07-20T08:49:44Z",
-      "codeUpdatedAt": "2026-07-17T12:35:14Z",
+      "codeUpdatedAt": "2026-07-20T18:41:02Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -8069,6 +8105,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-17T12:35:14Z",
           "body": "Promptless prepared documentation updates related to this change now that it has merged.\n\nTriggered by this PR (#16067).\n\n**User Documentation:** Documents the new \"Notes - User has access to\" Role permission (`lead:notes`) and the per-note-owner edit/delete visibility on the Contact Notes tab, plus an upgrade note covering the migration that backfills `lead:notes` from existing `lead:leads` for non-admin Roles. Review: [Document dedicated Notes permissions](https://github.com/mautic/user-documentation/pull/704)\n\n**Developer Documentation:** Documents the Notes API permission requirements (`lead:notes`) and updates the Contacts API \"List Contact Notes\" endpoint. Review: [Document Notes API permissions](https://github.com/mautic/developer-documentation-new/pull/516)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-20T18:41:02Z",
+          "body": "Hi @shinde-rahul,\r\n\r\nPromptless created PRs at both user and developer docs based on the changes in this PR.\r\n\r\nCan you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/16067#issuecomment-5003330028"
         }
       ],
       "rawCodeReviews": [
