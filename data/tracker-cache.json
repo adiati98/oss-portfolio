@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-07-25T01:41:38.635Z",
+  "fetchedAt": "2026-07-26T01:40:10.622Z",
   "data": {
     "mautic/developer-documentation-new#595": {
       "docsUpdatedAt": "2026-07-17T08:50:54Z",
@@ -1475,7 +1475,7 @@
     },
     "mautic/developer-documentation-new#563": {
       "docsUpdatedAt": "2026-07-10T12:18:19Z",
-      "codeUpdatedAt": "2026-07-10T09:18:12Z",
+      "codeUpdatedAt": "2026-07-25T07:27:15Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -1570,6 +1570,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-07-10T09:18:12Z",
           "body": "Promptless prepared a documentation update related to this change.\n\nTriggered by this PR — the GrapesJS Builder's compiled assets are no longer tracked in git, so anyone working from a git checkout now builds them (auto on `composer install`/`update` and DDEV bootstrap, or manually via `composer gjs-build` / `ddev gjs-build`, Node 24).\n\nDocumented the new build workflow in the developer docs (7.2), including the Parcel content-hashing + `manifest.json` that feeds the runtime `AssetsSubscriber`. No user-documentation change is needed since end users install pre-built release packages.\n\nReview: [developer-documentation-new #563](https://github.com/mautic/developer-documentation-new/pull/563)\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-07-25T07:27:15Z",
+          "body": "Hi @patrykgruszka,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/mautic/pull/16435#issuecomment-4933863153"
         }
       ],
       "rawCodeReviews": [
@@ -3243,7 +3248,7 @@
     },
     "mautic/developer-documentation-new#502": {
       "docsUpdatedAt": "2026-06-24T09:10:25Z",
-      "codeUpdatedAt": "2026-07-22T17:27:05Z",
+      "codeUpdatedAt": "2026-07-25T10:38:54Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -3488,7 +3493,7 @@
           "user": { "login": "copilot-pull-request-reviewer[bot]" },
           "state": "COMMENTED",
           "submitted_at": "2026-06-12T09:47:41Z",
-          "body": "## Pull request overview\n\nThis PR introduces “same role” scoped permissions (e.g., `view/edit/delete/publishsamerole`) so users can access content owned by users in the same role, without granting access to content owned by users in other roles.\n\n**Changes:**\n- Extends the core permission system to support `*samerole` permission levels and same-role ownership checks.\n- Updates multiple bundles’ controllers/menus to recognize the new `viewsamerole` capability and apply role-scoped listing filters.\n- Adds/updates automated tests and translations to cover/display the new permission options.\n\n### Reviewed changes\n\nCopilot reviewed 40 out of 40 changed files in this pull request and generated 4 comments.\n\n<details>\n<summary>Show a summary per file</summary>\n\n| File | Description |\r\n| ---- | ----------- |\r\n| plugins/MauticSocialBundle/Config/config.php | Adds `viewsamerole` to Tweets menu access. |\r\n| plugins/MauticFocusBundle/Entity/Focus.php | Adds `ENTITY_NAME` constant (entity metadata). |\r\n| plugins/MauticFocusBundle/Config/config.php | Switches Focus menu access to viewown/viewsamerole/viewother. |\r\n| app/bundles/WebhookBundle/Config/config.php | Adds `viewsamerole` to Webhook menu access. |\r\n| app/bundles/UserBundle/Entity/UserRepository.php | Adds `findUserIdsByRole()` helper for role-scoped filtering. |\r\n| app/bundles/SmsBundle/Controller/SmsController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/SmsBundle/Config/config.php | Adds `viewsamerole` to SMS menu access. |\r\n| app/bundles/ReportBundle/Controller/ReportController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/PageBundle/Controller/PageController.php | Uses shared permission keys and role-based filtering; refactors permission checks. |\r\n| app/bundles/PageBundle/Config/config.php | Adds `viewsamerole` to Page menu access. |\r\n| app/bundles/NotificationBundle/Controller/NotificationController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/NotificationBundle/Controller/MobileNotificationController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/NotificationBundle/Config/config.php | Adds `viewsamerole` to Notification menu access. |\r\n| app/bundles/LeadBundle/Tests/Security/LeadPermissionsFunctionalTest.php | Updates expectations to include new same-role permission checkboxes. |\r\n| app/bundles/LeadBundle/Security/Permissions/LeadPermissions.php | Adds `LISTS_VIEW_SAME_ROLE` constant. |\r\n| app/bundles/LeadBundle/Controller/ListController.php | Applies role-based filtering and passes same-role perm into entity access checks. |\r\n| app/bundles/LeadBundle/Controller/LeadController.php | Adds same-role handling for contact listing restrictions and constants. |\r\n| app/bundles/LeadBundle/Config/config.php | Adds `viewsamerole` to Contacts/Segments menu access. |\r\n| app/bundles/FormBundle/Controller/FormController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/FormBundle/Config/config.php | Adds `viewsamerole` to Forms menu access. |\r\n| app/bundles/EmailBundle/Controller/EmailController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/EmailBundle/Config/config.php | Adds `viewsamerole` to Emails menu access. |\r\n| app/bundles/DynamicContentBundle/Controller/DynamicContentController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/DynamicContentBundle/Config/config.php | Adds `viewsamerole` to Dynamic Content menu access. |\r\n| app/bundles/CoreBundle/Translations/en_US/messages.ini | Adds UI labels for same-role permissions. |\r\n| app/bundles/CoreBundle/Tests/Unit/Security/Permissions/CorePermissionsTest.php | Adds unit coverage for same-role access and permission analysis. |\r\n| app/bundles/CoreBundle/Security/Permissions/CorePermissions.php | Implements same-role resolution/checking in `hasEntityAccess()` and injects `UserRepository`. |\r\n| app/bundles/CoreBundle/Security/Permissions/AbstractPermissions.php | Adds `*samerole` levels, bits, form fields, and prerequisite analysis. |\r\n| app/bundles/CoreBundle/Model/AbstractCommonModel.php | Adds same-role support for Global Search entity restrictions. |\r\n| app/bundles/CoreBundle/Entity/CommonRepository.php | Improves filter column conversion, including nested filter structures. |\r\n| app/bundles/CoreBundle/Controller/CommonController.php | Introduces shared helpers for standard permission keys and role-based filters. |\r\n| app/bundles/CoreBundle/Controller/AbstractStandardFormController.php | Uses shared permission keys and role-based filtering; adjusts export permission check. |\r\n| app/bundles/CoreBundle/Config/config.php | Wires `UserRepository` into the `mautic.security` service. |\r\n| app/bundles/ChannelBundle/Entity/Message.php | Adds `ENTITY_NAME` constant (entity metadata). |\r\n| app/bundles/ChannelBundle/Config/config.php | Adds `viewsamerole` to Messages menu access. |\r\n| app/bundles/CampaignBundle/Controller/CampaignController.php | Uses shared permission keys and standard permission handling for export. |\r\n| app/bundles/CampaignBundle/Config/config.php | Switches Campaign menu access to viewown/viewsamerole/viewother. |\r\n| app/bundles/AssetBundle/Tests/Controller/AssetControllerFunctionalTest.php | Adds functional coverage for viewing same-role-owned assets. |\r\n| app/bundles/AssetBundle/Controller/AssetController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/AssetBundle/Config/config.php | Adds `viewsamerole` to Assets menu access. |\n</details>\n\n\n\n\n\n\n\n---\n\n💡 <a href=\"/mautic/mautic/new/7.x?filename=.github/instructions/*.instructions.md\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Add Copilot custom instructions</a> for smarter, more guided reviews. <a href=\"https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Learn how to get started</a>."
+          "body": "## Pull request overview\n\nThis PR introduces ���same role” scoped permissions (e.g., `view/edit/delete/publishsamerole`) so users can access content owned by users in the same role, without granting access to content owned by users in other roles.\n\n**Changes:**\n- Extends the core permission system to support `*samerole` permission levels and same-role ownership checks.\n- Updates multiple bundles’ controllers/menus to recognize the new `viewsamerole` capability and apply role-scoped listing filters.\n- Adds/updates automated tests and translations to cover/display the new permission options.\n\n### Reviewed changes\n\nCopilot reviewed 40 out of 40 changed files in this pull request and generated 4 comments.\n\n<details>\n<summary>Show a summary per file</summary>\n\n| File | Description |\r\n| ---- | ----------- |\r\n| plugins/MauticSocialBundle/Config/config.php | Adds `viewsamerole` to Tweets menu access. |\r\n| plugins/MauticFocusBundle/Entity/Focus.php | Adds `ENTITY_NAME` constant (entity metadata). |\r\n| plugins/MauticFocusBundle/Config/config.php | Switches Focus menu access to viewown/viewsamerole/viewother. |\r\n| app/bundles/WebhookBundle/Config/config.php | Adds `viewsamerole` to Webhook menu access. |\r\n| app/bundles/UserBundle/Entity/UserRepository.php | Adds `findUserIdsByRole()` helper for role-scoped filtering. |\r\n| app/bundles/SmsBundle/Controller/SmsController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/SmsBundle/Config/config.php | Adds `viewsamerole` to SMS menu access. |\r\n| app/bundles/ReportBundle/Controller/ReportController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/PageBundle/Controller/PageController.php | Uses shared permission keys and role-based filtering; refactors permission checks. |\r\n| app/bundles/PageBundle/Config/config.php | Adds `viewsamerole` to Page menu access. |\r\n| app/bundles/NotificationBundle/Controller/NotificationController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/NotificationBundle/Controller/MobileNotificationController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/NotificationBundle/Config/config.php | Adds `viewsamerole` to Notification menu access. |\r\n| app/bundles/LeadBundle/Tests/Security/LeadPermissionsFunctionalTest.php | Updates expectations to include new same-role permission checkboxes. |\r\n| app/bundles/LeadBundle/Security/Permissions/LeadPermissions.php | Adds `LISTS_VIEW_SAME_ROLE` constant. |\r\n| app/bundles/LeadBundle/Controller/ListController.php | Applies role-based filtering and passes same-role perm into entity access checks. |\r\n| app/bundles/LeadBundle/Controller/LeadController.php | Adds same-role handling for contact listing restrictions and constants. |\r\n| app/bundles/LeadBundle/Config/config.php | Adds `viewsamerole` to Contacts/Segments menu access. |\r\n| app/bundles/FormBundle/Controller/FormController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/FormBundle/Config/config.php | Adds `viewsamerole` to Forms menu access. |\r\n| app/bundles/EmailBundle/Controller/EmailController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/EmailBundle/Config/config.php | Adds `viewsamerole` to Emails menu access. |\r\n| app/bundles/DynamicContentBundle/Controller/DynamicContentController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/DynamicContentBundle/Config/config.php | Adds `viewsamerole` to Dynamic Content menu access. |\r\n| app/bundles/CoreBundle/Translations/en_US/messages.ini | Adds UI labels for same-role permissions. |\r\n| app/bundles/CoreBundle/Tests/Unit/Security/Permissions/CorePermissionsTest.php | Adds unit coverage for same-role access and permission analysis. |\r\n| app/bundles/CoreBundle/Security/Permissions/CorePermissions.php | Implements same-role resolution/checking in `hasEntityAccess()` and injects `UserRepository`. |\r\n| app/bundles/CoreBundle/Security/Permissions/AbstractPermissions.php | Adds `*samerole` levels, bits, form fields, and prerequisite analysis. |\r\n| app/bundles/CoreBundle/Model/AbstractCommonModel.php | Adds same-role support for Global Search entity restrictions. |\r\n| app/bundles/CoreBundle/Entity/CommonRepository.php | Improves filter column conversion, including nested filter structures. |\r\n| app/bundles/CoreBundle/Controller/CommonController.php | Introduces shared helpers for standard permission keys and role-based filters. |\r\n| app/bundles/CoreBundle/Controller/AbstractStandardFormController.php | Uses shared permission keys and role-based filtering; adjusts export permission check. |\r\n| app/bundles/CoreBundle/Config/config.php | Wires `UserRepository` into the `mautic.security` service. |\r\n| app/bundles/ChannelBundle/Entity/Message.php | Adds `ENTITY_NAME` constant (entity metadata). |\r\n| app/bundles/ChannelBundle/Config/config.php | Adds `viewsamerole` to Messages menu access. |\r\n| app/bundles/CampaignBundle/Controller/CampaignController.php | Uses shared permission keys and standard permission handling for export. |\r\n| app/bundles/CampaignBundle/Config/config.php | Switches Campaign menu access to viewown/viewsamerole/viewother. |\r\n| app/bundles/AssetBundle/Tests/Controller/AssetControllerFunctionalTest.php | Adds functional coverage for viewing same-role-owned assets. |\r\n| app/bundles/AssetBundle/Controller/AssetController.php | Uses shared “standard permissions” + role-based filters for listing/access. |\r\n| app/bundles/AssetBundle/Config/config.php | Adds `viewsamerole` to Assets menu access. |\n</details>\n\n\n\n\n\n\n\n---\n\n💡 <a href=\"/mautic/mautic/new/7.x?filename=.github/instructions/*.instructions.md\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Add Copilot custom instructions</a> for smarter, more guided reviews. <a href=\"https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Learn how to get started</a>."
         },
         {
           "user": { "login": "escopecz" },
@@ -4636,7 +4641,7 @@
       ]
     },
     "mautic/user-documentation#849": {
-      "docsUpdatedAt": "2026-07-24T19:29:44Z",
+      "docsUpdatedAt": "2026-07-24T19:31:58Z",
       "codeUpdatedAt": "2026-07-22T11:03:14Z",
       "rawDocsReviews": [
         {
@@ -6164,7 +6169,7 @@
     },
     "mautic/user-documentation#788": {
       "docsUpdatedAt": "2026-06-25T14:47:18Z",
-      "codeUpdatedAt": "2026-07-24T00:04:48Z",
+      "codeUpdatedAt": "2026-07-25T10:15:20Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -6202,7 +6207,7 @@
         },
         {
           "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-07-23T23:48:14Z",
+          "created_at": "2026-07-25T10:15:20Z",
           "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16355) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16355&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16355&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16355&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16355&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16355&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16355)\n\n"
         }
       ],
@@ -7836,7 +7841,7 @@
     },
     "mautic/user-documentation#728": {
       "docsUpdatedAt": "2026-06-25T11:32:13Z",
-      "codeUpdatedAt": "2026-07-22T17:27:05Z",
+      "codeUpdatedAt": "2026-07-25T10:38:54Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -9631,7 +9636,7 @@
       ]
     },
     "mautic/developer-documentation-new#601": {
-      "docsUpdatedAt": "2026-07-24T18:20:35Z",
+      "docsUpdatedAt": "2026-07-25T07:28:35Z",
       "codeUpdatedAt": "2026-07-24T18:01:44Z",
       "rawDocsReviews": [],
       "rawDocsComments": [],
@@ -9741,6 +9746,121 @@
         }
       ],
       "rawReviewRequests": []
+    },
+    "mautic/user-documentation#859": {
+      "docsUpdatedAt": "2026-07-25T11:58:06Z",
+      "codeUpdatedAt": "2026-07-25T11:43:54Z",
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [
+        {
+          "user": { "login": "codecov[bot]" },
+          "created_at": "2025-08-20T22:59:32Z",
+          "body": "## [Codecov](https://app.codecov.io/gh/mautic/mautic/pull/15402?dropdown=coverage&src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic) Report\n:white_check_mark: All modified and coverable lines are covered by tests.\n:white_check_mark: Project coverage is 71.26%. Comparing base ([`e7498de`](https://app.codecov.io/gh/mautic/mautic/commit/e7498deba0bd6a7b8f83e74dc6e8bfa77aa84502?dropdown=coverage&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic)) to head ([`c0db881`](https://app.codecov.io/gh/mautic/mautic/commit/c0db881e6628b95f066427ff96c050ad526d83b3?dropdown=coverage&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic)).\n:warning: Report is 58 commits behind head on 7.x.\n\n<details><summary>Additional details and impacted files</summary>\n\n\n\n[![Impacted file tree graph](https://app.codecov.io/gh/mautic/mautic/pull/15402/graphs/tree.svg?width=650&height=150&src=pr&token=JJAV4AZFpm&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic)](https://app.codecov.io/gh/mautic/mautic/pull/15402?src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic)\n\n```diff\n@@             Coverage Diff              @@\n##                7.x   #15402      +/-   ##\n============================================\n+ Coverage     71.21%   71.26%   +0.05%     \n- Complexity    38408    38426      +18     \n============================================\n  Files          2483     2483              \n  Lines        143929   144012      +83     \n============================================\n+ Hits         102494   102627     +133     \n+ Misses        41435    41385      -50     \n```\n\n| [Files with missing lines](https://app.codecov.io/gh/mautic/mautic/pull/15402?dropdown=coverage&src=pr&el=tree&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic) | Coverage Δ | |\n|---|---|---|\n| [...p/bundles/UserBundle/Controller/RoleController.php](https://app.codecov.io/gh/mautic/mautic/pull/15402?src=pr&el=tree&filepath=app%2Fbundles%2FUserBundle%2FController%2FRoleController.php&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic#diff-YXBwL2J1bmRsZXMvVXNlckJ1bmRsZS9Db250cm9sbGVyL1JvbGVDb250cm9sbGVyLnBocA==) | `74.27% <100.00%> (+17.31%)` | :arrow_up: |\n| [app/bundles/UserBundle/Model/RoleModel.php](https://app.codecov.io/gh/mautic/mautic/pull/15402?src=pr&el=tree&filepath=app%2Fbundles%2FUserBundle%2FModel%2FRoleModel.php&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic#diff-YXBwL2J1bmRsZXMvVXNlckJ1bmRsZS9Nb2RlbC9Sb2xlTW9kZWwucGhw) | `73.61% <100.00%> (+3.29%)` | :arrow_up: |\n\n... and [2 files with indirect coverage changes](https://app.codecov.io/gh/mautic/mautic/pull/15402/indirect-changes?src=pr&el=tree-more&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=mautic)\n</details>\n<details><summary> :rocket: New features to boost your workflow: </summary>\n\n- :snowflake: [Test Analytics](https://docs.codecov.com/docs/test-analytics): Detect flaky tests, report on failures, and find test suite problems.\n- :package: [JS Bundle Analysis](https://docs.codecov.com/docs/javascript-bundle-analysis): Save yourself from yourself by tracking and limiting bundle sizes in JS merges.\n</details>"
+        },
+        {
+          "user": { "login": "sonarqubecloud[bot]" },
+          "created_at": "2025-09-08T10:49:40Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_duplicated_lines_density&view=list)  \n  \n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402)\n\n"
+        },
+        {
+          "user": { "login": "sonarqubecloud[bot]" },
+          "created_at": "2025-12-01T16:13:14Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_duplicated_lines_density&view=list)  \n  \n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402)\n\n"
+        },
+        {
+          "user": { "login": "matbcvo" },
+          "created_at": "2026-07-24T12:46:00Z",
+          "body": "Please check the code coverage report and make sure the changes are covered by tests: https://github.com/mautic/mautic/pull/15402#issuecomment-3208313211"
+        },
+        {
+          "user": { "login": "sonarqubecloud[bot]" },
+          "created_at": "2026-07-25T11:27:32Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [2 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15402&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15402&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15402&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15402)\n\n"
+        }
+      ],
+      "rawCodeReviews": [
+        {
+          "user": { "login": "kingsedem" },
+          "state": "APPROVED",
+          "submitted_at": "2025-08-29T14:09:20Z",
+          "body": "Tested and looks good to me.\r\n<img width=\"1330\" height=\"820\" alt=\"image\" src=\"https://github.com/user-attachments/assets/08dc48db-29d9-49a9-ae8b-025228a6d1cc\" />\r\n\r\n<img width=\"1213\" height=\"790\" alt=\"image\" src=\"https://github.com/user-attachments/assets/5cef2174-626a-41bf-b853-e4358f5c4fc8\" />\r\n\r\n<img width=\"1891\" height=\"739\" alt=\"image\" src=\"https://github.com/user-attachments/assets/33c2a08b-ac0c-43ae-9458-6060f0f67ad0\" />\r\n\r\n<img width=\"1633\" height=\"745\" alt=\"image\" src=\"https://github.com/user-attachments/assets/d6ab48d0-eeed-495e-847f-facb095845cf\" />\r\n\r\n\r\n\r\n\r\n"
+        },
+        {
+          "user": { "login": "imaabasiee" },
+          "state": "APPROVED",
+          "submitted_at": "2025-09-08T08:25:32Z",
+          "body": "Works as expected\r\n\r\nhttps://github.com/user-attachments/assets/e36a52ff-648f-4d67-9cd4-3d8ed2559e20\r\n\r\n"
+        },
+        {
+          "user": { "login": "tolumasn" },
+          "state": "COMMENTED",
+          "submitted_at": "2025-10-02T15:28:27Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2025-11-04T12:58:48Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "shinde-rahul" },
+          "state": "CHANGES_REQUESTED",
+          "submitted_at": "2025-11-08T04:41:36Z",
+          "body": "Requested small changes, the rest looks good."
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2025-12-01T16:14:57Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "copilot-pull-request-reviewer[bot]" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-06-12T09:45:21Z",
+          "body": "## Pull request overview\n\nAdds a “clone role” workflow in the UserBundle so admins can duplicate an existing role (including permissions) into a new role form.\n\n**Changes:**\n- Introduces `RoleModel::cloneEntity()` to create a pre-filled Role clone (name prefix + copied fields).\n- Adds `RoleController::cloneAction()` and exposes a “Clone” action in the role list UI.\n- Adds unit + functional tests for cloning behavior and adds an English translation for the clone name prefix.\n\n### Reviewed changes\n\nCopilot reviewed 6 out of 6 changed files in this pull request and generated 2 comments.\n\n<details>\n<summary>Show a summary per file</summary>\n\n| File | Description |\r\n| ---- | ----------- |\r\n| app/bundles/UserBundle/Translations/en_US/messages.ini | Adds translation for “Clone of %name%” role name prefix. |\r\n| app/bundles/UserBundle/Tests/Model/RoleModelTest.php | Adds unit tests for `RoleModel::cloneEntity()` name/field/permissions copying. |\r\n| app/bundles/UserBundle/Tests/Functional/Controller/RoleControllerFunctionalTest.php | Adds functional test covering the clone flow through the controller + form submission. |\r\n| app/bundles/UserBundle/Resources/views/Role/list.html.twig | Enables the clone action button in the role list actions menu. |\r\n| app/bundles/UserBundle/Model/RoleModel.php | Implements `cloneEntity()` to create a cloned Role instance. |\r\n| app/bundles/UserBundle/Controller/RoleController.php | Adds clone controller action and refactors repeated strings into constants. |\n</details>\n\n\n\n\n\n\n\n---\n\n💡 <a href=\"/mautic/mautic/new/7.x?filename=.github/instructions/*.instructions.md\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Add Copilot custom instructions</a> for smarter, more guided reviews. <a href=\"https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Learn how to get started</a>."
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-06-25T10:45:53Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-06-25T10:45:55Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "shinde-rahul" },
+          "state": "APPROVED",
+          "submitted_at": "2026-07-21T09:18:33Z",
+          "body": "LGTM. "
+        }
+      ],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-07-25T11:58:06Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-07-25T11:58:06Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-07-25T11:58:06Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ]
     }
   }
 }
