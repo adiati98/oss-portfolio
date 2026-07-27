@@ -1,12 +1,52 @@
 [
   {
-    "title": "Fix: Broken external links",
-    "url": "https://github.com/mautic/mautic-community-handbook/pull/449",
+    "title": "Docs: Add reminder for authors to review docs PR in PR template",
+    "url": "https://github.com/mautic/mautic/pull/16760",
+    "repo": "mautic/mautic",
+    "status": "Authored",
+    "createdAt": "2026-07-26T14:29:14Z",
+    "updatedAt": "2026-07-26T15:38:04Z",
+    "number": 16760,
+    "user": {
+      "login": "adiati98",
+      "id": 45172775,
+      "node_id": "MDQ6VXNlcjQ1MTcyNzc1",
+      "avatar_url": "https://avatars.githubusercontent.com/u/45172775?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/adiati98",
+      "html_url": "https://github.com/adiati98",
+      "followers_url": "https://api.github.com/users/adiati98/followers",
+      "following_url": "https://api.github.com/users/adiati98/following{/other_user}",
+      "gists_url": "https://api.github.com/users/adiati98/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/adiati98/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/adiati98/subscriptions",
+      "organizations_url": "https://api.github.com/users/adiati98/orgs",
+      "repos_url": "https://api.github.com/users/adiati98/repos",
+      "events_url": "https://api.github.com/users/adiati98/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/adiati98/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": true,
+    "labels": [],
+    "lastActor": "sonarqubecloud[bot]",
+    "isLastActorBot": true,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-07-26T15:38:04.000Z",
+    "author": "adiati98",
+    "body": "<!-- ## Which branch should I use for my PR?\r\n\r\nAssuming that:\r\n\r\na = current major release\r\nb = current minor release\r\nc = future major release\r\n\r\n* a.x for any features and enhancements (e.g. 7.x)\r\n* a.b for any bug fixes (e.g. 5.2, 6.0)\r\n* c.x for any bug fixes, features, enhancements or bug fixes with backward compatibility breaking changes (e.g. 7.x) -->\r\n\r\n| Q                                      | A\r\n| -------------------------------------- | ---\r\n| Bug fix? (use the a.b branch)          | ✔️❌ <!-- Use emojis to indicate positive (green) or negative (red) for each item in the table. -->\r\n| New feature/enhancement? (use the a.x branch)      | ✔️❌\r\n| Deprecations?                          | ✔️❌\r\n| BC breaks? (use the c.x branch)        | ✔️❌\r\n| Automated tests included?              | ✔️❌ <!-- All PRs must maintain or improve code coverage -->\r\n| Related user documentation PR URL      | mautic/user-documentation#... <!-- required for new features -->\r\n| Related developer documentation PR URL | mautic/developer-documentation-new#... <!-- required for developer-facing changes -->\r\n| Issue(s) addressed                     | Fixes #... <!-- prefix each issue number with \"Fixes #\", no need to create an issue if none exists, explain below instead -->\r\n\r\n<!--\r\nAdditionally (see https://contribute.mautic.org/contributing-to-mautic/developer/code/pull-requests#work-on-your-pull-request):\r\n - Always add tests and ensure they pass.\r\n - Bug fixes must be submitted against the lowest maintained branch where they apply\r\n   (lowest branches are regularly merged to upper ones so they get the fixes too.)\r\n - Features and deprecations must be submitted against the \"4.x\" branch.\r\n-->\r\n\r\n## Description\r\n\r\nPromptless auto-creates a docs PR for code changes and links it in a comment on the code PR. Nobody can merge that docs PR without the code author's review and approval, but this step is easy to miss since it happens after the code PR is already open.\r\n\r\nThis PR adds a reminder to the template so authors know to watch for it and review it with below details:\r\n\r\n- Added a comment above the Q&A table explaining the Promptless workflow and the review requirement.\r\n\r\n### Notes\r\n\r\nThis PR is still a draft because it depends on https://github.com/mautic/mautic-community-handbook/pull/450 so we can verify the exact section link.\r\n\r\n<!--\r\nPlease write a short README for your feature/bugfix. This will help people understand your PR and what it aims to do. If you are fixing a bug and if there is no linked issue already, please provide steps to reproduce the issue here.\r\n-->\r\n<!-- Remove HTML comment markup below to use the table for screenshots when relevant. -->\r\n<!--\r\n| Before                                 | After\r\n| -------------------------------------- | ---\r\n|                                        | \r\n-->\r\n\r\n\r\n---\r\n### 📋 Steps to test this PR:\r\n\r\n<!--\r\nThis part is crucial. Take the time to write very clear, annotated and step by step test instructions, because testers may not be developers.\r\n-->\r\n1. Open this PR on GitHub Codespaces or pull down for testing locally (see docs on testing PRs [here](https://contribute.mautic.org/contributing-to-mautic/tester))\r\n2. \r\n\r\n<!--\r\nIf you have any deprecations and backwards compatibility breaks, list them here along with the new alternative.\r\n-->"
+  },
+  {
+    "title": "Docs: Add guidance for reviewing Promptless docs PRs",
+    "url": "https://github.com/mautic/mautic-community-handbook/pull/450",
     "repo": "mautic/mautic-community-handbook",
     "status": "Authored",
-    "createdAt": "2026-07-25T07:07:13Z",
-    "updatedAt": "2026-07-25T15:32:51Z",
-    "number": 449,
+    "createdAt": "2026-07-26T12:38:44Z",
+    "updatedAt": "2026-07-26T12:44:57Z",
+    "number": 450,
     "user": {
       "login": "adiati98",
       "id": 45172775,
@@ -30,14 +70,13 @@
     },
     "isDraft": false,
     "labels": [],
-    "lastActor": "adiati98",
     "isLastActorBot": false,
     "hasFormalReview": false,
     "reviewState": null,
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-07-25T15:32:51.000Z",
+    "lastSubstantiveDate": "2026-07-26T12:12:12.000Z",
     "author": "adiati98",
-    "body": "## Description\r\n\r\nThis PR fixes broken internal links with following details:\r\n\r\n- Added 403 error domains and https://ubuntu.com/community to `conf.py`.\r\n- Update link to Ubuntu governance page that leads to 502 Bad Gateway from https://ubuntu.com/community/governance to https://ubuntu.com/community. No exact replacement is available at the moment.\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
+    "body": "## Description\r\n\r\nThis PR adds guidance for developers on how to review the documentation PRs that Promptless automatically opens against their code PR changes. It covers finding the docs PR, monitoring for review reminders, and formally approving or requesting changes on GitHub.\r\n\r\n### Changes\r\n\r\n* `docs/contributing/developer.rst`\r\n  * Adds a new **Reviewing documentation PRs from Promptless** section with four subsections:\r\n    * **Finding documentation PRs** - explains how Promptless creates a draft or ready-to-review docs PR based on code changes, and cross-references it on the code PR.\r\n    * **Monitoring and approval** - explains that the Education Team requires formal approval to merge a docs PR, and describes the GitHub and Slack (`#t-product`, `#dev`) reminders to watch for.\r\n    * **Formally approving the content** - steps to approve a docs PR on GitHub.\r\n    * **Requesting changes** - steps to leave line comments, submit a formal review requesting changes, and how Promptless applies them automatically.\r\n* `docs/links/promptless.py`\r\n  * Adds a new external link entry for Promptless.\r\n* `.github/styles/config/vocabularies/Mautic/accept.txt`\r\n  * Adds `Promptless` to the Vale vocabulary so it isn't flagged as a spelling error.\r\n* `docs/contributing/images/`\r\n  * Adds screenshots illustrating the GitHub review flow: PR cross-reference/comment, adding a review comment, starting a review, requesting changes, and approving a PR.\r\n\r\n### Live preview\r\n\r\nhttps://mautic-community-handbook--450.org.readthedocs.build/en/450/contributing/developer.html#reviewing-documentation-prs-from-promptless\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
   },
   {
     "title": "Docs: Fix duplicate and inaccurate status-based label descriptions",
@@ -45,7 +84,7 @@
     "repo": "mautic/mautic-community-handbook",
     "status": "Authored",
     "createdAt": "2026-07-25T06:35:56Z",
-    "updatedAt": "2026-07-25T06:35:57Z",
+    "updatedAt": "2026-07-26T12:49:13Z",
     "number": 448,
     "user": {
       "login": "adiati98",
@@ -76,7 +115,7 @@
     "approvedBy": null,
     "lastSubstantiveDate": "2026-07-25T06:27:38.000Z",
     "author": "adiati98",
-    "body": "## Description\r\n\r\n`Ready to test` and `Pending test confirmation` had identical descriptions in the Status-based labels list (quoted below), which didn't reflect what each label actually means.\r\n\r\n```rst\r\n* Ready to test - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written and considered ready for merging\r\n* Pending test confirmation - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written and considered ready for merging\r\n* Ready to commit - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written, has the required signoff/approvals and considered ready for merging\r\n```\r\n\r\nI checked these labels' description and found the existing descriptions didn't match actual usage, so I've updated them:\r\n\r\n* `Ready to test` - It now simply reflects that the PR is ready for a tester to test it manually.\r\n* `Pending test confirmation` - now distinct from `Ready to test`. It reflects that the PR needs one more tester to confirm it works before merging, rather than repeating `Ready to test`'s description.\r\n* `User testing passed` - added. This is an actively-used label that was missing from the list entirely.\r\n* `Ready to commit` - updated to include the required number of tester confirmations and documentation as criteria.\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
+    "body": "## Description\r\n\r\n`Ready to test` and `Pending test confirmation` had identical descriptions in the Status-based labels list (quoted below), which didn't reflect what each label actually means.\r\n\r\n```rst\r\n* Ready to test - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written and considered ready for merging\r\n* Pending test confirmation - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written and considered ready for merging\r\n* Ready to commit - PRs only, and only applied when the PR is passing tests, has no conflicts, has automated tests written, has the required signoff/approvals and considered ready for merging\r\n```\r\n\r\nI checked these labels' description and found the existing descriptions didn't match actual usage, so I've updated them:\r\n\r\n* `Ready to test` - It now simply reflects that the PR is ready for a tester to test it manually.\r\n* `Pending test confirmation` - now distinct from `Ready to test`. It reflects that the PR needs one more tester to confirm it works before merging, rather than repeating `Ready to test`'s description.\r\n* `User testing passed` - added. This is an actively-used label that was missing from the list entirely.\r\n* `Ready to commit` - updated to include the required number of tester confirmations and documentation as criteria.\r\n\r\n### Live preview\r\n\r\nhttps://mautic-community-handbook--448.org.readthedocs.build/en/448/governance/code_governance.html#status-based-labels\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
   },
   {
     "title": "Docs: Add the new code coverage check for contributors and reviewers",
@@ -84,7 +123,7 @@
     "repo": "mautic/mautic-community-handbook",
     "status": "Authored",
     "createdAt": "2026-07-25T05:22:54Z",
-    "updatedAt": "2026-07-25T05:22:56Z",
+    "updatedAt": "2026-07-26T12:47:31Z",
     "number": 447,
     "user": {
       "login": "adiati98",
@@ -115,7 +154,7 @@
     "approvedBy": null,
     "lastSubstantiveDate": "2026-07-25T05:15:23.000Z",
     "author": "adiati98",
-    "body": "## Description\r\n\r\nThis PR updates the developer contribution guide and code governance page to reflect the automated code coverage check recently added to Mautic core's PR workflow based on comments in PR https://github.com/mautic/mautic/pull/16697.\r\n\r\n### Changes\r\n\r\n* `docs/contributing/developer.rst`\r\n  * **Step 6: Writing tests** - adds guidance that contributions must maintain or improve code coverage, and that contributors can ask a triage team member to add the `check-coverage` label at a later review stage to confirm coverage is sufficient.\r\n  * **PR review process** - adds a step for reviewers to add the `check-coverage` label when a PR reaches a later review stage.\r\n* `docs/governance/code_governance.rst`\r\n  * Adds `Check coverage` to the **Status-based labels** list.\r\n  * Updates the `Ready to commit` label's criteria to include passing the code coverage check.\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
+    "body": "## Description\r\n\r\nThis PR updates the developer contribution guide and code governance page to reflect the automated code coverage check recently added to Mautic core's PR workflow based on comments in PR https://github.com/mautic/mautic/pull/16697.\r\n\r\n### Changes\r\n\r\n* `docs/contributing/developer.rst`\r\n  * **Step 6: Writing tests** - adds guidance that contributions must maintain or improve code coverage, and that contributors can ask a triage team member to add the `check-coverage` label at a later review stage to confirm coverage is sufficient.\r\n  * **PR review process** - adds a step for reviewers to add the `check-coverage` label when a PR reaches a later review stage.\r\n* `docs/governance/code_governance.rst`\r\n  * Adds `Check coverage` to the **Status-based labels** list.\r\n  * Updates the `Ready to commit` label's criteria to include passing the code coverage check.\r\n\r\n### Live preview\r\n\r\n- https://mautic-community-handbook--447.org.readthedocs.build/en/447/contributing/developer.html#writing-tests\r\n- https://mautic-community-handbook--447.org.readthedocs.build/en/447/governance/code_governance.html#status-based-labels\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nN/A\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->"
   },
   {
     "title": "Chores: Restructure website",
