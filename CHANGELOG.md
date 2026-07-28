@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-07-28
+
+### Added
+
+- **Milestones split into six files, one for each kind of work**: Awards, courses, projects, documentation, talks, and videos each have their own file in `contents/`. The file an entry goes in decides the label it appears with on the Journey page, so labels are never written by hand and two similar entries cannot end up labelled differently by mistake.
+- **Highlights decide what appears first**: Entries marked as highlights show as soon as the Journey page opens. Everything else waits behind a "Show more" button, so a first-time visitor sees the strongest few rather than the whole list at once. When nothing is marked, the five most recent are shown instead.
+- **Dates can now cover several years**: Work that ran from 2021 to 2025, or that is still going today, shows as a range instead of shrinking to a single year. Anything still going stays near the top of the list.
+- **A "Get in touch" link at the bottom of every page**: A LinkedIn address set in `scripts/config/config.js` now appears site-wide. Until now, a reader who reached the end of a page had no way to make contact.
+- **A quick way to check colors**: One short command reports whether the chosen colors are readable, so the whole site no longer has to be built to find out.
+
+### Changed
+
+- **Journey page reordered**: Roles and expertise now come first, followed by selected work. Roles are what a reader takes in first, so they no longer sit underneath a long list.
+- **Titles now look like the links they are**: Every entry links to the thing itself — the award announcement, the video, the project. Those titles used to look like ordinary text and only gave themselves away on hover, which never happens on a phone, so most visitors never realized there was anything to click.
+- **Descriptions are shown in full**: Longer descriptions were cut off part-way through a sentence with a "...". They now show completely.
+- **Clearer controls on the timeline**: The "Highlights" switch and the year shortcuts used to look identical while doing quite different things. They are now visually separate, and the row follows the reader down the page, so the view can be switched at any point without scrolling back up.
+- **The plain-text version of the Journey page matches the website**: `journey.md` now follows the same order and splits the work into "Highlights" and "Other Work". Previously it listed every highlighted entry twice.
+- **Breaking change (where milestones live)**: Milestones have moved out of `contents/leadership.js`, which now holds roles only. Updating an existing copy of this project requires creating the six new files listed above before the site will build — an empty file (`module.exports = [];`) is enough. Any achievements previously kept in `leadership.js` belong in `contents/awards.js` or `contents/courses.js`, whichever fits.
+
+### Fixed
+
+- **"Show more" was a one-way trip**: Once the full list was expanded, there was no way back to the highlights short of reloading the page. The button now works both ways.
+- **Picking a year showed only the highlighted work from it**: Choosing a year from the shortcuts left the rest of that year hidden. It now shows everything from that year.
+- **The color instructions pointed at the wrong file**: The setup guide named `COLOR_PALETTE`, which is worked out automatically and quietly ignores anything put there. It now points at `scripts/config/theme.js`, the file that actually sets the brand colors.
+
+### Removed
+
+- **`achievements` in `contents/leadership.js`**: Awards and courses shared a file with job roles, which meant one of them always had its label written by hand. They now live in `contents/awards.js` and `contents/courses.js`.
+
 ## [3.0.0] - 2026-07-19
 
 ### Added
