@@ -144,7 +144,36 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
 - **Article Metadata:** Update `contents/fcc-articles.js` to add new freeCodeCamp publications.
 - **Repo Exclusions:** Update `contents/repo-exclusions.js` to filter out specific organizations or repositories from the Active Workbench.
 - **Bot Allowlist:** The Active Workbench excludes bots (e.g., Dependabot, Snyk) from being treated as a "last actor" by default. If you rely on a bot that leaves actionable comments or reviews (e.g., an AI review bot), list its username in the `allowedBot` array in `contents/allowed-bot.js` to have it show up as the last actor (driving "Take Action" / "Watching" status and the "Last Interaction" column) instead of being grouped under bot activity.
-- **Theming:** Update `COLOR_PALETTE` in `scripts/config/constants.js` to change the look of the generated HTML reports.
+- **Colors:** Update `scripts/config/theme.js` to give the whole site your own brand colors. It is the only file you need to touch. You choose five colors, and every other shade on the site — hover states, backgrounds, borders, and the entire dark mode — is worked out from them for you:
+
+    | Setting | Where you see it |
+    | :--- | :--- |
+    | `brand` | Your main color: the navigation bar, links, the Journey timeline, and outlines around whatever you have selected |
+    | `positive` | Work that was merged or approved, and roles you currently hold |
+    | `caution` | Things waiting on you, and reviews that are getting old |
+    | `critical` | Work that is blocked, and anything that failed |
+    | `neutral` | The grays: quieter text, thin dividing lines, and items that have gone stale |
+
+    You can also set `accent`, `surface`, and `ink` in the same file, but you do not have to. Leave them out and they are worked out from the five above.
+
+    If one of your colors would make text too hard to read against its background, the site refuses to build and tells you which color caused it, so you cannot accidentally publish a page people cannot read.
+
+    To check your colors without waiting for a full run, use:
+
+    ```bash
+    node -e "require('./scripts/config/theme-engine.js')"
+    ```
+
+    No output means your colors are fine. Otherwise you get the color that caused the problem, how readable it currently is against the target, and which way to adjust it:
+
+    ```
+    [theme] WCAG gate failed — the configured seeds cannot produce readable derivatives:
+      light on-brand/brand fill: #281B1B on #E5484D = 4.25:1 (needs 4.5:1)
+    Fix: darken (light theme) or let the engine lighten (dark theme) the named seed
+    in scripts/config/theme.js. Mid-lightness, moderately saturated seeds derive best.
+    ```
+
+    That last line is the rule of thumb worth remembering when picking a color: very pale, very dark, or very vivid colors are the ones that tend to be rejected.
 
 > [!TIP]
 > You do not have to fill in every file in `contents/`, but each file does need to be there. If you have no freeCodeCamp articles, no talks or videos yet, no repositories to leave out, or no bots to allow, keep the file and leave it empty like this: `module.exports = [];`. That goes for all six files listed above as well as `contents/fcc-articles.js`, `contents/repo-exclusions.js`, and `contents/allowed-bot.js`. An empty file simply adds nothing to your page.
