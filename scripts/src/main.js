@@ -50,7 +50,16 @@ const { createRedirectStubs } = require('../generators/html/redirect-stub-genera
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 const { loadMergedWorkbench } = require('../services/workbench-merge');
 const skillsData = require('../../contents/skills');
-const talksData = require('../../contents/talks');
+// Milestone sources — keys must match MILESTONE_SOURCES in
+// services/milestones-model.js, which maps each to its timeline tag.
+const milestoneContent = {
+  awards: require('../../contents/awards'),
+  courses: require('../../contents/courses'),
+  projects: require('../../contents/projects'),
+  docs: require('../../contents/docs'),
+  talks: require('../../contents/talks'),
+  videos: require('../../contents/videos'),
+};
 
 async function main() {
   // Define the data directory path.
@@ -509,7 +518,7 @@ async function main() {
     // --- 8. Generate Journey + Workbench pages (IA split of the old
     // Community & Activity page — design blueprint §02) ---
     console.log('Generating Journey page...');
-    await createJourneyHtml(leadershipData, skillsData, talksData);
+    await createJourneyHtml(leadershipData, skillsData, milestoneContent);
 
     console.log('Generating Workbench page (local records ⨝ docs-PR tracker)...');
     await createWorkbenchHtml(workbenchModel);
@@ -518,7 +527,7 @@ async function main() {
     await createRedirectStubs();
 
     // The markdown mirror splits the same way the HTML does (blueprint §02)
-    await createJourneyMarkdown(leadershipData, skillsData, talksData);
+    await createJourneyMarkdown(leadershipData, skillsData, milestoneContent);
     await createWorkbenchMarkdown(workbenchModel);
 
     console.log('Contributions update completed successfully.');
