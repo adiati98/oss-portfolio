@@ -10,6 +10,9 @@ const PROFILE = {
   name: 'Ayu Adiati',
   tagline:
     'Documentation maintainer and community lead. Everything below is generated from real GitHub activity.',
+  // Rendered in the footer of every page, so a reader who's convinced has
+  // somewhere to go. Leave empty to hide the link.
+  linkedIn: 'https://www.linkedin.com/in/adiatiayu/',
 };
 
 // --- Configuration to generate README in the contributions folder ---

@@ -4,6 +4,12 @@ const { BASE_DIR } = require('../../config/config');
 const { LANES } = require('../html/workbench-html-generator');
 const { THEME } = require('../../config/constants');
 const { mdEscapeCell, mdEscapeLinkText } = require('./md-escape');
+const {
+  buildMilestones,
+  selectShown,
+  summarize,
+  formatYears,
+} = require('../../services/milestones-model');
 
 const MD_BASE_DIR = path.join(BASE_DIR, 'markdown-generated');
 
@@ -16,23 +22,6 @@ function mdFooter(links) {
     day: 'numeric',
   });
   return `---\n${nav} | *Last updated: ${stamp}*\n`;
-}
-
-/**
- * Talks (contents/talks.js) join the milestones timeline with a 🎤 Talk tag —
- * same shape as achievements, mapped from the talk fields (event → org,
- * blurb → description). Mirrors normalizeTalks in journey-html-generator.js.
- * An empty talks list contributes nothing.
- */
-function normalizeTalksForMarkdown(talks) {
-  return (talks || []).map((t) => ({
-    title: t.title,
-    year: t.year,
-    org: t.event,
-    url: t.url,
-    description: t.blurb,
-    tag: '🎤 Talk',
-  }));
 }
 
 /**
@@ -69,40 +58,26 @@ function renderExpertiseMarkdown(skills) {
 }
 
 /**
- * journey.md — the recruiter-facing half: milestones, expertise, and roles.
- * Mirrors journey.html (design blueprint §02): talks (contents/talks.js) join
- * the milestones timeline, and skills.js renders as an Expertise section
- * (see renderExpertiseMarkdown), matching the HTML page's expertise/tools/
- * skills chip rows within markdown's own styling limits.
+ * journey.md — the recruiter-facing half: roles, expertise, and the work.
+ * Mirrors journey.html section for section: roles lead (the CV-shaped anchor),
+ * then expertise, then the work itself. Every milestone source joins one
+ * stream via services/milestones-model.js, shared with the HTML generator.
+ *
+ * The page splits the work with a control — highlights on arrival, the rest
+ * behind a button. Markdown has no control, so the same split becomes two
+ * headings and each entry appears exactly once.
+ *
+ * @param {Object} rolesData contents/leadership.js — `roles` only.
+ * @param {Object} skills    contents/skills.js
+ * @param {Object} content   Milestone sources keyed as in MILESTONE_SOURCES.
  */
-async function createJourneyMarkdown(rolesData, skills = {}, talks = []) {
+async function createJourneyMarkdown(rolesData, skills = {}, content = {}) {
   await fs.mkdir(MD_BASE_DIR, { recursive: true });
 
-  const milestones = [...(rolesData.achievements || []), ...normalizeTalksForMarkdown(talks)];
-  const sortedMilestones = [...milestones].sort((a, b) => (b.year || 0) - (a.year || 0));
+  const sortedMilestones = buildMilestones(content);
 
   let md = `# Journey\n\n`;
-  md += `Milestones, expertise, and the leadership roles behind them, across the Open Source ecosystem.\n\n`;
-
-  md += `## 🏆 Major Milestones\n\n`;
-  if (sortedMilestones.length === 0) {
-    md += `_Milestones will appear here — add them in \`contents/leadership.js\`._\n\n`;
-  } else {
-    sortedMilestones.forEach((ach) => {
-      const orgDisplay = ach.orgUrl
-        ? `[${mdEscapeLinkText(ach.org)}](${ach.orgUrl})`
-        : mdEscapeCell(ach.org);
-      const title = ach.url
-        ? `[${mdEscapeLinkText(ach.title)}](${ach.url})`
-        : mdEscapeCell(ach.title);
-      const tagPrefix = ach.tag ? `${ach.tag} — ` : '';
-      md += `* ${tagPrefix}**${title}** (${ach.year}) — *${orgDisplay}*\n`;
-      if (ach.description) md += `  * ${mdEscapeCell(ach.description)}\n`;
-    });
-    md += `\n`;
-  }
-
-  md += renderExpertiseMarkdown(skills || {});
+  md += `Roles, expertise, and the work behind them, across the Open Source ecosystem.\n\n`;
 
   md += `## 🏗️ Roles & Impact\n\n`;
   (rolesData.roles || []).forEach((role) => {
@@ -113,6 +88,50 @@ async function createJourneyMarkdown(rolesData, skills = {}, talks = []) {
     md += `* ${icon} | **${mdEscapeCell(role.title)}** at ${orgDisplay} (${role.period})\n`;
   });
   md += `\n`;
+
+  md += renderExpertiseMarkdown(skills || {});
+
+  // No ⭐ prefix on entries: the heading each one sits under already says
+  // whether it's a highlight, and nothing is listed twice.
+  const milestoneBullet = (ach) => {
+    const orgDisplay = ach.orgUrl
+      ? `[${mdEscapeLinkText(ach.org)}](${ach.orgUrl})`
+      : mdEscapeCell(ach.org);
+    const title = ach.url
+      ? `[${mdEscapeLinkText(ach.title)}](${ach.url})`
+      : mdEscapeCell(ach.title);
+    const tagPrefix = ach.tag ? `${ach.tag} — ` : '';
+    let out = `* ${tagPrefix}**${title}** (${formatYears(ach)}) — *${orgDisplay}*\n`;
+    if (ach.description) out += `  * ${mdEscapeCell(ach.description)}\n`;
+    return out;
+  };
+
+  if (sortedMilestones.length === 0) {
+    md += `## ⭐ Highlights\n\n`;
+    md += `_Milestones will appear here — add them in \`contents/awards.js\`, \`courses.js\`, \`projects.js\`, \`docs.js\`, \`talks.js\`, or \`videos.js\`._\n\n`;
+  } else {
+    // selectShown, not a raw `highlight` filter, so the five-newest fallback
+    // behaves identically here and on the page.
+    const { shown } = selectShown(sortedMilestones);
+    const highlights = sortedMilestones.filter((m) => shown.has(m));
+    const others = sortedMilestones.filter((m) => !shown.has(m));
+    const stats = summarize(sortedMilestones);
+
+    md += `## ⭐ Highlights\n\n`;
+    md += `_${stats.count} milestones across ${stats.orgs} organizations, ${stats.from}–${stats.to}._\n\n`;
+    highlights.forEach((ach) => {
+      md += milestoneBullet(ach);
+    });
+    md += `\n`;
+
+    if (others.length > 0) {
+      md += `## 📋 Other Work\n\n`;
+      others.forEach((ach) => {
+        md += milestoneBullet(ach);
+      });
+      md += `\n`;
+    }
+  }
 
   md += mdFooter(['[Active Workbench →](./workbench.md)']);
 

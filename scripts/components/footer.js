@@ -1,5 +1,5 @@
 const { dedent } = require('../utils/dedent');
-const { GITHUB_USERNAME } = require('../config/config');
+const { GITHUB_USERNAME, PROFILE } = require('../config/config');
 const { COLORS } = require('../config/constants');
 
 /**
@@ -36,6 +36,15 @@ function createFooterHtml() {
               Ayu Adiati
           </a>
       </div>
+      ${
+        PROFILE.linkedIn
+          ? `<div class="text-sm mt-3">
+          <a href="${PROFILE.linkedIn}" target="_blank" rel="noopener noreferrer" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150">
+              Get in touch on LinkedIn
+          </a>
+      </div>`
+          : ''
+      }
     </footer>
   `;
 }

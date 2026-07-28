@@ -21,13 +21,12 @@
  *   ink      — light-theme text color; defaults to a brand-biased near-black
  */
 module.exports = {
-  brand: '#4338CA',
+  brand: '#232963',
   positive: '#0F8A63',
   caution: '#A16207',
   critical: '#B3323F',
   neutral: '#5D6172',
-
-  // accent: '#A23E68',
+  accent: '#FB750B',
   // surface: '#F6F6F9',
   // ink: '#1B1D28',
 };
