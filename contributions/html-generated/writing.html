@@ -450,7 +450,10 @@
       }
       .wr-item-t a {
         color: var(--t-ink);
-        text-decoration: none;
+        text-decoration: underline;
+        text-decoration-color: var(--t-brand-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -459,6 +462,7 @@
       }
       .wr-item-t a:hover {
         color: var(--t-brand);
+        text-decoration-color: var(--t-brand);
       }
       .wr-meta {
         display: flex;
@@ -468,7 +472,7 @@
         font-family: ui-monospace, monospace;
         font-size: 0.75rem;
         color: var(--t-ink-3);
-        margin-top: 4px;
+        margin-top: 8px;
       }
       .wr-platform {
         color: var(--t-ink-2);
@@ -536,6 +540,125 @@
         .wr-chip {
           transition: none;
         }
+      }
+      /* Recognitions — same spine/marker/title/meta/description design as the
+     Journey page's "Selected work" timeline (journey-html-generator.js). */
+      .wr-rec-tl {
+        position: relative;
+        padding-left: 26px;
+        max-width: 660px;
+      }
+      .wr-rec-tl::before {
+        content: '';
+        position: absolute;
+        left: 6px;
+        top: 6px;
+        bottom: 6px;
+        width: 2px;
+        border-radius: 2px;
+        background: linear-gradient(var(--t-brand-line), var(--t-line));
+      }
+      .wr-rec-item {
+        position: relative;
+        padding: 14px 0 10px;
+      }
+      .wr-rec-item::before {
+        content: '';
+        position: absolute;
+        left: -24.5px;
+        top: 23px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--t-card);
+        border: 2.5px solid var(--t-brand);
+        transition: transform 0.15s ease;
+      }
+      .wr-rec-item:hover::before {
+        transform: scale(1.25);
+      }
+      .wr-rec-item--hl::before {
+        background: var(--t-brand);
+        border-color: var(--t-brand);
+        width: 13px;
+        height: 13px;
+        left: -25.5px;
+        top: 22px;
+      }
+      .wr-rec-star {
+        color: var(--t-caution);
+        margin-right: 3px;
+      }
+      .wr-rec-sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wr-rec-item::before {
+          transition: none;
+        }
+      }
+      .wr-rec-item h3 {
+        font-size: 1.16rem;
+        font-weight: 800;
+        margin: 0;
+        line-height: 1.32;
+      }
+      .wr-rec-item h3 a {
+        color: var(--t-ink);
+        text-decoration: underline;
+        text-decoration-color: var(--t-brand-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      .wr-rec-item h3 a:hover {
+        color: var(--t-brand);
+        text-decoration-color: var(--t-brand);
+      }
+      .wr-rec-item h3 a:focus-visible {
+        outline: 2px solid var(--t-brand);
+        outline-offset: 3px;
+        border-radius: 3px;
+      }
+      .wr-rec-org {
+        font-family: ui-monospace, monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: var(--t-ink-3);
+        margin: 14px 0 7px;
+      }
+      .wr-rec-org b {
+        color: var(--t-accent);
+        font-weight: 400;
+      }
+      .wr-rec-desc {
+        font-size: 0.9rem;
+        color: var(--t-ink-2);
+        margin: 0;
+        max-width: 60ch;
+      }
+      .wr-rec-desc a {
+        color: var(--t-accent);
+        text-decoration: underline;
+        text-decoration-color: var(--t-brand-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 2px;
+      }
+      .wr-rec-desc a:hover {
+        color: var(--t-brand);
+        text-decoration-color: var(--t-brand);
+      }
+      .wr-rec-desc a:focus-visible {
+        outline: 2px solid var(--t-brand);
+        outline-offset: 2px;
+        border-radius: 3px;
       }
 
       .skip-link {
@@ -1293,6 +1416,184 @@
               Guides and blog posts covering open source, its community, and the GitHub ecosystem.
             </p>
           </header>
+
+          <section aria-labelledby="wr-rec-h" class="mb-16">
+            <h2 id="wr-rec-h" class="wr-sec-label">Recognitions</h2>
+            <div class="wr-rec-tl">
+              <article class="wr-rec-item wr-rec-item--hl">
+                <h3>
+                  <span class="wr-rec-sr">Highlighted: </span
+                  ><span class="wr-rec-star" aria-hidden="true">★</span
+                  ><a
+                    href="https://dev.to/devteam/congrats-to-the-2025-hacktoberfest-writing-challenge-winners-1hpn/#open-source-reflections-winners"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >2025 Hacktoberfest Writing Challenge Winners</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>DEV Community</b> · November 2025</div>
+                <p class="wr-rec-desc">
+                  Winner in the Open Source Reflections category for
+                  <a
+                    href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"Beyond Hacktoberfest: Building a True Open Source Journey"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-53an"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top 7 Featured DEV Posts of the Week</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>DEV Community</b> · October 2025</div>
+                <p class="wr-rec-desc">
+                  Featured for
+                  <a
+                    href="https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"How I Built a Curated, Automated Open Source Portfolio"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-4idc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top 7 Featured DEV Posts of the Week</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>DEV Community</b> · April 2025</div>
+                <p class="wr-rec-desc">
+                  Featured for
+                  <a
+                    href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"The Curated, Automated Open Source Portfolio: How It's Going"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://www.freecodecamp.org/news/top-open-source-contributors-2023/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top Open Source Contributors 2023</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>freeCodeCamp</b> · November 2023</div>
+                <p class="wr-rec-desc">
+                  Listed among freeCodeCamp's top publication contributors of the year.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://github.com/freeCodeCamp/awesome-quincy-larson-emails#sep-22-2023"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Quincy Larson's Weekly Email — Sep 22, 2023</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>freeCodeCamp</b> · September 2023</div>
+                <p class="wr-rec-desc">
+                  Recommended in the newsletter for
+                  <a
+                    href="https://www.freecodecamp.org/news/how-to-contribute-to-open-source/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"How to Contribute to Open Source Projects – Non-Technical Things You Should
+                    Know"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://dev.to/codenewbieteam/top-featured-codenewbie-posts-81723-48i4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top Featured CodeNewbie Posts</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>CodeNewbie</b> · August 2023</div>
+                <p class="wr-rec-desc">
+                  Featured for
+                  <a
+                    href="https://dev.to/adiatiayu/how-to-communicate-better-in-open-source-3hdj"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"How to Communicate Better in Open Source"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://dev.to/devteam/top-7-featured-dev-posts-from-the-past-week-4phi"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top 7 Featured DEV Posts of the Week</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>DEV Community</b> · September 2022</div>
+                <p class="wr-rec-desc">
+                  Featured for
+                  <a
+                    href="https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"Mini Portfolio: Bring Your GitHub Profile to the Next Level"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://dev.to/devteam/top-7-featured-dev-posts-from-the-past-week-35fb"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Top 7 Featured DEV Posts of the Week</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>DEV Community</b> · November 2021</div>
+                <p class="wr-rec-desc">
+                  Featured for
+                  <a
+                    href="https://dev.to/adiatiayu/contributing-to-open-source-101-2dnm"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >"Contributing to Open Source 101"</a
+                  >.
+                </p>
+              </article>
+              <article class="wr-rec-item">
+                <h3>
+                  <a
+                    href="https://townhall.hashnode.com/oss-grant-badge-winners"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >OSS Grant Badge Winners</a
+                  >
+                </h3>
+                <div class="wr-rec-org"><b>Hashnode</b> · November 2021</div>
+                <p class="wr-rec-desc">
+                  Placed 2nd for the OSS Documentarian badge and was recognized among the OSS Mentor
+                  badge winners, as part of Hashnode's Open Source October.
+                </p>
+              </article>
+            </div>
+          </section>
 
           <section aria-labelledby="wr-org-h" class="mb-16">
             <h2 id="wr-org-h" class="wr-sec-label">Written for organizations</h2>
