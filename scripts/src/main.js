@@ -50,6 +50,7 @@ const { createRedirectStubs } = require('../generators/html/redirect-stub-genera
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 const { loadMergedWorkbench } = require('../services/workbench-merge');
 const skillsData = require('../../contents/skills');
+const recognitionsData = require('../../contents/recognitions');
 // Milestone sources — keys must match MILESTONE_SOURCES in
 // services/milestones-model.js, which maps each to its timeline tag.
 const milestoneContent = {
@@ -512,8 +513,8 @@ async function main() {
     await createHtmlReports(quarterlyHtmlLinks);
 
     // 7. Generate Writing (HTML and Markdown) — talks live on Journey, not here
-    await createBlogHtml(articles);
-    await writeArticlesMarkdown(articles);
+    await createBlogHtml(articles, recognitionsData);
+    await writeArticlesMarkdown(articles, recognitionsData);
 
     // --- 8. Generate Journey + Workbench pages (IA split of the old
     // Community & Activity page — design blueprint §02) ---

@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 const path = require('path');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const { newestFirst, platformsIn, groupByOrg } = require('../../services/writing-model');
-const { mdEscapeLinkText } = require('./md-escape');
+const { mdEscapeLinkText, mdEscapeCell } = require('./md-escape');
 
 function formatDate(dateStr) {
   return new Date(dateStr).toLocaleDateString('en-US', {
@@ -24,6 +24,39 @@ function articleBullet(article, { showPlatform }) {
   const platformBit =
     showPlatform && article.platform ? `Published on **${article.platform}** — ` : '';
   md += `  ${platformBit}${formatDate(article.date)}\n`;
+  return md + '\n';
+}
+
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+/** Mirrors renderRecognitions: newest first, ★ prefix on highlighted entries. */
+function renderRecognitionsSection(recognitions) {
+  if (!recognitions || recognitions.length === 0) return '';
+  let md = `## 🏅 Recognitions\n\n`;
+  [...recognitions]
+    .sort((a, b) => b.year - a.year || b.month - a.month)
+    .forEach((rec) => {
+      const title = rec.url
+        ? `[${mdEscapeLinkText(rec.title)}](${rec.url})`
+        : mdEscapeCell(rec.title);
+      const starPrefix = rec.highlight ? '★ ' : '';
+      const monthYear = `${MONTH_NAMES[rec.month - 1]} ${rec.year}`;
+      md += `* ${starPrefix}**${title}** (${monthYear}) — *${mdEscapeCell(rec.org)}*\n`;
+      if (rec.description) md += `  * ${mdEscapeCell(rec.description)}\n`;
+    });
   return md + '\n';
 }
 
@@ -63,14 +96,16 @@ function renderPersonalSection(personalArticles, hasOrgArticles) {
  * Generates and writes a Markdown report of articles written by the user.
  * Mirrors writing.html — renamed from blog.md in the IA restructure
  * (design blueprint §02). Talks live exclusively on the Journey timeline,
- * not here. Structure matches writing.html exactly: an org timeline (one
- * heading per org with `org` set, newest org first) above a personal list
- * (only articles with org = null/missing); an article appears in exactly
- * one section, never both. Grouping/sort rules live in
- * services/writing-model.js, shared with the HTML generator.
+ * not here. Structure matches writing.html exactly: recognitions (from
+ * contents/recognitions.js) lead, then an org timeline (one heading per org
+ * with `org` set, newest org first) above a personal list (only articles
+ * with org = null/missing); an article appears in exactly one section,
+ * never both. Grouping/sort rules live in services/writing-model.js, shared
+ * with the HTML generator.
  * @param {Array} articles Sorted list of article objects.
+ * @param {Array} recognitions contents/recognitions.js
  */
-async function writeArticlesMarkdown(articles) {
+async function writeArticlesMarkdown(articles, recognitions) {
   const mdBaseDir = path.join(BASE_DIR, 'markdown-generated');
   const outputPath = path.join(mdBaseDir, 'writing.md');
 
@@ -82,6 +117,7 @@ async function writeArticlesMarkdown(articles) {
 
   let markdownContent = `# Writing\n\n`;
   markdownContent += `Articles by **${GITHUB_USERNAME}**, covering insights and tutorials regarding the Open Source and GitHub ecosystem.\n\n`;
+  markdownContent += renderRecognitionsSection(recognitions);
   markdownContent += renderOrgSection(orgArticles);
   markdownContent += renderPersonalSection(personalArticles, orgArticles.length > 0);
 
