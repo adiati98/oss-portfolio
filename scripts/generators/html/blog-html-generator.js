@@ -3,11 +3,15 @@
  * Journey timeline (design blueprint) — no Talks chip, no talks slot here.
  *
  * Structural contract:
- *   1. "Written for organizations" timeline — every article with `org` set
+ *   1. Recognitions — external recognition for individual pieces (top picks,
+ *      challenge wins), same spine/marker/star design as the Journey page's
+ *      "Selected work" timeline. Leads the page. Renders only when at least
+ *      one recognition exists.
+ *   2. "Written for organizations" timeline — every article with `org` set
  *      (freeCodeCamp + Dev.to org posts), grouped into one node per org on a
  *      continuous spine, orgs ordered by their most recent piece. Renders
  *      only when at least one org article exists.
- *   2. Personal writing list — only articles with org = null/missing, newest
+ *   3. Personal writing list — only articles with org = null/missing, newest
  *      first: title (2-line clamp, full text in `title`), date, tags.
  * An article renders in exactly one place — the timeline or the list, never
  * both.
@@ -58,9 +62,10 @@ const WRITING_CSS = `
   .wr-item:last-child{border-bottom:0}
   .wr-item.wr-hidden{display:none}
   .wr-item-t{font-size:.95rem;font-weight:600;margin:0;line-height:1.4}
-  .wr-item-t a{color:var(--t-ink);text-decoration:none;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-  .wr-item-t a:hover{color:var(--t-brand)}
-  .wr-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:4px}
+  .wr-item-t a{color:var(--t-ink);text-decoration:underline;text-decoration-color:var(--t-brand-line);
+    text-decoration-thickness:2px;text-underline-offset:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .wr-item-t a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  .wr-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:8px}
   .wr-platform{color:var(--t-ink-2);font-weight:600}
   .wr-tags{display:flex;flex-wrap:wrap;gap:6px}
   .wr-tag{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:6px;padding:1px 8px}
@@ -72,6 +77,31 @@ const WRITING_CSS = `
   .wr-chip-n{opacity:.75}
   .wr-empty{color:var(--t-ink-3);font-style:italic;font-size:.9rem}
   @media (prefers-reduced-motion: reduce){.wr-chip{transition:none}}
+  /* Recognitions — same spine/marker/title/meta/description design as the
+     Journey page's "Selected work" timeline (journey-html-generator.js). */
+  .wr-rec-tl{position:relative;padding-left:26px;max-width:660px}
+  .wr-rec-tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;border-radius:2px;
+    background:linear-gradient(var(--t-brand-line),var(--t-line))}
+  .wr-rec-item{position:relative;padding:14px 0 10px}
+  .wr-rec-item::before{content:"";position:absolute;left:-24.5px;top:23px;width:11px;height:11px;border-radius:50%;
+    background:var(--t-card);border:2.5px solid var(--t-brand);transition:transform .15s ease}
+  .wr-rec-item:hover::before{transform:scale(1.25)}
+  .wr-rec-item--hl::before{background:var(--t-brand);border-color:var(--t-brand);width:13px;height:13px;left:-25.5px;top:22px}
+  .wr-rec-star{color:var(--t-caution);margin-right:3px}
+  .wr-rec-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  @media (prefers-reduced-motion: reduce){.wr-rec-item::before{transition:none}}
+  .wr-rec-item h3{font-size:1.16rem;font-weight:800;margin:0;line-height:1.32}
+  .wr-rec-item h3 a{color:var(--t-ink);text-decoration:underline;text-decoration-color:var(--t-brand-line);
+    text-decoration-thickness:2px;text-underline-offset:3px}
+  .wr-rec-item h3 a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  .wr-rec-item h3 a:focus-visible{outline:2px solid var(--t-brand);outline-offset:3px;border-radius:3px}
+  .wr-rec-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:14px 0 7px}
+  .wr-rec-org b{color:var(--t-accent);font-weight:400}
+  .wr-rec-desc{font-size:.9rem;color:var(--t-ink-2);margin:0;max-width:60ch}
+  .wr-rec-desc a{color:var(--t-accent);text-decoration:underline;text-decoration-color:var(--t-brand-line);
+    text-decoration-thickness:2px;text-underline-offset:2px}
+  .wr-rec-desc a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  .wr-rec-desc a:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px;border-radius:3px}
 `;
 
 function formatDate(dateStr) {
@@ -102,6 +132,57 @@ function renderArticleItem(article, { showPlatform, headingTag }) {
         ${tagsHtml ? `<span class="wr-tags">${tagsHtml}</span>` : ''}
       </div>
     </li>
+  `;
+}
+
+const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+function formatMonthYear(rec) {
+  return `${MONTH_NAMES[rec.month - 1]} ${rec.year}`;
+}
+
+function renderRecognitionItem(rec) {
+  const org = escapeHtml(rec.org || '');
+  const titleHtml = rec.url
+    ? `<a href="${escapeHtml(rec.url)}" target="_blank" rel="noopener noreferrer">${rec.title}</a>`
+    : rec.title;
+  const descHtml = rec.description ? `<p class="wr-rec-desc">${rec.description}</p>` : '';
+  const starHtml = rec.highlight
+    ? `<span class="wr-rec-sr">Highlighted: </span><span class="wr-rec-star" aria-hidden="true">★</span>`
+    : '';
+  return dedent`
+    <article class="wr-rec-item${rec.highlight ? ' wr-rec-item--hl' : ''}">
+      <h3>${starHtml}${titleHtml}</h3>
+      <div class="wr-rec-org"><b>${org}</b> · ${formatMonthYear(rec)}</div>
+      ${descHtml}
+    </article>
+  `;
+}
+
+function renderRecognitions(recognitions) {
+  if (!recognitions || recognitions.length === 0) return '';
+  const sorted = [...recognitions].sort(
+    (a, b) => b.year - a.year || b.month - a.month
+  );
+  const items = sorted.map(renderRecognitionItem).join('');
+  return dedent`
+    <section aria-labelledby="wr-rec-h" class="mb-16">
+      <h2 id="wr-rec-h" class="wr-sec-label">Recognitions</h2>
+      <div class="wr-rec-tl">${items}</div>
+    </section>
   `;
 }
 
@@ -170,7 +251,7 @@ function renderPersonalSection(personalArticles, hasOrgArticles) {
   `;
 }
 
-async function createBlogHtml(articles) {
+async function createBlogHtml(articles, recognitions) {
   const htmlBaseDir = path.join(BASE_DIR, 'html-generated');
   // Renamed to writing.html in the IA restructure (design blueprint §02);
   // blog.html is kept as a redirect stub for old links (see main.js).
@@ -208,6 +289,8 @@ async function createBlogHtml(articles) {
               <h1 class="wr-h1 text-4xl sm:text-5xl mt-2 mb-4">Articles on open source and GitHub</h1>
               <p class="wr-sub">Guides and blog posts covering open source, its community, and the GitHub ecosystem.</p>
             </header>
+
+            ${renderRecognitions(recognitions)}
 
             ${renderOrgTimeline(orgArticles)}
 
