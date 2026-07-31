@@ -47,7 +47,7 @@ module.exports = [
     url: 'https://virtualcoffee.io/resources/virtual-coffee-handbook',
     highlight: true,
     description:
-      "Created and looked after Virtual Coffee's handbook for four years — from how to join through to finding your way around Slack — including a 2023 reorganization of every community resource on the site.",
+      "Created and looked after Virtual Coffee's handbook — from how to join through to finding your way around Slack — including a 2023 reorganization of every community resource on the site.",
   },
   {
     title: 'Virtual Coffee Monthly Challenges documentation',
