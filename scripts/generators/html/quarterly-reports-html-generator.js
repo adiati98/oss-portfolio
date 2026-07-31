@@ -29,12 +29,12 @@ const { sanitizeAttribute } = require('../../utils/html-helpers');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 
 // Status badge colors route straight through the theme engine's semantic
-// ladder (see theme-engine.js) — no hex, no fallback chain. OPEN and MERGED
-// intentionally share the positive ladder (a design decision that predates
-// this migration, preserved as-is).
+// ladder (see theme-engine.js) — no hex, no fallback chain. MERGED uses the
+// `merged` ladder (GitHub's own merged-PR purple), matching GitHub's own
+// status color instead of sharing OPEN's green.
 const STATUS_BADGE_TOKENS = {
   OPEN: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
-  MERGED: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  MERGED: { bg: 'var(--t-merged-wash)', text: 'var(--t-merged)' },
   CLOSED: { bg: 'var(--t-critical-wash)', text: 'var(--t-critical)' },
   RECORDED: { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' },
 };
@@ -57,7 +57,7 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-worked-with{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:16px;padding-top:16px;border-top:1px solid var(--t-line)}
   .qr-worked-with-label{font-family:ui-monospace,monospace;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--t-ink-3)}
   .qr-org-chips{display:flex;flex-wrap:wrap;gap:8px}
-  .qr-org-chip{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:3px 11px;text-decoration:none;transition:border-color .15s ease,color .15s ease}
+  .qr-org-chip{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:3px 11px;transition:border-color .15s ease,color .15s ease}
   .qr-org-chip:hover{border-color:var(--t-brand-line);color:var(--t-brand)}
   .qr-org-chip:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
 
@@ -78,10 +78,11 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-nav-card{background-color:var(--t-card)}
   .qr-details{border:1px solid var(--t-line)}
 
-  .qr-link{color:var(--t-brand);text-decoration:none}
-  .qr-link:hover{color:var(--t-brand-strong);text-decoration:underline}
+  .qr-link{color:var(--t-brand)}
+  .qr-link:hover{color:var(--t-brand-strong)}
   .qr-link:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .qr-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:5px;padding:2px 7px}
+  .qr-status-cell{display:inline-block}
 
   /* Per-category "back to top" — resets that category's own table
      scroll container back to its first row, since each table scrolls
@@ -233,9 +234,14 @@ async function writeHtmlFiles(groupedContributions) {
     const statusWord = statusMatch && statusMatch[1] ? statusMatch[1] : 'N/A';
 
     const statusBadge = getStatusBadgeHtml(statusWord);
-    // Return both the HTML for display and the raw status text for sorting logic
+    // Wrapped in one element so the <br> keeps working once the mobile
+    // card layout switches this <td> to display:flex (below 640px) — a
+    // flex container turns each of ITS OWN direct children into a separate
+    // flex item, which would put the date and badge <span> side by side and
+    // silently defeat the <br> between them. Wrapping keeps date+badge as a
+    // single flex item, so the <br> still stacks them like it does on desktop.
     return {
-      html: `${date}<br>${statusBadge}`,
+      html: `<span class="qr-status-cell">${date}<br>${statusBadge}</span>`,
       statusText: statusWord,
     };
   }
@@ -374,7 +380,7 @@ async function writeHtmlFiles(groupedContributions) {
 
   function renderHighlightCard({ item, label, date }) {
     return dedent`
-      <a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-highlight-card">
+      <a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-highlight-card no-underline">
         <span class="qr-highlight-type">${label}</span>
         <span class="qr-highlight-repo">${sanitizeAttribute(item.repo || '')}</span>
         <span class="qr-highlight-title">${sanitizeAttribute(item.title)}</span>

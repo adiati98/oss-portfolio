@@ -175,7 +175,11 @@ function deriveTheme(seeds = SEEDS) {
 
   // --- Per-seed ladders ---
   const semantic = {};
-  const familyOf = { brand: seeds.brand, accent, ...pickSeeds(seeds) };
+  // `merged` isn't a brand seed — it's GitHub's own merged-PR purple
+  // (#8957E5, the same value the markdown badge generator already uses),
+  // fixed on purpose so a "merged" status always reads as GitHub's purple
+  // regardless of what a fork picks for its five brand seeds.
+  const familyOf = { brand: seeds.brand, accent, merged: '#8957E5', ...pickSeeds(seeds) };
   for (const [name, hex] of Object.entries(familyOf)) {
     // Text steps are derived readable in BOTH directions: darkened until AA
     // on the light grounds, lightened until AA on the dark ones. Each side is

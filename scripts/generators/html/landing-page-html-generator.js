@@ -49,7 +49,7 @@ const LANDING_CSS = `
       radial-gradient(130% 170% at 10% -10%,var(--t-brand-wash),transparent 62%),
       radial-gradient(90% 140% at 100% 0%,var(--t-accent-wash),transparent 55%);
     border:1px solid var(--t-line);border-radius:16px;padding:30px 32px 26px}
-  .lp-hero h1{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;letter-spacing:-.015em;line-height:1.12;margin:6px 0 8px;color:var(--t-ink)}
+  .lp-hero h1{font-size:clamp(1.9rem,4.4vw,3rem);font-weight:800;letter-spacing:-.015em;line-height:1.12;margin:6px 0 8px;color:var(--t-brand)}
   .lp-grad{background:linear-gradient(98deg,var(--t-brand) 10%,var(--t-accent) 90%);-webkit-background-clip:text;background-clip:text;color:transparent}
   .lp-hero p{color:var(--t-ink-2);font-size:.95rem;max-width:60ch;margin:0}
   /* container-type lets .lp-tiles react to the card's own rendered width
@@ -93,7 +93,7 @@ const LANDING_CSS = `
   .lp-m .bar i{display:block;height:100%;border-radius:2px;background:var(--t-brand);opacity:.85}
   .lp-focus{display:flex;justify-content:space-between;gap:10px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--t-line);max-width:520px}
   .lp-focus:last-of-type{border-bottom:0}
-  .lp-focus a{font-weight:600;color:var(--t-ink);text-decoration:none;min-width:0;overflow-wrap:anywhere}
+  .lp-focus a{font-weight:600;color:var(--t-ink);min-width:0;overflow-wrap:anywhere}
   .lp-focus a:hover{color:var(--t-brand)}
   .lp-focus a .o{color:var(--t-ink-3);font-weight:400}
   .lp-focus span{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);white-space:nowrap;flex-shrink:0}

@@ -154,7 +154,13 @@ Manual data and preferences are managed within the `scripts/config/` and `conten
     | `critical` | Work that is blocked, and anything that failed |
     | `neutral` | The grays: quieter text, thin dividing lines, and items that have gone stale |
 
-    You can also set `accent`, `surface`, and `ink` in the same file, but you do not have to. Leave them out and they are worked out from the five above.
+    You can also set `accent`, `surface`, and `ink` in the same file, but you do not have to. Leave them out and they are worked out from the five above:
+
+    | Setting | Where you see it |
+    | :--- | :--- |
+    | `accent` | A playful highlight, separate from your main brand color: the last word of your name on the Home page, org names on the Journey page, the "Focused" persona seal, and the underline under every external link site-wide. Left out, it is worked out from `brand`. |
+    | `surface` | The page background behind every card, in light mode. Left out, it is a very light, brand-tinted off-white. |
+    | `ink` | The main text color, in light mode. Left out, it is a near-black tinted with `brand`. |
 
     If one of your colors would make text too hard to read against its background, the site refuses to build and tells you which color caused it, so you cannot accidentally publish a page people cannot read.
 

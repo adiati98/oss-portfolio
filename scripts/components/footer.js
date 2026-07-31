@@ -39,7 +39,7 @@ function createFooterHtml() {
       ${
         PROFILE.linkedIn
           ? `<div class="text-sm mt-3">
-          <a href="${PROFILE.linkedIn}" target="_blank" rel="noopener noreferrer" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150">
+          <a href="${PROFILE.linkedIn}" target="_blank" rel="noopener noreferrer" style="color: ${COLORS.primaryText};" class="hover:opacity-80 font-semibold transition duration-150">
               Get in touch on LinkedIn
           </a>
       </div>`
