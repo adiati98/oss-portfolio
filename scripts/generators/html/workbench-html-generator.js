@@ -4,8 +4,9 @@
  *
  * Layer 1: plain-language impact header (any recruiter can read it).
  * Layer 2: five lanes ordered by what happens next —
- *   Needs your action / Approved — bring it home  (open by default)
- *   Waiting on others / Stalled 30+ days / Automated (folded)
+ *   Needs your action (open by default)
+ *   Approved — bring it home / Waiting on others / Stalled 30+ days /
+ *   Automated (folded)
  *
  * "Approved is not done": every ready-lane row shows who approved and its
  * remaining step (final review, backport check, maintainer nudge).
@@ -42,7 +43,7 @@ const LANES = [
     title: 'Approved — bring it home',
     explain:
       'Reviewed and approved, but not done: each still needs a final review, a backport check, or a maintainer nudge before it ships.',
-    open: true,
+    open: false,
     stripe: 'var(--t-positive)',
   },
   {
@@ -112,24 +113,46 @@ const WORKBENCH_CSS = `
   .wbx-banner b{color:var(--t-ink)}
   .wbx-lanes{display:flex;flex-direction:column;gap:12px}
   .wbx-lane{background:var(--t-card-2);border:1px solid var(--t-line);border-left-width:4px;border-radius:10px;overflow:hidden}
-  .wbx-lane summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .wbx-lane summary::-webkit-details-marker{display:none}
-  .wbx-lane summary::after{content:"▸";margin-left:auto;color:var(--t-ink-3);font-size:.78rem;align-self:center;transition:transform .15s ease}
-  /* Two auto margins on the same line would split the free space between
-     them (pushing the sort icon and the chevron apart, not together) — when
-     the sort button is present it does the pushing instead, and the chevron
-     just sits directly after it. */
-  .wbx-lane summary:has(.wbx-sort-btn)::after{margin-left:0}
-  .wbx-lane[open] summary::after{transform:rotate(90deg)}
-  @media (prefers-reduced-motion: reduce){.wbx-lane summary::after{transition:none}}
+  /* No list-style:none / hidden ::-webkit-details-marker here — kept as the
+     browser's native disclosure triangle, same as the Quarterly Reports list
+     page (reports.html), instead of a hand-rolled character. Getting that
+     marker to sit inline, to the left of the row (not hidden, not stacked
+     above it) took three wrong tries, each confirmed wrong with an actual
+     rendered screenshot:
+       - summary{display:flex} directly: removes the native marker outright
+         — flex layout on summary itself suppresses it, full stop.
+       - summary > a block-level <div> wrapper: the marker DOES render, but
+         summary then has no inline content of its own to share a line with,
+         so the marker sits alone on its own line above the block.
+       - .wbx-lane-row{width:100%}: Chrome's UA stylesheet sets
+         list-style-position:inside on <summary>, so the marker box shares
+         the SAME content box the row sits in — claiming 100% of it leaves
+         no room for the marker, pushing it onto its own line. Forcing
+         list-style-position:outside instead (to make the marker stop
+         competing for that space) made it disappear completely — outside
+         positioning needs indent space this card layout doesn't reserve,
+         so the marker rendered further left than the lane's own
+         overflow:hidden edge and got clipped, no matter how much left
+         padding summary was given.
+     The fix: leave list-style-position at its (inside) default, and don't
+     force .wbx-lane-row to 100% width at all — let it shrink-to-fit like
+     any inline-flex box normally would. The marker gets its room back, and
+     .wbx-lane-explain's flex-basis:100% still wraps it onto its own line
+     below, because that's resolved against the row's own flex layout, not
+     a specific pixel width. */
+  .wbx-lane summary{cursor:pointer;padding:13px 16px;color:var(--t-ink-3)}
+  .wbx-lane summary:focus-visible{outline:2px solid var(--t-brand);outline-offset:-2px}
+  .wbx-lane-row{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;max-width:calc(100% - 24px)}
   .wbx-lane-title{font-size:1.02rem;font-weight:800;color:var(--t-ink)}
   .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
-  /* Icon-only, pushed to the far right of the summary row (margin-left:auto,
-     same trick the ▸ chevron uses) — text like "Idle ▼" competed with the
-     row's other labels and read as another status pill. Static ↕ glyph that
-     only changes opacity/color/weight once clicked, matching the sort icon
-     on the quarterly report table (.sort-icon / th.sort-asc) rather than
-     inventing a new visual language for the same concept. */
+  /* Icon-only, pushed to the far right of the summary row (margin-left:auto).
+     Text like "Idle ▼" competed with the row's other labels and read as
+     another status pill. Static ↕ glyph that only changes opacity/color/
+     weight once clicked, matching the sort icon on the quarterly report
+     table (.sort-icon / th.sort-asc) rather than inventing a new visual
+     language for the same concept. Hidden while the lane is folded — nothing
+     to reorder if the rows aren't showing. */
+  .wbx-lane:not([open]) .wbx-sort-btn{display:none}
   .wbx-sort-btn{display:inline-flex;align-items:center;align-self:center;margin-left:auto;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
   .wbx-sort-btn:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .wbx-sort-icon{display:inline-flex;align-items:center;font-size:1.15rem;line-height:1;color:var(--t-ink-3);opacity:.4;transition:opacity .15s ease,color .15s ease}
@@ -261,10 +284,12 @@ function renderLane(lane, records) {
   return dedent`
     <details class="wbx-lane" id="wbx-lane-${lane.id}" style="border-left-color:${lane.stripe}" ${lane.open && records.length ? 'open' : ''}>
       <summary>
-        <span class="wbx-lane-title">${lane.title}</span>
-        <span class="wbx-lane-count">${records.length}</span>
-        ${sortBtn}
-        <p class="wbx-lane-explain">${lane.explain}</p>
+        <span class="wbx-lane-row">
+          <span class="wbx-lane-title">${lane.title}</span>
+          <span class="wbx-lane-count">${records.length}</span>
+          ${sortBtn}
+          <p class="wbx-lane-explain">${lane.explain}</p>
+        </span>
       </summary>
       ${body}
     </details>
