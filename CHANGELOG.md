@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-08-01
+
+### Added
+
+- **A "Recognitions" section on the Writing page**: External recognition for individual articles — weekly features, challenge wins, newsletter mentions — now has its own section at the top of the page, styled after the Journey page's timeline, backed by a new `contents/recognitions.js`.
+- **Courses can now carry a certificate**: A `contents/courses.js` entry can record a course link and a certificate link separately, for a course that was taken rather than authored. Either can be left out without breaking the entry, and the Journey page shows both when present.
+- **A sort control on each Workbench lane**: Every lane with more than one item now has an icon button to sort by idle time, oldest or newest first, matching the sort icon already used on quarterly report tables.
+- **External links are now underlined everywhere**: Every link that opens elsewhere is underlined in the site's accent color, instead of some pages underlining links and others not.
+
+### Changed
+
+- **Workbench lanes redesigned**: Lane headers now use the browser's own expand/collapse arrow instead of a hand-drawn one, matching the Quarterly Reports list page. "Needs your action" opens by default when the page loads; the other four lanes start folded, and the sort icon only shows once a lane is open.
+- **Merged pull requests get their own color**: A merged PR badge is now GitHub's own purple, instead of sharing the same green as an open one.
+- **Consistent page titles**: Every page's main heading (Workbench, Journey, Writing, Home) now uses the same brand color.
+- **Journey's "Selected work" summary line**: The numbers and years are now bold, and the wording changed from "milestones" to "entries." Once highlights are the default view, the "Show more" button reads "Show all selected work" instead of a raw count.
+- **Glossary rewritten in plain English**: Every explanation was reworded for a non-technical reader, keeping technical terms like pull request and issue as-is. Sections are now ordered to match the site's own navigation, and a new entry documents the Writing page's Recognitions section.
+
+### Fixed
+
+- **Workbench layout glitches on small screens**: A three-digit idle-day count no longer overflows its column, an impact tile with no tile below it no longer looks like it's missing a border, and the status pill on a task row no longer stretches the full width of the screen.
+- **Workbench row spacing**: Added breathing room around the divider between tasks, which previously sat flush against the row above and below it.
+- **Reviewed/Co-authored/Collaborations tables on small screens**: The status badge no longer collides with the date next to it — it now stacks underneath.
+- **The jump-to-lane navigation on Workbench**: Now stays visible while scrolling, matching how the Journey page's index behaves.
+
 ## [4.0.0] - 2026-07-28
 
 ### Added
