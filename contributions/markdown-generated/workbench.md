@@ -8,12 +8,12 @@ Live maintainer and contribution activity, organized by what happens next.
 | :-------- | :----------------------------------------- |
 | 🚀 **95** | changes shipped this quarter               |
 | ✅ **4**  | approved & heading to merge                |
-| 🔥 **60** | need your action now                       |
+| 🔥 **62** | need your action now                       |
 | 🤝 **0**  | contributions you helped ship this month   |
 | 🌐 **0**  | projects across 0 organizations this month |
 
 <details open>
-  <summary><h3 style="display: inline-block; cursor: pointer;">🔥 Needs your action (60)</h3></summary>
+  <summary><h3 style="display: inline-block; cursor: pointer;">🔥 Needs your action (62)</h3></summary>
 
 <sub>Your move — feedback to address, a review waiting on you, or a note left after approval.</sub>
 
@@ -79,6 +79,8 @@ Live maintainer and contribution activity, organized by what happens next.
 | ![Take Action](https://img.shields.io/badge/TAKE%20ACTION-a16207?style=flat-square)                    | **mautic/user-documentation**<br>👀 reviewing                     | [Update Assets page images for the Mautic 7.0 UI](https://github.com/mautic/user-documentation/pull/885)                                           | —                                                                                                                |
 | ![Take Action](https://img.shields.io/badge/TAKE%20ACTION-a16207?style=flat-square)                    | **mautic/user-documentation**<br>👀 reviewing                     | [Update Points page images for the Mautic 7.0 UI](https://github.com/mautic/user-documentation/pull/886)                                           | —                                                                                                                |
 | ![Take Action](https://img.shields.io/badge/TAKE%20ACTION-a16207?style=flat-square)                    | **mautic/user-documentation**<br>👀 reviewing                     | [Update creating Campaigns image for the Mautic 7.0 UI](https://github.com/mautic/user-documentation/pull/887)                                     | —                                                                                                                |
+| ![Take Action](https://img.shields.io/badge/TAKE%20ACTION-a16207?style=flat-square)                    | **mautic/user-documentation**<br>👀 reviewing                     | [Update Plugin resources page images for the Mautic 7.0 UI](https://github.com/mautic/user-documentation/pull/888)                                 | —                                                                                                                |
+| ![Take Action](https://img.shields.io/badge/TAKE%20ACTION-a16207?style=flat-square)                    | **mautic/user-documentation**<br>👀 reviewing                     | [Update Email Builder overview image for the Mautic 7.0 UI](https://github.com/mautic/user-documentation/pull/889)                                 | —                                                                                                                |
 
 </details>
 
@@ -145,7 +147,7 @@ Live maintainer and contribution activity, organized by what happens next.
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>197d</sub> | **mautic/user-documentation**<br>👀 reviewing                        | [Update Stages.png image](https://github.com/mautic/user-documentation/pull/542)                                                | • Idle 197d — decide: nudge or close                                  |
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>179d</sub> | **mautic/user-documentation**<br>👀 reviewing                        | [mautic/user-documentation#246](https://github.com/mautic/user-documentation/pull/246)                                          | • **jos0405** reviewed this<br>• Idle 179d — decide: nudge or close   |
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>148d</sub> | **mautic/user-documentation**<br>👀 reviewing                        | [mautic/user-documentation#279](https://github.com/mautic/user-documentation/pull/279)                                          | • **RCheesley** reviewed this<br>• Idle 148d — decide: nudge or close |
-| ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>135d</sub> | **mautic/user-documentation**<br>👀 reviewing                        | [mautic/user-documentation#341](https://github.com/mautic/user-documentation/pull/341)                                          | • Idle 135d — decide: nudge or close                                  |
+| ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>136d</sub> | **mautic/user-documentation**<br>👀 reviewing                        | [mautic/user-documentation#341](https://github.com/mautic/user-documentation/pull/341)                                          | • Idle 136d — decide: nudge or close                                  |
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>135d</sub> | **OpenSource-Communities/intro**<br>👀 reviewing                     | [fix(docs): audit and replace broken external links across docs](https://github.com/OpenSource-Communities/intro/pull/307)      | • Idle 135d — decide: nudge or close                                  |
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>123d</sub> | **OpenSource-Communities/intro**<br>👀 reviewing                     | [feat: improve accessibility for course progress bars](https://github.com/OpenSource-Communities/intro/pull/309)                | • Idle 123d — decide: nudge or close                                  |
 | ![Stale](https://img.shields.io/badge/STALE-5d6172?style=flat-square)<br><sub>117d</sub> | **OpenSource-Communities/guestbook**<br>👀 reviewing                 | [docs: add @juancguerrerom13 as a contributor](https://github.com/OpenSource-Communities/guestbook/pull/932)                    | • Idle 117d — decide: nudge or close                                  |
