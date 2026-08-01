@@ -97,11 +97,20 @@ async function createJourneyMarkdown(rolesData, skills = {}, content = {}) {
     const orgDisplay = ach.orgUrl
       ? `[${mdEscapeLinkText(ach.org)}](${ach.orgUrl})`
       : mdEscapeCell(ach.org);
-    const title = ach.url
-      ? `[${mdEscapeLinkText(ach.title)}](${ach.url})`
+    // Mirrors renderMilestone's fallback in journey-html-generator.js: most
+    // milestones carry one `url`, but courses can carry `courseUrl` and
+    // `certificationUrl` instead.
+    const primaryUrl = ach.url || ach.courseUrl || ach.certificationUrl;
+    const title = primaryUrl
+      ? `[${mdEscapeLinkText(ach.title)}](${primaryUrl})`
       : mdEscapeCell(ach.title);
+    const secondaryUrl =
+      ach.courseUrl && ach.certificationUrl && primaryUrl !== ach.certificationUrl
+        ? ach.certificationUrl
+        : null;
+    const certSuffix = secondaryUrl ? ` — [Certificate](${secondaryUrl})` : '';
     const tagPrefix = ach.tag ? `${ach.tag} — ` : '';
-    let out = `* ${tagPrefix}**${title}** (${formatYears(ach)}) — *${orgDisplay}*\n`;
+    let out = `* ${tagPrefix}**${title}** (${formatYears(ach)}) — *${orgDisplay}*${certSuffix}\n`;
     if (ach.description) out += `  * ${mdEscapeCell(ach.description)}\n`;
     return out;
   };

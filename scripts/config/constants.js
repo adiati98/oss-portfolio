@@ -22,7 +22,9 @@ const {
  *
  * Semantic mapping (see design blueprint §01):
  *   primary            → brand seed
- *   success / merged   → positive ladder (the old violet "merged" is retired)
+ *   success            → positive ladder
+ *   merged (COLORS.status.purple / report MERGED badge) → the fixed `merged`
+ *                         ladder (GitHub's own purple, see theme-engine.js)
  *   error              → critical ladder
  *   take-action        → caution ladder      watching → brand ladder
  *   waiting / approved → positive ladder     stale/bot → neutral ladder
@@ -96,7 +98,7 @@ const { colors: COLORS, cssVarsBlock: PALETTE_CSS_VARS } = generateColorsObject(
  */
 COLORS.status = {
   green: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
-  purple: { bg: 'var(--t-positive-wash)', text: 'var(--t-positive)' },
+  purple: { bg: 'var(--t-merged-wash)', text: 'var(--t-merged)' },
   red: { bg: 'var(--t-critical-wash)', text: 'var(--t-critical)' },
   gray: { bg: 'var(--t-neutral-wash)', text: 'var(--t-neutral)' },
 };

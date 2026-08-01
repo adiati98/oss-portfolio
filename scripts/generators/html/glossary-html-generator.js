@@ -76,10 +76,10 @@ async function createGlossaryHtml() {
           const processedNote = processText(rawNote);
 
           // Determine the Label dynamically
-          let label = 'Glossary Note';
-          if (item.entryMethod) label = 'Entry Method';
-          if (item.howItIsCalculated) label = 'Calculation Logic';
-          if (item.source) label = 'Data Source';
+          let label = 'Note';
+          if (item.entryMethod) label = 'How it’s added';
+          if (item.howItIsCalculated) label = 'How it’s worked out';
+          if (item.source) label = 'Where it comes from';
 
           return dedent`
             <div id="${item.id}" class="mb-16 last:mb-0">

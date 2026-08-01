@@ -352,6 +352,19 @@ const SHARED_CHROME_CSS = `
     text-decoration:none;transition:top .15s ease}
   .skip-link:focus{top:10px}
   @media (prefers-reduced-motion: reduce){.skip-link{transition:none}}
+  /* Every external link, site-wide — one shared rule instead of each page
+     hand-rolling its own (Journey and Writing used to). Underlined at rest,
+     not just on hover: hover doesn't exist on touch, and an unstyled link
+     reads as plain text, hiding the affordance nobody can see otherwise.
+     The underline itself uses --t-accent — the seed a fork sets for a
+     playful highlight color, already falling back to a hue-rotated brand
+     when a fork leaves it unset (see theme.js/theme-engine.js), so this
+     needs no separate "is accent configured" branch. .no-underline opts a
+     link back out — for a card/tile where the whole multi-line block is the
+     link, underlining it would draw a line under every line inside. */
+  a[target="_blank"]:not(.no-underline){text-decoration:underline;text-decoration-color:var(--t-accent-line);
+    text-decoration-thickness:2px;text-underline-offset:3px}
+  a[target="_blank"]:not(.no-underline):hover{text-decoration-color:var(--t-accent)}
   .back-to-top{position:fixed;right:20px;bottom:20px;z-index:40;width:46px;height:46px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;font-size:1.15rem;line-height:1;cursor:pointer;
     background:var(--t-brand);color:var(--t-on-brand);border:1px solid var(--t-brand-line);

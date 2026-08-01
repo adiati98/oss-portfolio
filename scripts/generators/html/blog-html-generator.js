@@ -42,7 +42,7 @@ const { newestFirst, platformsIn, groupByOrg } = require('../../services/writing
 const WRITING_CSS = `
   ${THEME_CSS_VARS}
   .wr-eyebrow{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
-  .wr-h1{font-weight:800;letter-spacing:-.01em;color:var(--t-ink)}
+  .wr-h1{font-weight:800;letter-spacing:-.01em;color:var(--t-brand)}
   .wr-sub{color:var(--t-ink-2);font-size:.95rem;max-width:64ch;margin:8px 0 0}
   .wr-sec-label{font-family:ui-monospace,monospace;font-size:.78rem;font-weight:400;letter-spacing:.13em;text-transform:uppercase;color:var(--t-ink-3);margin-bottom:16px}
   .wr-tl{position:relative;padding-left:26px;max-width:760px}
@@ -62,9 +62,8 @@ const WRITING_CSS = `
   .wr-item:last-child{border-bottom:0}
   .wr-item.wr-hidden{display:none}
   .wr-item-t{font-size:.95rem;font-weight:600;margin:0;line-height:1.4}
-  .wr-item-t a{color:var(--t-ink);text-decoration:underline;text-decoration-color:var(--t-brand-line);
-    text-decoration-thickness:2px;text-underline-offset:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
-  .wr-item-t a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  .wr-item-t a{color:var(--t-ink);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+  .wr-item-t a:hover{color:var(--t-brand)}
   .wr-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);margin-top:8px}
   .wr-platform{color:var(--t-ink-2);font-weight:600}
   .wr-tags{display:flex;flex-wrap:wrap;gap:6px}
@@ -91,9 +90,8 @@ const WRITING_CSS = `
   .wr-rec-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   @media (prefers-reduced-motion: reduce){.wr-rec-item::before{transition:none}}
   .wr-rec-item h3{font-size:1.16rem;font-weight:800;margin:0;line-height:1.32}
-  .wr-rec-item h3 a{color:var(--t-ink);text-decoration:underline;text-decoration-color:var(--t-brand-line);
-    text-decoration-thickness:2px;text-underline-offset:3px}
-  .wr-rec-item h3 a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  .wr-rec-item h3 a{color:var(--t-ink)}
+  .wr-rec-item h3 a:hover{color:var(--t-brand)}
   .wr-rec-item h3 a:focus-visible{outline:2px solid var(--t-brand);outline-offset:3px;border-radius:3px}
   .wr-rec-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:14px 0 7px}
   .wr-rec-org b{color:var(--t-accent);font-weight:400}

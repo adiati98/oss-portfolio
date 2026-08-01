@@ -4,8 +4,9 @@
  *
  * Layer 1: plain-language impact header (any recruiter can read it).
  * Layer 2: five lanes ordered by what happens next —
- *   Needs your action / Approved — bring it home  (open by default)
- *   Waiting on others / Stalled 30+ days / Automated (folded)
+ *   Needs your action (open by default)
+ *   Approved — bring it home / Waiting on others / Stalled 30+ days /
+ *   Automated (folded)
  *
  * "Approved is not done": every ready-lane row shows who approved and its
  * remaining step (final review, backport check, maintainer nudge).
@@ -42,7 +43,7 @@ const LANES = [
     title: 'Approved — bring it home',
     explain:
       'Reviewed and approved, but not done: each still needs a final review, a backport check, or a maintainer nudge before it ships.',
-    open: true,
+    open: false,
     stripe: 'var(--t-positive)',
   },
   {
@@ -94,7 +95,11 @@ const WORKBENCH_CSS = `
   @media (max-width:760px){.wbx-tiles{grid-template-columns:repeat(2,1fr)}}
   .wbx-tile{padding:15px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:2px}
   .wbx-tile:last-child{border-right:0}
-  @media (max-width:760px){.wbx-tile{border-top:1px solid var(--t-line)}.wbx-tile:nth-child(2n){border-right:0}}
+  /* border-bottom (not just border-top on the next tile) because 5 tiles in
+     a 2-column grid leaves an odd last row — the tile above that empty cell
+     (e.g. "contributions helped ship this month") has no sibling below it
+     to supply a border-top, so it reads as missing its bottom edge. */
+  @media (max-width:760px){.wbx-tile{border-top:0;border-bottom:1px solid var(--t-line)}.wbx-tile:nth-child(2n){border-right:0}}
   .wbx-tile .n{font-weight:800;font-size:2.05rem;line-height:1.08;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--t-ink)}
   .wbx-tile .c{font-size:.76rem;color:var(--t-ink-2);line-height:1.35}
   .wbx-tile--hero{background:linear-gradient(150deg,var(--t-brand-strong),var(--t-brand))}
@@ -108,19 +113,61 @@ const WORKBENCH_CSS = `
   .wbx-banner b{color:var(--t-ink)}
   .wbx-lanes{display:flex;flex-direction:column;gap:12px}
   .wbx-lane{background:var(--t-card-2);border:1px solid var(--t-line);border-left-width:4px;border-radius:10px;overflow:hidden}
-  .wbx-lane summary{list-style:none;cursor:pointer;padding:13px 16px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .wbx-lane summary::-webkit-details-marker{display:none}
-  .wbx-lane summary::after{content:"▸";margin-left:auto;color:var(--t-ink-3);font-size:.78rem;align-self:center;transition:transform .15s ease}
-  .wbx-lane[open] summary::after{transform:rotate(90deg)}
-  @media (prefers-reduced-motion: reduce){.wbx-lane summary::after{transition:none}}
+  /* No list-style:none / hidden ::-webkit-details-marker here — kept as the
+     browser's native disclosure triangle, same as the Quarterly Reports list
+     page (reports.html), instead of a hand-rolled character. Getting that
+     marker to sit inline, to the left of the row (not hidden, not stacked
+     above it) took three wrong tries, each confirmed wrong with an actual
+     rendered screenshot:
+       - summary{display:flex} directly: removes the native marker outright
+         — flex layout on summary itself suppresses it, full stop.
+       - summary > a block-level <div> wrapper: the marker DOES render, but
+         summary then has no inline content of its own to share a line with,
+         so the marker sits alone on its own line above the block.
+       - .wbx-lane-row{width:100%}: Chrome's UA stylesheet sets
+         list-style-position:inside on <summary>, so the marker box shares
+         the SAME content box the row sits in — claiming 100% of it leaves
+         no room for the marker, pushing it onto its own line. Forcing
+         list-style-position:outside instead (to make the marker stop
+         competing for that space) made it disappear completely — outside
+         positioning needs indent space this card layout doesn't reserve,
+         so the marker rendered further left than the lane's own
+         overflow:hidden edge and got clipped, no matter how much left
+         padding summary was given.
+     The fix: leave list-style-position at its (inside) default, and don't
+     force .wbx-lane-row to 100% width at all — let it shrink-to-fit like
+     any inline-flex box normally would. The marker gets its room back, and
+     .wbx-lane-explain's flex-basis:100% still wraps it onto its own line
+     below, because that's resolved against the row's own flex layout, not
+     a specific pixel width. */
+  .wbx-lane summary{cursor:pointer;padding:13px 16px;color:var(--t-ink-3)}
+  .wbx-lane summary:focus-visible{outline:2px solid var(--t-brand);outline-offset:-2px}
+  .wbx-lane-row{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;max-width:calc(100% - 24px)}
   .wbx-lane-title{font-size:1.02rem;font-weight:800;color:var(--t-ink)}
   .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
+  /* Icon-only, pushed to the far right of the summary row (margin-left:auto).
+     Text like "Idle ▼" competed with the row's other labels and read as
+     another status pill. Static ↕ glyph that only changes opacity/color/
+     weight once clicked, matching the sort icon on the quarterly report
+     table (.sort-icon / th.sort-asc) rather than inventing a new visual
+     language for the same concept. Hidden while the lane is folded — nothing
+     to reorder if the rows aren't showing. */
+  .wbx-lane:not([open]) .wbx-sort-btn{display:none}
+  .wbx-sort-btn{display:inline-flex;align-items:center;align-self:center;margin-left:auto;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
+  .wbx-sort-btn:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .wbx-sort-icon{display:inline-flex;align-items:center;font-size:1.15rem;line-height:1;color:var(--t-ink-3);opacity:.4;transition:opacity .15s ease,color .15s ease}
+  .wbx-sort-btn:hover .wbx-sort-icon{opacity:.8;color:var(--t-brand)}
+  .wbx-sort-btn[data-active="1"] .wbx-sort-icon{opacity:1;color:var(--t-brand);font-weight:bold}
+  @media (prefers-reduced-motion: reduce){.wbx-sort-icon{transition:none}}
   .wbx-lane-explain{flex-basis:100%;margin:2px 0 0;color:var(--t-ink-3);font-size:.82rem}
   .wbx-rows{border-top:1px solid var(--t-line)}
-  .wbx-row{display:grid;grid-template-columns:150px 1fr;gap:6px 16px;padding:12px 16px;border-top:1px solid var(--t-line);align-items:start;background:var(--t-card)}
+  .wbx-row{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;padding:16px;border-top:1px solid var(--t-line);align-items:start;background:var(--t-card)}
   .wbx-row:first-child{border-top:0}
   @media (max-width:620px){.wbx-row{grid-template-columns:1fr}}
-  .wbx-pill{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--t-line);white-space:nowrap;align-self:start}
+  /* justify-self:start — without it, a grid item defaults to stretch, so on
+     the single-column mobile layout the pill fills the whole row width
+     instead of sizing to its own text. */
+  .wbx-pill{display:inline-flex;align-items:center;gap:6px;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:2px 9px;border-radius:999px;border:1px solid var(--t-line);white-space:nowrap;align-self:start;justify-self:start}
   .wbx-pill i{width:7px;height:7px;border-radius:50%;flex:0 0 auto}
   .wbx-pill--act{color:var(--t-caution);border-color:var(--t-caution-line);background:var(--t-caution-wash)}.wbx-pill--act i{background:var(--t-caution)}
   .wbx-pill--ok{color:var(--t-positive);border-color:var(--t-positive-line);background:var(--t-positive-wash)}.wbx-pill--ok i{background:var(--t-positive)}
@@ -131,9 +178,9 @@ const WORKBENCH_CSS = `
   .wbx-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:5px;padding:1px 7px}
   .wbx-rel{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;color:var(--t-ink-3)}
   .wbx-task{font-size:.92rem;line-height:1.4;overflow-wrap:anywhere}
-  .wbx-task a{color:var(--t-ink);font-weight:600;text-decoration:none}
+  .wbx-task a{color:var(--t-ink);font-weight:600}
   .wbx-task a:hover{color:var(--t-brand)}
-  .wbx-next{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:5px;font-size:.78rem;color:var(--t-ink-2)}
+  .wbx-next{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:.78rem;color:var(--t-ink-2)}
   .wbx-step{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
   .wbx-step--do{color:var(--t-caution);background:var(--t-caution-wash)}
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
@@ -143,11 +190,19 @@ const WORKBENCH_CSS = `
   .wbx-live--stale{color:var(--t-caution)}
   .wbx-live--stale i{background:var(--t-caution)}
   .wbx-live--stale i::after{content:none}
-  .wbx-lane-index{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px}
+  /* Sticky so the lane shortcuts stay reachable while scrolling down the
+     board — same treatment as .jy-index on the Journey page. Sits below
+     the fixed navbar (4rem) and clears its own height. */
+  .wbx-lane-index{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 16px;
+    position:sticky;top:4rem;z-index:30;background:var(--t-surface);
+    padding:10px 0 9px;border-bottom:1px solid var(--t-line)}
   .wbx-lane-index a{display:inline-flex;align-items:center;gap:5px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);border:1px solid var(--t-line);border-radius:6px;padding:3px 10px;text-decoration:none;transition:border-color .15s ease,color .15s ease}
   .wbx-lane-index a:hover{color:var(--t-brand);border-color:var(--t-brand-line)}
   .wbx-lane-index-n{color:var(--t-ink-3)}
   @media (prefers-reduced-motion: reduce){.wbx-lane-index a{transition:none}}
+  /* Clears both the fixed navbar and the sticky lane index, so jumping to
+     a lane doesn't land it underneath them. */
+  .wbx-lane{scroll-margin-top:8rem}
 `;
 
 function relLabel(record) {
@@ -197,7 +252,7 @@ function renderRow(record) {
   const nextHtml = nextBits.length ? `<div class="wbx-next">${nextBits.join(' · ')}</div>` : '';
 
   return dedent`
-    <div class="wbx-row">
+    <div class="wbx-row" data-idle="${record.idleDays}">
       <span class="wbx-pill ${pillClass}"><i></i>${escapeHtml(record.ball)}${idleBadge}</span>
       <div>
         <div class="wbx-meta">
@@ -218,12 +273,23 @@ function renderLane(lane, records) {
     records.length > 0
       ? `<div class="wbx-rows">${rows}</div>`
       : '';
+  // Sorts by idle time, not the lane's own default order (idle desc for
+  // action/stalled, recency for the rest) — a manual override for anyone
+  // who wants to work oldest-first or newest-first regardless of lane.
+  // Skipped below one row: nothing to reorder.
+  const sortBtn =
+    records.length > 1
+      ? `<button type="button" class="wbx-sort-btn" data-lane-sort="${lane.id}" data-dir="desc" data-active="0" title="Sort by idle time" aria-label="Sort ${escapeHtml(lane.title)} by idle time, currently oldest first"><span class="wbx-sort-icon" aria-hidden="true">↕</span></button>`
+      : '';
   return dedent`
     <details class="wbx-lane" id="wbx-lane-${lane.id}" style="border-left-color:${lane.stripe}" ${lane.open && records.length ? 'open' : ''}>
       <summary>
-        <span class="wbx-lane-title">${lane.title}</span>
-        <span class="wbx-lane-count">${records.length}</span>
-        <p class="wbx-lane-explain">${lane.explain}</p>
+        <span class="wbx-lane-row">
+          <span class="wbx-lane-title">${lane.title}</span>
+          <span class="wbx-lane-count">${records.length}</span>
+          ${sortBtn}
+          <p class="wbx-lane-explain">${lane.explain}</p>
+        </span>
       </summary>
       ${body}
     </details>
@@ -341,7 +407,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
           <div class="max-w-6xl mx-auto">
             <header class="mt-16 mb-10">
               <p style="font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)">active workbench</p>
-              <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color:var(--t-ink);letter-spacing:-.01em">Organized by what happens next</h1>
+              <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color:var(--t-brand);letter-spacing:-.01em">Organized by what happens next</h1>
             </header>
             ${renderImpact(impact, feed)}
             ${humanRecords.length > 0 ? renderLaneIndex(records) : ''}
@@ -373,6 +439,37 @@ async function createWorkbenchHtml({ records, impact, feed }) {
             textEl.textContent = 'cached · ' + diffD + 'd old';
           }
           // Beyond 7 days the server-rendered absolute date stays as-is.
+        })();
+      </script>
+      <script>
+        (function () {
+          document.querySelectorAll('.wbx-sort-btn').forEach(function (btn) {
+            btn.addEventListener('click', function (e) {
+              // The button lives inside a <summary> — without these, clicking
+              // it would also toggle the lane open/closed.
+              e.preventDefault();
+              e.stopPropagation();
+              var lane = document.getElementById('wbx-lane-' + btn.getAttribute('data-lane-sort'));
+              var container = lane && lane.querySelector('.wbx-rows');
+              if (!container) return;
+              var dir = btn.getAttribute('data-dir') === 'asc' ? 'desc' : 'asc';
+              btn.setAttribute('data-dir', dir);
+              btn.setAttribute('data-active', '1');
+              var rows = Array.prototype.slice.call(container.children);
+              rows.sort(function (a, b) {
+                var av = parseFloat(a.getAttribute('data-idle')) || 0;
+                var bv = parseFloat(b.getAttribute('data-idle')) || 0;
+                return dir === 'asc' ? av - bv : bv - av;
+              });
+              rows.forEach(function (row) {
+                container.appendChild(row);
+              });
+              btn.setAttribute(
+                'aria-label',
+                'Sort by idle time, currently ' + (dir === 'asc' ? 'newest first' : 'oldest first')
+              );
+            });
+          });
         })();
       </script>
       ${footerHtml}

@@ -19,13 +19,13 @@ module.exports = [
   },
   {
     title: 'Mautic Docs PRs Tracker',
-    org: 'Mautic',
+    org: 'Personal / Mautic',
     year: 2026,
     yearEnd: 'present',
     url: 'https://github.com/adiati98/mautic-docs-prs-tracker',
     highlight: true,
     description:
-      'Built a board showing the Education Team which documentation changes are waiting on a review, with a reminder page that nudges developers to take a look.',
+      'Built an automated board showing the Education Team which documentation PRs are waiting on a review, with a reminder page that nudges developers to take a look.',
   },
   {
     title: 'OSS Portfolio Template',

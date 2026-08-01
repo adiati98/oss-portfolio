@@ -42,7 +42,7 @@ const FLAT_TIMELINE_MAX = 10;
 const JOURNEY_CSS = `
   ${THEME_CSS_VARS}
   .jy-eyebrow{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)}
-  .jy-h2{font-family:inherit;font-weight:800;letter-spacing:-.01em;color:var(--t-ink)}
+  .jy-h2{font-family:inherit;font-weight:800;letter-spacing:-.01em;color:var(--t-brand)}
   .jy-tl{position:relative;padding-left:26px;max-width:660px}
   .jy-tl::before{content:"";position:absolute;left:6px;top:6px;bottom:6px;width:2px;border-radius:2px;
     background:linear-gradient(var(--t-brand-line),var(--t-line))}
@@ -63,16 +63,16 @@ const JOURNEY_CSS = `
   .jy-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
   @media (prefers-reduced-motion: reduce){.jy-ms::before{transition:none}}
   .jy-ms h3{font-size:1.16rem;font-weight:800;margin:0;line-height:1.32}
-  /* Every title links to the evidence. Underlined at rest, not just on hover:
-     hover doesn't exist on touch, and an unstyled link reads as plain text —
-     which hides the proof behind an affordance nobody can see. */
-  .jy-ms h3 a{color:var(--t-ink);text-decoration:underline;text-decoration-color:var(--t-brand-line);
-    text-decoration-thickness:2px;text-underline-offset:3px}
-  .jy-ms h3 a:hover{color:var(--t-brand);text-decoration-color:var(--t-brand)}
+  /* Underline itself comes from the shared a[target="_blank"] rule
+     (navbar.js SHARED_CHROME_CSS) — only the text color is page-specific. */
+  .jy-ms h3 a{color:var(--t-ink)}
+  .jy-ms h3 a:hover{color:var(--t-brand)}
   .jy-ms h3 a:focus-visible{outline:2px solid var(--t-brand);outline-offset:3px;border-radius:3px}
   /* Roomier above than below: the title's underline sits close to its
      baseline, so 4px left the tag row crowding the link. */
   .jy-org{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.08em;color:var(--t-ink-3);margin:11px 0 7px}
+  .jy-ms-cert{color:var(--t-ink-3)}
+  .jy-ms-cert:hover{color:var(--t-brand)}
   .jy-org b{color:var(--t-accent);font-weight:400}
   .jy-ms-tag{display:inline-flex;align-items:center;gap:4px;font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-accent);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:999px;padding:1px 8px;margin-right:6px}
   .jy-desc{font-size:.9rem;color:var(--t-ink-2);margin:0;max-width:60ch}
@@ -125,9 +125,23 @@ const JOURNEY_CSS = `
 
 function renderMilestone(ach, hidden) {
   const org = escapeHtml(ach.org || '');
-  const titleHtml = ach.url
-    ? `<a href="${ach.url}" target="_blank" rel="noopener noreferrer">${ach.title}</a>`
+  // Most milestones carry one `url`. Courses can instead carry two —
+  // `courseUrl` (the course itself) and `certificationUrl` (the certificate
+  // earned for completing it) — since a taken course's evidence is the
+  // certificate, not always the course listing. The title links to
+  // whichever exists first; if both do, the other gets a small secondary
+  // link next to the org line instead of being dropped.
+  const primaryUrl = ach.url || ach.courseUrl || ach.certificationUrl;
+  const titleHtml = primaryUrl
+    ? `<a href="${primaryUrl}" target="_blank" rel="noopener noreferrer">${ach.title}</a>`
     : ach.title;
+  const secondaryUrl =
+    ach.courseUrl && ach.certificationUrl && primaryUrl !== ach.certificationUrl
+      ? ach.certificationUrl
+      : null;
+  const certHtml = secondaryUrl
+    ? ` · <a class="jy-ms-cert" href="${secondaryUrl}" target="_blank" rel="noopener noreferrer">Certificate</a>`
+    : '';
   // Descriptions render in full — no clamp, so no `title` tooltip needed to
   // recover text the clamp had cut off.
   const descHtml = ach.description ? `<p class="jy-desc">${ach.description}</p>` : '';
@@ -141,7 +155,7 @@ function renderMilestone(ach, hidden) {
   return dedent`
     <article class="${classes}" data-earlier="${hidden ? '1' : '0'}">
       <h3>${starHtml}${titleHtml}</h3>
-      <div class="jy-org">${tagHtml}<b>${org}</b> · ${formatYears(ach)}</div>
+      <div class="jy-org">${tagHtml}<b>${org}</b> · ${formatYears(ach)}${certHtml}</div>
       ${descHtml}
     </article>
   `;
@@ -198,7 +212,12 @@ function renderTimeline(sorted) {
 
   // Both labels ship in the markup so the count stays server-side and the
   // script never has to compose copy.
-  const moreLabel = `Show ${hiddenCount} more milestone${hiddenCount === 1 ? '' : 's'} ↓`;
+  // Once highlights are the filtered default view, "show more" means "see
+  // everything, not just the picked highlights" — a count of hidden
+  // milestones doesn't communicate that as well as naming what's underneath.
+  const moreLabel = hasFlagged
+    ? 'Show all selected work ↓'
+    : `Show ${hiddenCount} more milestone${hiddenCount === 1 ? '' : 's'} ↓`;
   const lessLabel = hasFlagged ? 'Show highlights only ↑' : 'Show fewer ↑';
   const more =
     hiddenCount > 0
@@ -292,7 +311,7 @@ async function createJourneyHtml(rolesData, skills, content = {}) {
   const timeline = renderTimeline(milestones);
   const stats = summarize(milestones);
   const scaleLine = stats
-    ? `<p class="jy-scale">${stats.count} milestones across ${stats.orgs} organizations, ${stats.from}\u2013${stats.to}.</p>`
+    ? `<p class="jy-scale"><b>${stats.count}</b> entries across <b>${stats.orgs}</b> organizations, <b>${stats.from}</b>\u2013<b>${stats.to}</b>.</p>`
     : '';
   const { expertise, toolsSection, skillsSection } = renderExpertiseAndTools(skills || {});
   const experience = renderExperience(rolesData.roles || []);

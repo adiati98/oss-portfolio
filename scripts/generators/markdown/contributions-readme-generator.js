@@ -223,14 +223,14 @@ async function createStatsReadme(finalContributions, articles = [], failedFetchC
   let glossarySectionsMd = '';
 
   groups.forEach((group) => {
-    let noteHeader = 'Glossary Note';
+    let noteHeader = 'Note';
     const hasEntryMethod = group.items.some((i) => i.entryMethod);
     const hasCalculation = group.items.some((i) => i.howItIsCalculated);
     const hasSource = group.items.some((i) => i.source);
 
-    if (hasEntryMethod) noteHeader = 'Entry Method';
-    else if (hasCalculation) noteHeader = 'Calculation Logic';
-    else if (hasSource) noteHeader = 'Data Source';
+    if (hasEntryMethod) noteHeader = 'How it’s added';
+    else if (hasCalculation) noteHeader = 'How it’s worked out';
+    else if (hasSource) noteHeader = 'Where it comes from';
 
     glossarySectionsMd += `## ${group.title}\n\n`;
     glossarySectionsMd += `_${personalize(group.description)}_\n\n`;
