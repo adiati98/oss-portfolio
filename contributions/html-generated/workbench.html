@@ -276,6 +276,10 @@
         --t-accent-wash: #feecdd;
         --t-accent-line: #fed3b1;
         --t-accent-strong: #c65903;
+        --t-merged: #7d45e2;
+        --t-merged-wash: #eee7fb;
+        --t-merged-line: #d9c9f7;
+        --t-merged-strong: #6422dd;
         --t-positive: #0d7856;
         --t-positive-wash: #ddefe9;
         --t-positive-line: #b2dacd;
@@ -314,6 +318,10 @@
         --t-accent-wash: #462c24;
         --t-accent-line: #6a3816;
         --t-accent-strong: #fb750b;
+        --t-merged: #a27aea;
+        --t-merged-wash: #27243d;
+        --t-merged-line: #483a6b;
+        --t-merged-strong: #a27aea;
         --t-positive: #119c70;
         --t-positive-wash: #182430;
         --t-positive-line: #11463d;
@@ -421,9 +429,14 @@
       .wbx-tile:last-child {
         border-right: 0;
       }
+      /* border-bottom (not just border-top on the next tile) because 5 tiles in
+     a 2-column grid leaves an odd last row — the tile above that empty cell
+     (e.g. "contributions helped ship this month") has no sibling below it
+     to supply a border-top, so it reads as missing its bottom edge. */
       @media (max-width: 760px) {
         .wbx-tile {
-          border-top: 1px solid var(--t-line);
+          border-top: 0;
+          border-bottom: 1px solid var(--t-line);
         }
         .wbx-tile:nth-child(2n) {
           border-right: 0;
@@ -491,33 +504,48 @@
         border-radius: 10px;
         overflow: hidden;
       }
+      /* No list-style:none / hidden ::-webkit-details-marker here — kept as the
+     browser's native disclosure triangle, same as the Quarterly Reports list
+     page (reports.html), instead of a hand-rolled character. Getting that
+     marker to sit inline, to the left of the row (not hidden, not stacked
+     above it) took three wrong tries, each confirmed wrong with an actual
+     rendered screenshot:
+       - summary{display:flex} directly: removes the native marker outright
+         — flex layout on summary itself suppresses it, full stop.
+       - summary > a block-level <div> wrapper: the marker DOES render, but
+         summary then has no inline content of its own to share a line with,
+         so the marker sits alone on its own line above the block.
+       - .wbx-lane-row{width:100%}: Chrome's UA stylesheet sets
+         list-style-position:inside on <summary>, so the marker box shares
+         the SAME content box the row sits in — claiming 100% of it leaves
+         no room for the marker, pushing it onto its own line. Forcing
+         list-style-position:outside instead (to make the marker stop
+         competing for that space) made it disappear completely — outside
+         positioning needs indent space this card layout doesn't reserve,
+         so the marker rendered further left than the lane's own
+         overflow:hidden edge and got clipped, no matter how much left
+         padding summary was given.
+     The fix: leave list-style-position at its (inside) default, and don't
+     force .wbx-lane-row to 100% width at all — let it shrink-to-fit like
+     any inline-flex box normally would. The marker gets its room back, and
+     .wbx-lane-explain's flex-basis:100% still wraps it onto its own line
+     below, because that's resolved against the row's own flex layout, not
+     a specific pixel width. */
       .wbx-lane summary {
-        list-style: none;
         cursor: pointer;
         padding: 13px 16px;
-        display: flex;
+        color: var(--t-ink-3);
+      }
+      .wbx-lane summary:focus-visible {
+        outline: 2px solid var(--t-brand);
+        outline-offset: -2px;
+      }
+      .wbx-lane-row {
+        display: inline-flex;
         align-items: baseline;
         gap: 10px;
         flex-wrap: wrap;
-      }
-      .wbx-lane summary::-webkit-details-marker {
-        display: none;
-      }
-      .wbx-lane summary::after {
-        content: '▸';
-        margin-left: auto;
-        color: var(--t-ink-3);
-        font-size: 0.78rem;
-        align-self: center;
-        transition: transform 0.15s ease;
-      }
-      .wbx-lane[open] summary::after {
-        transform: rotate(90deg);
-      }
-      @media (prefers-reduced-motion: reduce) {
-        .wbx-lane summary::after {
-          transition: none;
-        }
+        max-width: calc(100% - 24px);
       }
       .wbx-lane-title {
         font-size: 1.02rem;
@@ -533,6 +561,56 @@
         border-radius: 999px;
         padding: 1px 9px;
       }
+      /* Icon-only, pushed to the far right of the summary row (margin-left:auto).
+     Text like "Idle ▼" competed with the row's other labels and read as
+     another status pill. Static ↕ glyph that only changes opacity/color/
+     weight once clicked, matching the sort icon on the quarterly report
+     table (.sort-icon / th.sort-asc) rather than inventing a new visual
+     language for the same concept. Hidden while the lane is folded — nothing
+     to reorder if the rows aren't showing. */
+      .wbx-lane:not([open]) .wbx-sort-btn {
+        display: none;
+      }
+      .wbx-sort-btn {
+        display: inline-flex;
+        align-items: center;
+        align-self: center;
+        margin-left: auto;
+        background: none;
+        border: none;
+        padding: 2px 4px;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .wbx-sort-btn:focus-visible {
+        outline: 2px solid var(--t-brand);
+        outline-offset: 2px;
+      }
+      .wbx-sort-icon {
+        display: inline-flex;
+        align-items: center;
+        font-size: 1.15rem;
+        line-height: 1;
+        color: var(--t-ink-3);
+        opacity: 0.4;
+        transition:
+          opacity 0.15s ease,
+          color 0.15s ease;
+      }
+      .wbx-sort-btn:hover .wbx-sort-icon {
+        opacity: 0.8;
+        color: var(--t-brand);
+      }
+      .wbx-sort-btn[data-active='1'] .wbx-sort-icon {
+        opacity: 1;
+        color: var(--t-brand);
+        font-weight: bold;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .wbx-sort-icon {
+          transition: none;
+        }
+      }
       .wbx-lane-explain {
         flex-basis: 100%;
         margin: 2px 0 0;
@@ -544,9 +622,9 @@
       }
       .wbx-row {
         display: grid;
-        grid-template-columns: 150px 1fr;
+        grid-template-columns: minmax(150px, max-content) 1fr;
         gap: 6px 16px;
-        padding: 12px 16px;
+        padding: 16px;
         border-top: 1px solid var(--t-line);
         align-items: start;
         background: var(--t-card);
@@ -559,6 +637,9 @@
           grid-template-columns: 1fr;
         }
       }
+      /* justify-self:start — without it, a grid item defaults to stretch, so on
+     the single-column mobile layout the pill fills the whole row width
+     instead of sizing to its own text. */
       .wbx-pill {
         display: inline-flex;
         align-items: center;
@@ -572,6 +653,7 @@
         border: 1px solid var(--t-line);
         white-space: nowrap;
         align-self: start;
+        justify-self: start;
       }
       .wbx-pill i {
         width: 7px;
@@ -648,7 +730,6 @@
       .wbx-task a {
         color: var(--t-ink);
         font-weight: 600;
-        text-decoration: none;
       }
       .wbx-task a:hover {
         color: var(--t-brand);
@@ -658,7 +739,7 @@
         align-items: center;
         gap: 6px;
         flex-wrap: wrap;
-        margin-top: 5px;
+        margin-top: 10px;
         font-size: 0.78rem;
         color: var(--t-ink-2);
       }
@@ -709,11 +790,20 @@
       .wbx-live--stale i::after {
         content: none;
       }
+      /* Sticky so the lane shortcuts stay reachable while scrolling down the
+     board — same treatment as .jy-index on the Journey page. Sits below
+     the fixed navbar (4rem) and clears its own height. */
       .wbx-lane-index {
         display: flex;
         gap: 6px;
         flex-wrap: wrap;
         margin: 0 0 16px;
+        position: sticky;
+        top: 4rem;
+        z-index: 30;
+        background: var(--t-surface);
+        padding: 10px 0 9px;
+        border-bottom: 1px solid var(--t-line);
       }
       .wbx-lane-index a {
         display: inline-flex;
@@ -742,6 +832,11 @@
           transition: none;
         }
       }
+      /* Clears both the fixed navbar and the sticky lane index, so jumping to
+     a lane doesn't land it underneath them. */
+      .wbx-lane {
+        scroll-margin-top: 8rem;
+      }
 
       .skip-link {
         position: absolute;
@@ -765,6 +860,25 @@
         .skip-link {
           transition: none;
         }
+      }
+      /* Every external link, site-wide — one shared rule instead of each page
+     hand-rolling its own (Journey and Writing used to). Underlined at rest,
+     not just on hover: hover doesn't exist on touch, and an unstyled link
+     reads as plain text, hiding the affordance nobody can see otherwise.
+     The underline itself uses --t-accent — the seed a fork sets for a
+     playful highlight color, already falling back to a hue-rotated brand
+     when a fork leaves it unset (see theme.js/theme-engine.js), so this
+     needs no separate "is accent configured" branch. .no-underline opts a
+     link back out — for a card/tile where the whole multi-line block is the
+     link, underlining it would draw a line under every line inside. */
+      a[target='_blank']:not(.no-underline) {
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      a[target='_blank']:not(.no-underline):hover {
+        text-decoration-color: var(--t-accent);
       }
       .back-to-top {
         position: fixed;
@@ -1505,7 +1619,7 @@
             </p>
             <h1
               class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4"
-              style="color: var(--t-ink); letter-spacing: -0.01em"
+              style="color: var(--t-brand); letter-spacing: -0.01em"
             >
               Organized by what happens next
             </h1>
@@ -1516,44 +1630,44 @@
                 Active across open source
                 <span>— live maintainer &amp; contribution activity</span>
               </h2>
-              <span class="wbx-live" data-build-ts="2026-08-01T01:42:15.748Z" data-degraded="0">
+              <span class="wbx-live" data-build-ts="2026-08-01T18:36:40.855Z" data-degraded="0">
                 <i aria-hidden="true"></i
-                ><time class="wbx-live-text" datetime="2026-08-01T01:42:15.748Z"
-                  >Updated 2026-08-01 01:42</time
+                ><time class="wbx-live-text" datetime="2026-08-01T18:36:40.855Z"
+                  >Updated 2026-08-01 18:36</time
                 >
               </span>
             </div>
             <div class="wbx-tiles">
               <div class="wbx-tile wbx-tile--hero">
-                <span class="n">95</span><span class="c">changes shipped in Q3 2026</span>
+                <span class="n">96</span><span class="c">changes shipped in Q3 2026</span>
               </div>
               <div class="wbx-tile wbx-tile--good">
                 <span class="n">4</span
                 ><span class="c">approved &amp; heading to merge — on the board now</span>
               </div>
               <div class="wbx-tile wbx-tile--hot">
-                <span class="n">62</span><span class="c">need your action now</span>
+                <span class="n">86</span><span class="c">need your action now</span>
               </div>
               <div class="wbx-tile">
-                <span class="n">0</span
+                <span class="n">1</span
                 ><span class="c">contributions you helped ship this month</span>
               </div>
               <div class="wbx-tile">
-                <span class="n">0</span
-                ><span class="c">projects across 0 organizations this month</span>
+                <span class="n">1</span
+                ><span class="c">projects across 1 organization this month</span>
               </div>
             </div>
           </div>
           <nav class="wbx-lane-index" aria-label="Jump to lane">
             <a href="#wbx-lane-action"
-              >Needs your action <span class="wbx-lane-index-n">(62)</span></a
+              >Needs your action <span class="wbx-lane-index-n">(86)</span></a
             ><a href="#wbx-lane-ready"
               >Approved — bring it home <span class="wbx-lane-index-n">(4)</span></a
             ><a href="#wbx-lane-waiting"
-              >Waiting on others <span class="wbx-lane-index-n">(28)</span></a
+              >Waiting on others <span class="wbx-lane-index-n">(27)</span></a
             ><a href="#wbx-lane-stalled"
               >Stalled · 30+ days <span class="wbx-lane-index-n">(22)</span></a
-            ><a href="#wbx-lane-bot">Automated <span class="wbx-lane-index-n">(7)</span></a>
+            ><a href="#wbx-lane-bot">Automated <span class="wbx-lane-index-n">(8)</span></a>
           </nav>
 
           <div class="wbx-lanes">
@@ -1564,16 +1678,29 @@
               open
             >
               <summary>
-                <span class="wbx-lane-title">Needs your action</span>
-                <span class="wbx-lane-count">62</span>
-                <p class="wbx-lane-explain">
-                  Your move — feedback to address, a review waiting on you, or a note left after
-                  approval.
-                </p>
+                <span class="wbx-lane-row">
+                  <span class="wbx-lane-title">Needs your action</span>
+                  <span class="wbx-lane-count">86</span>
+                  <button
+                    type="button"
+                    class="wbx-sort-btn"
+                    data-lane-sort="action"
+                    data-dir="desc"
+                    data-active="0"
+                    title="Sort by idle time"
+                    aria-label="Sort Needs your action by idle time, currently oldest first"
+                  >
+                    <span class="wbx-sort-icon" aria-hidden="true">↕</span>
+                  </button>
+                  <p class="wbx-lane-explain">
+                    Your move — feedback to address, a review waiting on you, or a note left after
+                    approval.
+                  </p>
+                </span>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 119d</span>
+                <div class="wbx-row" data-idle="120.00847460648149">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 120d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -1588,12 +1715,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">idle 119d — escalate</span>
+                      <span class="wbx-step wbx-step--do">idle 120d — escalate</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 76d</span>
+                <div class="wbx-row" data-idle="77.28382182870371">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 77d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -1609,12 +1736,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">idle 76d — escalate</span>
+                      <span class="wbx-step wbx-step--do">idle 77d — escalate</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 65d</span>
+                <div class="wbx-row" data-idle="66.07955099537037">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 66d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -1629,12 +1756,12 @@
                       </a>
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">idle 65d — escalate</span>
+                      <span class="wbx-step wbx-step--do">idle 66d — escalate</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>To Write · 64d</span>
+                <div class="wbx-row" data-idle="65.44743293981482">
+                  <span class="wbx-pill wbx-pill--act"><i></i>To Write · 65d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1650,13 +1777,13 @@
                     </div>
                     <div class="wbx-next">
                       <span class="wbx-step wbx-step--do"
-                        >Assigned 64d ago, no PR yet — start the work</span
+                        >Assigned 65d ago, no PR yet — start the work</span
                       >
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 46d</span>
+                <div class="wbx-row" data-idle="47.33775701388889">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 47d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1672,8 +1799,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 45d</span>
+                <div class="wbx-row" data-idle="46.28639127314815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 46d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1689,8 +1816,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 37d</span>
+                <div class="wbx-row" data-idle="38.30095145833333">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 38d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1706,8 +1833,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 37d</span>
+                <div class="wbx-row" data-idle="38.29445840277778">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 38d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1723,8 +1850,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 36d</span>
+                <div class="wbx-row" data-idle="37.16224775462963">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 37d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1744,8 +1871,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 36d</span>
+                <div class="wbx-row" data-idle="37.118208402777775">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 37d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1776,8 +1903,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 35d</span>
+                <div class="wbx-row" data-idle="36.53097460648148">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 36d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1796,8 +1923,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 34d</span>
+                <div class="wbx-row" data-idle="35.23555793981482">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 35d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1814,8 +1941,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 34d</span>
+                <div class="wbx-row" data-idle="35.23487506944444">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 35d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -1832,7 +1959,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="30.916090347222223">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 30d</span>
                   <div>
                     <div class="wbx-meta">
@@ -1852,8 +1979,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 27d</span>
+                <div class="wbx-row" data-idle="28.490419050925926">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 28d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1870,7 +1997,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="23.96881025462963">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 23d</span>
                   <div>
                     <div class="wbx-meta">
@@ -1889,7 +2016,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="23.814446828703705">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 23d</span>
                   <div>
                     <div class="wbx-meta">
@@ -1906,7 +2033,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="22.941599606481482">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
@@ -1923,8 +2050,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.375754699074076">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1940,8 +2067,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.375002384259258">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1957,8 +2084,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.37343988425926">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1974,8 +2101,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.372155162037036">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -1991,8 +2118,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.372085717592594">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2008,8 +2135,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.371437569444446">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2025,8 +2152,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.371379699074073">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2042,8 +2169,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.36955099537037">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2059,8 +2186,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.368636643518517">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2076,8 +2203,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.368567199074075">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2093,8 +2220,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.367953773148148">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2111,8 +2238,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.36724775462963">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2129,8 +2256,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.366842662037037">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2146,8 +2273,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.366148217592592">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2163,8 +2290,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.36607877314815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2180,8 +2307,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.365106550925926">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2197,8 +2324,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.364527847222224">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2214,8 +2341,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.363138958333334">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2232,8 +2359,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.362826458333334">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2249,8 +2376,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.362768587962965">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2266,8 +2393,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.361020902777778">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2283,8 +2410,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.359643587962964">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2300,8 +2427,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.359250069444446">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2317,8 +2444,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 21d</span>
+                <div class="wbx-row" data-idle="22.358740810185186">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 22d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2334,7 +2461,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="20.985430625">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 20d</span>
                   <div>
                     <div class="wbx-meta">
@@ -2352,8 +2479,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 19d</span>
+                <div class="wbx-row" data-idle="20.349620439814814">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 20d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2369,8 +2496,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 15d</span>
+                <div class="wbx-row" data-idle="16.266472291666666">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 16d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -2386,8 +2513,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 14d</span>
+                <div class="wbx-row" data-idle="15.406888958333333">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 15d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2403,8 +2530,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
+                <div class="wbx-row" data-idle="11.539886643518518">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 11d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -2421,8 +2548,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
+                <div class="wbx-row" data-idle="11.535094976851852">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 11d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -2438,8 +2565,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
+                <div class="wbx-row" data-idle="11.451599606481482">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 11d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -2455,8 +2582,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
+                <div class="wbx-row" data-idle="11.118405162037037">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 11d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -2471,12 +2598,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">idle 10d — follow up</span>
+                      <span class="wbx-step wbx-step--do">idle 11d — follow up</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 9d</span>
+                <div class="wbx-row" data-idle="10.530812569444445">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2492,8 +2619,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 9d</span>
+                <div class="wbx-row" data-idle="10.516287106481482">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action · 10d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2509,7 +2636,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="6.418312569444445">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2529,7 +2656,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.5635787731481483">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2549,7 +2676,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="2.4984977546296294">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2569,7 +2696,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7677338657407408">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2586,7 +2713,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7604769212962963">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2603,7 +2730,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7563218287037037">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2620,7 +2747,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7510209027777778">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2637,7 +2764,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7490764583333334">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2654,7 +2781,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7279074768518519">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2671,7 +2798,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.7134398842592593">
                   <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
                   <div>
                     <div class="wbx-meta">
@@ -2688,25 +2815,450 @@
                     </div>
                   </div>
                 </div>
+                <div class="wbx-row" data-idle="0.6961829398148148">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/890"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign Builder page images for the Mautic 7.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6821783101851852">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/891"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign overview image for the Mautic 7.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6491111805555555">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/892"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Manage Segments page images for the Mautic 7.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6371320138888888">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/893"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Plugin resources page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6358241435185186">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/895"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Dashboard image for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6356621064814815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/898"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Assets page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6356621064814815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/897"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update UTM tags image for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6356621064814815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/896"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Authentication page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.632930625">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/894"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update creating Campaigns image for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6094121064814815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/900"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Stages page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6094121064814815">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/899"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign overview image for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6092500694444445">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/902"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Email Builder overview image for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6092500694444445">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/901"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign Builder page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.6091227546296296">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/903"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Points page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5950255324074074">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/904"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Configuration settings page images for the Mautic 6.0 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5649676620370371">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/907"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign overview image for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5649676620370371">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/906"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update UTM tags image for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5649676620370371">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/905"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Plugin resources page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5647940509259259">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/910"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Campaign Builder page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5647940509259259">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/909"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Authentication page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5647940509259259">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/908"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Stages page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.551356550925926">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/911"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Configuration settings page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5366227546296296">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">mautic/user-documentation</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/mautic/user-documentation/pull/912"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >Update Manage Segments page images for the Mautic 5.2 UI</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="0.5180695138888889">
+                  <span class="wbx-pill wbx-pill--act"><i></i>Take Action</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">OpenSource-Communities/pizza-verse</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/OpenSource-Communities/pizza-verse/pull/142"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >feat: add Paneer Tikka Pizza recipe</a
+                      >
+                    </div>
+                    <div class="wbx-next">
+                      <span class="wbx-step wbx-step--do"
+                        >Author replied — review the latest changes</span
+                      >
+                    </div>
+                  </div>
+                </div>
               </div>
             </details>
             <details
               class="wbx-lane"
               id="wbx-lane-ready"
               style="border-left-color: var(--t-positive)"
-              open
             >
               <summary>
-                <span class="wbx-lane-title">Approved — bring it home</span>
-                <span class="wbx-lane-count">4</span>
-                <p class="wbx-lane-explain">
-                  Reviewed and approved, but not done: each still needs a final review, a backport
-                  check, or a maintainer nudge before it ships.
-                </p>
+                <span class="wbx-lane-row">
+                  <span class="wbx-lane-title">Approved — bring it home</span>
+                  <span class="wbx-lane-count">4</span>
+                  <button
+                    type="button"
+                    class="wbx-sort-btn"
+                    data-lane-sort="ready"
+                    data-dir="desc"
+                    data-active="0"
+                    title="Sort by idle time"
+                    aria-label="Sort Approved — bring it home by idle time, currently oldest first"
+                  >
+                    <span class="wbx-sort-icon" aria-hidden="true">↕</span>
+                  </button>
+                  <p class="wbx-lane-explain">
+                    Reviewed and approved, but not done: each still needs a final review, a backport
+                    check, or a maintainer nudge before it ships.
+                  </p>
+                </span>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 134d</span>
+                <div class="wbx-row" data-idle="135.32995608796296">
+                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 135d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -2723,13 +3275,13 @@
                     <div class="wbx-next">
                       approved by <b>RCheesley</b> ·
                       <span class="wbx-step wbx-step--ship"
-                        >Approved 134d ago — nudge a maintainer to merge</span
+                        >Approved 135d ago — nudge a maintainer to merge</span
                       >
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 37d</span>
+                <div class="wbx-row" data-idle="38.37158803240741">
+                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 38d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -2746,13 +3298,13 @@
                     <div class="wbx-next">
                       approved by <b>escopecz</b> ·
                       <span class="wbx-step wbx-step--ship"
-                        >Approved 37d ago — nudge a maintainer to merge</span
+                        >Approved 38d ago — nudge a maintainer to merge</span
                       >
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 266d</span>
+                <div class="wbx-row" data-idle="267.37250238425923">
+                  <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 267d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/mautic-community-handbook</span>
@@ -2770,12 +3322,12 @@
                     <div class="wbx-next">
                       approved by <b>escopecz</b> ·
                       <span class="wbx-step wbx-step--ship"
-                        >Approved 266d ago — nudge a maintainer to merge</span
+                        >Approved 267d ago — nudge a maintainer to merge</span
                       >
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="765.9456736805555">
                   <span class="wbx-pill wbx-pill--ok"><i></i>Approved · 765d</span>
                   <div>
                     <div class="wbx-meta">
@@ -2806,31 +3358,27 @@
               style="border-left-color: var(--t-brand)"
             >
               <summary>
-                <span class="wbx-lane-title">Waiting on others</span>
-                <span class="wbx-lane-count">28</span>
-                <p class="wbx-lane-explain">
-                  Your part is done — awaiting review, or blocked on a linked code PR.
-                </p>
+                <span class="wbx-lane-row">
+                  <span class="wbx-lane-title">Waiting on others</span>
+                  <span class="wbx-lane-count">27</span>
+                  <button
+                    type="button"
+                    class="wbx-sort-btn"
+                    data-lane-sort="waiting"
+                    data-dir="desc"
+                    data-active="0"
+                    title="Sort by idle time"
+                    aria-label="Sort Waiting on others by idle time, currently oldest first"
+                  >
+                    <span class="wbx-sort-icon" aria-hidden="true">↕</span>
+                  </button>
+                  <p class="wbx-lane-explain">
+                    Your part is done — awaiting review, or blocked on a linked code PR.
+                  </p>
+                </span>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
-                  <div>
-                    <div class="wbx-meta">
-                      <span class="wbx-repo">OpenSource-Communities/guestbook</span>
-                      <span class="wbx-rel">👀 reviewing</span>
-                    </div>
-                    <div class="wbx-task">
-                      <a
-                        href="https://github.com/OpenSource-Communities/guestbook/pull/998"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        >feat: Add alexandrebayanza-maker as a contributor</a
-                      >
-                    </div>
-                  </div>
-                </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.3289954398148147">
                   <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
                   <div>
                     <div class="wbx-meta">
@@ -2850,7 +3398,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.4113102546296297">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2867,7 +3415,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.4116459027777777">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2884,7 +3432,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.4119121064814815">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2901,7 +3449,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.425905162037037">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2921,7 +3469,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="2.1348519212962964">
                   <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
                   <div>
                     <div class="wbx-meta">
@@ -2951,7 +3499,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.9066343287037038">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2968,7 +3516,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="1.9069005324074073">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -2985,7 +3533,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="2.5132894212962964">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3002,7 +3550,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="2.513567199074074">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3019,7 +3567,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="2.515280162037037">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3036,7 +3584,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.029608865740741">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3053,7 +3601,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.0299213657407407">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3070,7 +3618,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.030303310185185">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching</span>
                   <div>
                     <div class="wbx-meta">
@@ -3087,7 +3635,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.34142599537037">
                   <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
                   <div>
                     <div class="wbx-meta">
@@ -3107,7 +3655,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="3.9480463657407405">
                   <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
                   <div>
                     <div class="wbx-meta">
@@ -3124,7 +3672,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="6.124030162037037">
                   <span class="wbx-pill wbx-pill--wait"><i></i>Waiting</span>
                   <div>
                     <div class="wbx-meta">
@@ -3157,8 +3705,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 7d</span>
+                <div class="wbx-row" data-idle="8.509932939814815">
+                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 8d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3179,8 +3727,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 9d</span>
+                <div class="wbx-row" data-idle="10.539701458333333">
+                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 10d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3196,8 +3744,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 10d</span>
+                <div class="wbx-row" data-idle="11.485291736111112">
+                  <span class="wbx-pill wbx-pill--wait"><i></i>Waiting · 11d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -3213,7 +3761,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="11.990673680555556">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 11d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3230,7 +3778,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="11.991055625">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 11d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3247,8 +3795,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 14d</span>
+                <div class="wbx-row" data-idle="15.406784791666666">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 15d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3264,8 +3812,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 19d</span>
+                <div class="wbx-row" data-idle="20.41306951388889">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 20d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3281,7 +3829,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="21.981981550925926">
                   <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 21d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3298,8 +3846,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 23d</span>
+                <div class="wbx-row" data-idle="24.008428310185185">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 24d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3315,8 +3863,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 23d</span>
+                <div class="wbx-row" data-idle="24.00884497685185">
+                  <span class="wbx-pill wbx-pill--watch"><i></i>Watching · 24d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3340,15 +3888,28 @@
               style="border-left-color: var(--t-neutral)"
             >
               <summary>
-                <span class="wbx-lane-title">Stalled · 30+ days</span>
-                <span class="wbx-lane-count">22</span>
-                <p class="wbx-lane-explain">
-                  No movement in a month — each needs a decision: nudge or close.
-                </p>
+                <span class="wbx-lane-row">
+                  <span class="wbx-lane-title">Stalled · 30+ days</span>
+                  <span class="wbx-lane-count">22</span>
+                  <button
+                    type="button"
+                    class="wbx-sort-btn"
+                    data-lane-sort="stalled"
+                    data-dir="desc"
+                    data-active="0"
+                    title="Sort by idle time"
+                    aria-label="Sort Stalled · 30+ days by idle time, currently oldest first"
+                  >
+                    <span class="wbx-sort-icon" aria-hidden="true">↕</span>
+                  </button>
+                  <p class="wbx-lane-explain">
+                    No movement in a month — each needs a decision: nudge or close.
+                  </p>
+                </span>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 312d</span>
+                <div class="wbx-row" data-idle="313.0125255324074">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 313d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/oss-communities</span>
@@ -3364,12 +3925,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 312d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 313d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 197d</span>
+                <div class="wbx-row" data-idle="198.38843988425927">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 198d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3384,11 +3945,11 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 197d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 198d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="179.78705099537038">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 179d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3410,8 +3971,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 148d</span>
+                <div class="wbx-row" data-idle="149.30979405092592">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 149d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3428,11 +3989,11 @@
                     <div class="wbx-next">
                       <span style="color: var(--t-ink-3)"><b>RCheesley</b> reviewed this</span>
                       ·
-                      <span class="wbx-step wbx-step--do">Idle 148d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 149d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="136.70959729166665">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 136d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3452,8 +4013,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 135d</span>
+                <div class="wbx-row" data-idle="136.0545857175926">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 136d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -3468,11 +4029,11 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 135d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 136d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="123.7494468287037">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 123d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3492,8 +4053,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 117d</span>
+                <div class="wbx-row" data-idle="118.3008820138889">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 118d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3508,12 +4069,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 117d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 118d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 117d</span>
+                <div class="wbx-row" data-idle="118.30026858796296">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 118d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3528,12 +4089,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 117d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 118d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 117d</span>
+                <div class="wbx-row" data-idle="118.25053479166667">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 118d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3548,11 +4109,11 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 117d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 118d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="117.80995608796296">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 117d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3572,8 +4133,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 111d</span>
+                <div class="wbx-row" data-idle="112.40818525462963">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 112d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3588,12 +4149,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 111d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 112d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 101d</span>
+                <div class="wbx-row" data-idle="102.5282894212963">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 102d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3610,12 +4171,12 @@
                     <div class="wbx-next">
                       <span style="color: var(--t-ink-3)"><b>escopecz</b> reviewed this</span>
                       ·
-                      <span class="wbx-step wbx-step--do">Idle 101d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 102d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 94d</span>
+                <div class="wbx-row" data-idle="95.52624081018519">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 95d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3630,12 +4191,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 94d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 95d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 64d</span>
+                <div class="wbx-row" data-idle="65.20142599537037">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 65d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/guestbook</span>
@@ -3651,12 +4212,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 64d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 65d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 61d</span>
+                <div class="wbx-row" data-idle="62.48353247685185">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 62d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/pizza-verse</span>
@@ -3671,12 +4232,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 61d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 62d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 52d</span>
+                <div class="wbx-row" data-idle="53.419817199074075">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 53d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3691,12 +4252,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 52d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 53d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 46d</span>
+                <div class="wbx-row" data-idle="47.678567199074074">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 47d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">Virtual-Coffee/virtualcoffee.io</span>
@@ -3712,12 +4273,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 46d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 47d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 37d</span>
+                <div class="wbx-row" data-idle="38.393231550925925">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 38d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/developer-documentation-new</span>
@@ -3732,12 +4293,12 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 37d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 38d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 36d</span>
+                <div class="wbx-row" data-idle="37.294759328703705">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 37d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3754,11 +4315,11 @@
                     <div class="wbx-next">
                       <span style="color: var(--t-ink-3)"><b>escopecz</b> reviewed this</span>
                       ·
-                      <span class="wbx-step wbx-step--do">Idle 36d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 37d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="35.981009328703706">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 35d</span>
                   <div>
                     <div class="wbx-meta">
@@ -3778,8 +4339,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 31d</span>
+                <div class="wbx-row" data-idle="32.314342662037035">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Stale · 32d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">mautic/user-documentation</span>
@@ -3794,7 +4355,7 @@
                       >
                     </div>
                     <div class="wbx-next">
-                      <span class="wbx-step wbx-step--do">Idle 31d — decide: nudge or close</span>
+                      <span class="wbx-step wbx-step--do">Idle 32d — decide: nudge or close</span>
                     </div>
                   </div>
                 </div>
@@ -3802,14 +4363,44 @@
             </details>
             <details class="wbx-lane" id="wbx-lane-bot" style="border-left-color: var(--t-line-2)">
               <summary>
-                <span class="wbx-lane-title">Automated</span>
-                <span class="wbx-lane-count">7</span>
-                <p class="wbx-lane-explain">
-                  Dependency and security bumps from bots — batchable, kept out of the way.
-                </p>
+                <span class="wbx-lane-row">
+                  <span class="wbx-lane-title">Automated</span>
+                  <span class="wbx-lane-count">8</span>
+                  <button
+                    type="button"
+                    class="wbx-sort-btn"
+                    data-lane-sort="bot"
+                    data-dir="desc"
+                    data-active="0"
+                    title="Sort by idle time"
+                    aria-label="Sort Automated by idle time, currently oldest first"
+                  >
+                    <span class="wbx-sort-icon" aria-hidden="true">↕</span>
+                  </button>
+                  <p class="wbx-lane-explain">
+                    Dependency and security bumps from bots — batchable, kept out of the way.
+                  </p>
+                </span>
               </summary>
               <div class="wbx-rows">
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="0.6052454398148148">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot</span>
+                  <div>
+                    <div class="wbx-meta">
+                      <span class="wbx-repo">Virtual-Coffee/virtualcoffee.io</span>
+                      <span class="wbx-rel">👀 reviewing</span>
+                    </div>
+                    <div class="wbx-task">
+                      <a
+                        href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1529"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >chore(deps): bump sanitize-html from 2.17.0 to 2.17.5</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <div class="wbx-row" data-idle="5.141831087962963">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Bot</span>
                   <div>
                     <div class="wbx-meta">
@@ -3826,7 +4417,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
+                <div class="wbx-row" data-idle="5.475326458333333">
                   <span class="wbx-pill wbx-pill--stale"><i></i>Bot</span>
                   <div>
                     <div class="wbx-meta">
@@ -3843,8 +4434,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 44d</span>
+                <div class="wbx-row" data-idle="45.29945840277778">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 45d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">Virtual-Coffee/virtualcoffee.io</span>
@@ -3860,8 +4451,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 47d</span>
+                <div class="wbx-row" data-idle="48.40127553240741">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 48d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">Virtual-Coffee/virtualcoffee.io</span>
@@ -3877,8 +4468,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 65d</span>
+                <div class="wbx-row" data-idle="66.07131025462962">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 66d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -3894,8 +4485,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 65d</span>
+                <div class="wbx-row" data-idle="66.06909960648149">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 66d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/intro</span>
@@ -3911,8 +4502,8 @@
                     </div>
                   </div>
                 </div>
-                <div class="wbx-row">
-                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 189d</span>
+                <div class="wbx-row" data-idle="190.41798849537037">
+                  <span class="wbx-pill wbx-pill--stale"><i></i>Bot · 190d</span>
                   <div>
                     <div class="wbx-meta">
                       <span class="wbx-repo">OpenSource-Communities/oss-communities</span>
@@ -3960,6 +4551,37 @@
         // Beyond 7 days the server-rendered absolute date stays as-is.
       })();
     </script>
+    <script>
+      (function () {
+        document.querySelectorAll('.wbx-sort-btn').forEach(function (btn) {
+          btn.addEventListener('click', function (e) {
+            // The button lives inside a <summary> — without these, clicking
+            // it would also toggle the lane open/closed.
+            e.preventDefault();
+            e.stopPropagation();
+            var lane = document.getElementById('wbx-lane-' + btn.getAttribute('data-lane-sort'));
+            var container = lane && lane.querySelector('.wbx-rows');
+            if (!container) return;
+            var dir = btn.getAttribute('data-dir') === 'asc' ? 'desc' : 'asc';
+            btn.setAttribute('data-dir', dir);
+            btn.setAttribute('data-active', '1');
+            var rows = Array.prototype.slice.call(container.children);
+            rows.sort(function (a, b) {
+              var av = parseFloat(a.getAttribute('data-idle')) || 0;
+              var bv = parseFloat(b.getAttribute('data-idle')) || 0;
+              return dir === 'asc' ? av - bv : bv - av;
+            });
+            rows.forEach(function (row) {
+              container.appendChild(row);
+            });
+            btn.setAttribute(
+              'aria-label',
+              'Sort by idle time, currently ' + (dir === 'asc' ? 'newest first' : 'oldest first')
+            );
+          });
+        });
+      })();
+    </script>
     <footer
       style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
@@ -3995,7 +4617,7 @@
           target="_blank"
           rel="noopener noreferrer"
           style="color: var(--c-primary-text)"
-          class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           Get in touch on LinkedIn
         </a>

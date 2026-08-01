@@ -37,12 +37,12 @@ Roles, expertise, and the work behind them, across the Open Source ecosystem.
 
 ## ⭐ Highlights
 
-_17 milestones across 6 organizations, 2021–2026._
+_17 milestones across 7 organizations, 2021–2026._
 
 - 🛠 Project — **[OSS Portfolio](https://github.com/adiati98/oss-portfolio)** (2025–present) — _Personal_
   - Built an automated system that collects, organizes, and showcases open source contributions — featuring customizable themes, progress reports, and a live dashboard for active projects.
-- 🛠 Project — **[Mautic Docs PRs Tracker](https://github.com/adiati98/mautic-docs-prs-tracker)** (2026–present) — _Mautic_
-  - Built a board showing the Education Team which documentation changes are waiting on a review, with a reminder page that nudges developers to take a look.
+- 🛠 Project — **[Mautic Docs PRs Tracker](https://github.com/adiati98/mautic-docs-prs-tracker)** (2026–present) — _Personal / Mautic_
+  - Built an automated board showing the Education Team which documentation PRs are waiting on a review, with a reminder page that nudges developers to take a look.
 - 📚 Docs — **[Mautic contributing guidelines: overhaul and migration](https://contribute.mautic.org/en/latest/contributing/contributing_docs.html)** (2025–2026) — _Mautic_
   - Rewrote Mautic's contributing guidelines, then moved them onto the Community Handbook site so all three documentation projects point at one set of instructions instead of keeping their own.
 - 🏆 Award — **[Mautician of the Year](https://mautic.org/blog/learnings-from-mautic-world-conference-2025/)** (2025) — _Mautic_
@@ -50,7 +50,7 @@ _17 milestones across 6 organizations, 2021–2026._
 - 📚 Docs — **[Mautic Community Handbook reStructuredText conversion](https://contribute.mautic.org/)** (2025) — _Mautic_
   - Rebuilt the whole Community Handbook in reStructuredText, the format Mautic publishes its documentation from — every section, from contributing and testing through to policies and the style guide.
 - 📚 Docs — **[Virtual Coffee Handbook](https://virtualcoffee.io/resources/virtual-coffee-handbook)** (2021–2025) — _Virtual Coffee_
-  - Created and looked after Virtual Coffee's handbook for four years — from how to join through to finding your way around Slack — including a 2023 reorganization of every community resource on the site.
+  - Created and looked after Virtual Coffee's handbook — from how to join through to finding your way around Slack — including a 2023 reorganization of every community resource on the site.
 - 📚 Docs — **[Virtual Coffee docs migration to Docusaurus](https://vc-community-docs.netlify.app/docs/)** (2025) — _Virtual Coffee_
   - Moved Virtual Coffee's documentation onto Docusaurus on my own — 192 files rebuilt and delivered as a single piece of work.
 - 🎤 Talk — **[Building Bridges, Not Walls: The Importance of Documentation in Open Source Projects](https://www.youtube.com/live/pzLXQYZpOPU?t=5368)** (2024) — _Virtual Coffee Lightning Talks_

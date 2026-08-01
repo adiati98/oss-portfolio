@@ -277,6 +277,10 @@
         --t-accent-wash: #feecdd;
         --t-accent-line: #fed3b1;
         --t-accent-strong: #c65903;
+        --t-merged: #7d45e2;
+        --t-merged-wash: #eee7fb;
+        --t-merged-line: #d9c9f7;
+        --t-merged-strong: #6422dd;
         --t-positive: #0d7856;
         --t-positive-wash: #ddefe9;
         --t-positive-line: #b2dacd;
@@ -315,6 +319,10 @@
         --t-accent-wash: #462c24;
         --t-accent-line: #6a3816;
         --t-accent-strong: #fb750b;
+        --t-merged: #a27aea;
+        --t-merged-wash: #27243d;
+        --t-merged-line: #483a6b;
+        --t-merged-strong: #a27aea;
         --t-positive: #119c70;
         --t-positive-wash: #182430;
         --t-positive-line: #11463d;
@@ -732,7 +740,6 @@
         border: 1px solid var(--t-line);
         border-radius: 999px;
         padding: 3px 11px;
-        text-decoration: none;
         transition:
           border-color 0.15s ease,
           color 0.15s ease;
@@ -827,11 +834,9 @@
 
       .qr-link {
         color: var(--t-brand);
-        text-decoration: none;
       }
       .qr-link:hover {
         color: var(--t-brand-strong);
-        text-decoration: underline;
       }
       .qr-link:focus-visible {
         outline: 2px solid var(--t-brand);
@@ -845,6 +850,9 @@
         border: 1px solid var(--t-line);
         border-radius: 5px;
         padding: 2px 7px;
+      }
+      .qr-status-cell {
+        display: inline-block;
       }
 
       /* Per-category "back to top" — resets that category's own table
@@ -1019,6 +1027,25 @@
         .skip-link {
           transition: none;
         }
+      }
+      /* Every external link, site-wide — one shared rule instead of each page
+     hand-rolling its own (Journey and Writing used to). Underlined at rest,
+     not just on hover: hover doesn't exist on touch, and an unstyled link
+     reads as plain text, hiding the affordance nobody can see otherwise.
+     The underline itself uses --t-accent — the seed a fork sets for a
+     playful highlight color, already falling back to a hue-rotated brand
+     when a fork leaves it unset (see theme.js/theme-engine.js), so this
+     needs no separate "is accent configured" branch. .no-underline opts a
+     link back out — for a card/tile where the whole multi-line block is the
+     link, underlining it would draw a line under every line inside. */
+      a[target='_blank']:not(.no-underline) {
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      a[target='_blank']:not(.no-underline):hover {
+        text-decoration-color: var(--t-accent);
       }
       .back-to-top {
         position: fixed;
@@ -1779,7 +1806,7 @@
                 href="https://github.com/brittanyrw/emojipages/issues/65"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="qr-highlight-card"
+                class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Collaboration</span>
                 <span class="qr-highlight-repo">brittanyrw/emojipages</span>
@@ -2193,7 +2220,7 @@
                 style="border-color: var(--t-line)"
               >
                 <!-- prettier-ignore -->
-                <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Comment</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">brittanyrw/emojipages</span></td><td data-label="Title"><a href="https://github.com/brittanyrw/emojipages/issues/65" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add &quot;Jurassic Park&quot; by Michael Crichton to EmojiPages (#65)">Add &quot;Jurassic Park&quot; by Michael Crichton to EmojiPages</a></td><td data-value="2019-09-24T20:23:35Z" data-label="Created At">2019-09-24</td><td data-value="2019-09-30T23:28:00Z" data-label="First Comment">2019-09-30</td><td data-value="CLOSED" data-label="Last Update / Status">2019-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></td></tr></tbody></table>
+                <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Comment</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">brittanyrw/emojipages</span></td><td data-label="Title"><a href="https://github.com/brittanyrw/emojipages/issues/65" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add &quot;Jurassic Park&quot; by Michael Crichton to EmojiPages (#65)">Add &quot;Jurassic Park&quot; by Michael Crichton to EmojiPages</a></td><td data-value="2019-09-24T20:23:35Z" data-label="Created At">2019-09-24</td><td data-value="2019-09-30T23:28:00Z" data-label="First Comment">2019-09-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2019-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr></tbody></table>
               </div>
               <button type="button" class="qr-cat-top" data-scroll-target="collaborations-scroll">
                 ↑ Back to top
@@ -2587,7 +2614,7 @@
           target="_blank"
           rel="noopener noreferrer"
           style="color: var(--c-primary-text)"
-          class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           Get in touch on LinkedIn
         </a>

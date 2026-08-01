@@ -276,6 +276,10 @@
         --t-accent-wash: #feecdd;
         --t-accent-line: #fed3b1;
         --t-accent-strong: #c65903;
+        --t-merged: #7d45e2;
+        --t-merged-wash: #eee7fb;
+        --t-merged-line: #d9c9f7;
+        --t-merged-strong: #6422dd;
         --t-positive: #0d7856;
         --t-positive-wash: #ddefe9;
         --t-positive-line: #b2dacd;
@@ -314,6 +318,10 @@
         --t-accent-wash: #462c24;
         --t-accent-line: #6a3816;
         --t-accent-strong: #fb750b;
+        --t-merged: #a27aea;
+        --t-merged-wash: #27243d;
+        --t-merged-line: #483a6b;
+        --t-merged-strong: #a27aea;
         --t-positive: #119c70;
         --t-positive-wash: #182430;
         --t-positive-line: #11463d;
@@ -354,7 +362,7 @@
         letter-spacing: -0.015em;
         line-height: 1.12;
         margin: 6px 0 8px;
-        color: var(--t-ink);
+        color: var(--t-brand);
       }
       .lp-grad {
         background: linear-gradient(98deg, var(--t-brand) 10%, var(--t-accent) 90%);
@@ -588,7 +596,6 @@
       .lp-focus a {
         font-weight: 600;
         color: var(--t-ink);
-        text-decoration: none;
         min-width: 0;
         overflow-wrap: anywhere;
       }
@@ -773,6 +780,25 @@
         .skip-link {
           transition: none;
         }
+      }
+      /* Every external link, site-wide — one shared rule instead of each page
+     hand-rolling its own (Journey and Writing used to). Underlined at rest,
+     not just on hover: hover doesn't exist on touch, and an unstyled link
+     reads as plain text, hiding the affordance nobody can see otherwise.
+     The underline itself uses --t-accent — the seed a fork sets for a
+     playful highlight color, already falling back to a hue-rotated brand
+     when a fork leaves it unset (see theme.js/theme-engine.js), so this
+     needs no separate "is accent configured" branch. .no-underline opts a
+     link back out — for a card/tile where the whole multi-line block is the
+     link, underlining it would draw a line under every line inside. */
+      a[target='_blank']:not(.no-underline) {
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      a[target='_blank']:not(.no-underline):hover {
+        text-decoration-color: var(--t-accent);
       }
       .back-to-top {
         position: fixed;
@@ -1513,10 +1539,10 @@
           <section class="lp-impact" aria-labelledby="lp-impact-h">
             <div class="lp-impact-top">
               <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-              <span class="lp-live" data-build-ts="2026-08-01T01:42:15.096Z">
+              <span class="lp-live" data-build-ts="2026-08-01T18:36:40.216Z">
                 <i aria-hidden="true"></i
-                ><time class="lp-live-text" datetime="2026-08-01T01:42:15.096Z"
-                  >Updated 2026-08-01 01:42</time
+                ><time class="lp-live-text" datetime="2026-08-01T18:36:40.216Z"
+                  >Updated 2026-08-01 18:36</time
                 >
               </span>
             </div>
@@ -1524,10 +1550,10 @@
               <div class="lp-tile lp-tile--hero">
                 <span class="n">2818</span>
                 <span class="c">contributions since 2019</span>
-                <span class="c2">1646 shipped changes</span>
+                <span class="c2">1647 shipped changes</span>
               </div>
               <div class="lp-tile">
-                <span class="n">992</span><span class="c">contributions you helped ship</span>
+                <span class="n">993</span><span class="c">contributions you helped ship</span>
               </div>
               <div class="lp-tile">
                 <span class="n">48</span>
@@ -1701,7 +1727,7 @@
           target="_blank"
           rel="noopener noreferrer"
           style="color: var(--c-primary-text)"
-          class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           Get in touch on LinkedIn
         </a>

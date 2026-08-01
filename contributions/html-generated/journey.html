@@ -276,6 +276,10 @@
         --t-accent-wash: #feecdd;
         --t-accent-line: #fed3b1;
         --t-accent-strong: #c65903;
+        --t-merged: #7d45e2;
+        --t-merged-wash: #eee7fb;
+        --t-merged-line: #d9c9f7;
+        --t-merged-strong: #6422dd;
         --t-positive: #0d7856;
         --t-positive-wash: #ddefe9;
         --t-positive-line: #b2dacd;
@@ -314,6 +318,10 @@
         --t-accent-wash: #462c24;
         --t-accent-line: #6a3816;
         --t-accent-strong: #fb750b;
+        --t-merged: #a27aea;
+        --t-merged-wash: #27243d;
+        --t-merged-line: #483a6b;
+        --t-merged-strong: #a27aea;
         --t-positive: #119c70;
         --t-positive-wash: #182430;
         --t-positive-line: #11463d;
@@ -344,7 +352,7 @@
         font-family: inherit;
         font-weight: 800;
         letter-spacing: -0.01em;
-        color: var(--t-ink);
+        color: var(--t-brand);
       }
       .jy-tl {
         position: relative;
@@ -440,19 +448,13 @@
         margin: 0;
         line-height: 1.32;
       }
-      /* Every title links to the evidence. Underlined at rest, not just on hover:
-     hover doesn't exist on touch, and an unstyled link reads as plain text —
-     which hides the proof behind an affordance nobody can see. */
+      /* Underline itself comes from the shared a[target="_blank"] rule
+     (navbar.js SHARED_CHROME_CSS) — only the text color is page-specific. */
       .jy-ms h3 a {
         color: var(--t-ink);
-        text-decoration: underline;
-        text-decoration-color: var(--t-brand-line);
-        text-decoration-thickness: 2px;
-        text-underline-offset: 3px;
       }
       .jy-ms h3 a:hover {
         color: var(--t-brand);
-        text-decoration-color: var(--t-brand);
       }
       .jy-ms h3 a:focus-visible {
         outline: 2px solid var(--t-brand);
@@ -467,6 +469,12 @@
         letter-spacing: 0.08em;
         color: var(--t-ink-3);
         margin: 11px 0 7px;
+      }
+      .jy-ms-cert {
+        color: var(--t-ink-3);
+      }
+      .jy-ms-cert:hover {
+        color: var(--t-brand);
       }
       .jy-org b {
         color: var(--t-accent);
@@ -713,6 +721,25 @@
         .skip-link {
           transition: none;
         }
+      }
+      /* Every external link, site-wide — one shared rule instead of each page
+     hand-rolling its own (Journey and Writing used to). Underlined at rest,
+     not just on hover: hover doesn't exist on touch, and an unstyled link
+     reads as plain text, hiding the affordance nobody can see otherwise.
+     The underline itself uses --t-accent — the seed a fork sets for a
+     playful highlight color, already falling back to a hue-rotated brand
+     when a fork leaves it unset (see theme.js/theme-engine.js), so this
+     needs no separate "is accent configured" branch. .no-underline opts a
+     link back out — for a card/tile where the whole multi-line block is the
+     link, underlining it would draw a line under every line inside. */
+      a[target='_blank']:not(.no-underline) {
+        text-decoration: underline;
+        text-decoration-color: var(--t-accent-line);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 3px;
+      }
+      a[target='_blank']:not(.no-underline):hover {
+        text-decoration-color: var(--t-accent);
       }
       .back-to-top {
         position: fixed;
@@ -1596,7 +1623,9 @@
 
           <section aria-labelledby="jy-milestones">
             <h2 id="jy-milestones" class="jy-sec-label">Selected work</h2>
-            <p class="jy-scale">17 milestones across 6 organizations, 2021–2026.</p>
+            <p class="jy-scale">
+              <b>17</b> entries across <b>7</b> organizations, <b>2021</b>–<b>2026</b>.
+            </p>
             <div class="jy-index">
               <button type="button" id="jy-show-highlights" aria-pressed="true">
                 ★ Highlights
@@ -1640,11 +1669,11 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🛠 Project</span><b>Mautic</b> · 2026–present
+                  <span class="jy-ms-tag">🛠 Project</span><b>Personal / Mautic</b> · 2026–present
                 </div>
                 <p class="jy-desc">
-                  Built a board showing the Education Team which documentation changes are waiting
-                  on a review, with a reminder page that nudges developers to take a look.
+                  Built an automated board showing the Education Team which documentation PRs are
+                  waiting on a review, with a reminder page that nudges developers to take a look.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1753,9 +1782,9 @@
                   <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> · 2021–2025
                 </div>
                 <p class="jy-desc">
-                  Created and looked after Virtual Coffee's handbook for four years — from how to
-                  join through to finding your way around Slack — including a 2023 reorganization of
-                  every community resource on the site.
+                  Created and looked after Virtual Coffee's handbook — from how to join through to
+                  finding your way around Slack — including a 2023 reorganization of every community
+                  resource on the site.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1926,10 +1955,10 @@
                   type="button"
                   id="jy-show-earlier"
                   aria-expanded="false"
-                  data-label-more="Show 9 more milestones ↓"
+                  data-label-more="Show all selected work ↓"
                   data-label-less="Show highlights only ↑"
                 >
-                  Show 9 more milestones ↓
+                  Show all selected work ↓
                 </button>
               </div>
             </div>
@@ -2029,7 +2058,7 @@
           target="_blank"
           rel="noopener noreferrer"
           style="color: var(--c-primary-text)"
-          class="hover:opacity-80 font-semibold underline underline-offset-4 transition duration-150"
+          class="hover:opacity-80 font-semibold transition duration-150"
         >
           Get in touch on LinkedIn
         </a>
