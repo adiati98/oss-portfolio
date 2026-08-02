@@ -140,20 +140,30 @@ const WORKBENCH_CSS = `
      .wbx-lane-explain's flex-basis:100% still wraps it onto its own line
      below, because that's resolved against the row's own flex layout, not
      a specific pixel width. */
-  .wbx-lane summary{cursor:pointer;padding:13px 16px;color:var(--t-ink-3)}
+  .wbx-lane summary{cursor:pointer;padding:13px 40px 13px 16px;color:var(--t-ink-3);position:relative}
   .wbx-lane summary:focus-visible{outline:2px solid var(--t-brand);outline-offset:-2px}
   .wbx-lane-row{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;max-width:calc(100% - 24px)}
   .wbx-lane-title{font-size:1.02rem;font-weight:800;color:var(--t-ink)}
   .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
-  /* Icon-only, pushed to the far right of the summary row (margin-left:auto).
-     Text like "Idle ▼" competed with the row's other labels and read as
-     another status pill. Static ↕ glyph that only changes opacity/color/
-     weight once clicked, matching the sort icon on the quarterly report
-     table (.sort-icon / th.sort-asc) rather than inventing a new visual
-     language for the same concept. Hidden while the lane is folded — nothing
-     to reorder if the rows aren't showing. */
+  /* Icon-only — text like "Idle ▼" competed with the row's other labels and
+     read as another status pill. Static ↕ glyph that only changes opacity/
+     color/weight once clicked, matching the sort icon on the quarterly
+     report table (.sort-icon / th.sort-asc) rather than inventing a new
+     visual language for the same concept. Hidden while the lane is folded —
+     nothing to reorder if the rows aren't showing.
+     Positioned absolute against the summary element itself, not
+     margin-left:auto inside .wbx-lane-row — that row is inline-flex
+     (shrink-to-fit, required to keep the native <summary> marker rendering,
+     see the note above), so on a wide viewport its own box stops well short
+     of the card's right edge and an auto margin only reaches the edge of
+     that narrower box, landing the button mid-card instead of at the card's
+     edge. The summary element itself IS full width, so anchoring to it
+     keeps the button pinned to the
+     true edge at every viewport width — the same place it already sat on
+     narrow screens, where the row's shrink-to-fit width happens to be close
+     to full anyway. */
   .wbx-lane:not([open]) .wbx-sort-btn{display:none}
-  .wbx-sort-btn{display:inline-flex;align-items:center;align-self:center;margin-left:auto;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
+  .wbx-sort-btn{position:absolute;top:12px;right:14px;display:inline-flex;align-items:center;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
   .wbx-sort-btn:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .wbx-sort-icon{display:inline-flex;align-items:center;font-size:1.15rem;line-height:1;color:var(--t-ink-3);opacity:.4;transition:opacity .15s ease,color .15s ease}
   .wbx-sort-btn:hover .wbx-sort-icon{opacity:.8;color:var(--t-brand)}
