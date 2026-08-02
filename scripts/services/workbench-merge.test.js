@@ -98,6 +98,35 @@ run(
   }
 );
 
+// 3b. Tracker-only row enriched with a fetched title + linked code PR (see
+// fetchTrackerTitleInfo) renders both instead of falling back to repo#number.
+run(
+  'tracker-only row enriched by titles',
+  {
+    tracker: {
+      'mautic/user-documentation#880': {
+        docsUpdatedAt: daysAgo(3),
+        codeUpdatedAt: daysAgo(2),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+    titles: {
+      'mautic/user-documentation#880': {
+        title: 'Update the campaign builder docs',
+        linkedCodePr: 'mautic/mautic#16760',
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#880');
+    assert.equal(r.source, 'tracker');
+    assert.equal(r.title, 'Update the campaign builder docs');
+    assert.equal(r.linkedCodePr.ref, 'mautic/mautic#16760');
+    assert.equal(r.linkedCodePr.hasActivity, true);
+  }
+);
+
 // 4. Approved + linked code PR → ready lane, code-aware next step
 run(
   'approved with linked code PR → ready, bring-it-home step',

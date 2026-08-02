@@ -25,6 +25,8 @@ const path = require('path');
 const axios = require('axios');
 const { GITHUB_USERNAME } = require('../config/config');
 const { isAllowedBotLogin, isBotLogin } = require('../utils/bot-helpers');
+const { extractLinkedCodePr } = require('../utils/github-helpers');
+const { fetchTrackerTitleInfo } = require('../api/fetch-tracker-titles');
 
 const TRACKER_RAW_URL =
   'https://raw.githubusercontent.com/adiati98/mautic-docs-prs-tracker/main/data/pr-cache.json';
@@ -118,16 +120,6 @@ async function fetchTrackerFeed({ url = TRACKER_RAW_URL, timeoutMs = 10000 } = {
 function taskKey(record) {
   if (!record.repo || record.number == null) return null;
   return `${record.repo}#${record.number}`;
-}
-
-/** Extracts a linked code-PR reference from a docs PR body, if present. */
-function extractLinkedCodePr(body, ownRepo) {
-  if (!body) return null;
-  const urlMatch = body.match(/github\.com\/([\w.-]+\/[\w.-]+)\/pull\/(\d+)/);
-  if (urlMatch && urlMatch[1] !== ownRepo) return `${urlMatch[1]}#${urlMatch[2]}`;
-  const shortMatch = body.match(/([\w.-]+\/[\w.-]+)#(\d+)/);
-  if (shortMatch && shortMatch[1] !== ownRepo) return `${shortMatch[1]}#${shortMatch[2]}`;
-  return null;
 }
 
 /**
@@ -639,9 +631,23 @@ function deriveTurn(record, me, botPingSignal = null) {
  * @param {object} input.feed      { data, fetchedAt, degraded, reason }
  * @param {string} [input.username]
  * @param {Date}   [input.now]
+ * @param {object} [input.titles]  tracker-only enrichment, keyed by
+ *                                 "owner/repo#number" → { title, linkedCodePr }
+ *                                 (see fetchTrackerTitleInfo). Never required —
+ *                                 an absent key just keeps today's null-title
+ *                                 fallback.
  * @returns {{ records: Array, feed: object }}
  */
-function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], feed, username, now }) {
+function mergeWorkbench({
+  tasks = [],
+  issues = [],
+  prs = [],
+  coauthored = [],
+  feed,
+  username,
+  now,
+  titles = {},
+}) {
   const me = String(username || GITHUB_USERNAME || '').toLowerCase();
   const nowDate = now || new Date();
   const tracker = (feed && feed.data) || {};
@@ -716,10 +722,13 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
 
   // Tracker-only rows: the tracker watches them but they aren't in the local
   // workbench (e.g. someone else's docs PR you triage as maintainer). The
-  // cache carries activity, not titles — renderers show repo#number.
+  // cache itself carries activity, not titles — `titles` is a separate,
+  // optional enrichment (fetchTrackerTitleInfo/loadMergedWorkbench) that
+  // looks the PR up directly; without it, renderers fall back to repo#number.
   for (const [key, upstream] of Object.entries(tracker)) {
     if (matchedKeys.has(key)) continue;
     const [repo, number] = key.split('#');
+    const titleInfo = titles[key] || null;
     const approval = deriveApproval(null, upstream);
     const reviewRequest = deriveReviewRequest(upstream, me);
     const reviewedNote = deriveReviewedNote(upstream, approval, me);
@@ -729,7 +738,7 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
     const record = {
       key,
       source: 'tracker',
-      title: null,
+      title: titleInfo?.title || null,
       url: `https://github.com/${repo}/pull/${number}`,
       repo,
       relationship: 'reviewing',
@@ -751,7 +760,11 @@ function mergeWorkbench({ tasks = [], issues = [], prs = [], coauthored = [], fe
       // Tracker-only rows have no local author/last-actor, so no bot-ping can be
       // derived — kept present and null for a uniform record contract.
       botPing: null,
-      linkedCodePr: upstream.codeUpdatedAt ? { ref: null, hasActivity: true } : null,
+      linkedCodePr: titleInfo?.linkedCodePr
+        ? { ref: titleInfo.linkedCodePr, hasActivity: Boolean(upstream.codeUpdatedAt) }
+        : upstream.codeUpdatedAt
+          ? { ref: null, hasActivity: true }
+          : null,
       upstream: {
         docsUpdatedAt: upstream.docsUpdatedAt || null,
         codeUpdatedAt: upstream.codeUpdatedAt || null,
@@ -913,7 +926,24 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions } = {}) {
     readJsonOr({}, path.join(dataDir, 'all-contributions.json')),
   ]);
   const feed = await fetchTrackerFeed(fetchOptions);
-  const { records, feed: feedMeta } = mergeWorkbench({ tasks, issues, prs, coauthored, feed });
+
+  // Only tracker-only rows need the title enrichment fetch — a row already
+  // covered by a local record carries its own title, so re-fetching it would
+  // just burn an API call for something we already have.
+  const localKeys = new Set(
+    [...tasks, ...issues, ...prs, ...coauthored].map(taskKey).filter(Boolean)
+  );
+  const trackerOnlyKeys = Object.keys(feed.data || {}).filter((key) => !localKeys.has(key));
+  const titles = await fetchTrackerTitleInfo(trackerOnlyKeys);
+
+  const { records, feed: feedMeta } = mergeWorkbench({
+    tasks,
+    issues,
+    prs,
+    coauthored,
+    feed,
+    titles,
+  });
   const impact = computeImpact(records, contributions);
   return { records, impact, feed: feedMeta };
 }
@@ -922,6 +952,7 @@ module.exports = {
   TRACKER_RAW_URL,
   fetchTrackerFeed,
   isValidTrackerShape,
+  taskKey,
   extractLinkedCodePr,
   extractIssueRefs,
   buildIssuePrLinks,
