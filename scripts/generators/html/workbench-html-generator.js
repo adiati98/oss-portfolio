@@ -215,13 +215,20 @@ function relLabel(record) {
   return map[record.relationship] || escapeHtml(record.relationship) || '';
 }
 
+/** "owner/repo#123" → "owner/repo #123" — a space between the repo and the
+ * issue/PR number reads better than GitHub's own crammed-together convention. */
+function spaceBeforeNumber(key) {
+  return String(key || '').replace(/#(\d+)$/, ' #$1');
+}
+
 function renderRow(record) {
   const pillClass = PILL_CLASS[record.ball] || 'wbx-pill--stale';
   const idleBadge =
     record.lane === 'stalled' || record.idleDays >= 7
       ? ` · ${Math.floor(record.idleDays)}d`
       : '';
-  const title = escapeHtml(record.title || record.key);
+  const repoLabel = record.key ? spaceBeforeNumber(record.key) : record.repo || '';
+  const title = escapeHtml(record.title || repoLabel);
   const nextBits = [];
   if (record.approval && record.approval.by) {
     // An approval dismissed after a push is still worth surfacing — it just
@@ -256,7 +263,7 @@ function renderRow(record) {
       <span class="wbx-pill ${pillClass}"><i></i>${escapeHtml(record.ball)}${idleBadge}</span>
       <div>
         <div class="wbx-meta">
-          <span class="wbx-repo">${escapeHtml(record.repo || '')}</span>
+          <span class="wbx-repo">${escapeHtml(repoLabel)}</span>
           <span class="wbx-rel">${relLabel(record)}</span>
           ${record.isDraft ? '<span class="wbx-chip-draft">Draft</span>' : ''}
         </div>

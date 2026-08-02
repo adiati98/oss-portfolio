@@ -202,9 +202,15 @@ function statusCell(record) {
   return `${badge}${idleBadge}`;
 }
 
+/** "owner/repo#123" → "owner/repo #123" — mirrors the HTML renderer's spacing. */
+function spaceBeforeNumber(key) {
+  return String(key || '').replace(/#(\d+)$/, ' #$1');
+}
+
 /** Mirrors the wbx-meta row: repo chip, relationship label, Draft badge. */
 function repoCell(record) {
-  const bits = [`**${mdEscapeCell(record.repo || '')}**`];
+  const repoLabel = record.key ? spaceBeforeNumber(record.key) : record.repo || '';
+  const bits = [`**${mdEscapeCell(repoLabel)}**`];
   const rel = REL_LABEL[record.relationship] || record.relationship;
   if (rel) bits.push(rel);
   if (record.isDraft) bits.push('`Draft`');
@@ -237,7 +243,7 @@ function nextCell(record) {
 }
 
 function taskCell(record) {
-  const title = mdEscapeLinkText(record.title || record.key || '');
+  const title = mdEscapeLinkText(record.title || spaceBeforeNumber(record.key) || '');
   return record.url ? `[${title}](${record.url})` : title;
 }
 

@@ -15,6 +15,16 @@ function getLinkedIssueNumbers(prBody) {
   return matches;
 }
 
+/** Extracts a linked code-PR reference from a docs PR body, if present. */
+function extractLinkedCodePr(body, ownRepo) {
+  if (!body) return null;
+  const urlMatch = body.match(/github\.com\/([\w.-]+\/[\w.-]+)\/pull\/(\d+)/);
+  if (urlMatch && urlMatch[1] !== ownRepo) return `${urlMatch[1]}#${urlMatch[2]}`;
+  const shortMatch = body.match(/([\w.-]+\/[\w.-]+)#(\d+)/);
+  if (shortMatch && shortMatch[1] !== ownRepo) return `${shortMatch[1]}#${shortMatch[2]}`;
+  return null;
+}
+
 /**
  * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
  * Merges timeline processing with explicit fallback comment checking to guarantee review replies are caught,
@@ -208,5 +218,6 @@ async function getPrActivityMeta(
 
 module.exports = {
   getLinkedIssueNumbers,
+  extractLinkedCodePr,
   getPrActivityMeta,
 };

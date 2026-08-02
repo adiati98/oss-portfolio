@@ -4,6 +4,7 @@ const { BASE_DIR } = require('../../config/config');
 const {
   formatDate,
   calculatePeriodInDays,
+  getIssueOrPrNumber,
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
@@ -205,9 +206,12 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
         let counter = 1;
         // Iterate over each contribution item to build table rows
         for (const item of items) {
+          const issueOrPrNumber = getIssueOrPrNumber(item.url);
+          const numberSuffix = issueOrPrNumber ? ` #${issueOrPrNumber}` : '';
+
           tableContent += `    <tr>\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
-          tableContent += `      <td>${item.repo}</td>\n`;
+          tableContent += `      <td>${item.repo}${numberSuffix}</td>\n`;
           // Add a hyperlink to the title
           tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
 

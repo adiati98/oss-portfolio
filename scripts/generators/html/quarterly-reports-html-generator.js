@@ -6,6 +6,7 @@ const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
 const {
   formatDate,
   calculatePeriodInDays,
+  getIssueOrPrNumber,
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
@@ -859,20 +860,23 @@ ${navHtmlForReports}
           // No. column (not sortable, styled via the :first-child rule).
           tableContent += `<td>${counter++}.</td>`;
 
-          // Repo column (String type). Sort falls back to textContent, so no data-value is needed.
-          tableContent += `<td data-label="Project"><span class="qr-repo">${sanitizeAttribute(item.repo || '')}</span></td>`;
-
-          // Title column (String type, contains hyperlink). Sort falls back to textContent.
           // Backports/cherry-picks routinely reuse the exact same PR title
           // across different PRs (see e.g. Q2-2026's "docs: Add Tags
           // documentation for Contact management" filed 3 times) — two
           // links with identical text but different destinations is
           // exactly what WAVE's "suspicious link text" flags, since a
           // screen reader's link list can't tell them apart. The number
-          // pulled from the PR/issue URL disambiguates the accessible name
-          // without changing what's shown.
-          const refMatch = String(item.url || '').match(/\/(pull|issues)\/(\d+)/);
-          const refSuffix = refMatch ? ` (#${refMatch[2]})` : '';
+          // pulled from the PR/issue URL disambiguates both the accessible
+          // name below AND the visible repo chip, so a sighted reader gets
+          // the same disambiguation a screen reader does.
+          const issueOrPrNumber = getIssueOrPrNumber(item.url);
+          const numberSuffix = issueOrPrNumber ? ` #${issueOrPrNumber}` : '';
+
+          // Repo column (String type). Sort falls back to textContent, so no data-value is needed.
+          tableContent += `<td data-label="Project"><span class="qr-repo">${sanitizeAttribute(item.repo || '')}${numberSuffix}</span></td>`;
+
+          // Title column (String type, contains hyperlink). Sort falls back to textContent.
+          const refSuffix = issueOrPrNumber ? ` (#${issueOrPrNumber})` : '';
           tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="${sanitizeAttribute(item.title || '')}${refSuffix}">${safeTitle}</a></td>`;
 
           // Handle the remaining columns based on the contribution type.
