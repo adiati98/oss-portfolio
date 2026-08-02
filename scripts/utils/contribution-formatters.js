@@ -43,6 +43,18 @@ function calculatePeriodInDays(startDateString, endDateString, status = null) {
 }
 
 /**
+ * Extracts the issue/PR number from a GitHub URL, e.g.
+ * ".../pull/123" or ".../issues/123" → "123". Returns null when the URL
+ * doesn't match (missing, malformed, or not an issue/PR URL).
+ * @param {string} url
+ * @returns {string|null}
+ */
+function getIssueOrPrNumber(url) {
+  const match = String(url || '').match(/\/(?:pull|issues)\/(\d+)/);
+  return match ? match[1] : null;
+}
+
+/**
  * Generates Last Update / Status content for reviewed and co-authored PRs.
  * @param {object} item PR item with date, mergedAt, and state fields.
  * @returns {string} Formatted date with status badge.
@@ -84,6 +96,7 @@ function getCollaborationStatusContent(item) {
 module.exports = {
   formatDate,
   calculatePeriodInDays,
+  getIssueOrPrNumber,
   getPrStatusContent,
   getCollaborationStatusContent,
 };
