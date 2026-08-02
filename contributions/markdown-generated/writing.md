@@ -4,12 +4,12 @@ Articles by **adiati98**, covering insights and tutorials regarding the Open Sou
 
 ## 🏅 Recognitions
 
+- **[Top 7 Featured DEV Posts of the Week](https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-4idc)** (April 2026) — _DEV Community_
+  - Featured for <a href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98" target="_blank" rel="noopener noreferrer">"The Curated, Automated Open Source Portfolio: How It's Going"</a>.
 - ★ **[2025 Hacktoberfest Writing Challenge Winners](https://dev.to/devteam/congrats-to-the-2025-hacktoberfest-writing-challenge-winners-1hpn/#open-source-reflections-winners)** (November 2025) — _DEV Community_
   - Winner in the Open Source Reflections category for <a href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci" target="_blank" rel="noopener noreferrer">"Beyond Hacktoberfest: Building a True Open Source Journey"</a>.
 - **[Top 7 Featured DEV Posts of the Week](https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-53an)** (October 2025) — _DEV Community_
   - Featured for <a href="https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0" target="_blank" rel="noopener noreferrer">"How I Built a Curated, Automated Open Source Portfolio"</a>.
-- **[Top 7 Featured DEV Posts of the Week](https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-4idc)** (April 2025) — _DEV Community_
-  - Featured for <a href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98" target="_blank" rel="noopener noreferrer">"The Curated, Automated Open Source Portfolio: How It's Going"</a>.
 - **[Top Open Source Contributors 2023](https://www.freecodecamp.org/news/top-open-source-contributors-2023/)** (November 2023) — _freeCodeCamp_
   - Listed among freeCodeCamp's top publication contributors of the year.
 - **[Quincy Larson's Weekly Email — Sep 22, 2023](https://github.com/freeCodeCamp/awesome-quincy-larson-emails#sep-22-2023)** (September 2023) — _freeCodeCamp_
