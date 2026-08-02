@@ -68,7 +68,7 @@ module.exports = [
     title: 'Top 7 Featured DEV Posts of the Week',
     org: 'DEV Community',
     month: 4,
-    year: 2025,
+    year: 2026,
     url: 'https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-4idc',
     description:
       'Featured for <a href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98" target="_blank" rel="noopener noreferrer">"The Curated, Automated Open Source Portfolio: How It\'s Going"</a>.',
