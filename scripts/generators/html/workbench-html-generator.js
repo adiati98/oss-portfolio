@@ -18,7 +18,7 @@ const path = require('path');
 const prettier = require('prettier');
 const { dedent } = require('../../utils/dedent');
 const { GITHUB_USERNAME, BASE_DIR } = require('../../config/config');
-const { FAVICON_SVG_ENCODED, THEME_CSS_VARS } = require('../../config/constants');
+const { FAVICON_SVG_ENCODED, THEME_CSS_VARS, SEARCH_SVG } = require('../../config/constants');
 const {
   createNavHtml,
   createSkipToContentHtml,
@@ -140,20 +140,30 @@ const WORKBENCH_CSS = `
      .wbx-lane-explain's flex-basis:100% still wraps it onto its own line
      below, because that's resolved against the row's own flex layout, not
      a specific pixel width. */
-  .wbx-lane summary{cursor:pointer;padding:13px 16px;color:var(--t-ink-3)}
+  .wbx-lane summary{cursor:pointer;padding:13px 40px 13px 16px;color:var(--t-ink-3);position:relative}
   .wbx-lane summary:focus-visible{outline:2px solid var(--t-brand);outline-offset:-2px}
   .wbx-lane-row{display:inline-flex;align-items:baseline;gap:10px;flex-wrap:wrap;max-width:calc(100% - 24px)}
   .wbx-lane-title{font-size:1.02rem;font-weight:800;color:var(--t-ink)}
   .wbx-lane-count{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-3);background:var(--t-surface);border:1px solid var(--t-line);border-radius:999px;padding:1px 9px}
-  /* Icon-only, pushed to the far right of the summary row (margin-left:auto).
-     Text like "Idle ▼" competed with the row's other labels and read as
-     another status pill. Static ↕ glyph that only changes opacity/color/
-     weight once clicked, matching the sort icon on the quarterly report
-     table (.sort-icon / th.sort-asc) rather than inventing a new visual
-     language for the same concept. Hidden while the lane is folded — nothing
-     to reorder if the rows aren't showing. */
+  /* Icon-only — text like "Idle ▼" competed with the row's other labels and
+     read as another status pill. Static ↕ glyph that only changes opacity/
+     color/weight once clicked, matching the sort icon on the quarterly
+     report table (.sort-icon / th.sort-asc) rather than inventing a new
+     visual language for the same concept. Hidden while the lane is folded —
+     nothing to reorder if the rows aren't showing.
+     Positioned absolute against the summary element itself, not
+     margin-left:auto inside .wbx-lane-row — that row is inline-flex
+     (shrink-to-fit, required to keep the native <summary> marker rendering,
+     see the note above), so on a wide viewport its own box stops well short
+     of the card's right edge and an auto margin only reaches the edge of
+     that narrower box, landing the button mid-card instead of at the card's
+     edge. The summary element itself IS full width, so anchoring to it
+     keeps the button pinned to the
+     true edge at every viewport width — the same place it already sat on
+     narrow screens, where the row's shrink-to-fit width happens to be close
+     to full anyway. */
   .wbx-lane:not([open]) .wbx-sort-btn{display:none}
-  .wbx-sort-btn{display:inline-flex;align-items:center;align-self:center;margin-left:auto;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
+  .wbx-sort-btn{position:absolute;top:12px;right:14px;display:inline-flex;align-items:center;background:none;border:none;padding:2px 4px;cursor:pointer;border-radius:4px}
   .wbx-sort-btn:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
   .wbx-sort-icon{display:inline-flex;align-items:center;font-size:1.15rem;line-height:1;color:var(--t-ink-3);opacity:.4;transition:opacity .15s ease,color .15s ease}
   .wbx-sort-btn:hover .wbx-sort-icon{opacity:.8;color:var(--t-brand)}
@@ -161,9 +171,19 @@ const WORKBENCH_CSS = `
   @media (prefers-reduced-motion: reduce){.wbx-sort-icon{transition:none}}
   .wbx-lane-explain{flex-basis:100%;margin:2px 0 0;color:var(--t-ink-3);font-size:.82rem}
   .wbx-rows{border-top:1px solid var(--t-line)}
-  .wbx-row{display:grid;grid-template-columns:minmax(150px,max-content) 1fr;gap:6px 16px;padding:16px;border-top:1px solid var(--t-line);align-items:start;background:var(--t-card)}
+  .wbx-row{display:grid;grid-template-columns:auto minmax(150px,max-content) 1fr;gap:6px 16px;padding:16px;border-top:1px solid var(--t-line);align-items:start;background:var(--t-card)}
   .wbx-row:first-child{border-top:0}
-  @media (max-width:620px){.wbx-row{grid-template-columns:1fr}}
+  .wbx-row.wbx-row--hidden{display:none}
+  @media (max-width:620px){.wbx-row{grid-template-columns:auto 1fr}.wbx-body{grid-column:1/-1}}
+  /* Checked state is local-only (see the checklist script below) — dim the
+     row and strike the title so a scan of the lane reads what's still
+     outstanding at a glance, without removing the row (the count badges and
+     "everything's checked" state both rely on it staying in the DOM). */
+  .wbx-chk{display:flex;align-items:center;padding-top:2px}
+  .wbx-chk input[type=checkbox]{width:16px;height:16px;cursor:pointer}
+  .wbx-chk input[type=checkbox]:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .wbx-row.wbx-checked{opacity:.55}
+  .wbx-row.wbx-checked .wbx-task a{text-decoration:line-through}
   /* justify-self:start — without it, a grid item defaults to stretch, so on
      the single-column mobile layout the pill fills the whole row width
      instead of sizing to its own text. */
@@ -203,6 +223,17 @@ const WORKBENCH_CSS = `
   /* Clears both the fixed navbar and the sticky lane index, so jumping to
      a lane doesn't land it underneath them. */
   .wbx-lane{scroll-margin-top:8rem}
+  .wbx-search-bar{margin-bottom:14px}
+  .wbx-search-input-wrap{position:relative;display:flex;align-items:center}
+  .wbx-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--t-ink-3);pointer-events:none}
+  .wbx-search-icon svg{display:block;width:100%;height:100%}
+  .wbx-search-input{width:100%;padding:9px 36px;border-radius:8px;border:1px solid var(--t-brand);background:var(--t-card);color:var(--t-ink);font-size:.88rem;transition:border-color .15s ease,box-shadow .15s ease}
+  .wbx-search-input::placeholder{color:var(--t-ink-3)}
+  .wbx-search-input:focus,.wbx-search-input:focus-visible{outline:none;border-color:var(--t-brand-line);box-shadow:0 0 0 1px var(--t-brand-line)}
+  .wbx-search-input::-webkit-search-cancel-button{display:none}
+  .wbx-search-clear{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border:none;background:none;color:var(--t-ink-3);cursor:pointer;border-radius:5px;font-size:.8rem}
+  .wbx-search-clear:hover{color:var(--t-ink);background:color-mix(in srgb, var(--t-ink) 8%, transparent)}
+  .wbx-search-clear:focus-visible{outline:2px solid var(--t-brand);outline-offset:1px}
 `;
 
 function relLabel(record) {
@@ -219,6 +250,33 @@ function relLabel(record) {
  * issue/PR number reads better than GitHub's own crammed-together convention. */
 function spaceBeforeNumber(key) {
   return String(key || '').replace(/#(\d+)$/, ' #$1');
+}
+
+/** A fingerprint of everything that decides what a row looks like right now.
+ * The checklist script compares this against the fingerprint saved at check
+ * time — deliberately excluding idleDays (which changes every day on its
+ * own) so a checked row only clears itself when the underlying situation
+ * actually moved on (approved, reassigned, next step changed), not just
+ * because time passed since the last build. */
+function statusSignatureFor(record) {
+  return JSON.stringify([
+    record.lane,
+    record.ball,
+    record.nextStep,
+    record.approval && record.approval.by,
+    record.approval && record.approval.dismissed,
+    record.reviewedNote && record.reviewedNote.by,
+    record.botPing && record.botPing.of,
+    record.linkedCodePr && record.linkedCodePr.ref,
+    record.isDraft,
+  ]);
+}
+
+function searchBlobFor(record, repoLabel) {
+  return [repoLabel, record.title, record.relationship, record.ball, record.nextStep]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
 }
 
 function renderRow(record) {
@@ -257,11 +315,16 @@ function renderRow(record) {
     nextBits.push(`<span class="wbx-step ${stepClass}">${escapeHtml(record.nextStep)}</span>`);
   }
   const nextHtml = nextBits.length ? `<div class="wbx-next">${nextBits.join(' · ')}</div>` : '';
+  const key = record.key || record.url || '';
+  const status = escapeHtml(statusSignatureFor(record));
+  const search = escapeHtml(searchBlobFor(record, repoLabel));
+  const rowLabel = `${repoLabel}: ${record.title || ''}`;
 
   return dedent`
-    <div class="wbx-row" data-idle="${record.idleDays}">
+    <div class="wbx-row" data-idle="${record.idleDays}" data-key="${escapeHtml(key)}" data-status="${status}" data-search="${search}">
+      <label class="wbx-chk"><input type="checkbox" aria-label="Mark ${escapeHtml(rowLabel)} as done"></label>
       <span class="wbx-pill ${pillClass}"><i></i>${escapeHtml(record.ball)}${idleBadge}</span>
-      <div>
+      <div class="wbx-body">
         <div class="wbx-meta">
           <span class="wbx-repo">${escapeHtml(repoLabel)}</span>
           <span class="wbx-rel">${relLabel(record)}</span>
@@ -288,8 +351,9 @@ function renderLane(lane, records) {
     records.length > 1
       ? `<button type="button" class="wbx-sort-btn" data-lane-sort="${lane.id}" data-dir="desc" data-active="0" title="Sort by idle time" aria-label="Sort ${escapeHtml(lane.title)} by idle time, currently oldest first"><span class="wbx-sort-icon" aria-hidden="true">↕</span></button>`
       : '';
+  const defaultOpen = lane.open && records.length ? '1' : '0';
   return dedent`
-    <details class="wbx-lane" id="wbx-lane-${lane.id}" style="border-left-color:${lane.stripe}" ${lane.open && records.length ? 'open' : ''}>
+    <details class="wbx-lane" id="wbx-lane-${lane.id}" style="border-left-color:${lane.stripe}" data-default-open="${defaultOpen}" ${defaultOpen === '1' ? 'open' : ''}>
       <summary>
         <span class="wbx-lane-row">
           <span class="wbx-lane-title">${lane.title}</span>
@@ -381,6 +445,18 @@ async function createWorkbenchHtml({ records, impact, feed }) {
       </div>`
     : '';
 
+  const searchBar =
+    humanRecords.length > 0
+      ? dedent`
+        <div class="wbx-search-bar">
+          <div class="wbx-search-input-wrap">
+            <span class="wbx-search-icon">${SEARCH_SVG}</span>
+            <input type="search" id="wbxSearch" class="wbx-search-input" placeholder="Search by title, repo, or status…" aria-label="Search workbench items by title, repo, or status" autocomplete="off" spellcheck="false">
+            <button type="button" id="wbxSearchClear" class="wbx-search-clear" aria-label="Clear search" hidden>✕</button>
+          </div>
+        </div>`
+      : '';
+
   const board =
     humanRecords.length === 0
       ? dedent`
@@ -418,6 +494,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
             </header>
             ${renderImpact(impact, feed)}
             ${humanRecords.length > 0 ? renderLaneIndex(records) : ''}
+            ${searchBar}
             ${banner}
             ${board}
           </div>
@@ -477,6 +554,116 @@ async function createWorkbenchHtml({ records, impact, feed }) {
               );
             });
           });
+        })();
+      </script>
+      <script>
+        // ---- per-item checklist (saved to this browser only, via localStorage) ----
+        (function () {
+          var STORE_KEY = 'workbenchChecklist';
+          var state = {};
+          try { state = JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { state = {}; }
+
+          var validKeys = {};
+          var changed = false;
+          document.querySelectorAll('.wbx-row[data-key]').forEach(function (row) {
+            var key = row.getAttribute('data-key');
+            if (!key) return;
+            validKeys[key] = true;
+            var cb = row.querySelector('.wbx-chk input[type=checkbox]');
+            if (!cb) return;
+            // Checked state carries a fingerprint of the row's status (see
+            // data-status) at the time it was checked. If that's changed
+            // since — the item moved lanes, got approved, next step
+            // changed — the old check no longer applies to today's
+            // situation, so it resets instead of staying struck through.
+            var status = row.getAttribute('data-status') || '';
+            if (state[key] && state[key] === status) {
+              cb.checked = true;
+              row.classList.add('wbx-checked');
+            } else if (state[key]) {
+              delete state[key];
+              changed = true;
+            }
+            cb.addEventListener('change', function () {
+              if (cb.checked) {
+                state[key] = status;
+                row.classList.add('wbx-checked');
+              } else {
+                delete state[key];
+                row.classList.remove('wbx-checked');
+              }
+              try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+            });
+          });
+          // Drop saved keys for items no longer on the board so localStorage
+          // doesn't grow forever with stale entries.
+          Object.keys(state).forEach(function (k) {
+            if (!validKeys[k]) { delete state[k]; changed = true; }
+          });
+          if (changed) {
+            try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+          }
+        })();
+      </script>
+      <script>
+        // ---- quick search ----
+        (function () {
+          var input = document.getElementById('wbxSearch');
+          if (!input) return;
+          var clearBtn = document.getElementById('wbxSearchClear');
+          var rows = Array.prototype.slice.call(document.querySelectorAll('.wbx-row[data-search]'));
+          var lanes = Array.prototype.slice.call(document.querySelectorAll('.wbx-lane'));
+
+          function updateLaneCount(lane) {
+            var badge = lane.querySelector('.wbx-lane-count');
+            if (badge) badge.textContent = String(lane.querySelectorAll('.wbx-row:not(.wbx-row--hidden)').length);
+          }
+
+          function applySearch() {
+            var q = input.value.trim().toLowerCase();
+            clearBtn.hidden = q === '';
+            rows.forEach(function (row) {
+              var blob = row.getAttribute('data-search') || '';
+              row.classList.toggle('wbx-row--hidden', Boolean(q) && blob.indexOf(q) === -1);
+            });
+            lanes.forEach(function (lane) {
+              var total = lane.querySelectorAll('.wbx-row').length;
+              var anyVisible = lane.querySelectorAll('.wbx-row:not(.wbx-row--hidden)').length > 0;
+              if (q) {
+                // A search hit tucked inside a folded lane is invisible
+                // unless the lane is open — open it automatically so
+                // search always surfaces what it finds. A lane with no
+                // matches at all is hidden outright rather than left open
+                // and empty.
+                lane.style.display = total > 0 && !anyVisible ? 'none' : '';
+                if (total > 0) lane.open = anyVisible;
+              } else {
+                lane.style.display = '';
+                lane.open = lane.getAttribute('data-default-open') === '1';
+              }
+              updateLaneCount(lane);
+            });
+          }
+
+          input.addEventListener('input', applySearch);
+          clearBtn.addEventListener('click', function () {
+            input.value = '';
+            applySearch();
+            input.focus();
+          });
+
+          // "/" jumps into search from anywhere on the page, same convention
+          // as GitHub's own list pages — skipped while already typing into
+          // another field so it doesn't hijack normal input.
+          document.addEventListener('keydown', function (e) {
+            if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey || e.isComposing) return;
+            var ae = document.activeElement;
+            var editable = ae && (ae === input || ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA' || ae.isContentEditable);
+            if (editable) return;
+            e.preventDefault();
+            input.focus();
+            input.select();
+          }, true);
         })();
       </script>
       ${footerHtml}
