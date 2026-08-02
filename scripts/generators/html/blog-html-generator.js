@@ -152,12 +152,25 @@ function formatMonthYear(rec) {
   return `${MONTH_NAMES[rec.month - 1]} ${rec.year}`;
 }
 
+function renderRecognitionDescription(rec) {
+  if (!rec.description) return '';
+  if (!rec.article) return `<p class="wr-rec-desc">${escapeHtml(rec.description)}</p>`;
+
+  const quotedTitle = `"${rec.articleTitle}"`;
+  const articleLink = `<a href="${escapeHtml(rec.article)}" target="_blank" rel="noopener noreferrer">${escapeHtml(quotedTitle)}</a>`;
+  const parts = rec.description.split(quotedTitle);
+  const descHtml = parts
+    .map((part) => escapeHtml(part))
+    .join(articleLink);
+  return `<p class="wr-rec-desc">${descHtml}</p>`;
+}
+
 function renderRecognitionItem(rec) {
   const org = escapeHtml(rec.org || '');
   const titleHtml = rec.url
     ? `<a href="${escapeHtml(rec.url)}" target="_blank" rel="noopener noreferrer">${rec.title}</a>`
     : rec.title;
-  const descHtml = rec.description ? `<p class="wr-rec-desc">${rec.description}</p>` : '';
+  const descHtml = renderRecognitionDescription(rec);
   const starHtml = rec.highlight
     ? `<span class="wr-rec-sr">Highlighted: </span><span class="wr-rec-star" aria-hidden="true">★</span>`
     : '';

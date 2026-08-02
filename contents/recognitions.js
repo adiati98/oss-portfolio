@@ -6,8 +6,11 @@
  * Fields: title (req — the recognized piece's title, or the recognition
  *         itself), org (req — the platform/publication that recognized it),
  *         month (req — 1–12), year (req), url (req — link to the piece or
- *         the recognition), description (optional — may include a raw <a>
- *         link to the specific article that was selected), highlight
+ *         the recognition), description (optional — plain prose, no HTML),
+ *         article (optional — URL of the specific article the recognition
+ *         calls out; omitted when the recognition covers a body of work
+ *         rather than one piece), articleTitle (optional — the linked
+ *         article's title text, required alongside `article`), highlight
  *         (optional: renders with a ★ marker for a standout entry)
  */
 module.exports = [
@@ -17,8 +20,9 @@ module.exports = [
     month: 11,
     year: 2021,
     url: 'https://dev.to/devteam/top-7-featured-dev-posts-from-the-past-week-35fb',
-    description:
-      'Featured for <a href="https://dev.to/adiatiayu/contributing-to-open-source-101-2dnm" target="_blank" rel="noopener noreferrer">"Contributing to Open Source 101"</a>.',
+    article: 'https://dev.to/adiatiayu/contributing-to-open-source-101-2dnm',
+    articleTitle: 'Contributing to Open Source 101',
+    description: 'Featured for "Contributing to Open Source 101".',
   },
   {
     title: 'OSS Grant Badge Winners',
@@ -35,8 +39,11 @@ module.exports = [
     month: 9,
     year: 2022,
     url: 'https://dev.to/devteam/top-7-featured-dev-posts-from-the-past-week-4phi',
+    article:
+      'https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n',
+    articleTitle: 'Mini Portfolio: Bring Your GitHub Profile to the Next Level',
     description:
-      'Featured for <a href="https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n" target="_blank" rel="noopener noreferrer">"Mini Portfolio: Bring Your GitHub Profile to the Next Level"</a>.',
+      'Featured for "Mini Portfolio: Bring Your GitHub Profile to the Next Level".',
   },
   {
     title: 'Top Featured CodeNewbie Posts',
@@ -44,8 +51,9 @@ module.exports = [
     month: 8,
     year: 2023,
     url: 'https://dev.to/codenewbieteam/top-featured-codenewbie-posts-81723-48i4',
-    description:
-      'Featured for <a href="https://dev.to/adiatiayu/how-to-communicate-better-in-open-source-3hdj" target="_blank" rel="noopener noreferrer">"How to Communicate Better in Open Source"</a>.',
+    article: 'https://dev.to/adiatiayu/how-to-communicate-better-in-open-source-3hdj',
+    articleTitle: 'How to Communicate Better in Open Source',
+    description: 'Featured for "How to Communicate Better in Open Source".',
   },
   {
     title: "Quincy Larson's Weekly Email — Sep 22, 2023",
@@ -53,8 +61,11 @@ module.exports = [
     month: 9,
     year: 2023,
     url: 'https://github.com/freeCodeCamp/awesome-quincy-larson-emails#sep-22-2023',
+    article: 'https://www.freecodecamp.org/news/how-to-contribute-to-open-source/',
+    articleTitle:
+      'How to Contribute to Open Source Projects – Non-Technical Things You Should Know',
     description:
-      'Recommended in the newsletter for <a href="https://www.freecodecamp.org/news/how-to-contribute-to-open-source/" target="_blank" rel="noopener noreferrer">"How to Contribute to Open Source Projects – Non-Technical Things You Should Know"</a>.',
+      'Recommended in the newsletter for "How to Contribute to Open Source Projects – Non-Technical Things You Should Know".',
   },
   {
     title: 'Top Open Source Contributors 2023',
@@ -70,8 +81,11 @@ module.exports = [
     month: 4,
     year: 2026,
     url: 'https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-4idc',
+    article:
+      'https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98',
+    articleTitle: "The Curated, Automated Open Source Portfolio: How It's Going",
     description:
-      'Featured for <a href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98" target="_blank" rel="noopener noreferrer">"The Curated, Automated Open Source Portfolio: How It\'s Going"</a>.',
+      'Featured for "The Curated, Automated Open Source Portfolio: How It\'s Going".',
   },
   {
     title: 'Top 7 Featured DEV Posts of the Week',
@@ -79,8 +93,10 @@ module.exports = [
     month: 10,
     year: 2025,
     url: 'https://dev.to/devteam/top-7-featured-dev-posts-of-the-week-53an',
-    description:
-      'Featured for <a href="https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0" target="_blank" rel="noopener noreferrer">"How I Built a Curated, Automated Open Source Portfolio"</a>.',
+    article:
+      'https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0',
+    articleTitle: 'How I Built a Curated, Automated Open Source Portfolio',
+    description: 'Featured for "How I Built a Curated, Automated Open Source Portfolio".',
   },
   {
     title: '2025 Hacktoberfest Writing Challenge Winners',
@@ -89,7 +105,9 @@ module.exports = [
     year: 2025,
     url: 'https://dev.to/devteam/congrats-to-the-2025-hacktoberfest-writing-challenge-winners-1hpn/#open-source-reflections-winners',
     highlight: true,
+    article: 'https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci',
+    articleTitle: 'Beyond Hacktoberfest: Building a True Open Source Journey',
     description:
-      'Winner in the Open Source Reflections category for <a href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci" target="_blank" rel="noopener noreferrer">"Beyond Hacktoberfest: Building a True Open Source Journey"</a>.',
+      'Winner in the Open Source Reflections category for "Beyond Hacktoberfest: Building a True Open Source Journey".',
   },
 ];
