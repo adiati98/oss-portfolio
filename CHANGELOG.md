@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-08-02
+
+### Added
+
+- **Workbench identity now includes the issue/PR number**: The repo chip on both Workbench and quarterly report rows now reads like "owner/repo #123" instead of showing the title alone, so a row's identity no longer depends on remembering titles.
+- **Tracker-only Workbench rows show real titles**: Rows that exist only because the tracker is watching them no longer render as a bare "owner/repo#123" — their title and any linked code PR are now fetched once and cached alongside the rest of the tracker data.
+- **A checklist on every Workbench row**: Each item now has a checkbox, saved per item so it survives a reload. A checked item clears itself automatically if its status changes on a later build, instead of staying checked against stale state.
+- **A search bar on Workbench**: Filters rows by title, repo, or status, with a clear button and a `/` keyboard shortcut. A folded lane containing a match opens automatically.
+
+### Changed
+
+- **Recognitions store the linked article as data, not markup**: A `contents/recognitions.js` entry can now carry `article` and `articleTitle` fields instead of an HTML link embedded in `description`. The Writing page builds the link itself from those fields; entries that recognize a body of work rather than a single article simply leave them out.
+
+### Fixed
+
+- **The Workbench lane sort arrow's position**: It sat mid-card on wide screens instead of near the row's right edge. It now anchors to the full-width row instead of an auto-margin inside a shrink-to-fit flex layout.
+- **A recognition entry's year**: One Writing page recognition was dated 2025 instead of 2026.
+
 ## [4.1.0] - 2026-08-01
 
 ### Added
