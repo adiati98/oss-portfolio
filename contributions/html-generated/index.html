@@ -450,13 +450,22 @@
           animation: none;
         }
       }
-      .lp-live--stale {
+      .lp-live--caution {
         color: var(--t-caution);
       }
-      .lp-live--stale i {
+      .lp-live--caution i {
         background: var(--t-caution);
       }
-      .lp-live--stale i::after {
+      .lp-live--caution i::after {
+        content: none;
+      }
+      .lp-live--critical {
+        color: var(--t-critical);
+      }
+      .lp-live--critical i {
+        background: var(--t-critical);
+      }
+      .lp-live--critical i::after {
         content: none;
       }
       .lp-tiles {
@@ -1539,18 +1548,18 @@
           <section class="lp-impact" aria-labelledby="lp-impact-h">
             <div class="lp-impact-top">
               <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-              <span class="lp-live" data-build-ts="2026-08-07T03:53:33.506Z">
+              <span class="lp-live" data-contrib-ts="2026-08-07T09:48:16.000Z">
                 <i aria-hidden="true"></i
-                ><time class="lp-live-text" datetime="2026-08-07T03:53:33.506Z"
-                  >Updated 2026-08-07 03:53</time
+                ><time class="lp-live-text" datetime="2026-08-07T09:48:16.000Z"
+                  >Last contribution 11h ago</time
                 >
               </span>
             </div>
             <div class="lp-tiles">
               <div class="lp-tile lp-tile--hero">
-                <span class="n">2818</span>
+                <span class="n">2819</span>
                 <span class="c">contributions since 2019</span>
-                <span class="c2">1647 shipped changes</span>
+                <span class="c2">1648 shipped changes</span>
               </div>
               <div class="lp-tile">
                 <span class="n">993</span><span class="c">contributions you helped ship</span>
@@ -1579,8 +1588,8 @@
                   <div class="bar"><i style="width: 23.2%"></i></div>
                 </div>
                 <div class="lp-m">
-                  <div class="r"><b>Merged PRs</b><span>562 · 20.0%</span></div>
-                  <div class="bar"><i style="width: 20%"></i></div>
+                  <div class="r"><b>Merged PRs</b><span>563 · 20.1%</span></div>
+                  <div class="bar"><i style="width: 20.1%"></i></div>
                 </div>
                 <div class="lp-m">
                   <div class="r"><b>Collaborations</b><span>460 · 16.4%</span></div>
@@ -1671,25 +1680,26 @@
     </main>
     <script>
       (function () {
-        var el = document.querySelector('.lp-live[data-build-ts]');
+        var el = document.querySelector('.lp-live[data-contrib-ts]');
         if (!el) return;
+        var ts = el.getAttribute('data-contrib-ts');
+        if (!ts) return;
         var textEl = el.querySelector('.lp-live-text');
-        var built = new Date(el.getAttribute('data-build-ts'));
-        if (!textEl || isNaN(built.getTime())) return;
-        var diffH = (Date.now() - built.getTime()) / 3600000;
+        var contrib = new Date(ts);
+        if (!textEl || isNaN(contrib.getTime())) return;
+        var diffH = (Date.now() - contrib.getTime()) / 3600000;
         var diffD = Math.floor(diffH / 24);
-        el.classList.toggle('lp-live--stale', diffH >= 24);
-        if (diffH < 24) {
-          if (diffH < 1 / 60) textEl.textContent = 'Updated just now';
-          else if (diffH < 1)
-            textEl.textContent = 'Updated ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
-          else textEl.textContent = 'Updated ' + Math.floor(diffH) + 'h ago';
-        } else if (diffD === 1) {
-          textEl.textContent = 'Updated yesterday';
-        } else if (diffD < 7) {
-          textEl.textContent = 'cached · ' + diffD + 'd old';
-        }
-        // Beyond 7 days the server-rendered absolute date stays as-is.
+        el.classList.remove('lp-live--caution', 'lp-live--critical');
+        if (diffD >= 15) el.classList.add('lp-live--critical');
+        else if (diffD >= 8) el.classList.add('lp-live--caution');
+        if (diffH < 1 / 60) textEl.textContent = 'Last contribution just now';
+        else if (diffH < 1)
+          textEl.textContent = 'Last contribution ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
+        else if (diffH < 24)
+          textEl.textContent = 'Last contribution ' + Math.floor(diffH) + 'h ago';
+        else if (diffD === 1) textEl.textContent = 'Last contribution yesterday';
+        else if (diffD < 30) textEl.textContent = 'Last contribution ' + diffD + 'd ago';
+        else textEl.textContent = 'Last contribution on ' + contrib.toISOString().slice(0, 10);
       })();
     </script>
     <footer
