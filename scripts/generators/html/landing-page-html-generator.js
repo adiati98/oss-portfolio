@@ -66,9 +66,12 @@ const LANDING_CSS = `
   .lp-live i::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:1px solid var(--t-positive);animation:lp-ping 2.4s ease-out infinite}
   @keyframes lp-ping{0%{transform:scale(.6);opacity:.8}100%{transform:scale(1.6);opacity:0}}
   @media (prefers-reduced-motion: reduce){.lp-live i::after{animation:none}}
-  .lp-live--stale{color:var(--t-caution)}
-  .lp-live--stale i{background:var(--t-caution)}
-  .lp-live--stale i::after{content:none}
+  .lp-live--caution{color:var(--t-caution)}
+  .lp-live--caution i{background:var(--t-caution)}
+  .lp-live--caution i::after{content:none}
+  .lp-live--critical{color:var(--t-critical)}
+  .lp-live--critical i{background:var(--t-critical)}
+  .lp-live--critical i::after{content:none}
   .lp-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
   @container (max-width:600px){.lp-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
   .lp-tile{min-width:0;padding:16px 18px;border-right:1px solid var(--t-line);display:flex;flex-direction:column;gap:3px;transition:background .18s ease}
@@ -238,6 +241,7 @@ function renderImpact({
   articleCount,
   repoCount,
   orgCount,
+  latestContributionIso,
 }) {
   // Talks live on the Journey timeline, not here — this tile counts
   // published articles only.
@@ -255,19 +259,40 @@ function renderImpact({
   const shippedLine =
     shippedCount > 0 ? `<span class="c2">${shippedCount} shipped changes</span>` : '';
 
-  // Server-rendered fallback is always the absolute build time — a static
-  // page can be viewed long after generation, so a hardcoded "today" goes
-  // stale silently with no JS to correct it. The inline script recomputes
-  // relative freshness at view-time and only then swaps the text.
-  const buildIso = new Date().toISOString();
-  const buildAbsolute = buildIso.slice(0, 16).replace('T', ' ');
+  // The footer already carries the build timestamp, so this indicator
+  // tracks something the footer can't: how recently work actually
+  // happened. Server-rendered fallback is computed from the latest
+  // contribution date at build time; a static page can be viewed long
+  // after generation, so the inline script recomputes it at view-time and
+  // swaps the text/color tier once JS runs.
+  const contribDate = latestContributionIso ? new Date(latestContributionIso) : null;
+  const hasContrib = contribDate && !isNaN(contribDate.getTime());
+  const contribIso = hasContrib ? contribDate.toISOString() : '';
+  const diffH = hasContrib ? (Date.now() - contribDate.getTime()) / 3600000 : null;
+  const diffD = hasContrib ? Math.floor(diffH / 24) : null;
+
+  let tierClass = '';
+  if (hasContrib) {
+    if (diffD >= 15) tierClass = 'lp-live--critical';
+    else if (diffD >= 8) tierClass = 'lp-live--caution';
+  }
+
+  let liveText = 'No contributions recorded';
+  if (hasContrib) {
+    if (diffH < 1 / 60) liveText = 'Last contribution just now';
+    else if (diffH < 1) liveText = 'Last contribution ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
+    else if (diffH < 24) liveText = 'Last contribution ' + Math.floor(diffH) + 'h ago';
+    else if (diffD === 1) liveText = 'Last contribution yesterday';
+    else if (diffD < 30) liveText = 'Last contribution ' + diffD + 'd ago';
+    else liveText = 'Last contribution on ' + contribDate.toISOString().slice(0, 10);
+  }
 
   return dedent`
     <section class="lp-impact" aria-labelledby="lp-impact-h">
       <div class="lp-impact-top">
         <h2 id="lp-impact-h">Impact <span>— lifetime, across the ecosystem</span></h2>
-        <span class="lp-live" data-build-ts="${buildIso}">
-          <i aria-hidden="true"></i><time class="lp-live-text" datetime="${buildIso}">Updated ${buildAbsolute}</time>
+        <span class="lp-live ${tierClass}" data-contrib-ts="${contribIso}">
+          <i aria-hidden="true"></i><time class="lp-live-text" datetime="${contribIso}">${liveText}</time>
         </span>
       </div>
       <div class="lp-tiles">
@@ -420,6 +445,14 @@ async function createIndexHtml(
   // "shipped" would overclaim if applied to it directly.
   const shippedCount = allItems.filter((item) => Boolean(item.mergedAt)).length;
 
+  const contributionDates = allItems
+    .map((item) => new Date(item.date))
+    .filter((date) => !isNaN(date.getTime()));
+  const latestContributionIso =
+    contributionDates.length > 0
+      ? new Date(Math.max(...contributionDates.map((date) => date.getTime()))).toISOString()
+      : null;
+
   const getStats = (count) => {
     if (grandTotal === 0) return { pct: 0, pctStr: '0%' };
     const pct = (count / grandTotal) * 100;
@@ -487,6 +520,7 @@ async function createIndexHtml(
               articleCount,
               repoCount: uniqueRepos.size,
               orgCount: uniqueOrgs.size,
+              latestContributionIso,
             })}
 
             <div class="lp-cols">
@@ -511,24 +545,24 @@ async function createIndexHtml(
       </main>
       <script>
         (function () {
-          var el = document.querySelector('.lp-live[data-build-ts]');
+          var el = document.querySelector('.lp-live[data-contrib-ts]');
           if (!el) return;
+          var ts = el.getAttribute('data-contrib-ts');
+          if (!ts) return;
           var textEl = el.querySelector('.lp-live-text');
-          var built = new Date(el.getAttribute('data-build-ts'));
-          if (!textEl || isNaN(built.getTime())) return;
-          var diffH = (Date.now() - built.getTime()) / 3600000;
+          var contrib = new Date(ts);
+          if (!textEl || isNaN(contrib.getTime())) return;
+          var diffH = (Date.now() - contrib.getTime()) / 3600000;
           var diffD = Math.floor(diffH / 24);
-          el.classList.toggle('lp-live--stale', diffH >= 24);
-          if (diffH < 24) {
-            if (diffH < 1 / 60) textEl.textContent = 'Updated just now';
-            else if (diffH < 1) textEl.textContent = 'Updated ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
-            else textEl.textContent = 'Updated ' + Math.floor(diffH) + 'h ago';
-          } else if (diffD === 1) {
-            textEl.textContent = 'Updated yesterday';
-          } else if (diffD < 7) {
-            textEl.textContent = 'cached · ' + diffD + 'd old';
-          }
-          // Beyond 7 days the server-rendered absolute date stays as-is.
+          el.classList.remove('lp-live--caution', 'lp-live--critical');
+          if (diffD >= 15) el.classList.add('lp-live--critical');
+          else if (diffD >= 8) el.classList.add('lp-live--caution');
+          if (diffH < 1 / 60) textEl.textContent = 'Last contribution just now';
+          else if (diffH < 1) textEl.textContent = 'Last contribution ' + Math.max(1, Math.round(diffH * 60)) + 'm ago';
+          else if (diffH < 24) textEl.textContent = 'Last contribution ' + Math.floor(diffH) + 'h ago';
+          else if (diffD === 1) textEl.textContent = 'Last contribution yesterday';
+          else if (diffD < 30) textEl.textContent = 'Last contribution ' + diffD + 'd ago';
+          else textEl.textContent = 'Last contribution on ' + contrib.toISOString().slice(0, 10);
         })();
       </script>
       ${footerHtml}
