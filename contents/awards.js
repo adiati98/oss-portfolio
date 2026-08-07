@@ -15,6 +15,6 @@ module.exports = [
     url: 'https://mautic.org/blog/learnings-from-mautic-world-conference-2025/',
     highlight: true,
     description:
-      'Awarded by the Mautic community at Mautic World Conference 2025 in recognition of outstanding individual contribution and dedication to the open-source project.',
+      'Awarded by the Mautic community at Mautic World Conference 2025 in recognition of outstanding individual contribution and dedication to the open source project.',
   },
 ];
