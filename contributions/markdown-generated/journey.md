@@ -46,7 +46,7 @@ _17 milestones across 7 organizations, 2021–2026._
 - 📚 Docs — **[Mautic contributing guidelines: overhaul and migration](https://contribute.mautic.org/en/latest/contributing/contributing_docs.html)** (2025–2026) — _Mautic_
   - Rewrote Mautic's contributing guidelines, then moved them onto the Community Handbook site so all three documentation projects point at one set of instructions instead of keeping their own.
 - 🏆 Award — **[Mautician of the Year](https://mautic.org/blog/learnings-from-mautic-world-conference-2025/)** (2025) — _Mautic_
-  - Awarded by the Mautic community at Mautic World Conference 2025 in recognition of outstanding individual contribution and dedication to the open source project.
+  - Awarded by a panel of experts from the Mautic community at Mautic World Conference 2025, in recognition of making a significant personal impact through exceptional support, innovative ideas, or tireless dedication to the Mautic community.
 - 📚 Docs — **[Mautic Community Handbook reStructuredText conversion](https://contribute.mautic.org/)** (2025) — _Mautic_
   - Rebuilt the whole Community Handbook in reStructuredText, the format Mautic publishes its documentation from — every section, from contributing and testing through to policies and the style guide.
 - 📚 Docs — **[Virtual Coffee Handbook](https://virtualcoffee.io/resources/virtual-coffee-handbook)** (2021–2025) — _Virtual Coffee_
