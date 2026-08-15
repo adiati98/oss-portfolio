@@ -32,7 +32,7 @@ const axiosInstance = attachRateLimitLogger(
 // unlimited Promise.all) so we don't fire hundreds of simultaneous requests
 // at GitHub's secondary rate limiter when a user has thousands of open PRs
 // to track. Each PR's activity fetch fans out to 4 parallel calls, plus one
-// authoritative draft-state call (see fetchDraftState) = 5, so the real peak is
+// authoritative draft-state call (see fetchPrDetail) = 5, so the real peak is
 // PR_CONCURRENCY * 5 sockets — kept at 3 (=> ~15 in flight, further capped by
 // the agent's maxSockets) to stay under GitHub's abuse-detection threshold.
 // Going higher reliably tripped secondary rate limits and ECONNRESET storms
@@ -158,34 +158,54 @@ async function getFirstCommitDetails(
 }
 
 /**
- * SHARED HELPER: fetchDraftState
- * Authoritative draft flag for a PR, read from the PR detail endpoint.
+ * SHARED HELPER: fetchPrDetail
+ * Authoritative PR detail fields, read from the single PR detail endpoint call.
  *
  * Three of the four Workbench fetchers get their PR objects from the Search API
  * (fetchOngoingReviews, fetchOngoingCoAuthoredPrs) or the `/issues` list
  * (fetchOngoingAuthoredPrs), and neither reliably carries `draft` — the field
  * can be absent or lag GitHub's search index, so a real draft would silently
  * render as ready-for-review. `/repos/:owner/:repo/pulls/:number` always reports
- * the true `draft`, so it is the source of truth here; the search/issues item's
- * own `draft` is only the fallback for when the detail call can't be made (a
- * permanent 403 on an SSO-gated org, or any transient failure). Callers cache
- * the result alongside the activity meta, gated by the PR's updated_at — and a
- * draft toggle always bumps updated_at — so this costs an API call only when a
- * PR actually changed since the last run.
+ * the true `draft` plus the live pending-reviewer list, mergeable state, base
+ * branch, and milestone — all read from this one call rather than issuing a
+ * second request per field. The search/issues item's own `draft` is only the
+ * fallback for when the detail call can't be made (a permanent 403 on an
+ * SSO-gated org, or any transient failure). Callers cache the result alongside
+ * the activity meta, gated by the PR's updated_at — and any of these fields
+ * changing always bumps updated_at — so this costs an API call only when a PR
+ * actually changed since the last run.
  */
-async function fetchDraftState(owner, repo, pr, failedFetchCache) {
-  const fallback = pr.draft === true;
+async function fetchPrDetail(owner, repo, pr, failedFetchCache) {
+  const fallback = {
+    isDraft: pr.draft === true,
+    requestedReviewers: [],
+    mergeableState: null,
+    baseRef: null,
+    milestone: null,
+  };
   // Skip a PR we already know permanently 403s — reuse the search/issues value.
   if (failedFetchCache?.has(pr.html_url)) return fallback;
   try {
     const resp = await withRateLimitRetry(
       () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${pr.number}`),
-      { label: `pr-draft#${pr.number}` }
+      { label: `pr-detail#${pr.number}` }
     );
-    return resp.data.draft === true;
+    const data = resp.data;
+    return {
+      isDraft: data.draft === true,
+      requestedReviewers: Array.isArray(data.requested_reviewers)
+        ? data.requested_reviewers
+            .map((u) => u.login)
+            .filter(Boolean)
+            .slice(0, 30)
+        : [],
+      mergeableState: data.mergeable_state ?? null,
+      baseRef: data.base?.ref ?? null,
+      milestone: data.milestone?.title ?? null,
+    };
   } catch (err) {
     // getPrActivityMeta runs the same PR in parallel and records any permanent
-    // 403; here we only need a truthful-as-possible boolean, so degrade to the
+    // 403; here we only need a truthful-as-possible result, so degrade to the
     // fetch-layer item's own draft rather than failing the PR.
     return fallback;
   }
@@ -204,14 +224,14 @@ async function getCachedActivity(owner, repo, pr, activityCache, failedFetchCach
   const cacheKey = pr.html_url;
   if (activityCache) {
     const cached = activityCache.get(cacheKey);
-    if (cached && cached.updatedAt === pr.updated_at) {
+    if (cached && cached.updatedAt === pr.updated_at && cached.schemaVersion >= 2) {
       return cached.activity;
     }
   }
 
-  // The 4-call activity fetch and the draft read are independent, so run them
-  // in parallel; the draft result is folded onto the activity object.
-  const [activity, isDraft] = await Promise.all([
+  // The 4-call activity fetch and the PR detail read are independent, so run
+  // them in parallel; the detail fields are folded onto the activity object.
+  const [activity, prDetail] = await Promise.all([
     getPrActivityMeta(
       owner,
       repo,
@@ -223,12 +243,16 @@ async function getCachedActivity(owner, repo, pr, activityCache, failedFetchCach
       pr.html_url,
       pr.title
     ),
-    fetchDraftState(owner, repo, pr, failedFetchCache),
+    fetchPrDetail(owner, repo, pr, failedFetchCache),
   ]);
-  activity.isDraft = isDraft;
+  activity.isDraft = prDetail.isDraft;
+  activity.requestedReviewers = prDetail.requestedReviewers;
+  activity.mergeableState = prDetail.mergeableState;
+  activity.baseRef = prDetail.baseRef;
+  activity.milestone = prDetail.milestone;
 
   if (activityCache) {
-    activityCache.set(cacheKey, { updatedAt: pr.updated_at, activity });
+    activityCache.set(cacheKey, { updatedAt: pr.updated_at, activity, schemaVersion: 2 });
   }
   return activity;
 }
@@ -252,7 +276,7 @@ const formatTask = async (pr, status, activityCache, failedFetchCache) => {
     updatedAt: pr.updated_at,
     number: pr.number,
     user: pr.user,
-    // Authoritative draft from the PR detail endpoint (see fetchDraftState),
+    // Authoritative draft from the PR detail endpoint (see fetchPrDetail),
     // falling back to the search/issues item's own `draft` only if a cached
     // activity object predates this field.
     isDraft: typeof activity.isDraft === 'boolean' ? activity.isDraft : pr.draft === true,
@@ -386,7 +410,7 @@ async function fetchOngoingAuthoredPrs(activityCache, failedFetchCache) {
 
   return mapWithConcurrency(candidates, PR_CONCURRENCY, async (item) => {
     // formatTask now sources the authoritative draft flag from the PR detail
-    // endpoint (via fetchDraftState), so no `/issues`-shaped override is needed.
+    // endpoint (via fetchPrDetail), so no `/issues`-shaped override is needed.
     const formatted = await formatTask(item, 'Authored', activityCache, failedFetchCache);
     formatted.author = GITHUB_USERNAME;
     formatted.body = item.body;

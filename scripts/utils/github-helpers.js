@@ -25,6 +25,13 @@ function extractLinkedCodePr(body, ownRepo) {
   return null;
 }
 
+/** Extracts @-mention logins from a comment body. The body itself is never persisted. */
+function extractMentions(body) {
+  if (!body) return [];
+  const matches = body.match(/@([a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?)/g) || [];
+  return [...new Set(matches.map((m) => m.slice(1)))];
+}
+
 /**
  * HELPER: Fetches specific activity metadata for a PR to determine "Who has the ball".
  * Merges timeline processing with explicit fallback comment checking to guarantee review replies are caught,
@@ -55,6 +62,9 @@ async function getPrActivityMeta(
     approvedBy: null,
     lastSubstantiveDate: prMainUpdatedAt,
     hasHumanEngagement: false,
+    reviews: [],
+    comments: [],
+    reviewRequests: [],
   };
 
   // Already confirmed permanently 403 (e.g. an org we don't have SSO
@@ -142,6 +152,36 @@ async function getPrActivityMeta(
         commentsResp.data.some((c) => c.user?.type === 'User' && c.user.login !== authorLogin)
       : false;
 
+    // Full review history, newest last, capped so the cache doesn't grow
+    // unbounded on PRs with a long back-and-forth review trail.
+    const reviewsList = reviews
+      .filter((r) => r.user)
+      .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at))
+      .map((r) => ({ login: r.user.login, state: r.state, submittedAt: r.submitted_at }))
+      .slice(-30);
+
+    // Merged from both comment endpoints (issue comments + review comments).
+    // Only the mention logins are kept — the body itself is never persisted.
+    const comments = [...commentsResp.data, ...reviewCommentsResp.data]
+      .filter((c) => c.user)
+      .map((c) => ({
+        login: c.user.login,
+        createdAt: c.created_at,
+        isBot: isBotLogin(c.user.login, c.user.type),
+        mentions: extractMentions(c.body),
+      }))
+      .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+      .slice(-30);
+
+    const reviewRequests = timeline
+      .filter((e) => e.event === 'review_requested')
+      .map((e) => ({
+        requestedReviewer: e.requested_reviewer?.login || e.requested_team?.name || null,
+        actor: e.actor?.login || e.review_requester?.login || null,
+        createdAt: e.created_at,
+      }))
+      .slice(-30);
+
     const baseActivity = {
       lastActor,
       isLastActorBot,
@@ -150,6 +190,9 @@ async function getPrActivityMeta(
       approvedBy,
       lastSubstantiveDate,
       hasHumanEngagement,
+      reviews: reviewsList,
+      comments,
+      reviewRequests,
     };
 
     // Explicit Substantive Activity Augmentation (the fix for review replies)
