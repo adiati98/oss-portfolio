@@ -217,9 +217,14 @@ function repoCell(record) {
   return bits.join('<br>');
 }
 
-/** Mirrors renderRow's nextBits: approval note, reviewed note, bot ping, linked code PR, next step. */
+/** Mirrors renderRow's nextBits, in the same order: actions first (add
+ * milestone, then the next step), then the context notes. */
 function nextCell(record) {
   const bits = [];
+  if (record.pendingLabelMissing)
+    bits.push(`**Add ${mdEscapeCell(record.pendingLabelMissing)} label**`);
+  if (record.milestoneMissing) bits.push('**Add milestone**');
+  if (record.nextStep) bits.push(mdEscapeCell(record.nextStep));
   if (record.approval && record.approval.by) {
     const dismissedNote = record.approval.dismissed ? ' — dismissed after update' : '';
     bits.push(`approved by **${mdEscapeCell(record.approval.by)}**${dismissedNote}`);
@@ -238,7 +243,6 @@ function nextCell(record) {
       : mdEscapeCell(ref);
     bits.push(`🔗 code PR ${refMd}`);
   }
-  if (record.nextStep) bits.push(mdEscapeCell(record.nextStep));
   return bits.length ? bits.map((bit) => `• ${bit}`).join('<br>') : '—';
 }
 

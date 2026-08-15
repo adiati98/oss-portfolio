@@ -204,6 +204,11 @@ const WORKBENCH_CSS = `
   .wbx-step{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
   .wbx-step--do{color:var(--t-caution);background:var(--t-caution-wash)}
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
+  /* Triage, not the row's instruction — brand blue keeps it a visibly
+     different class of thing from the amber "do this" step, the way the
+     upstream docs-PR tracker separates its teal setup chip from its blue
+     act chip. */
+  .wbx-step--setup{color:var(--t-brand);background:var(--t-brand-wash);border:1px solid var(--t-brand-line)}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
   .wbx-chip-draft{display:inline-flex;align-items:center;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.03em;color:var(--t-neutral);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);border-radius:999px;padding:1px 9px}
@@ -269,11 +274,23 @@ function statusSignatureFor(record) {
     record.botPing && record.botPing.of,
     record.linkedCodePr && record.linkedCodePr.ref,
     record.isDraft,
+    // Setting the milestone or the label is a real change of situation, so a
+    // row checked off while one was missing must not stay checked once it is.
+    record.milestoneMissing,
+    record.pendingLabelMissing,
   ]);
 }
 
 function searchBlobFor(record, repoLabel) {
-  return [repoLabel, record.title, record.relationship, record.ball, record.nextStep]
+  return [
+    repoLabel,
+    record.title,
+    record.relationship,
+    record.ball,
+    record.nextStep,
+    record.milestoneMissing ? 'add milestone' : null,
+    record.pendingLabelMissing ? `add ${record.pendingLabelMissing} label` : null,
+  ]
     .filter(Boolean)
     .join(' ')
     .toLowerCase();
@@ -287,7 +304,25 @@ function renderRow(record) {
       : '';
   const repoLabel = record.key ? spaceBeforeNumber(record.key) : record.repo || '';
   const title = escapeHtml(record.title || repoLabel);
+
+  // Actions first, context after. The row used to lead with "approved by X ·
+  // Y reviewed this · 🔗 code PR" and put the one thing you actually had to DO
+  // at the very end of the line. Triage leads the actions, mirroring the
+  // upstream tracker, which pushes its "Add milestone" chip ahead of the
+  // review chip because the milestone is the cheaper, more blocking fix.
   const nextBits = [];
+  if (record.pendingLabelMissing) {
+    nextBits.push(
+      `<span class="wbx-step wbx-step--setup">Add ${escapeHtml(record.pendingLabelMissing)} label</span>`
+    );
+  }
+  if (record.milestoneMissing) {
+    nextBits.push('<span class="wbx-step wbx-step--setup">Add milestone</span>');
+  }
+  if (record.nextStep) {
+    const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
+    nextBits.push(`<span class="wbx-step ${stepClass}">${escapeHtml(record.nextStep)}</span>`);
+  }
   if (record.approval && record.approval.by) {
     // An approval dismissed after a push is still worth surfacing — it just
     // needs a fresh look, not a re-review from scratch.
@@ -309,10 +344,6 @@ function renderRow(record) {
       ? `<a href="https://github.com/${escapeHtml(refMatch[1])}/pull/${refMatch[2]}" target="_blank" rel="noopener noreferrer">${escapeHtml(ref)}</a>`
       : escapeHtml(ref);
     nextBits.push(`<span style="font-family:ui-monospace,monospace;font-size:.75rem">🔗 code PR <b>${refHtml}</b></span>`);
-  }
-  if (record.nextStep) {
-    const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
-    nextBits.push(`<span class="wbx-step ${stepClass}">${escapeHtml(record.nextStep)}</span>`);
   }
   const nextHtml = nextBits.length ? `<div class="wbx-next">${nextBits.join(' · ')}</div>` : '';
   const key = record.key || record.url || '';

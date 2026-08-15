@@ -288,6 +288,22 @@ const formatTask = async (pr, status, activityCache, failedFetchCache) => {
     approvedBy: activity.approvedBy,
     lastSubstantiveDate: activity.lastSubstantiveDate,
     author: pr.user.login,
+    // Widened activity + PR detail, carried through to the merge engine so it
+    // can derive specific next steps ("changes requested by X", "X mentioned
+    // you", "no reviewer assigned", "conflicts with main") for EVERY repo,
+    // not only the ones the external docs tracker covers. Already capped and
+    // body-stripped upstream (see getPrActivityMeta / fetchPrDetail); a cached
+    // activity object predating those fields degrades to an empty/null value
+    // rather than an undefined one, so consumers can read them unguarded.
+    reviews: Array.isArray(activity.reviews) ? activity.reviews : [],
+    comments: Array.isArray(activity.comments) ? activity.comments : [],
+    reviewRequests: Array.isArray(activity.reviewRequests) ? activity.reviewRequests : [],
+    requestedReviewers: Array.isArray(activity.requestedReviewers)
+      ? activity.requestedReviewers
+      : [],
+    mergeableState: activity.mergeableState ?? null,
+    baseRef: activity.baseRef ?? null,
+    milestone: activity.milestone ?? null,
   };
 };
 
