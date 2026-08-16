@@ -1,6 +1,6 @@
 # 📖 Glossary
 
-Plain-English explanations of the terms used across this portfolio — what each one means, and how it's worked out from the underlying GitHub activity.
+The terms used across this portfolio and how it's worked out from the underlying GitHub activity.
 
 ## Portfolio-wide Metrics
 
@@ -69,4 +69,4 @@ _Terms used inside a single report, covering the work done in that three-month p
 
 ---
 
-[← Back to Summary](./README.md) | _Last updated: 8/16/2026, 11:10:56 AM_
+[← Back to Summary](./README.md) | _Last updated: 8/16/2026, 9:33:21 PM_

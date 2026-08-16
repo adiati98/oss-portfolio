@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
           function isDark() {
-            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
-            if (stored === "dark") return true;
-            if (stored === "light") return false;
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle("dark", isDark());
+          document.documentElement.classList.toggle('dark', isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener("change", function () {
-            document.documentElement.classList.toggle("dark", isDark());
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
       :root {
         --c-primary-hex: #232963;
         --c-primary-rgb: rgb(35, 41, 99);
@@ -297,11 +297,8 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow:
-          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg:
-          0 2px 4px rgba(20, 20, 30, 0.04),
-          0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -342,10 +339,8 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg:
-          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -362,7 +357,7 @@
          button on every page built from this base CSS. */
         overflow-x: hidden;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -435,8 +430,7 @@
       /* The Block Code Look */
       .glossary-code-block {
         display: block;
-        font-family:
-          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
         background-color: var(--t-card-2);
         border: 1px solid var(--t-line);
       }
@@ -519,13 +513,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target="_blank"]:not(.no-underline) {
+      a[target='_blank']:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target="_blank"]:not(.no-underline):hover {
+      a[target='_blank']:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -572,9 +566,7 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="./index.html"
@@ -648,10 +640,7 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span
-                  data-theme-icon-for="light"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -667,10 +656,7 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="dark"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -683,10 +669,7 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="system"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -728,9 +711,7 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -749,15 +730,11 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      />
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -890,10 +867,7 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span
-                data-theme-icon-for="light"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -909,10 +883,7 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span
-                data-theme-icon-for="dark"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -925,10 +896,7 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span
-                data-theme-icon-for="system"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -970,9 +938,7 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -995,9 +961,7 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1029,95 +993,79 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-              const menu = dropdown.querySelector(".theme-dropdown-menu");
-              const wasOpen = !menu.classList.contains("hidden");
-              menu.classList.add("hidden");
-              trigger.setAttribute("aria-expanded", "false");
+              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+              const menu = dropdown.querySelector('.theme-dropdown-menu');
+              const wasOpen = !menu.classList.contains('hidden');
+              menu.classList.add('hidden');
+              trigger.setAttribute('aria-expanded', 'false');
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
             closeAllDropdowns();
-            menu.classList.remove("hidden");
-            trigger.setAttribute("aria-expanded", "true");
-            const items = Array.from(
-              dropdown.querySelectorAll("[data-theme-choice]"),
-            );
-            const checked = items.find(
-              (item) => item.getAttribute("aria-checked") === "true",
-            );
+            menu.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === "system") {
-              localStorage.removeItem("theme");
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
             } else {
-              localStorage.setItem("theme", choice);
+              localStorage.setItem('theme', choice);
             }
             const isDark =
-              choice === "dark" ||
-              (choice === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches);
-            document.documentElement.classList.toggle("dark", isDark);
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem("theme") || "system";
+            const current = localStorage.getItem('theme') || 'system';
             dropdowns.forEach((dropdown) => {
-              dropdown
-                .querySelectorAll("[data-theme-icon-for]")
-                .forEach((icon) => {
-                  icon.classList.toggle(
-                    "hidden",
-                    icon.dataset.themeIconFor !== current,
-                  );
-                });
-              dropdown
-                .querySelectorAll("[data-theme-choice]")
-                .forEach((item) => {
-                  item.setAttribute(
-                    "aria-checked",
-                    String(item.dataset.themeChoice === current),
-                  );
-                });
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
 
-            trigger.addEventListener("click", (e) => {
+            trigger.addEventListener('click', (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains("hidden");
+              const isOpen = !menu.classList.contains('hidden');
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1125,46 +1073,44 @@
               }
             });
 
-            trigger.addEventListener("keydown", (e) => {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            trigger.addEventListener('keydown', (e) => {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener("keydown", (e) => {
-              const items = Array.from(
-                dropdown.querySelectorAll("[data-theme-choice]"),
-              );
+            menu.addEventListener('keydown', (e) => {
+              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === "ArrowDown") {
+              if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === "ArrowUp") {
+              } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === "Home") {
+              } else if (e.key === 'Home') {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === "End") {
+              } else if (e.key === 'End') {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === "Tab") {
+              } else if (e.key === 'Tab') {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
-              item.addEventListener("click", () => {
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener("click", () => closeAllDropdowns());
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
+          document.addEventListener('click', () => closeAllDropdowns());
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1227,7 +1173,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded="true"] {
+      .theme-dropdown-trigger[aria-expanded='true'] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1286,7 +1232,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1320,8 +1266,8 @@
               Glossary
             </h1>
             <p class="text-lg max-w-3xl leading-relaxed glossary-body">
-              The terms used across this portfolio and how it's worked out from
-              the underlying GitHub activity.
+              The terms used across this portfolio and how it's worked out from the underlying
+              GitHub activity.
             </p>
           </header>
           <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
@@ -1329,246 +1275,154 @@
               aria-label="Glossary sections"
               class="glossary-toc mb-10 lg:mb-0 lg:sticky lg:top-8 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto lg:pr-4"
             >
-              <p
-                class="text-xs font-bold uppercase tracking-widest glossary-caption mb-3"
-              >
+              <p class="text-xs font-bold uppercase tracking-widest glossary-caption mb-3">
                 On this page
               </p>
               <ul class="space-y-4 text-sm">
                 <li>
-                  <a
-                    href="#portfolioWide"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
+                  <a href="#portfolioWide" class="font-semibold" style="color: var(--t-brand)"
                     >Portfolio-wide Metrics</a
                   >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#totalImpact"
-                        class="block glossary-body hover:underline"
+                      <a href="#totalImpact" class="block glossary-body hover:underline"
                         >Total Impact</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#shippedChanges"
-                        class="block glossary-body hover:underline"
+                      <a href="#shippedChanges" class="block glossary-body hover:underline"
                         >Shipped Changes</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#activeSince"
-                        class="block glossary-body hover:underline"
+                      <a href="#activeSince" class="block glossary-body hover:underline"
                         >Active Since</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#totalImpactedRepos"
-                        class="block glossary-body hover:underline"
+                      <a href="#totalImpactedRepos" class="block glossary-body hover:underline"
                         >Impacted Repos</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#helpedShip"
-                        class="block glossary-body hover:underline"
+                      <a href="#helpedShip" class="block glossary-body hover:underline"
                         >Helped Ship</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#primaryFocusProjects"
-                        class="block glossary-body hover:underline"
+                      <a href="#primaryFocusProjects" class="block glossary-body hover:underline"
                         >Primary Focus Projects</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#persona"
-                        class="block glossary-body hover:underline"
+                      <a href="#persona" class="block glossary-body hover:underline"
                         >Collaboration Profile</a
                       >
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a
-                    href="#journey"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
-                    >Journey</a
-                  >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <a href="#journey" class="font-semibold" style="color: var(--t-brand)">Journey</a>
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#milestonesAwards"
-                        class="block glossary-body hover:underline"
+                      <a href="#milestonesAwards" class="block glossary-body hover:underline"
                         >Selected Work, Awards & Talks</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#expertise"
-                        class="block glossary-body hover:underline"
+                      <a href="#expertise" class="block glossary-body hover:underline"
                         >Expertise, Tools & Skills</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#advocacyRoles"
-                        class="block glossary-body hover:underline"
+                      <a href="#advocacyRoles" class="block glossary-body hover:underline"
                         >Experience & Roles</a
                       >
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a
-                    href="#workbench"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
+                  <a href="#workbench" class="font-semibold" style="color: var(--t-brand)"
                     >Active Workbench</a
                   >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#activeWorkbench"
-                        class="block glossary-body hover:underline"
+                      <a href="#activeWorkbench" class="block glossary-body hover:underline"
                         >Board & Lanes</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#workbenchStatus"
-                        class="block glossary-body hover:underline"
+                      <a href="#workbenchStatus" class="block glossary-body hover:underline"
                         >Workbench Status & Ball Tracking</a
                       >
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a
-                    href="#writing"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
-                    >Writing</a
-                  >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <a href="#writing" class="font-semibold" style="color: var(--t-brand)">Writing</a>
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#recognitions"
-                        class="block glossary-body hover:underline"
+                      <a href="#recognitions" class="block glossary-body hover:underline"
                         >Recognitions</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#articles"
-                        class="block glossary-body hover:underline"
+                      <a href="#articles" class="block glossary-body hover:underline"
                         >Articles Written</a
                       >
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a
-                    href="#quarterlyReports"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
+                  <a href="#quarterlyReports" class="font-semibold" style="color: var(--t-brand)"
                     >Quarterly Reports</a
                   >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#reportsIndex"
-                        class="block glossary-body hover:underline"
+                      <a href="#reportsIndex" class="block glossary-body hover:underline"
                         >Reports Index</a
                       >
                     </li>
                   </ul>
                 </li>
                 <li>
-                  <a
-                    href="#quarterlyMetrics"
-                    class="font-semibold"
-                    style="color: var(--t-brand)"
+                  <a href="#quarterlyMetrics" class="font-semibold" style="color: var(--t-brand)"
                     >Quarterly Report Metrics</a
                   >
-                  <ul
-                    class="mt-2 space-y-1.5 pl-3 border-l"
-                    style="border-color: var(--t-line)"
-                  >
+                  <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line)">
                     <li>
-                      <a
-                        href="#quarterInBrief"
-                        class="block glossary-body hover:underline"
+                      <a href="#quarterInBrief" class="block glossary-body hover:underline"
                         >Quarter in brief</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#stats"
-                        class="block glossary-body hover:underline"
+                      <a href="#stats" class="block glossary-body hover:underline"
                         >Quarterly Statistics</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#focusProjects"
-                        class="block glossary-body hover:underline"
+                      <a href="#focusProjects" class="block glossary-body hover:underline"
                         >Top 3 Repositories</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#merged"
-                        class="block glossary-body hover:underline"
-                        >Merged PRs</a
-                      >
+                      <a href="#merged" class="block glossary-body hover:underline">Merged PRs</a>
                     </li>
                     <li>
-                      <a
-                        href="#issues"
-                        class="block glossary-body hover:underline"
-                        >Issues</a
-                      >
+                      <a href="#issues" class="block glossary-body hover:underline">Issues</a>
                     </li>
                     <li>
-                      <a
-                        href="#reviewed"
-                        class="block glossary-body hover:underline"
+                      <a href="#reviewed" class="block glossary-body hover:underline"
                         >Reviewed PRs</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#coAuthored"
-                        class="block glossary-body hover:underline"
+                      <a href="#coAuthored" class="block glossary-body hover:underline"
                         >Co-authored PRs</a
                       >
                     </li>
                     <li>
-                      <a
-                        href="#collaborations"
-                        class="block glossary-body hover:underline"
+                      <a href="#collaborations" class="block glossary-body hover:underline"
                         >Collaborations</a
                       >
                     </li>
@@ -1580,24 +1434,18 @@
               <div class="metrics-container">
                 <section id="portfolioWide" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Portfolio-wide Metrics
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      Terms for the numbers that sum up all the open source work
-                      shown here, from the very first contribution to now.
+                      Terms for the numbers that sum up all the open source work shown here, from
+                      the very first contribution to now.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="totalImpact" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Total Impact
@@ -1605,32 +1453,26 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          Every contribution counted together, going back to the
-                          very first one on GitHub.
+                          Every contribution counted together, going back to the very first one on
+                          GitHub.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Adds up merged pull requests, issues, reviewed pull
-                            requests, co-authored pull requests, and
-                            collaborations.
+                            Adds up merged pull requests, issues, reviewed pull requests,
+                            co-authored pull requests, and collaborations.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="shippedChanges" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Shipped Changes
@@ -1638,22 +1480,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          How many of those contributions were actually finished
-                          and accepted — not just opened.
+                          How many of those contributions were actually finished and accepted — not
+                          just opened.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Counts only the contributions GitHub marked as
-                            merged. Total Impact also includes work that's still
-                            open, so this number is smaller — it's what's
+                            Counts only the contributions GitHub marked as merged. Total Impact also
+                            includes work that's still open, so this number is smaller — it's what's
                             actually done.
                           </div>
                         </div>
@@ -1661,10 +1500,7 @@
                     </div>
                     <div id="activeSince" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Active Since
@@ -1672,31 +1508,25 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          The year of the very first recorded contribution on
-                          GitHub.
+                          The year of the very first recorded contribution on GitHub.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Finds the earliest contribution in the data and uses
-                            its year as the starting point.
+                            Finds the earliest contribution in the data and uses its year as the
+                            starting point.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="totalImpactedRepos" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Impacted Repos
@@ -1704,33 +1534,27 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          How many different projects are represented here, and
-                          how many organizations those projects belong to.
+                          How many different projects are represented here, and how many
+                          organizations those projects belong to.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Counts every different external repo with at least
-                            one recorded contribution. A project's organization
-                            is whoever owns the repo — the "octocat" in
-                            octocat/Hello-World, for example.
+                            Counts every different external repo with at least one recorded
+                            contribution. A project's organization is whoever owns the repo — the
+                            "octocat" in octocat/Hello-World, for example.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="helpedShip" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Helped Ship
@@ -1738,34 +1562,27 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          How many reviewed or co-authored pull requests
-                          actually got merged — work that helped someone else's
-                          contribution land, not solo PRs.
+                          How many reviewed or co-authored pull requests actually got merged — work
+                          that helped someone else's contribution land, not solo PRs.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Counts every reviewed or co-authored pull request
-                            that got merged, across the full contribution
-                            history. One that's still open, or was closed
-                            without merging, doesn't count yet.
+                            Counts every reviewed or co-authored pull request that got merged,
+                            across the full contribution history. One that's still open, or was
+                            closed without merging, doesn't count yet.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="primaryFocusProjects" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Primary Focus Projects
@@ -1773,31 +1590,25 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          The three projects with the most contributions, over
-                          the full history.
+                          The three projects with the most contributions, over the full history.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Sorts every tracked repo by how many contributions
-                            it has, and picks the top three.
+                            Sorts every tracked repo by how many contributions it has, and picks the
+                            top three.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="persona" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Collaboration Profile
@@ -1805,23 +1616,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A label for the primary way of contributing to the
-                          community.
+                          A label for the primary way of contributing to the community.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Looks at contribution frequency across every
-                            category, then picks the label that fits best — for
-                            example, "Community Mentor" for a high volume of
-                            reviews.
+                            Looks at contribution frequency across every category, then picks the
+                            label that fits best — for example, "Community Mentor" for a high volume
+                            of reviews.
                           </div>
                         </div>
                       </div>
@@ -1830,24 +1637,18 @@
                 </section>
                 <section id="journey" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Journey
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      Terms used on the Journey page — selected work, talks,
-                      expertise, and the roles behind them.
+                      Terms used on the Journey page — selected work, talks, expertise, and the
+                      roles behind them.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="milestonesAwards" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Selected Work, Awards & Talks
@@ -1855,33 +1656,27 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A showcase of notable work and recognition within the
-                          open source community, on one continuous timeline.
+                          A showcase of notable work and recognition within the open source
+                          community, on one continuous timeline.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Each one is added manually. What can be found here:
-                            awards, courses and certifications, projects,
-                            documentation work, talks, and videos — each one
-                            tagged for quick identification.
+                            Each one is added manually. What can be found here: awards, courses and
+                            certifications, projects, documentation work, talks, and videos — each
+                            one tagged for quick identification.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="expertise" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Expertise, Tools & Skills
@@ -1889,37 +1684,29 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          The skill areas behind the work, plus the tools and
-                          languages used to do it. No self-rated skill bars —
-                          the rest of the portfolio is the proof.
+                          The skill areas behind the work, plus the tools and languages used to do
+                          it. No self-rated skill bars — the rest of the portfolio is the proof.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Expertise areas are entered manually in a contents
-                            file, each with a title and a short blurb. Tools and
-                            skills each show as their own list, but only if
-                            there's something in it — an empty list just doesn't
-                            show, heading and all. A few entries can be marked
-                            to stand out (bold, in the accent color) to call out
-                            the two or three that matter most.
+                            Expertise areas are entered manually in a contents file, each with a
+                            title and a short blurb. Tools and skills each show as their own list,
+                            but only if there's something in it — an empty list just doesn't show,
+                            heading and all. A few entries can be marked to stand out (bold, in the
+                            accent color) to call out the two or three that matter most.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="advocacyRoles" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Experience & Roles
@@ -1927,23 +1714,20 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of official roles held within open source
-                          organizations.
+                          A record of official roles held within open source organizations.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Each role is added by hand in a contents file, along
-                            with its dates. Whether it shows as
-                            <strong>Active</strong> or <strong>Past</strong> is
-                            worked out automatically from those dates.
+                            Each role is added by hand in a contents file, along with its dates.
+                            Whether it shows as
+                            <strong>Active</strong> or <strong>Past</strong> is worked out
+                            automatically from those dates.
                           </div>
                         </div>
                       </div>
@@ -1952,24 +1736,18 @@
                 </section>
                 <section id="workbench" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Active Workbench
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      Terms used on the Active Workbench page — the live board
-                      of maintainer and contribution work in progress.
+                      Terms used on the Active Workbench page — the live board of maintainer and
+                      contribution work in progress.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="activeWorkbench" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Board & Lanes
@@ -1977,78 +1755,57 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A live board of work in progress, organized by what
-                          happens next.
+                          A live board of work in progress, organized by what happens next.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Open pull requests, assigned issues, and review
-                            requests are pulled together with live status
-                            updates into one board, then sorted into five lanes,
-                            ordered by what happens next:
+                            Open pull requests, assigned issues, and review requests are pulled
+                            together with live status updates into one board, then sorted into five
+                            lanes, ordered by what happens next:
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Needs your action:</strong> Feedback to
-                                address, a review still pending, or a note left
-                                after approval.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Needs your action:</strong> Feedback to address, a review
+                                still pending, or a note left after approval.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
+                              <li class="ml-4 list-disc list-inside glossary-accent">
                                 <strong>Approved — bring it home:</strong>
-                                Reviewed and approved, but not shipped yet —
-                                something still needs to happen first, like a
-                                final check or a reminder to a maintainer.
+                                Reviewed and approved, but not shipped yet — something still needs
+                                to happen first, like a final check or a reminder to a maintainer.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Waiting on others:</strong> That side of
-                                the work is done — awaiting review, or blocked
-                                on a linked code PR.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Waiting on others:</strong> That side of the work is done —
+                                awaiting review, or blocked on a linked code PR.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Stalled · 30+ days:</strong> No movement
-                                in a month — each needs a decision: nudge or
-                                close.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Stalled · 30+ days:</strong> No movement in a month — each
+                                needs a decision: nudge or close.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Automated:</strong> Automatic updates
-                                from bots, like routine dependency or security
-                                updates — grouped together and kept out of the
-                                way.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Automated:</strong> Automatic updates from bots, like
+                                routine dependency or security updates — grouped together and kept
+                                out of the way.
                               </li>
                             </ul>
-                            Only open items are shown; they're removed once
-                            they're merged or closed. An empty board reads "Your
-                            court is clear" — a good sign, not an error.<br /><br />A
-                            freshness badge in the header reads "Updated Xh ago"
-                            (or "Updated just now" / "Updated yesterday") when
-                            the board's data loaded live, and "cached · Nd old"
-                            when that data isn't available right now and the
-                            board is showing the last good saved copy — a banner
+                            Only open items are shown; they're removed once they're merged or
+                            closed. An empty board reads "Your court is clear" — a good sign, not an
+                            error.<br /><br />A freshness badge in the header reads "Updated Xh ago"
+                            (or "Updated just now" / "Updated yesterday") when the board's data
+                            loaded live, and "cached · Nd old" when that data isn't available right
+                            now and the board is showing the last good saved copy — a banner
                             explains why whenever that happens.
                           </div>
                         </div>
@@ -2056,10 +1813,7 @@
                     </div>
                     <div id="workbenchStatus" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Workbench Status & Ball Tracking
@@ -2067,98 +1821,72 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A badge on each row showing whose turn it is, whether
-                          it's a draft, and how long it's been waiting.
+                          A badge on each row showing whose turn it is, whether it's a draft, and
+                          how long it's been waiting.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Each task carries a "ball" badge showing whose move
-                            it is:
+                            Each task carries a "ball" badge showing whose move it is:
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Take Action:</strong> New feedback to
-                                address, a requested review, or a reply that
-                                needs an answer.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Take Action:</strong> New feedback to address, a requested
+                                review, or a reply that needs an answer.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>To Write:</strong> An issue that's
-                                assigned, with no pull request opened yet.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>To Write:</strong> An issue that's assigned, with no pull
+                                request opened yet.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Approved:</strong> The PR has a formal
-                                approval and is heading toward merge. An
-                                approval dismissed after a later push still
-                                counts — its note names the approver and adds
-                                "dismissed after update", asking for a fresh
-                                look rather than a from-scratch re-review.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Approved:</strong> The PR has a formal approval and is
+                                heading toward merge. An approval dismissed after a later push still
+                                counts — its note names the approver and adds "dismissed after
+                                update", asking for a fresh look rather than a from-scratch
+                                re-review.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Watching:</strong> The ball is with
-                                another maintainer or contributor; participation
-                                continues in the background.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Watching:</strong> The ball is with another maintainer or
+                                contributor; participation continues in the background.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Waiting:</strong> That side of the work
-                                is done, and the row is idle by design — a draft
-                                not yet marked ready, or work blocked on someone
-                                else.
-                              </li>
-                            </ul>
-                            <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Stale:</strong> No real activity for 30+
-                                days on a row where the next move belongs to
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Waiting:</strong> That side of the work is done, and the row
+                                is idle by design — a draft not yet marked ready, or work blocked on
                                 someone else.
                               </li>
                             </ul>
                             <ul class="my-3 space-y-1 glossary-accent">
-                              <li
-                                class="ml-4 list-disc list-inside glossary-accent"
-                              >
-                                <strong>Bot:</strong> An automatic update to a
-                                dependency or security patch, submitted by a
-                                bot, kept in its own lane.
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Stale:</strong> No real activity for 30+ days on a row where
+                                the next move belongs to someone else.
                               </li>
                             </ul>
-                            A <strong>Draft</strong> chip marks a pull request
-                            still in draft state.
-                            <strong>The day count</strong> shown next to a
-                            Stalled (or otherwise long-idle) badge is the time
-                            since the last real update.<br /><br /><strong
+                            <ul class="my-3 space-y-1 glossary-accent">
+                              <li class="ml-4 list-disc list-inside glossary-accent">
+                                <strong>Bot:</strong> An automatic update to a dependency or
+                                security patch, submitted by a bot, kept in its own lane.
+                              </li>
+                            </ul>
+                            A <strong>Draft</strong> chip marks a pull request still in draft state.
+                            <strong>The day count</strong> shown next to a Stalled (or otherwise
+                            long-idle) badge is the time since the last real update.<br /><br /><strong
                               >Note on Timers:</strong
                             >
-                            "Idle" ignores noise such as labels, reviewer pings,
-                            or base-branch merges. The clock only resets on a
-                            new commit, a code review (human or bot), or a
-                            discussion comment.
+                            "Idle" ignores noise such as labels, reviewer pings, or base-branch
+                            merges. The clock only resets on a new commit, a code review (human or
+                            bot), or a discussion comment.
                           </div>
                         </div>
                       </div>
@@ -2167,24 +1895,18 @@
                 </section>
                 <section id="writing" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Writing
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      Terms used on the Writing page, covering recognitions and
-                      published articles and how they are grouped.
+                      Terms used on the Writing page, covering recognitions and published articles
+                      and how they are grouped.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="recognitions" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Recognitions
@@ -2192,34 +1914,28 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          External recognition for individual pieces of writing
-                          — top-of-the-week picks, challenge wins, and similar
-                          mentions. Shown at the top of the page, above the
-                          article lists, and only when at least one exists.
+                          External recognition for individual pieces of writing — top-of-the-week
+                          picks, challenge wins, and similar mentions. Shown at the top of the page,
+                          above the article lists, and only when at least one exists.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Each one is added manually in a contents file, with
-                            a title, the platform that gave it, and a link. A
-                            standout entry can be marked with a star.
+                            Each one is added manually in a contents file, with a title, the
+                            platform that gave it, and a link. A standout entry can be marked with a
+                            star.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="articles" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Articles Written
@@ -2227,30 +1943,25 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          Blog posts and articles about open source, written to
-                          support and promote the community. Grouped into
-                          <strong>Written for organizations</strong>, for pieces
-                          written for a specific org, and
-                          <strong>Personal writing</strong>, for everything
-                          else.
+                          Blog posts and articles about open source, written to support and promote
+                          the community. Grouped into
+                          <strong>Written for organizations</strong>, for pieces written for a
+                          specific org, and <strong>Personal writing</strong>, for everything else.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s added
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Articles are pulled in automatically from Dev.to,
-                            plus added directly for other platforms (like
-                            freeCodeCamp) in the contents folder. Pieces written
-                            for a specific organization are grouped under
-                            <strong>Written for organizations</strong>, newest
-                            organization first; everything else is listed under
-                            <strong>Personal writing</strong>, newest first.
+                            Articles are pulled in automatically from Dev.to, plus added directly
+                            for other platforms (like freeCodeCamp) in the contents folder. Pieces
+                            written for a specific organization are grouped under
+                            <strong>Written for organizations</strong>, newest organization first;
+                            everything else is listed under <strong>Personal writing</strong>,
+                            newest first.
                           </div>
                         </div>
                       </div>
@@ -2259,24 +1970,18 @@
                 </section>
                 <section id="quarterlyReports" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Quarterly Reports
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      How contributions are grouped into three-month periods,
-                      making them easier to find and read.
+                      How contributions are grouped into three-month periods, making them easier to
+                      find and read.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="reportsIndex" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Reports Index
@@ -2284,23 +1989,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          The main list of the portfolio. It organizes all work
-                          into separate pages grouped by year and three-month
-                          periods (quarters).
+                          The main list of the portfolio. It organizes all work into separate pages
+                          grouped by year and three-month periods (quarters).
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             Where it comes from
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            The <strong>Quarterly Reports</strong> page works
-                            like a folder, showing every year and, inside each
-                            year, its three-month periods.
+                            The <strong>Quarterly Reports</strong> page works like a folder, showing
+                            every year and, inside each year, its three-month periods.
                           </div>
                         </div>
                       </div>
@@ -2309,24 +2010,18 @@
                 </section>
                 <section id="quarterlyMetrics" class="mb-24 last:mb-0">
                   <div class="mb-10">
-                    <h2
-                      style="color: var(--t-brand)"
-                      class="text-3xl sm:text-4xl font-black mb-2"
-                    >
+                    <h2 style="color: var(--t-brand)" class="text-3xl sm:text-4xl font-black mb-2">
                       Quarterly Report Metrics
                     </h2>
                     <p class="glossary-caption text-lg font-medium italic">
-                      Terms used inside a single report, covering the work done
-                      in that three-month period.
+                      Terms used inside a single report, covering the work done in that three-month
+                      period.
                     </p>
                   </div>
                   <div class="space-y-2">
                     <div id="quarterInBrief" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Quarter in brief
@@ -2334,39 +2029,32 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A plain-language summary at the top of each quarterly
-                          report: a sentence or two on what happened, which
-                          organizations were worked with, and a few highlighted
-                          contributions.
+                          A plain-language summary at the top of each quarterly report: a sentence
+                          or two on what happened, which organizations were worked with, and a few
+                          highlighted contributions.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Built from the same counts as the tables below —
-                            merged, reviewed, and co-authored pull requests, and
-                            issues — turned into a few sentences, a list of
-                            organizations worked with, and up to three
-                            highlighted contributions. The Markdown version of
-                            the report shows the same numbers as a
-                            <strong>Quarterly Statistics</strong> table instead,
-                            since Markdown can't do the same layout.
+                            Built from the same counts as the tables below — merged, reviewed, and
+                            co-authored pull requests, and issues — turned into a few sentences, a
+                            list of organizations worked with, and up to three highlighted
+                            contributions. The Markdown version of the report shows the same numbers
+                            as a
+                            <strong>Quarterly Statistics</strong> table instead, since Markdown
+                            can't do the same layout.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="stats" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Quarterly Statistics
@@ -2374,32 +2062,26 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A summary that shows the total work and the projects
-                          involved during a specific three-month period.
+                          A summary that shows the total work and the projects involved during a
+                          specific three-month period.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Adds up every type of contribution and every
-                            different repo touched during that three-month
-                            period.
+                            Adds up every type of contribution and every different repo touched
+                            during that three-month period.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="focusProjects" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Top 3 Repositories
@@ -2407,31 +2089,25 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          The projects that received the most work and attention
-                          within each quarter.
+                          The projects that received the most work and attention within each
+                          quarter.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Sorts repos by how many contributions happened in
-                            them that quarter.
+                            Sorts repos by how many contributions happened in them that quarter.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="merged" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Merged PRs
@@ -2439,32 +2115,27 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of pull requests that got accepted and merged
-                          into other people's repos.
+                          A record of pull requests that got accepted and merged into other people's
+                          repos.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Finds every pull request marked as merged, and works
-                            out the <strong>Review Period</strong> — the time
-                            from opening it to it being accepted.
+                            Finds every pull request marked as merged, and works out the
+                            <strong>Review Period</strong> — the time from opening it to it being
+                            accepted.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="issues" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Issues
@@ -2472,33 +2143,26 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of bugs, ideas, and problems reported on
-                          other people's repos.
+                          A record of bugs, ideas, and problems reported on other people's repos.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Collects every issue opened, whether or not it was
-                            assigned. Works out the
-                            <strong>Closing Period</strong> — the time from
-                            opening to closing.
+                            Collects every issue opened, whether or not it was assigned. Works out
+                            the
+                            <strong>Closing Period</strong> — the time from opening to closing.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="reviewed" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Reviewed PRs
@@ -2506,34 +2170,26 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of formal reviews left on other people's pull
-                          requests.
+                          A record of formal reviews left on other people's pull requests.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Works out the <strong>Review Period</strong> — from
-                            the pull request opening to the formal review being
-                            submitted — and tracks its current
-                            <strong>Status</strong> and
-                            <strong>Last Update</strong>.
+                            Works out the <strong>Review Period</strong> — from the pull request
+                            opening to the formal review being submitted — and tracks its current
+                            <strong>Status</strong> and <strong>Last Update</strong>.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="coAuthored" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Co-authored PRs
@@ -2541,13 +2197,11 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of pull requests where code was contributed
-                          alongside other developers.
+                          A record of pull requests where code was contributed alongside other
+                          developers.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
@@ -2555,22 +2209,17 @@
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
                             Finds commits credited to a co-author. The
-                            <strong>Commit Period</strong> is the time from the
-                            pull request opening to the first commit on it —
-                            showing when the collaboration started.
-                            <strong>Status</strong> and
-                            <strong>Last Update</strong> track where it stands
-                            now.
+                            <strong>Commit Period</strong> is the time from the pull request opening
+                            to the first commit on it — showing when the collaboration started.
+                            <strong>Status</strong> and <strong>Last Update</strong> track where it
+                            stands now.
                           </div>
                         </div>
                       </div>
                     </div>
                     <div id="collaborations" class="mb-16 last:mb-0">
                       <h3
-                        style="
-                          color: var(--t-brand);
-                          border-bottom: 2px solid var(--t-brand-line);
-                        "
+                        style="color: var(--t-brand); border-bottom: 2px solid var(--t-brand-line)"
                         class="text-xl font-extrabold mb-6 pb-2 inline-block"
                       >
                         Collaborations
@@ -2578,21 +2227,19 @@
 
                       <div class="space-y-6">
                         <p class="text-lg glossary-body leading-relaxed">
-                          A record of comments left on issues or pull requests
-                          opened by other people.
+                          A record of comments left on issues or pull requests opened by other
+                          people.
                         </p>
 
-                        <div
-                          class="glossary-code-block p-6 overflow-x-auto rounded-2xl"
-                        >
+                        <div class="glossary-code-block p-6 overflow-x-auto rounded-2xl">
                           <span
                             class="block text-xs uppercase tracking-widest glossary-caption mb-3 font-black font-mono"
                           >
                             How it’s worked out
                           </span>
                           <div class="text-sm glossary-accent leading-relaxed">
-                            Tracks comments on pull requests and issues, up
-                            until one gets a formal review.
+                            Tracks comments on pull requests and issues, up until one gets a formal
+                            review.
                           </div>
                         </div>
                       </div>
@@ -2606,10 +2253,7 @@
       </div>
     </main>
     <footer
-      style="
-        border-top-color: var(--c-neutral-10);
-        color: var(--c-text-secondary-rgb);
-      "
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -2649,31 +2293,23 @@
         </a>
       </div>
     </footer>
-    <button
-      type="button"
-      id="back-to-top"
-      class="back-to-top"
-      aria-label="Back to top"
-      hidden
-    >
+    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById("back-to-top");
+        var btn = document.getElementById('back-to-top');
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
-        btn.addEventListener("click", function () {
-          var reduceMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
+        btn.addEventListener('click', function () {
+          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: reduceMotion ? 'auto' : 'smooth',
           });
         });
       })();
