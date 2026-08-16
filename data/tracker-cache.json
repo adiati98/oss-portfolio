@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-15T06:04:26.880Z",
+  "fetchedAt": "2026-08-16T02:24:46.911Z",
   "data": {
     "mautic/developer-documentation-new#616": {
       "docsUpdatedAt": "2026-08-10T08:14:49Z",
@@ -4481,7 +4481,7 @@
       ]
     },
     "mautic/user-documentation#901": {
-      "docsUpdatedAt": "2026-08-14T19:09:55Z",
+      "docsUpdatedAt": "2026-08-14T20:18:23Z",
       "codeUpdatedAt": null,
       "rawDocsReviews": [
         {
@@ -4501,6 +4501,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-08-14T19:09:55Z",
           "body": "Diagnosed the two flagged images — both are clipped captures. The paste-cloned-event modal lost its top event node and connector and is cut off at the edges, and the send-email delay-options shot has the heading clipped at the top with a broken overlapping footer at the bottom. Re-capturing both correctly against a local Mautic 6.0.x instance at 2x, matching the framing of the four accepted images in this PR. Will follow up with the results."
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-08-14T20:18:23Z",
+          "body": "Thanks for flagging those two images @RCheesley — both were botched in the previous capture (commit `9fb5feb` fixes them):\n\n- **`send-email-delay-options.png`** — the heading was cut off and a dark Add/Cancel bar was overlapping the Priority/Attempts fields. Recaptured to show the full modal top-to-bottom with a clean footer.\n- **`paste-cloned-event-modal.png`** — the Decision/Action/Condition cards were clipped at both edges. Recaptured with all three cards fully in-frame plus the 'Insert cloned event here' panel.\n\nBoth were recaptured against a fresh Mautic 6.0.9 instance at 2x and now match the framing of the other images in the PR. The other four images are unchanged. Ready for another look."
         }
       ],
       "rawCodeComments": [],
@@ -4966,13 +4971,13 @@
     },
     "mautic/user-documentation#880": {
       "docsUpdatedAt": "2026-07-31T08:44:23Z",
-      "codeUpdatedAt": "2026-08-10T11:12:05Z",
+      "codeUpdatedAt": "2026-08-15T02:25:52Z",
       "rawDocsReviews": [],
       "rawDocsComments": [],
       "rawCodeComments": [
         {
           "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-08-10T10:45:21Z",
+          "created_at": "2026-08-15T02:25:52Z",
           "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16877) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [10 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16877&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16877&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16877&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16877&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16877&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16877)\n\n"
         }
       ],
