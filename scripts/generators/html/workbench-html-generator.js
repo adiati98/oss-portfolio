@@ -201,7 +201,7 @@ const WORKBENCH_CSS = `
   .wbx-task a{color:var(--t-ink);font-weight:600}
   .wbx-task a:hover{color:var(--t-brand)}
   .wbx-next{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:10px;font-size:.78rem;color:var(--t-ink-2)}
-  .wbx-step{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px}
+  .wbx-step{font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;padding:1px 8px;border-radius:5px;word-break:break-word;overflow-wrap:break-word}
   .wbx-step--do{color:var(--t-caution);background:var(--t-caution-wash)}
   .wbx-step--ship{color:var(--t-positive);background:var(--t-positive-wash)}
   /* Triage, not the row's instruction — brand blue keeps it a visibly
