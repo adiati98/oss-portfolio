@@ -829,16 +829,18 @@ run(
   }
 );
 
-// SR2. Age is urgency text INSIDE a row, never demotion to a folded lane. A
-// reviewing row the author last touched 12d ago stays in the action lane and
-// carries the escalation in its nextStep.
+// SR2. Age is urgency shown via idleDays (the pill), never demotion to a
+// folded lane. A reviewing row the author last touched 12d ago stays in the
+// action lane; nextStep states the reason plainly, without an escalation
+// word the row hasn't earned (see the LCP rule 3a fixtures for the one case
+// "escalate" is reserved for).
 run(
-  'SR2 · author replied 12d ago → still action, age shown as follow-up text',
+  'SR2 · author replied 12d ago → still action, age shown via idleDays',
   { tasks: [local({ number: 4002, updatedAt: daysAgo(12), lastSubstantiveDate: daysAgo(12), lastActor: 'writer3', author: 'writer3' })] },
   ({ records }) => {
     assert.equal(records[0].lane, 'action');
-    assert.ok(/12d/.test(records[0].nextStep), records[0].nextStep);
-    assert.ok(/follow up|escalate|reminder/i.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Author replied — review the latest changes');
+    assert.ok(records[0].idleDays >= 12, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -923,9 +925,11 @@ run(
   ({ records }) => {
     assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
     assert.equal(records[0].ball, 'Take Action');
-    // Age is not lost — it escalates inside the row instead of demoting it.
-    assert.ok(/40d/.test(records[0].nextStep), records[0].nextStep);
-    assert.ok(/escalate/i.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Author replied — review the latest changes');
+    // Age is not lost — it's carried on idleDays (rendered on the pill)
+    // instead of demoting the row or being misworded as "escalate" in the
+    // step text, which is reserved for the real code-author-reminder case.
+    assert.ok(records[0].idleDays >= 40, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -957,7 +961,8 @@ run(
   ({ records }) => {
     assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
     assert.ok(records[0].reviewRequest, 'the review request must survive on the record');
-    assert.ok(/45d/.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Review requested — review it');
+    assert.ok(records[0].idleDays >= 45, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -1843,10 +1848,11 @@ run(
   }
 );
 
-// M9. The idle escalation still rides inside nextStep, and the milestone stays
-// out of it — two separate channels, so neither can crowd out the other.
+// M9. idleDays and the milestone flag are two separate channels on the
+// record — the missing-milestone flag never gets folded into nextStep text,
+// and nextStep stays the plain reason regardless of age.
 run(
-  'M9 · idle hint stays in the step, milestone stays a field',
+  'M9 · idleDays and milestone stay separate fields, nextStep stays plain',
   {
     tasks: [
       local({
@@ -1862,11 +1868,8 @@ run(
   },
   ({ records }) => {
     assertMilestone(records[0], true);
-    assert.equal(
-      records[0].nextStep,
-      `${AUTHOR_REPLIED} · idle 20d, escalate`,
-      records[0].nextStep
-    );
+    assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+    assert.ok(records[0].idleDays >= 20, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -2069,18 +2072,18 @@ run(
 );
 
 // ===========================================================================
-// Idle suffix (§ I) — the escalation APPENDS to the reason, never replaces it.
-// Regression: `idleHint(idleDays) || reason` dropped the reason on exactly the
-// oldest rows, so the board stopped saying what to do and said only how late.
+// Idle wording (§ I) — nextStep states the reason plainly at any age. Age
+// itself lives only in idleDays (rendered as the pill's "· Nd" badge), never
+// folded into the step text as a remind/follow-up/escalate word — that ladder
+// belongs to the upstream tracker's own code-author-reminder timeline (see
+// the LCP fixtures), which this repo doesn't model for generic action rows.
+// Regression: this used to append "· idle Nd, escalate" and mislabel any
+// aged action-lane row (e.g. a plain review request) as needing escalation.
 // ===========================================================================
 
-for (const [days, tail] of [
-  [8, 'idle 8d, send a reminder'],
-  [11, 'idle 11d, follow up'],
-  [20, 'idle 20d, escalate'],
-]) {
+for (const days of [3, 8, 11, 20]) {
   run(
-    `I1 · idle ${days}d → "reason · ${tail}"`,
+    `I1 · idle ${days}d → reason stays plain, age lives in idleDays`,
     {
       tasks: [
         local({
@@ -2094,18 +2097,16 @@ for (const [days, tail] of [
       ],
     },
     ({ records }) => {
-      assert.equal(records[0].nextStep, `${AUTHOR_REPLIED} · ${tail}`, records[0].nextStep);
-      assert.ok(
-        records[0].nextStep.startsWith(AUTHOR_REPLIED),
-        'the reason survives the escalation'
-      );
+      assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+      assert.ok(records[0].idleDays >= days, `idleDays was: ${records[0].idleDays}`);
     }
   );
 }
 
-// I2. Under the 7-day threshold there is no suffix at all.
+// I2. Same bare reason at zero days too — nothing special about crossing a
+// threshold, because there's no longer a threshold-driven suffix to cross.
 run(
-  'I2 · below the remind threshold → bare reason, no suffix',
+  'I2 · fresh row → same bare reason',
   {
     tasks: [local({ repo: 'someorg/app', number: 6060, lastActor: 'writerA', author: 'writerA' })],
   },
@@ -2280,6 +2281,105 @@ run(
   ({ records }) => {
     assert.equal(records[0].lane, 'action');
     assert.equal(records[0].nextStep, 'Address the review feedback', records[0].nextStep);
+  }
+);
+
+// ===========================================================================
+// Linked code PR state (rule 3a)
+// ===========================================================================
+
+// LCP1. Linked code PR merged → action lane, "review the docs now".
+run(
+  'LCP1 · linked code PR merged → action lane',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7001,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17001',
+        linkedCodePrState: 'merged',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, 'Code PR merged — review the docs now');
+  }
+);
+
+// LCP2. Linked code PR closed unmerged → action lane, "close this docs PR".
+run(
+  'LCP2 · linked code PR closed unmerged → action lane',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7002,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17002',
+        linkedCodePrState: 'closed',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, 'Code PR closed unmerged — close this docs PR');
+  }
+);
+
+// LCP3. Linked code PR still open → no verdict, falls through to the
+// turn-based reading unchanged (here: the ball is still with the author,
+// waiting on their own reply).
+run(
+  'LCP3 · linked code PR open → falls through to turn logic',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7003,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17003',
+        linkedCodePrState: 'open',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.notEqual(r.nextStep, 'Code PR merged — review the docs now');
+    assert.notEqual(r.nextStep, 'Code PR closed unmerged — close this docs PR');
+  }
+);
+
+// LCP4. Unknown (null) state — a failed/403 fetch — carries no verdict
+// either, same fallthrough as 'open'.
+run(
+  'LCP4 · linked code PR state unknown (null) → falls through to turn logic',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7004,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17004',
+        linkedCodePrState: null,
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.notEqual(r.nextStep, 'Code PR merged — review the docs now');
+    assert.notEqual(r.nextStep, 'Code PR closed unmerged — close this docs PR');
   }
 );
 

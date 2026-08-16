@@ -13,7 +13,11 @@
  *                 it does not end one
  *   - nextStep    plain-language remaining action (required for action/ready)
  *   - linkedCodePr / upstream signals from the tracker cache
- *   - idleDays    drives remind (7d) → follow up (10d) → escalate (14d)
+ *   - idleDays    how long a row has sat untouched; shown on the pill and
+ *                 drives the 30d stalled fold. "Escalate" is reserved for the
+ *                 upstream tracker's own timeline (code PR merged, author
+ *                 reminded, still silent 14d) — this repo doesn't track who
+ *                 reminded whom yet, so that word never appears here.
  *
  * Every rule here is repo-agnostic. The tracker feed only ever covered the
  * Mautic docs repos, so reading its `raw*` arrays directly used to be what
@@ -44,8 +48,6 @@ const TRACKER_CACHE_FILE = path.join('data', 'tracker-cache.json');
 
 const STALLED_AFTER_DAYS = 30;
 const REMIND_AFTER_DAYS = 7;
-const FOLLOW_UP_AFTER_DAYS = 10;
-const ESCALATE_AFTER_DAYS = 14;
 
 /**
  * Per-project docs housekeeping — see contents/docs-workflow-repos.js. Loaded
@@ -668,38 +670,17 @@ function deriveBotPing(activity, local, me) {
 // Lane + next-step derivation (the tracker's model, generalized)
 // ---------------------------------------------------------------------------
 
-function idleHint(idleDays) {
-  if (idleDays >= ESCALATE_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d, escalate`;
-  if (idleDays >= FOLLOW_UP_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d, follow up`;
-  if (idleDays >= REMIND_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d, send a reminder`;
-  return null;
-}
-
-/**
- * Appends the escalation to a step instead of replacing it: "reason · idle 14d,
- * escalate". The old `idleHint(idleDays) || reason` form discarded the reason
- * on exactly the rows that most needed it — the oldest ones, where the board
- * went from telling you what to do to telling you only how late you were.
- *
- * Steps that already state their own age ("You reviewed 12d ago…") skip this:
- * the escalation is what age ADDS to a step, and a step carrying "12d ago ·
- * idle 12d" says the same thing twice.
- */
-function withIdle(step, idleDays) {
-  const hint = idleHint(idleDays);
-  if (!hint) return step || null;
-  return step ? `${step} · ${hint}` : hint;
-}
-
 /**
  * Assigns lane, ball label, and nextStep for one merged record.
  *
  * Precedence, first match wins:
- *   1 bot lane          2 assigned issue     3 approval states
- *   4 direct ping at me 5 changes requested  6 conflicts
- *   7 turn-based fallback                    8 stalled fold
+ *   1 bot lane          2 assigned issue        3 approval states
+ *   3a linked code PR   4 direct ping at me      5 changes requested
+ *   6 conflicts         7 turn-based fallback    8 stalled fold
  *
- * 1–3 and 8 live here; 4–7 live in deriveTurn. Rules 4–6 only ever choose the
+ * 1–3, 3a, and 8 live here; 4–7 live in deriveTurn. Rule 3a only fires for a
+ * merged or closed-unmerged linked code PR — an open or unknown (null) state
+ * falls straight through to the turn-based reading unchanged. Rules 4–6 only ever choose the
  * WORDING — the lane and ball a row lands in are decided by the turn logic and
  * by the staleness fold exactly as before.
  *
@@ -717,8 +698,8 @@ function withIdle(step, idleDays) {
  * were carved out of that rule first (an issue you haven't started has nobody
  * touching it, so it always ages past the threshold); this generalizes the
  * carve-out to every path where the ball is yours. Age still shows: the row
- * carries idleDays, the reviewing steps escalate through idleHint, and the
- * action lane sorts oldest-first.
+ * carries idleDays (rendered on the pill), and the action lane sorts
+ * oldest-first.
  */
 function deriveLane(record, me, botPingSignal = null, signals = emptySignals()) {
   const result = laneFor(record, me, botPingSignal, signals);
@@ -791,6 +772,21 @@ function laneFor(record, me, botPingSignal, signals) {
     return { lane: 'ready', ball: 'Approved', nextStep };
   }
 
+  // Rule 3a — the linked code PR's fate is decisive: merged means the docs are
+  // now actionable, closed-unmerged means this docs PR has nothing left to
+  // track. An 'open' or unknown (null) state carries no verdict, so it falls
+  // straight through to the turn-based reading below, unchanged.
+  if (record.linkedCodePrState === 'merged') {
+    return { lane: 'action', ball: 'Take Action', nextStep: 'Code PR merged — review the docs now' };
+  }
+  if (record.linkedCodePrState === 'closed') {
+    return {
+      lane: 'action',
+      ball: 'Take Action',
+      nextStep: 'Code PR closed unmerged — close this docs PR',
+    };
+  }
+
   // Whose turn is it? Resolved BEFORE staleness (see the note above), so a row
   // where the ball is yours keeps its action lane no matter how old it is.
   const turn = deriveTurn(record, me, botPingSignal, signals);
@@ -834,7 +830,7 @@ function directPingStep(record, signals) {
     record.relationship === 'reviewing' &&
     (record.status === 'Request review' || Boolean(record.reviewRequest))
   ) {
-    return withIdle('Review requested — review it', record.idleDays);
+    return 'Review requested — review it';
   }
   return null;
 }
@@ -850,7 +846,7 @@ function changesRequestedStep(record, signals) {
   if (record.relationship !== 'authored' && record.relationship !== 'co-authoring') return null;
   const cr = signals.changesRequested;
   if (!cr || !cr.by) return null;
-  return withIdle(`Changes requested by ${cr.by} — address the feedback`, record.idleDays);
+  return `Changes requested by ${cr.by} — address the feedback`;
 }
 
 /**
@@ -861,10 +857,9 @@ function changesRequestedStep(record, signals) {
 function conflictStep(record, signals) {
   if (record.relationship !== 'authored' && record.relationship !== 'co-authoring') return null;
   if (!signals.conflict) return null;
-  const step = signals.conflict.base
+  return signals.conflict.base
     ? `Conflicts with ${signals.conflict.base} — rebase needed`
     : 'Conflicts — rebase needed';
-  return withIdle(step, record.idleDays);
 }
 
 /**
@@ -973,19 +968,19 @@ function turnReading(record, me, signals) {
       return {
         lane: 'action',
         ball: 'Take Action',
-        nextStep: withIdle('Author replied — review the latest changes', record.idleDays),
+        nextStep: 'Author replied — review the latest changes',
       };
     }
     // A formal review request aimed at you is a "your turn" ping — treat it
-    // like an @-mention. It lands in the action lane and escalates with age
-    // (remind → follow up → escalate). This generalizes the local
-    // `status === 'Request review'` flag to the cached review-request events,
-    // so any repo's rows get the same signal, not just tracker-covered ones.
+    // like an @-mention. It lands in the action lane; the pill already carries
+    // how long it's been idle. This generalizes the local `status === 'Request
+    // review'` flag to the cached review-request events, so any repo's rows
+    // get the same signal, not just tracker-covered ones.
     if (record.status === 'Request review' || Boolean(record.reviewRequest)) {
       return {
         lane: 'action',
         ball: 'Take Action',
-        nextStep: withIdle('Review requested — review it', record.idleDays),
+        nextStep: 'Review requested — review it',
       };
     }
     // A third party moved last: the outstanding review belongs to someone
@@ -1017,7 +1012,7 @@ function turnReading(record, me, signals) {
       return {
         lane: 'waiting',
         ball: 'Waiting',
-        nextStep: withIdle('No reviewer assigned — request one', record.idleDays),
+        nextStep: 'No reviewer assigned — request one',
       };
     }
     return {
@@ -1147,6 +1142,7 @@ function mergeWorkbench({
       linkedCodePr: linkedCodePr
         ? { ref: linkedCodePr, hasActivity: Boolean(upstream && upstream.codeUpdatedAt) }
         : null,
+      linkedCodePrState: local.linkedCodePrState ?? null,
       upstream: upstream
         ? {
             docsUpdatedAt: upstream.docsUpdatedAt || null,

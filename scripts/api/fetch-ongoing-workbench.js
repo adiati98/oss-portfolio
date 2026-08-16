@@ -1,7 +1,11 @@
 require('dotenv').config();
 const axios = require('axios');
 const { GITHUB_USERNAME, BASE_URL } = require('../config/config');
-const { getLinkedIssueNumbers, getPrActivityMeta } = require('../utils/github-helpers');
+const {
+  getLinkedIssueNumbers,
+  getPrActivityMeta,
+  extractLinkedCodePr,
+} = require('../utils/github-helpers');
 const {
   attachRateLimitLogger,
   withRateLimitRetry,
@@ -32,9 +36,11 @@ const axiosInstance = attachRateLimitLogger(
 // unlimited Promise.all) so we don't fire hundreds of simultaneous requests
 // at GitHub's secondary rate limiter when a user has thousands of open PRs
 // to track. Each PR's activity fetch fans out to 4 parallel calls, plus one
-// authoritative draft-state call (see fetchPrDetail) = 5, so the real peak is
-// PR_CONCURRENCY * 5 sockets — kept at 3 (=> ~15 in flight, further capped by
-// the agent's maxSockets) to stay under GitHub's abuse-detection threshold.
+// authoritative draft-state call (see fetchPrDetail), plus one linked-code-PR
+// state call on the rows that reference one (see fetchLinkedCodePrState) = up
+// to 6, so the real peak is PR_CONCURRENCY * 6 sockets — kept at 3 (=> ~18 in
+// flight, further capped by the agent's maxSockets) to stay under GitHub's
+// abuse-detection threshold.
 // Going higher reliably tripped secondary rate limits and ECONNRESET storms
 // that cost far more in backoff than the extra parallelism saved. The draft
 // call rides the same updated_at-gated cache, so it only fires when a PR
@@ -212,6 +218,31 @@ async function fetchPrDetail(owner, repo, pr, failedFetchCache) {
 }
 
 /**
+ * SHARED HELPER: fetchLinkedCodePrState
+ * Some docs PRs reference a code PR in another repo (extractLinkedCodePr).
+ * Knowing whether that code PR merged, closed unmerged, or is still open is
+ * what turns a vague "Watching" into a real next step. Only called for
+ * records that actually carry a linked code PR reference — everything else
+ * pays nothing. A failed or 403 fetch resolves to null (unknown), never
+ * 'open', so callers don't mistake "couldn't check" for "still open".
+ */
+async function fetchLinkedCodePrState(ref) {
+  const [repoPart, numberPart] = ref.split('#');
+  const [owner, repo] = repoPart.split('/');
+  const number = Number(numberPart);
+  try {
+    const resp = await withRateLimitRetry(
+      () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${number}`),
+      { label: `linked-code-pr#${number}` }
+    );
+    if (resp.data.merged) return 'merged';
+    return resp.data.state === 'closed' ? 'closed' : 'open';
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
  * SHARED HELPER: getCachedActivity
  * Wraps getPrActivityMeta (and the authoritative draft read) with a persistent,
  * updatedAt-gated cache so a PR that hasn't changed since the last run costs
@@ -231,7 +262,11 @@ async function getCachedActivity(owner, repo, pr, activityCache, failedFetchCach
 
   // The 4-call activity fetch and the PR detail read are independent, so run
   // them in parallel; the detail fields are folded onto the activity object.
-  const [activity, prDetail] = await Promise.all([
+  // The linked-code-PR state check rides along the same Promise.all, but only
+  // fires for a PR whose body actually references one — everything else pays
+  // nothing extra.
+  const linkedCodePr = extractLinkedCodePr(pr.body, `${owner}/${repo}`);
+  const [activity, prDetail, linkedCodePrState] = await Promise.all([
     getPrActivityMeta(
       owner,
       repo,
@@ -244,12 +279,14 @@ async function getCachedActivity(owner, repo, pr, activityCache, failedFetchCach
       pr.title
     ),
     fetchPrDetail(owner, repo, pr, failedFetchCache),
+    linkedCodePr ? fetchLinkedCodePrState(linkedCodePr) : Promise.resolve(null),
   ]);
   activity.isDraft = prDetail.isDraft;
   activity.requestedReviewers = prDetail.requestedReviewers;
   activity.mergeableState = prDetail.mergeableState;
   activity.baseRef = prDetail.baseRef;
   activity.milestone = prDetail.milestone;
+  activity.linkedCodePrState = linkedCodePrState;
 
   if (activityCache) {
     activityCache.set(cacheKey, { updatedAt: pr.updated_at, activity, schemaVersion: 2 });
@@ -304,6 +341,7 @@ const formatTask = async (pr, status, activityCache, failedFetchCache) => {
     mergeableState: activity.mergeableState ?? null,
     baseRef: activity.baseRef ?? null,
     milestone: activity.milestone ?? null,
+    linkedCodePrState: activity.linkedCodePrState ?? null,
   };
 };
 
