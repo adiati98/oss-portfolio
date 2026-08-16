@@ -518,7 +518,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
       ${navHtml}
       <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
-          <div class="max-w-6xl mx-auto">
+          <div class="max-w-7xl mx-auto">
             <header class="mt-16 mb-10">
               <p style="font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)">active workbench</p>
               <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color:var(--t-brand);letter-spacing:-.01em">Organized by what happens next</h1>

@@ -142,15 +142,41 @@ async function createGlossaryHtml() {
       <main id="main" class="grow w-full">
         <div class="px-6 sm:px-12 lg:px-16 xl:px-32 py-10">
           <div class="max-w-7xl mx-auto">
-            <header style="border-bottom-color: var(--t-brand-line);" class="text-center mt-16 mb-16 pb-12 border-b-2">
-              <h1 style="color: var(--t-brand);" class="text-4xl sm:text-6xl font-black mb-6 pt-8">
+            <header class="mt-16 mb-14">
+              <p style="font-family: ui-monospace, monospace; font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--t-ink-3);">glossary</p>
+              <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color: var(--t-brand); letter-spacing: -0.01em;">
                 ${GLOSSARY_CONTENT.title}
               </h1>
-              <p class="text-xl max-w-3xl mx-auto leading-relaxed glossary-body">
+              <p class="text-lg max-w-3xl leading-relaxed glossary-body">
                 ${processText(GLOSSARY_CONTENT.subtitle)}
               </p>
             </header>
-            <div class="max-w-[90ch] mx-auto">
+            <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
+              <nav
+                aria-label="Glossary sections"
+                class="glossary-toc mb-10 lg:mb-0 lg:sticky lg:top-8 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto lg:pr-4"
+              >
+                <p class="text-xs font-bold uppercase tracking-widest glossary-caption mb-3">On this page</p>
+                <ul class="space-y-4 text-sm">
+                  ${sections
+                    .map(
+                      (group) => dedent`
+                        <li>
+                          <a href="#${group.id}" class="font-semibold" style="color: var(--t-brand);">${group.title}</a>
+                          <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line);">
+                            ${group.items
+                              .map(
+                                (item) =>
+                                  `<li><a href="#${item.id}" class="block glossary-body hover:underline">${item.title}</a></li>`
+                              )
+                              .join('')}
+                          </ul>
+                        </li>
+                      `
+                    )
+                    .join('')}
+                </ul>
+              </nav>
               <article class="glossary-content">
                 <div class="metrics-container">
                   ${metricBlocksHtml}

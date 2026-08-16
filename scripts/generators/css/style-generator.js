@@ -454,13 +454,13 @@ function getGlossaryStyleCss() {
       padding: 0;
     }
 
-    /* Highlight the section when navigating via URL hash (#) */
+    /* Highlight the section when navigating via URL hash (#). Uses a
+       box-shadow halo rather than negative margin so the highlight can't
+       eat into a following section's spacing (e.g. on a last:mb-0 item). */
     :target {
       background-color: var(--t-brand-wash);
-      border-radius: 1rem;
       transition: background-color 0.5s ease;
-      padding: 1rem;
-      margin: -1rem;
+      box-shadow: 0 0 0 1rem var(--t-brand-wash);
       scroll-margin-top: 100px;
     }
 
