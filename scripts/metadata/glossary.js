@@ -3,7 +3,7 @@
  */
 const GLOSSARY_CONTENT = {
   title: 'Glossary',
-  subtitle: `Plain-English explanations of the terms used across this portfolio — what each one means, and how it's worked out from the underlying GitHub activity.`,
+  subtitle: `The terms used across this portfolio and how it's worked out from the underlying GitHub activity.`,
 
   sections: [
     {
@@ -15,7 +15,8 @@ const GLOSSARY_CONTENT = {
         {
           id: 'totalImpact',
           title: 'Total Impact',
-          description: 'Every contribution counted together, going back to the very first one on GitHub.',
+          description:
+            'Every contribution counted together, going back to the very first one on GitHub.',
           howItIsCalculated:
             'Adds up merged pull requests, issues, reviewed pull requests, co-authored pull requests, and collaborations.',
         },
@@ -25,7 +26,7 @@ const GLOSSARY_CONTENT = {
           description:
             'How many of those contributions were actually finished and accepted — not just opened.',
           howItIsCalculated:
-            'Counts only the contributions GitHub marked as merged. Total Impact also includes work that\'s still open, so this number is smaller — it\'s what\'s actually done.',
+            "Counts only the contributions GitHub marked as merged. Total Impact also includes work that's still open, so this number is smaller — it's what's actually done.",
         },
         {
           id: 'activeSince',
@@ -69,7 +70,8 @@ const GLOSSARY_CONTENT = {
     {
       id: 'journey',
       title: 'Journey',
-      description: 'Terms used on the Journey page — selected work, talks, expertise, and the roles behind them.',
+      description:
+        'Terms used on the Journey page — selected work, talks, expertise, and the roles behind them.',
       items: [
         {
           id: 'milestonesAwards',
@@ -85,7 +87,7 @@ const GLOSSARY_CONTENT = {
           description:
             'The skill areas behind the work, plus the tools and languages used to do it. No self-rated skill bars — the rest of the portfolio is the proof.',
           entryMethod:
-            'Expertise areas are entered manually in a contents file, each with a title and a short blurb. Tools and skills each show as their own list, but only if there\'s something in it — an empty list just doesn\'t show, heading and all. A few entries can be marked to stand out (bold, in the accent color) to call out the two or three that matter most.',
+            "Expertise areas are entered manually in a contents file, each with a title and a short blurb. Tools and skills each show as their own list, but only if there's something in it — an empty list just doesn't show, heading and all. A few entries can be marked to stand out (bold, in the accent color) to call out the two or three that matter most.",
         },
         {
           id: 'advocacyRoles',
@@ -99,7 +101,8 @@ const GLOSSARY_CONTENT = {
     {
       id: 'workbench',
       title: 'Active Workbench',
-      description: 'Terms used on the Active Workbench page — the live board of maintainer and contribution work in progress.',
+      description:
+        'Terms used on the Active Workbench page — the live board of maintainer and contribution work in progress.',
       items: [
         {
           id: 'activeWorkbench',
@@ -120,7 +123,8 @@ A freshness badge in the header reads "Updated Xh ago" (or "Updated just now" / 
         {
           id: 'workbenchStatus',
           title: 'Workbench Status & Ball Tracking',
-          description: "A badge on each row showing whose turn it is, whether it's a draft, and how long it's been waiting.",
+          description:
+            "A badge on each row showing whose turn it is, whether it's a draft, and how long it's been waiting.",
           entryMethod: `Each task carries a "ball" badge showing whose move it is:
 * **Take Action:** New feedback to address, a requested review, or a reply that needs an answer.
 * **To Write:** An issue that's assigned, with no pull request opened yet.
@@ -139,7 +143,8 @@ A **Draft** chip marks a pull request still in draft state. **The day count** sh
     {
       id: 'writing',
       title: 'Writing',
-      description: 'Terms used on the Writing page, covering recognitions and published articles and how they are grouped.',
+      description:
+        'Terms used on the Writing page, covering recognitions and published articles and how they are grouped.',
       items: [
         {
           id: 'recognitions',
@@ -162,7 +167,8 @@ A **Draft** chip marks a pull request still in draft state. **The day count** sh
     {
       id: 'quarterlyReports',
       title: 'Quarterly Reports',
-      description: 'How contributions are grouped into three-month periods, making them easier to find and read.',
+      description:
+        'How contributions are grouped into three-month periods, making them easier to find and read.',
       items: [
         {
           id: 'reportsIndex',
@@ -177,7 +183,8 @@ A **Draft** chip marks a pull request still in draft state. **The day count** sh
     {
       id: 'quarterlyMetrics',
       title: 'Quarterly Report Metrics',
-      description: 'Terms used inside a single report, covering the work done in that three-month period.',
+      description:
+        'Terms used inside a single report, covering the work done in that three-month period.',
       items: [
         {
           id: 'quarterInBrief',
@@ -185,53 +192,58 @@ A **Draft** chip marks a pull request still in draft state. **The day count** sh
           description:
             'A plain-language summary at the top of each quarterly report: a sentence or two on what happened, which organizations were worked with, and a few highlighted contributions.',
           howItIsCalculated:
-            'Built from the same counts as the tables below — merged, reviewed, and co-authored pull requests, and issues — turned into a few sentences, a list of organizations worked with, and up to three highlighted contributions. The Markdown version of the report shows the same numbers as a **Quarterly Statistics** table instead, since Markdown can\'t do the same layout.',
+            "Built from the same counts as the tables below — merged, reviewed, and co-authored pull requests, and issues — turned into a few sentences, a list of organizations worked with, and up to three highlighted contributions. The Markdown version of the report shows the same numbers as a **Quarterly Statistics** table instead, since Markdown can't do the same layout.",
         },
         {
           id: 'stats',
           title: 'Quarterly Statistics',
-          description: 'A summary that shows the total work and the projects involved during a specific three-month period.',
+          description:
+            'A summary that shows the total work and the projects involved during a specific three-month period.',
           howItIsCalculated:
             'Adds up every type of contribution and every different repo touched during that three-month period.',
         },
         {
           id: 'focusProjects',
           title: 'Top 3 Repositories',
-          description: 'The projects that received the most work and attention within each quarter.',
+          description:
+            'The projects that received the most work and attention within each quarter.',
           howItIsCalculated: 'Sorts repos by how many contributions happened in them that quarter.',
         },
         {
           id: 'merged',
           title: 'Merged PRs',
-          description: 'A record of pull requests that got accepted and merged into other people\'s repos.',
+          description:
+            "A record of pull requests that got accepted and merged into other people's repos.",
           howItIsCalculated:
             'Finds every pull request marked as merged, and works out the **Review Period** — the time from opening it to it being accepted.',
         },
         {
           id: 'issues',
           title: 'Issues',
-          description: 'A record of bugs, ideas, and problems reported on other people\'s repos.',
+          description: "A record of bugs, ideas, and problems reported on other people's repos.",
           howItIsCalculated:
             'Collects every issue opened, whether or not it was assigned. Works out the **Closing Period** — the time from opening to closing.',
         },
         {
           id: 'reviewed',
           title: 'Reviewed PRs',
-          description: 'A record of formal reviews left on other people\'s pull requests.',
+          description: "A record of formal reviews left on other people's pull requests.",
           howItIsCalculated:
             'Works out the **Review Period** — from the pull request opening to the formal review being submitted — and tracks its current **Status** and **Last Update**.',
         },
         {
           id: 'coAuthored',
           title: 'Co-authored PRs',
-          description: 'A record of pull requests where code was contributed alongside other developers.',
+          description:
+            'A record of pull requests where code was contributed alongside other developers.',
           howItIsCalculated:
             'Finds commits credited to a co-author. The **Commit Period** is the time from the pull request opening to the first commit on it — showing when the collaboration started. **Status** and **Last Update** track where it stands now.',
         },
         {
           id: 'collaborations',
           title: 'Collaborations',
-          description: 'A record of comments left on issues or pull requests opened by other people.',
+          description:
+            'A record of comments left on issues or pull requests opened by other people.',
           howItIsCalculated:
             'Tracks comments on pull requests and issues, up until one gets a formal review.',
         },

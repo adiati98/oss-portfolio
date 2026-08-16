@@ -151,7 +151,32 @@ async function createGlossaryHtml() {
                 ${processText(GLOSSARY_CONTENT.subtitle)}
               </p>
             </header>
-            <div class="max-w-[90ch] mx-auto">
+            <div class="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
+              <nav
+                aria-label="Glossary sections"
+                class="glossary-toc mb-10 lg:mb-0 lg:sticky lg:top-8 lg:self-start lg:max-h-[calc(100vh-4rem)] lg:overflow-y-auto lg:pr-4"
+              >
+                <p class="text-xs font-bold uppercase tracking-widest glossary-caption mb-3">On this page</p>
+                <ul class="space-y-4 text-sm">
+                  ${sections
+                    .map(
+                      (group) => dedent`
+                        <li>
+                          <a href="#${group.id}" class="font-semibold" style="color: var(--t-brand);">${group.title}</a>
+                          <ul class="mt-2 space-y-1.5 pl-3 border-l" style="border-color: var(--t-line);">
+                            ${group.items
+                              .map(
+                                (item) =>
+                                  `<li><a href="#${item.id}" class="block glossary-body hover:underline">${item.title}</a></li>`
+                              )
+                              .join('')}
+                          </ul>
+                        </li>
+                      `
+                    )
+                    .join('')}
+                </ul>
+              </nav>
               <article class="glossary-content">
                 <div class="metrics-container">
                   ${metricBlocksHtml}
