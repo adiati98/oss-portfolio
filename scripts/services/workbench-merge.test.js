@@ -691,10 +691,11 @@ run(
 
 const AUTHOR_REPLIED = 'Author replied — review the latest changes';
 
-// B1. Bot's latest comment @-mentions me → my turn: action, no chip, no botPing,
-// and never the forbidden "author replied" step.
+// B1. Bot's latest comment @-mentions me → my turn: action, no botPing, and
+// never the forbidden "author replied" step. The step is routed BY THE PING —
+// who named me and when — so the row says what the ping was, not who "replied".
 run(
-  'Promptless last actor @-mentions me → action (no chip)',
+  'Promptless last actor @-mentions me → action, routed by the ping',
   {
     tasks: [
       local({
@@ -723,14 +724,19 @@ run(
     assert.notEqual(r.lane, 'bot');
     assert.equal(r.lane, 'action');
     assert.equal(r.ball, 'Take Action');
-    assert.equal(r.nextStep, null, 'no chip — the lane already says it is my turn');
+    assert.equal(
+      r.nextStep,
+      'promptless-for-oss mentioned you 1d ago — reply',
+      `nextStep was: ${r.nextStep}`
+    );
     assert.ok(!r.botPing, 'no botPing when the bot pinged me');
     assert.notEqual(r.nextStep, AUTHOR_REPLIED);
   }
 );
 
 // B1b. Bot pinged me via a live review request (its latest comment names nobody)
-// → still my turn: action, no chip, no botPing. Mirrors real #592.
+// → still my turn: action, no botPing, and the step names the review it asked
+// for rather than any "author" wording. Mirrors real #592.
 run(
   'Promptless last actor with live review request aimed at me → action',
   {
@@ -760,7 +766,8 @@ run(
     const r = records.find((x) => x.key === 'mautic/developer-documentation-new#592');
     assert.equal(r.lane, 'action');
     assert.equal(r.ball, 'Take Action');
-    assert.equal(r.nextStep, null);
+    assert.equal(r.nextStep, 'Review requested — review it', `nextStep was: ${r.nextStep}`);
+    assert.notEqual(r.nextStep, AUTHOR_REPLIED);
     assert.ok(!r.botPing, 'pinged me too → my turn, not a "pinged others" row');
   }
 );
@@ -822,16 +829,18 @@ run(
   }
 );
 
-// SR2. Age is urgency text INSIDE a row, never demotion to a folded lane. A
-// reviewing row the author last touched 12d ago stays in the action lane and
-// carries the escalation in its nextStep.
+// SR2. Age is urgency shown via idleDays (the pill), never demotion to a
+// folded lane. A reviewing row the author last touched 12d ago stays in the
+// action lane; nextStep states the reason plainly, without an escalation
+// word the row hasn't earned (see the LCP rule 3a fixtures for the one case
+// "escalate" is reserved for).
 run(
-  'SR2 · author replied 12d ago → still action, age shown as follow-up text',
+  'SR2 · author replied 12d ago → still action, age shown via idleDays',
   { tasks: [local({ number: 4002, updatedAt: daysAgo(12), lastSubstantiveDate: daysAgo(12), lastActor: 'writer3', author: 'writer3' })] },
   ({ records }) => {
     assert.equal(records[0].lane, 'action');
-    assert.ok(/12d/.test(records[0].nextStep), records[0].nextStep);
-    assert.ok(/follow up|escalate|reminder/i.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Author replied — review the latest changes');
+    assert.ok(records[0].idleDays >= 12, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -916,9 +925,11 @@ run(
   ({ records }) => {
     assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
     assert.equal(records[0].ball, 'Take Action');
-    // Age is not lost — it escalates inside the row instead of demoting it.
-    assert.ok(/40d/.test(records[0].nextStep), records[0].nextStep);
-    assert.ok(/escalate/i.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Author replied — review the latest changes');
+    // Age is not lost — it's carried on idleDays (rendered on the pill)
+    // instead of demoting the row or being misworded as "escalate" in the
+    // step text, which is reserved for the real code-author-reminder case.
+    assert.ok(records[0].idleDays >= 40, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -950,7 +961,8 @@ run(
   ({ records }) => {
     assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
     assert.ok(records[0].reviewRequest, 'the review request must survive on the record');
-    assert.ok(/45d/.test(records[0].nextStep), records[0].nextStep);
+    assert.equal(records[0].nextStep, 'Review requested — review it');
+    assert.ok(records[0].idleDays >= 45, `idleDays was: ${records[0].idleDays}`);
   }
 );
 
@@ -1097,6 +1109,1277 @@ run(
     assert.equal(records[0].lane, 'stalled');
     assert.ok(records[0].reviewedNote, 'reviewedNote must survive the demotion');
     assert.equal(records[0].reviewedNote.by, 'reviewer9');
+  }
+);
+
+// ===========================================================================
+// Generalized next steps (§ G) — every repo, not just the tracker-covered ones.
+//
+// These rows deliberately live in UNTRACKED repos with an EMPTY tracker feed:
+// each step below is derived purely from the widened local activity the fetch
+// layer caches (reviews, comments with mentions, reviewRequests,
+// requestedReviewers, mergeableState, baseRef, milestone). Before this, every
+// one of them fell through to `nextStep: null`.
+// ===========================================================================
+
+/** The widened PR-detail/activity block the fetch layer now writes onto each
+ * local record. Present-but-empty is meaningful: it says "we looked", which is
+ * what lets rules like "no reviewer assigned" speak at all. */
+function detail(overrides = {}) {
+  return {
+    reviews: [],
+    comments: [],
+    reviewRequests: [],
+    requestedReviewers: [],
+    mergeableState: null,
+    baseRef: null,
+    milestone: null,
+    ...overrides,
+  };
+}
+
+// G1. Reviewing, you moved last → the row can finally say why it's parked.
+run(
+  'G1 · reviewing, I reviewed last → "You reviewed Nd ago — author hasn\'t replied"',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6001,
+        lastActor: ME,
+        author: 'writerA',
+        ...detail({ reviews: [{ login: ME, state: 'COMMENTED', submittedAt: daysAgo(4) }] }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.source, 'local', 'derived with no tracker record at all');
+    assert.equal(r.upstream, null);
+    assert.equal(r.lane, 'waiting');
+    assert.equal(r.ball, 'Waiting');
+    assert.equal(r.nextStep, "You reviewed 4d ago — author hasn't replied", r.nextStep);
+  }
+);
+
+// G2. Reviewing, a third party moved last → name the reviewer still on the hook.
+run(
+  'G2 · reviewing, third party last → "Waiting on LOGIN to review — requested Nd ago"',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6002,
+        lastActor: 'thirdparty',
+        author: 'writerA',
+        ...detail({
+          requestedReviewers: ['maintainerZ'],
+          reviewRequests: [
+            { requestedReviewer: 'maintainerZ', actor: 'writerA', createdAt: daysAgo(5) },
+          ],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.equal(r.ball, 'Watching');
+    assert.equal(r.nextStep, 'Waiting on maintainerZ to review — requested 5d ago', r.nextStep);
+  }
+);
+
+// G2b. Nobody resolvable to wait on → drop the whole clause rather than print
+// "Waiting on  to review". The Watching pill already says this much.
+run(
+  'G2b · no resolvable reviewer → no step, never an empty placeholder',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6021,
+        lastActor: 'thirdparty',
+        author: 'writerA',
+        ...detail(),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, null, records[0].nextStep);
+  }
+);
+
+// G2c. A live pending reviewer with no surviving request event still gets
+// named — only the date clause drops.
+run(
+  'G2c · pending reviewer, no request event → date clause dropped',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6022,
+        lastActor: 'thirdparty',
+        author: 'writerA',
+        ...detail({ requestedReviewers: ['maintainerZ'] }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Waiting on maintainerZ to review', records[0].nextStep);
+  }
+);
+
+// G3. Your own PR, you spoke last → say when, and who owes you.
+run(
+  'G3 · authored, I replied last → "You replied Nd ago — waiting on LOGIN"',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6003,
+        lastActor: ME,
+        author: ME,
+        ...detail({
+          requestedReviewers: ['maintainerZ'],
+          comments: [{ login: ME, createdAt: daysAgo(3), mentions: [] }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.equal(r.nextStep, 'You replied 3d ago — waiting on maintainerZ', r.nextStep);
+  }
+);
+
+// G4. A bot pushed to your own PR. Never "author replied" — a push is not a
+// person answering you, it's a diff that moved under you.
+run(
+  'G4 · authored, bot pushed last → "LOGIN pushed Nd ago — re-check the changes"',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6004,
+        user: { login: ME },
+        author: ME,
+        lastActor: 'renovate[bot]',
+        isLastActorBot: true,
+        ...detail(),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.notEqual(r.lane, 'bot', 'my PR, not bot-lane clutter');
+    assert.equal(r.ball, 'Watching');
+    assert.equal(r.nextStep, 'renovate[bot] pushed 2d ago — re-check the changes', r.nextStep);
+  }
+);
+
+// G5. Changes requested and unanswered → say who, on any repo.
+run(
+  'G5 · changes requested → "Changes requested by LOGIN — address the feedback"',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6005,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          reviews: [{ login: 'reviewerQ', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action', 'the wording sharpens; the lane is untouched');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, 'Changes requested by reviewerQ — address the feedback', r.nextStep);
+  }
+);
+
+// G5b. Once you reply, it stops nagging and the generic step returns.
+run(
+  'G5b · changes requested, answered by a later reply of mine → back to generic',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6023,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          reviews: [{ login: 'reviewerQ', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(4) }],
+          comments: [{ login: ME, createdAt: daysAgo(2), mentions: [] }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Address the review feedback', records[0].nextStep);
+  }
+);
+
+// G6. A direct @-mention outranks the turn reading — being named is being asked.
+run(
+  'G6 · @-mention of me → "LOGIN mentioned you Nd ago — reply"',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6006,
+        lastActor: 'writerA',
+        author: 'writerA',
+        ...detail({
+          comments: [{ login: 'writerA', createdAt: daysAgo(2), mentions: ['adiati98'] }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action', 'lane still comes from the turn reading');
+    assert.equal(r.nextStep, 'writerA mentioned you 2d ago — reply', r.nextStep);
+  }
+);
+
+// G6b. A mention you already answered is spent — no later comment of mine, no
+// step. (Here I commented after it, so the row falls back to its turn step.)
+run(
+  'G6b · mention already answered → no ping step',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6024,
+        lastActor: 'writerA',
+        author: 'writerA',
+        ...detail({
+          comments: [
+            { login: 'writerA', createdAt: daysAgo(5), mentions: ['adiati98'] },
+            { login: ME, createdAt: daysAgo(3), mentions: [] },
+          ],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.ok(!/mentioned you/.test(records[0].nextStep || ''), records[0].nextStep);
+  }
+);
+
+// G7. Ready, non-draft, nobody asked to look → that IS the remaining step.
+run(
+  'G7 · ready with no reviewer and no review → "No reviewer assigned — request one"',
+  {
+    prs: [local({ repo: 'someorg/app', number: 6007, lastActor: ME, author: ME, ...detail() })],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'No reviewer assigned — request one', records[0].nextStep);
+  }
+);
+
+// G7b. A draft is not "ready", so it keeps the draft step instead.
+run(
+  'G7b · draft with no reviewer → still the draft step, not "request one"',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6025,
+        lastActor: ME,
+        author: ME,
+        isDraft: true,
+        ...detail(),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
+  }
+);
+
+// G7c. Without the PR-detail block there is no evidence either way, so the
+// rule stays silent rather than claiming nobody was asked.
+run(
+  'G7c · no cached PR detail → no "request one" claim',
+  {
+    prs: [local({ repo: 'someorg/app', number: 6026, lastActor: ME, author: ME })],
+  },
+  ({ records }) => {
+    assert.ok(!/reviewer assigned/.test(records[0].nextStep || ''), records[0].nextStep);
+  }
+);
+
+// G8. A definitively dirty merge state names the base branch.
+run(
+  'G8 · mergeableState dirty → "Conflicts with BRANCH — rebase needed"',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6008,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({ mergeableState: 'dirty', baseRef: 'main' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Conflicts with main — rebase needed', records[0].nextStep);
+  }
+);
+
+// G8b. No base branch to name → drop the clause, keep the fact.
+run(
+  'G8b · dirty with no baseRef → clause dropped',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6027,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({ mergeableState: 'dirty', baseRef: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Conflicts — rebase needed', records[0].nextStep);
+  }
+);
+
+// G8c. null (and any non-dirty state) means UNKNOWN, not clean and not
+// conflicted. Emit nothing — there is nothing to retry, the next build reads a
+// fresh value anyway.
+for (const state of [null, 'unknown', 'blocked', 'behind', 'clean']) {
+  run(
+    `G8c · mergeableState ${JSON.stringify(state)} → no conflict step`,
+    {
+      prs: [
+        local({
+          repo: 'someorg/app',
+          number: 6028,
+          lastActor: 'reviewerQ',
+          author: ME,
+          hasFormalReview: true,
+          ...detail({ mergeableState: state, baseRef: 'main' }),
+        }),
+      ],
+    },
+    ({ records }) => {
+      assert.ok(!/rebase|onflict/.test(records[0].nextStep || ''), records[0].nextStep);
+      assert.equal(records[0].nextStep, 'Address the review feedback', records[0].nextStep);
+    }
+  );
+}
+
+// ===========================================================================
+// Precedence (§ P) — one row carrying every signal at once, peeled back a
+// layer at a time. Ping → changes requested → conflicts → turn.
+//
+// Deliberately NOT a milestone repo: the milestone reminder appends rather
+// than competes (see § M), so keeping it out here leaves the ladder legible.
+// ===========================================================================
+
+function stacked(overrides) {
+  return local({
+    repo: 'someorg/app',
+    number: 6009,
+    lastActor: ME,
+    author: ME,
+    ...detail({
+      requestedReviewers: ['escopecz'],
+      reviews: [{ login: 'reviewerQ', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+      comments: [{ login: 'reviewerQ', createdAt: daysAgo(1), mentions: ['adiati98'] }],
+      mergeableState: 'dirty',
+      baseRef: 'main',
+      milestone: null,
+    }),
+    ...overrides,
+  });
+}
+
+run(
+  'P1 · ping outranks changes requested, conflicts and the turn',
+  { prs: [stacked({})] },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      'reviewerQ mentioned you 1d ago — reply',
+      records[0].nextStep
+    );
+  }
+);
+
+run(
+  'P2 · no ping → changes requested outranks conflicts and the turn',
+  { prs: [stacked({ comments: [] })] },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      'Changes requested by reviewerQ — address the feedback',
+      records[0].nextStep
+    );
+  }
+);
+
+run(
+  'P3 · no ping, no change request → conflicts outrank the turn',
+  { prs: [stacked({ comments: [], reviews: [] })] },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Conflicts with main — rebase needed', records[0].nextStep);
+  }
+);
+
+run(
+  'P4 · nothing pressing → the turn reading is what is left',
+  { prs: [stacked({ comments: [], reviews: [], mergeableState: null })] },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      'You replied 2d ago — waiting on escopecz',
+      records[0].nextStep
+    );
+  }
+);
+
+// ===========================================================================
+// Milestone reminder (§ M) — scoped by a repo list, never inferred from the
+// data, and carried as its OWN record field rather than spliced into nextStep.
+//
+// This follows the upstream docs-PR tracker, which models a missing milestone
+// as a lifecycle category (needs-milestone / needs-label-and-milestone) with
+// "act" severity, and renders it as a separate "Add milestone" chip pushed
+// AHEAD of the review chip. Two consequences differ from a plain suffix:
+// nextStep stays clean, and drafts are triaged rather than exempted.
+// ===========================================================================
+
+/** Every eligible row must expose the flag; none may leak it into the prose. */
+function assertMilestone(record, expected) {
+  assert.equal(
+    record.milestoneMissing,
+    expected,
+    `milestoneMissing was ${record.milestoneMissing}`
+  );
+  assert.ok(
+    !/milestone/i.test(record.nextStep || ''),
+    `nextStep must stay clean, was: ${record.nextStep}`
+  );
+}
+
+// M1. Fires on a listed Mautic repo, as a field — the row's own step is
+// untouched, so the renderer can draw the chip separately.
+run(
+  'M1 · listed Mautic repo → flag set, nextStep left alone',
+  {
+    prs: [
+      local({
+        repo: 'mautic/developer-documentation-new',
+        number: 6031,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assertMilestone(records[0], true);
+    assert.equal(
+      records[0].nextStep,
+      'You replied 2d ago — waiting on escopecz',
+      records[0].nextStep
+    );
+  }
+);
+
+// M2. …and NOT on an identical row in a repo that isn't on the list. Same
+// missing milestone, same shape — only the repo differs.
+run(
+  'M2 · milestone reminder does NOT fire for a non-Mautic repo',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6032,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assertMilestone(records[0], false);
+    assert.equal(
+      records[0].nextStep,
+      'You replied 2d ago — waiting on escopecz',
+      records[0].nextStep
+    );
+  }
+);
+
+// M3. A listed repo that DOES carry a milestone says nothing about it — and a
+// non-listed repo carrying one is equally silent. Presence of the field is
+// never what decides the scope.
+run(
+  'M3 · milestone present → silent, on listed and unlisted repos alike',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6033,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: 'Q3 docs' }),
+      }),
+      local({
+        repo: 'someorg/app',
+        number: 6034,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: 'Q3 docs' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    for (const r of records) assertMilestone(r, false);
+  }
+);
+
+// M4. The action lane — where most of the real board's Mautic rows sit. The
+// instruction is untouched; the chip is an independent field beside it.
+run(
+  'M4 · action lane → instruction untouched, flag set alongside',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6029,
+        lastActor: 'writerA',
+        author: 'writerA',
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action');
+    assertMilestone(records[0], true);
+    assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+  }
+);
+
+// M5. A missing milestone is YOUR move, so the row must not sit in a lane that
+// means the opposite. "Waiting on others" reads *your part is done*; "Stalled"
+// reads *nudge or close* AND folds the row shut so the chip goes unseen. Both
+// are false while a milestone is owed, so the row is promoted — and because
+// the promotion happens in the turn logic, the staleness fold skips it for
+// free, the same way it skips assigned issues and review pings.
+run(
+  'M5 · a stalled row is promoted to action, never folded away',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6035,
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].ball, 'Take Action');
+    assert.ok(
+      records[0].idleDays >= 30,
+      'genuinely old — it just is not stale while you owe it something'
+    );
+    assert.ok(!/nudge or close/.test(records[0].nextStep), records[0].nextStep);
+    assertMilestone(records[0], true);
+  }
+);
+
+// M5b. The plain waiting case, same rule.
+run(
+  'M5b · a waiting row is promoted to action',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6041,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].ball, 'Take Action');
+  }
+);
+
+// M5c. …but with the milestone set, the identical row stays where it was. The
+// promotion is caused by the missing milestone, not by the repo.
+run(
+  'M5c · milestone set → the same row stays in waiting',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6042,
+        lastActor: ME,
+        author: ME,
+        ...detail({ requestedReviewers: ['escopecz'], milestone: 'Q3 docs' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'waiting');
+    assert.equal(records[0].ball, 'Waiting');
+  }
+);
+
+// M5d. Drafts are triaged, NOT exempted. The upstream tracker's
+// needs-label-and-milestone category fires precisely on drafts and carries
+// "act" severity — a draft is when the milestone is cheapest to set, before
+// anyone is waiting on the merge. The draft instruction survives beside it.
+run(
+  'M5d · a draft is promoted too, keeping its own instruction',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6043,
+        lastActor: ME,
+        author: ME,
+        isDraft: true,
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assertMilestone(records[0], true);
+    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
+  }
+);
+
+// M6. The approval branch returns before the turn logic runs at all, so the
+// flag has to survive that route too — an approved PR still wants a milestone.
+// The lane is deliberately NOT promoted: "Approved — bring it home" already
+// means work is left before it ships, and the Approved pill says something
+// Take Action would throw away.
+run(
+  'M6 · reaches approved rows, and leaves that lane and pill alone',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6036,
+        reviewState: 'APPROVED',
+        approvedBy: 'escopecz',
+        lastActor: 'escopecz',
+        author: ME,
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'ready');
+    assert.equal(records[0].ball, 'Approved');
+    assertMilestone(records[0], true);
+    assert.equal(records[0].nextStep, 'Final review, then merge', records[0].nextStep);
+  }
+);
+
+// M7. A row with nothing else to say carries the flag alone — the chip is the
+// whole message, and nextStep stays null rather than inventing prose for it.
+run(
+  'M7 · no other step → the flag stands alone, nextStep stays null',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6037,
+        lastActor: 'thirdparty',
+        author: 'writerA',
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assertMilestone(records[0], true);
+    assert.equal(records[0].nextStep, null, records[0].nextStep);
+  }
+);
+
+// M8. The bot lane is folded away precisely so it carries no instructions —
+// a dependabot PR in a Mautic repo must stay silent. The upstream tracker
+// exempts Dependabot from milestone triage for the same reason.
+run(
+  'M8 · never on the bot lane',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6038,
+        user: { login: 'dependabot[bot]' },
+        author: 'dependabot[bot]',
+        title: 'Bump lodash from 4 to 5',
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'bot');
+    assertMilestone(records[0], false);
+    assert.equal(records[0].nextStep, null, records[0].nextStep);
+  }
+);
+
+// M9. idleDays and the milestone flag are two separate channels on the
+// record — the missing-milestone flag never gets folded into nextStep text,
+// and nextStep stays the plain reason regardless of age.
+run(
+  'M9 · idleDays and milestone stay separate fields, nextStep stays plain',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6039,
+        updatedAt: daysAgo(20),
+        lastSubstantiveDate: daysAgo(20),
+        lastActor: 'writerA',
+        author: 'writerA',
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assertMilestone(records[0], true);
+    assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+    assert.ok(records[0].idleDays >= 20, `idleDays was: ${records[0].idleDays}`);
+  }
+);
+
+// M10. Every record carries the field, so renderers never have to guard for
+// undefined — the same contract botPing follows.
+run(
+  'M10 · the field is present on every record, tracker-only rows included',
+  {
+    prs: [local({ repo: 'someorg/app', number: 6044, lastActor: ME, author: ME })],
+    tracker: {
+      'mautic/user-documentation#6045': {
+        docsUpdatedAt: daysAgo(3),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    for (const r of records) {
+      assert.ok('milestoneMissing' in r, `missing on ${r.key}`);
+      assert.equal(typeof r.milestoneMissing, 'boolean', `not a boolean on ${r.key}`);
+    }
+    // A tracker-only row has no local PR detail, so "no milestone" is an
+    // unknown, not a fact.
+    const trackerOnly = records.find((r) => r.source === 'tracker');
+    assert.equal(trackerOnly.milestoneMissing, false);
+  }
+);
+
+// ===========================================================================
+// Pending-PR label (§ L) — the second Mautic docs housekeeping rule, scoped by
+// its own repo list. Ported from the upstream tracker's
+// needs-label-and-milestone category, which prompts for the label on DRAFTS:
+// a draft docs PR is by definition still pending something. Once it is ready
+// for review, whether the label belongs is a judgement call about the linked
+// code PR, not a lapse — so the prompt stops.
+// ===========================================================================
+
+const PENDING_LABEL = 'pending-pr-merge';
+
+function draftRow(overrides) {
+  return local({
+    repo: 'mautic/user-documentation',
+    lastActor: ME,
+    author: ME,
+    isDraft: true,
+    ...detail({ milestone: 'Q3 docs' }),
+    ...overrides,
+  });
+}
+
+// L1. Draft in a listed repo, label absent → chip, and the row is promoted the
+// same way a missing milestone promotes it.
+run(
+  'L1 · draft without the label → flagged and promoted',
+  { prs: [draftRow({ number: 6101, labels: [] })] },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL, records[0].pendingLabelMissing);
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].ball, 'Take Action');
+    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
+  }
+);
+
+// L2. THE CLEARING CASE — the prompt is a live read of the PR's own labels
+// every build, never a stored flag. Add the label on GitHub and the chip is
+// gone on the next run, with nothing to reset by hand; the row drops back out
+// of the action lane too, since nothing is owed any more. Same fixture as L1
+// apart from the label, so the label is provably the only thing doing it.
+run(
+  'L2 · adding the label clears the chip and the promotion',
+  { prs: [draftRow({ number: 6102, labels: [PENDING_LABEL] })] },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
+    assert.equal(records[0].lane, 'waiting', 'nothing owed → back where it was');
+    assert.equal(records[0].ball, 'Waiting');
+  }
+);
+
+// L2b. Matched case-insensitively — GitHub label casing varies by who made it.
+run(
+  'L2b · label match ignores case',
+  { prs: [draftRow({ number: 6103, labels: ['Pending-PR-Merge'] })] },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
+  }
+);
+
+// L2c. …and it is the RIGHT label that clears it, not merely having labels.
+run(
+  'L2c · unrelated labels do not clear the prompt',
+  { prs: [draftRow({ number: 6104, labels: ['needs-backport', 'content-approved'] })] },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL, records[0].pendingLabelMissing);
+  }
+);
+
+// L3. Not a draft → no prompt, however the labels look. Once a PR is ready for
+// review the label is a judgement call, not a lapse.
+run(
+  'L3 · ready-for-review PR without the label → silent',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6105,
+        lastActor: ME,
+        author: ME,
+        isDraft: false,
+        labels: [],
+        ...detail({ requestedReviewers: ['escopecz'], milestone: 'Q3 docs' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
+  }
+);
+
+// L4. A draft in a repo that isn't on the list → silent. Same shape, only the
+// repo differs — the scope is the list, never the data.
+run(
+  'L4 · draft in a non-listed repo → silent',
+  { prs: [draftRow({ repo: 'someorg/app', number: 6106, labels: [], ...detail() })] },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
+    assert.equal(records[0].lane, 'waiting', 'nothing owed → no promotion');
+  }
+);
+
+// L5. Both housekeeping rules at once — two independent fields, neither
+// crowding out the other nor the row's own instruction.
+run(
+  'L5 · label and milestone both missing → both fields set, step untouched',
+  {
+    prs: [
+      draftRow({
+        repo: 'mautic/developer-documentation-new',
+        number: 6107,
+        labels: ['needs-backport'],
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL);
+    assert.equal(records[0].milestoneMissing, true);
+    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
+    assert.ok(!/label|milestone/i.test(records[0].nextStep), 'neither leaks into the prose');
+  }
+);
+
+// L6. Bot rows stay clean — the lane is folded away precisely so it carries no
+// instructions, and the upstream tracker exempts Dependabot for the same reason.
+run(
+  'L6 · never on the bot lane',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6108,
+        user: { login: 'dependabot[bot]' },
+        author: 'dependabot[bot]',
+        title: 'Bump lodash from 4 to 5',
+        isDraft: true,
+        labels: [],
+        ...detail({ milestone: null }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'bot');
+    assert.equal(records[0].pendingLabelMissing, null);
+    assert.equal(records[0].milestoneMissing, false);
+  }
+);
+
+// L7. Present on every record, so renderers never guard for undefined.
+run(
+  'L7 · the field is present on every record',
+  {
+    prs: [local({ repo: 'someorg/app', number: 6109, lastActor: ME, author: ME })],
+    tracker: {
+      'mautic/user-documentation#6110': {
+        docsUpdatedAt: daysAgo(3),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    for (const r of records) {
+      assert.ok('pendingLabelMissing' in r, `missing on ${r.key}`);
+      assert.ok(
+        r.pendingLabelMissing === null || typeof r.pendingLabelMissing === 'string',
+        `bad type on ${r.key}: ${typeof r.pendingLabelMissing}`
+      );
+    }
+  }
+);
+
+// ===========================================================================
+// Idle wording (§ I) — nextStep states the reason plainly at any age. Age
+// itself lives only in idleDays (rendered as the pill's "· Nd" badge), never
+// folded into the step text as a remind/follow-up/escalate word — that ladder
+// belongs to the upstream tracker's own code-author-reminder timeline (see
+// the LCP fixtures), which this repo doesn't model for generic action rows.
+// Regression: this used to append "· idle Nd, escalate" and mislabel any
+// aged action-lane row (e.g. a plain review request) as needing escalation.
+// ===========================================================================
+
+for (const days of [3, 8, 11, 20]) {
+  run(
+    `I1 · idle ${days}d → reason stays plain, age lives in idleDays`,
+    {
+      tasks: [
+        local({
+          repo: 'someorg/app',
+          number: 6040 + days,
+          updatedAt: daysAgo(days),
+          lastSubstantiveDate: daysAgo(days),
+          lastActor: 'writerA',
+          author: 'writerA',
+        }),
+      ],
+    },
+    ({ records }) => {
+      assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+      assert.ok(records[0].idleDays >= days, `idleDays was: ${records[0].idleDays}`);
+    }
+  );
+}
+
+// I2. Same bare reason at zero days too — nothing special about crossing a
+// threshold, because there's no longer a threshold-driven suffix to cross.
+run(
+  'I2 · fresh row → same bare reason',
+  {
+    tasks: [local({ repo: 'someorg/app', number: 6060, lastActor: 'writerA', author: 'writerA' })],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, AUTHOR_REPLIED, records[0].nextStep);
+  }
+);
+
+// I3. Steps that already state their own age don't double up on it.
+run(
+  'I3 · a step carrying its own age gets no idle suffix',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6061,
+        updatedAt: daysAgo(20),
+        lastSubstantiveDate: daysAgo(20),
+        lastActor: ME,
+        author: 'writerA',
+        ...detail({ reviews: [{ login: ME, state: 'COMMENTED', submittedAt: daysAgo(20) }] }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      "You reviewed 20d ago — author hasn't replied",
+      records[0].nextStep
+    );
+    assert.ok(!/idle 20d/.test(records[0].nextStep), 'no "20d ago · idle 20d"');
+  }
+);
+
+// ===========================================================================
+// Degradation (§ D) — the tracker can be down, and none of this may care.
+// ===========================================================================
+
+// D1. Feed down, no cache at all: the local fields carry the whole thing.
+run(
+  'D1 · tracker feed down → local fields still derive the specific step',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6070,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          reviews: [{ login: 'reviewerQ', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+        }),
+      }),
+    ],
+    feed: {
+      data: {},
+      fetchedAt: null,
+      degraded: true,
+      reason: 'live fetch failed; no cached feed',
+    },
+  },
+  ({ records, feed }) => {
+    assert.equal(feed.degraded, true);
+    assert.equal(
+      records[0].nextStep,
+      'Changes requested by reviewerQ — address the feedback',
+      records[0].nextStep
+    );
+  }
+);
+
+// D2. Where BOTH sides carry an array, upstream wins — the tracker sees a
+// repo's full history, the local cache is capped and can miss older activity.
+run(
+  'D2 · upstream reviews preferred over the local copy',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6071,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          // A milestone is set so this fixture stays about the merge
+          // preference and not the § M trailing clause.
+          milestone: 'Q3 docs',
+          reviews: [{ login: 'localGuy', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+        }),
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#6071': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [
+          { user: { login: 'upstreamGuy' }, state: 'CHANGES_REQUESTED', submitted_at: daysAgo(2) },
+        ],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      'Changes requested by upstreamGuy — address the feedback',
+      records[0].nextStep
+    );
+  }
+);
+
+// D3. An EMPTY upstream array is not a source of truth — it falls through to
+// the local copy instead of blanking a row that has real local activity.
+run(
+  'D3 · empty upstream array falls through to local activity',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 6072,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          // A milestone is set so this fixture stays about the merge
+          // preference and not the § M trailing clause.
+          milestone: 'Q3 docs',
+          reviews: [{ login: 'localGuy', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+        }),
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#6072': {
+        docsUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    assert.equal(
+      records[0].nextStep,
+      'Changes requested by localGuy — address the feedback',
+      records[0].nextStep
+    );
+  }
+);
+
+// D4. A record whose activity blows up mid-read yields NO signals rather than
+// a thrown build. The row still lands in a lane.
+run(
+  'D4 · malformed activity degrades to no signals, never a throw',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6073,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({
+          comments: [
+            {
+              get login() {
+                throw new Error('drifted record');
+              },
+            },
+          ],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action');
+    assert.equal(records[0].nextStep, 'Address the review feedback', records[0].nextStep);
+  }
+);
+
+// ===========================================================================
+// Linked code PR state (rule 3a)
+// ===========================================================================
+
+// LCP1. Linked code PR merged → action lane, "review the docs now".
+run(
+  'LCP1 · linked code PR merged → action lane',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7001,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17001',
+        linkedCodePrState: 'merged',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, 'Code PR merged — review the docs now');
+  }
+);
+
+// LCP2. Linked code PR closed unmerged → action lane, "close this docs PR".
+run(
+  'LCP2 · linked code PR closed unmerged → action lane',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7002,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17002',
+        linkedCodePrState: 'closed',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(r.nextStep, 'Code PR closed unmerged — close this docs PR');
+  }
+);
+
+// LCP3. Linked code PR still open → no verdict, falls through to the
+// turn-based reading unchanged (here: the ball is still with the author,
+// waiting on their own reply).
+run(
+  'LCP3 · linked code PR open → falls through to turn logic',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7003,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17003',
+        linkedCodePrState: 'open',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.notEqual(r.nextStep, 'Code PR merged — review the docs now');
+    assert.notEqual(r.nextStep, 'Code PR closed unmerged — close this docs PR');
+  }
+);
+
+// LCP4. Unknown (null) state — a failed/403 fetch — carries no verdict
+// either, same fallthrough as 'open'.
+run(
+  'LCP4 · linked code PR state unknown (null) → falls through to turn logic',
+  {
+    prs: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 7004,
+        author: ME,
+        lastActor: ME,
+        body: 'Docs for https://github.com/mautic/mautic/pull/17004',
+        linkedCodePrState: null,
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.notEqual(r.nextStep, 'Code PR merged — review the docs now');
+    assert.notEqual(r.nextStep, 'Code PR closed unmerged — close this docs PR');
   }
 );
 

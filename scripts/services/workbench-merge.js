@@ -13,12 +13,26 @@
  *                 it does not end one
  *   - nextStep    plain-language remaining action (required for action/ready)
  *   - linkedCodePr / upstream signals from the tracker cache
- *   - idleDays    drives remind (7d) → follow up (10d) → escalate (14d)
+ *   - idleDays    how long a row has sat untouched; shown on the pill and
+ *                 drives the 30d stalled fold. "Escalate" is reserved for the
+ *                 upstream tracker's own timeline (code PR merged, author
+ *                 reminded, still silent 14d) — this repo doesn't track who
+ *                 reminded whom yet, so that word never appears here.
+ *
+ * Every rule here is repo-agnostic. The tracker feed only ever covered the
+ * Mautic docs repos, so reading its `raw*` arrays directly used to be what
+ * decided whether a row got a specific next step at all — every other repo fell
+ * through to `nextStep: null`. The signals are now read from a NORMALIZED
+ * activity view (see normalizeActivity) that the local fetch layer and the
+ * tracker both feed, so an untracked repo derives the same steps from its own
+ * cached reviews/comments/review requests. Upstream stays the preferred source
+ * wherever both sides carry the same array.
  *
  * Resilience contract: the tracker feed can be down, rate-limited, or
  * schema-drifted — the merge NEVER fails the build. Failures degrade to the
  * last cached copy (data/tracker-cache.json) and finally to local-only
- * records, with `feed.degraded` explaining what happened.
+ * records, with `feed.degraded` explaining what happened. Signal derivation is
+ * likewise fail-soft: a malformed record yields no signals, never a throw.
  */
 const fs = require('fs/promises');
 const path = require('path');
@@ -34,8 +48,50 @@ const TRACKER_CACHE_FILE = path.join('data', 'tracker-cache.json');
 
 const STALLED_AFTER_DAYS = 30;
 const REMIND_AFTER_DAYS = 7;
-const FOLLOW_UP_AFTER_DAYS = 10;
-const ESCALATE_AFTER_DAYS = 14;
+
+/**
+ * Per-project docs housekeeping — see contents/docs-workflow-repos.js. Loaded
+ * the same fail-soft way as the bot allowlist: a missing or broken file
+ * switches these rules off rather than failing the build.
+ */
+function loadDocsWorkflow() {
+  try {
+    const config = require('../../contents/docs-workflow-repos');
+    const list = (key) => (config[key] || []).map((r) => String(r).toLowerCase()).filter(Boolean);
+    return {
+      milestoneRepos: list('milestoneRepos'),
+      pendingLabelRepos: list('pendingLabelRepos'),
+      pendingLabel: String(config.pendingLabel || '').trim(),
+    };
+  } catch (e) {
+    return { milestoneRepos: [], pendingLabelRepos: [], pendingLabel: '' };
+  }
+}
+
+const DOCS_WORKFLOW = loadDocsWorkflow();
+
+function matchesRepoList(repo, list) {
+  const lower = String(repo || '').toLowerCase();
+  if (!lower || !list.length) return false;
+  return list.some((entry) => lower.includes(entry));
+}
+
+/**
+ * Whether `repo` is one of the projects that tracks milestones. The repo list
+ * is the ONLY thing that scopes the "Add milestone" chip — deliberately never
+ * inferred from whether a record happens to carry a milestone field, since a
+ * PR without one looks identical in a project that wants milestones and a
+ * project that has never used them.
+ */
+function tracksMilestones(repo) {
+  return matchesRepoList(repo, DOCS_WORKFLOW.milestoneRepos);
+}
+
+/** Whether `repo` marks docs PRs as pending their code PR with a label. */
+function usesPendingLabel(repo) {
+  if (!DOCS_WORKFLOW.pendingLabel) return false;
+  return matchesRepoList(repo, DOCS_WORKFLOW.pendingLabelRepos);
+}
 
 // ---------------------------------------------------------------------------
 // Upstream feed: fetch → validate → cache → degrade
@@ -210,12 +266,244 @@ function daysBetween(from, to) {
   return (to - new Date(from)) / (1000 * 60 * 60 * 24);
 }
 
+function sameLogin(a, b) {
+  const x = String(a || '').toLowerCase();
+  const y = String(b || '').toLowerCase();
+  return Boolean(x) && x === y;
+}
+
+/** Newest entry of a list by its `at` timestamp, or null for an empty list. */
+function newestBy(list) {
+  if (!Array.isArray(list) || list.length === 0) return null;
+  return list.reduce((a, b) => (new Date(a.at || 0) >= new Date(b.at || 0) ? a : b));
+}
+
+// ---------------------------------------------------------------------------
+// Normalized activity — one shape, two sources
+// ---------------------------------------------------------------------------
+
+/**
+ * Flattens the two feeds' activity into one shape every rule below reads:
+ *
+ *   reviews         [{ login, state, at }]
+ *   comments        [{ login, at, mentions: [login] }]
+ *   reviewRequests  [{ of, by, at }]
+ *
+ * The tracker's `raw*` arrays and the local fetch layer's cached
+ * `reviews`/`comments`/`reviewRequests` carry the same facts under different
+ * field names — normalizing them is what lets an untracked repo derive the same
+ * next steps as a tracker-covered one. Upstream wins per-array when it actually
+ * has entries: the tracker sees a repo's full history, while the local cache is
+ * capped and can miss older activity. An EMPTY upstream array is not a source
+ * of truth, so it falls through to the local array rather than blanking it.
+ *
+ * Comment bodies exist only upstream; the local cache stores the extracted
+ * mention logins instead and discards the body, so mentions are read from
+ * whichever side supplied the comment.
+ */
+function normalizeActivity(local, upstream) {
+  const prefer = (up, loc) => (Array.isArray(up) && up.length ? up : Array.isArray(loc) ? loc : []);
+
+  const rawReviews = prefer(upstream?.rawDocsReviews, local?.reviews);
+  const reviews = rawReviews.filter(Boolean).map((r) => ({
+    login: r.user?.login || r.login || null,
+    state: r.state || null,
+    at: r.submitted_at || r.submittedAt || null,
+  }));
+
+  const rawComments = prefer(upstream?.rawDocsComments, local?.comments);
+  const comments = rawComments.filter(Boolean).map((c) => ({
+    login: c.user?.login || c.login || null,
+    at: c.created_at || c.createdAt || null,
+    mentions: Array.isArray(c.mentions) ? c.mentions : extractMentions(c.body),
+  }));
+
+  const rawRequests = prefer(upstream?.rawReviewRequests, local?.reviewRequests);
+  const reviewRequests = rawRequests.filter(Boolean).map((r) => ({
+    of: r.requested_reviewer?.login || r.requestedReviewer || null,
+    by: r.actor?.login || r.actor || null,
+    at: r.created_at || r.createdAt || null,
+  }));
+
+  return { reviews, comments, reviewRequests };
+}
+
+function emptySignals() {
+  return {
+    activity: { reviews: [], comments: [], reviewRequests: [] },
+    myLastReplyDays: null,
+    mention: null,
+    changesRequested: null,
+    pendingReview: null,
+    waitingOn: null,
+    noReviewerAssigned: false,
+    conflict: null,
+    milestoneMissing: false,
+    pendingLabelMissing: null,
+  };
+}
+
+/**
+ * Everything the next-step rules need, derived once per record from the
+ * normalized activity plus the PR-detail fields the local fetch layer caches
+ * (requestedReviewers, mergeableState, baseRef, milestone).
+ *
+ *   myLastReplyDays     days since YOUR newest review or comment
+ *   mention             newest @-mention of you nobody has heard back on
+ *   changesRequested    newest CHANGES_REQUESTED you haven't answered
+ *   pendingReview       an outstanding review request aimed at someone else
+ *   waitingOn           who the ball actually sits with
+ *   noReviewerAssigned  ready, non-draft, nobody asked to look
+ *   conflict            ONLY when the merge state is definitively dirty
+ *   milestoneMissing    milestone-tracking repo, no milestone set
+ *
+ * Wrapped so a drifted or malformed record produces no signals instead of a
+ * throw — the merge must never fail the build.
+ */
+function deriveSignals(local, upstream, me, now) {
+  try {
+    return buildSignals(local, upstream, me, now || new Date());
+  } catch (e) {
+    return emptySignals();
+  }
+}
+
+function buildSignals(local, upstream, me, now) {
+  const activity = normalizeActivity(local, upstream);
+  const signals = { ...emptySignals(), activity };
+  const daysSince = (at) => (at ? Math.max(0, Math.floor(daysBetween(at, now))) : null);
+  const everything = [...activity.reviews, ...activity.comments];
+
+  // Your own newest word on the thread. Anything older than this you have, by
+  // definition, already replied to.
+  const mineAt = everything
+    .filter((x) => sameLogin(x.login, me) && x.at)
+    .map((x) => new Date(x.at).getTime())
+    .filter((t) => !Number.isNaN(t));
+  const myLatest = mineAt.length ? Math.max(...mineAt) : null;
+  const answeredByMe = (at) => Boolean(myLatest && at && myLatest > new Date(at).getTime());
+  signals.myLastReplyDays = myLatest ? daysSince(new Date(myLatest).toISOString()) : null;
+
+  // A DIRECT @-mention of you, still unanswered. Genuine bots are skipped —
+  // a CI bot naming you in a log line isn't a person waiting on a reply —
+  // but ALLOW-LISTED bots (Promptless) are kept: their pings are real work.
+  const mentionsOfMe = activity.comments.filter(
+    (c) =>
+      c.login &&
+      !sameLogin(c.login, me) &&
+      !isBotLogin(c.login) &&
+      c.mentions.some((m) => sameLogin(m, me))
+  );
+  const latestMention = newestBy(mentionsOfMe);
+  if (latestMention && !answeredByMe(latestMention.at)) {
+    signals.mention = { by: latestMention.login, days: daysSince(latestMention.at) };
+  }
+
+  // Changes requested and not yet answered. Someone else's change request only
+  // — your own is the "you reviewed, author hasn't replied" case instead.
+  const latestChanges = newestBy(
+    activity.reviews.filter(
+      (r) => r.state === 'CHANGES_REQUESTED' && r.login && !sameLogin(r.login, me)
+    )
+  );
+  if (latestChanges && !answeredByMe(latestChanges.at)) {
+    signals.changesRequested = { by: latestChanges.login, days: daysSince(latestChanges.at) };
+  }
+
+  // Who else is on the hook for a review. `requestedReviewers` is GitHub's LIVE
+  // pending list (it empties the moment someone reviews), so it's the stronger
+  // signal; the request events supply the date it was asked. A request whose
+  // reviewer has since spoken is fulfilled and drops out.
+  const pendingLogins = (
+    Array.isArray(local?.requestedReviewers) ? local.requestedReviewers : []
+  ).filter((l) => l && !sameLogin(l, me));
+  const spokeAfter = (login, at) =>
+    everything.some(
+      (x) => sameLogin(x.login, login) && x.at && at && new Date(x.at) > new Date(at)
+    );
+  const openRequests = activity.reviewRequests.filter(
+    (r) => r.of && !sameLogin(r.of, me) && !spokeAfter(r.of, r.at)
+  );
+  const stillPending = openRequests.filter((r) => pendingLogins.some((l) => sameLogin(l, r.of)));
+  const chosen = newestBy(stillPending.length ? stillPending : openRequests);
+  if (chosen) {
+    signals.pendingReview = { of: chosen.of, days: daysSince(chosen.at) };
+  } else if (pendingLogins.length) {
+    // Named on the live list but no request event survived the cache cap —
+    // we can still say WHO, just not when. The date clause gets dropped.
+    signals.pendingReview = { of: pendingLogins[0], days: null };
+  }
+
+  // Failing a pending reviewer, the ball sits with whoever last reviewed.
+  const latestOtherReviewer = newestBy(
+    activity.reviews.filter((r) => r.login && !sameLogin(r.login, me) && !isBotActor(r.login))
+  );
+  signals.waitingOn = signals.pendingReview?.of || latestOtherReviewer?.login || null;
+
+  // The PR-detail fields ride along with the widened activity cache, so their
+  // presence marks a record we can reason about. Without them, "nobody is
+  // assigned" and "no milestone" are unknowns, not facts — stay quiet.
+  const hasPrDetail =
+    Boolean(local) &&
+    (local.mergeableState !== undefined ||
+      local.requestedReviewers !== undefined ||
+      local.milestone !== undefined);
+
+  signals.noReviewerAssigned =
+    hasPrDetail &&
+    local.isDraft !== true &&
+    pendingLogins.length === 0 &&
+    activity.reviews.length === 0 &&
+    local.hasFormalReview !== true;
+
+  // ONLY a definitively dirty merge state counts. GitHub reports `unknown`
+  // (and this field reports null) while it is still computing mergeability, so
+  // anything that isn't literally "dirty" stays silent rather than guessing —
+  // and there is nothing to retry, the next build reads a fresh value anyway.
+  if (String(local?.mergeableState || '').toLowerCase() === 'dirty') {
+    signals.conflict = { base: local.baseRef || null };
+  }
+
+  signals.milestoneMissing = hasPrDetail && tracksMilestones(local?.repo) && !local.milestone;
+
+  // A DRAFT docs PR is by definition still pending something, so in projects
+  // that track that with a label it should be carrying one. Draft-gated on
+  // purpose, matching the upstream tracker: once the PR is ready for review
+  // the label is a judgement call about the linked code PR, not a lapse.
+  //
+  // Read live from the PR's own labels every build — never a stored flag — so
+  // adding the label on GitHub clears the chip on the next run with nothing to
+  // reset by hand. Unlike the milestone this needs no hasPrDetail gate: every
+  // PR record already carries its labels, so an empty list is a real answer.
+  //
+  // Carries the LABEL NAME when it's missing (null otherwise) so the chip can
+  // name it — the label is configurable per project, so hardcoding the wording
+  // in the renderers would silently lie for any repo that renames it.
+  const labelMissing =
+    Boolean(local) &&
+    local.isDraft === true &&
+    usesPendingLabel(local.repo) &&
+    !(Array.isArray(local.labels) ? local.labels : []).some(
+      (l) => String(l).toLowerCase() === DOCS_WORKFLOW.pendingLabel.toLowerCase()
+    );
+  signals.pendingLabelMissing = labelMissing ? DOCS_WORKFLOW.pendingLabel : null;
+
+  // A DRAFT docs PR is by definition still pending something, so in projects
+  // that track that with a label it should be carrying one. Draft-gated on
+  // purpose, matching the upstream tracker: once the PR is ready for review
+  // the label is a judgement call about the linked code PR, not a lapse.
+  // Unlike the milestone this reads a field every PR record already has, so
+  // there's no hasPrDetail gate — an empty label list is a real answer.
+
+  return signals;
+}
+
 /**
  * Latest approval visible from either side of the join, plus whether any
- * substantive (non-bot) docs comment landed AFTER that approval — the
- * tracker's "note since approval — take a look" signal.
+ * substantive (non-bot) comment landed AFTER that approval — the "note since
+ * approval — take a look" signal.
  */
-function deriveApproval(local, upstream) {
+function deriveApproval(local, activity) {
   let state = null;
   let by = null;
   let approvedAt = null;
@@ -227,41 +515,34 @@ function deriveApproval(local, upstream) {
     by = local.approvedBy ? String(local.approvedBy).trim() : null;
   }
 
-  // Read the latest APPROVED/DISMISSED review from the tracker. A dismissed
-  // approval no longer shows as APPROVED in GitHub's reviews list — it flips
-  // to DISMISSED while still carrying the original approver's login — so
-  // filtering to APPROVED alone silently drops it. We keep it and mark it
+  // Read the latest APPROVED/DISMISSED review from the normalized activity. A
+  // dismissed approval no longer shows as APPROVED in GitHub's reviews list —
+  // it flips to DISMISSED while still carrying the original approver's login —
+  // so filtering to APPROVED alone silently drops it. We keep it and mark it
   // `dismissed` so the lane can route it to "re-request" instead.
-  if (upstream && Array.isArray(upstream.rawDocsReviews)) {
-    const reviews = upstream.rawDocsReviews;
-    const decisive = reviews.filter((r) => r && (r.state === 'APPROVED' || r.state === 'DISMISSED'));
-    if (decisive.length > 0) {
-      const latest = decisive.reduce((a, b) =>
-        new Date(a.submitted_at || 0) >= new Date(b.submitted_at || 0) ? a : b
-      );
-      // A change request landing AFTER the last approval/dismissal supersedes
-      // it — the PR is no longer approved (the reviewed-again case, e.g. an
-      // approval dismissed on push and then changes requested). Drop the
-      // approval and let the turn-based logic take over.
-      const supersededByChanges = reviews.some(
-        (r) =>
-          r &&
-          r.state === 'CHANGES_REQUESTED' &&
-          new Date(r.submitted_at || 0) > new Date(latest.submitted_at || 0)
-      );
-      if (supersededByChanges) {
-        state = null;
-        by = null;
-        approvedAt = null;
-      } else {
-        state = 'APPROVED';
-        approvedAt = latest.submitted_at || null;
-        dismissed = latest.state === 'DISMISSED';
-        dismissedAt = dismissed ? latest.submitted_at || null : null;
-        // A dismissed review names the approver whose approval was dropped;
-        // prefer it so "re-request from <login>" points at the right person.
-        by = dismissed ? latest.user?.login || by : by || latest.user?.login || null;
-      }
+  const reviews = activity && Array.isArray(activity.reviews) ? activity.reviews : [];
+  const decisive = reviews.filter((r) => r.state === 'APPROVED' || r.state === 'DISMISSED');
+  if (decisive.length > 0) {
+    const latest = newestBy(decisive);
+    // A change request landing AFTER the last approval/dismissal supersedes
+    // it — the PR is no longer approved (the reviewed-again case, e.g. an
+    // approval dismissed on push and then changes requested). Drop the
+    // approval and let the turn-based logic take over.
+    const supersededByChanges = reviews.some(
+      (r) => r.state === 'CHANGES_REQUESTED' && new Date(r.at || 0) > new Date(latest.at || 0)
+    );
+    if (supersededByChanges) {
+      state = null;
+      by = null;
+      approvedAt = null;
+    } else {
+      state = 'APPROVED';
+      approvedAt = latest.at || null;
+      dismissed = latest.state === 'DISMISSED';
+      dismissedAt = dismissed ? latest.at || null : null;
+      // A dismissed review names the approver whose approval was dropped;
+      // prefer it so "re-request from <login>" points at the right person.
+      by = dismissed ? latest.login || by : by || latest.login || null;
     }
   }
 
@@ -270,12 +551,10 @@ function deriveApproval(local, upstream) {
   // "Note since approval" only applies to a live approval — a dismissed one
   // already routes to "re-request", which supersedes any later note.
   let noteSince = false;
-  if (!dismissed && approvedAt && upstream && Array.isArray(upstream.rawDocsComments)) {
-    noteSince = upstream.rawDocsComments.some(
-      (c) =>
-        c &&
-        new Date(c.created_at || 0) > new Date(approvedAt) &&
-        !isBotLogin(c.user?.login)
+  if (!dismissed && approvedAt) {
+    const comments = activity && Array.isArray(activity.comments) ? activity.comments : [];
+    noteSince = comments.some(
+      (c) => new Date(c.at || 0) > new Date(approvedAt) && !isBotLogin(c.login)
     );
   }
 
@@ -284,52 +563,34 @@ function deriveApproval(local, upstream) {
 
 /**
  * A LIVE formal review request aimed at YOU (the workbench owner) — the
- * tracker's rawReviewRequests, filtered to `requested_reviewer === me`. Team
- * requests and requests aimed at other reviewers are ignored: this is the
- * "you've been pinged to review" signal, the review-side equivalent of an
- * @-mention. Returns the most recent such LIVE request, or null.
+ * normalized review requests, filtered to `of === me`. Team requests and
+ * requests aimed at other reviewers are ignored: this is the "you've been
+ * pinged to review" signal, the review-side equivalent of an @-mention.
+ * Returns the most recent such LIVE request, or null.
  *
- * Liveness is the crux. rawReviewRequests are historical GitHub timeline events
+ * Liveness is the crux. Review requests are historical GitHub timeline events
  * that PERSIST after the request is fulfilled: GitHub clears the live
- * `requested_reviewers` the instant you review, but the upstream tracker caches
- * the `review_requested` issue event for good — which is exactly why we can see
- * it at all. So a request counts as live ONLY when you have not already answered
- * it: no review (rawDocsReviews) or comment (rawDocsComments) of yours is dated
+ * `requested_reviewers` the instant you review, but both the tracker cache and
+ * the local activity cache keep the `review_requested` event for good — which
+ * is exactly why we can see it at all. So a request counts as live ONLY when
+ * you have not already answered it: no review or comment of yours is dated
  * after the request was made. A later comment by someone ELSE does not revive a
  * request you already handled — only your own activity fulfills it.
  */
-function deriveReviewRequest(upstream, me) {
-  if (!upstream || !Array.isArray(upstream.rawReviewRequests)) return null;
-  const mine = upstream.rawReviewRequests.filter(
-    (r) =>
-      r && r.requested_reviewer && String(r.requested_reviewer.login || '').toLowerCase() === me
-  );
+function deriveReviewRequest(activity, me) {
+  if (!activity || !Array.isArray(activity.reviewRequests)) return null;
+  const mine = activity.reviewRequests.filter((r) => sameLogin(r.of, me));
   if (mine.length === 0) return null;
-  const latest = mine.reduce((a, b) =>
-    new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
-  );
+  const latest = newestBy(mine);
 
   // Fulfilled? A review or comment of MINE dated after the request was made.
-  const requestedAt = new Date(latest.created_at || 0);
-  const answeredByMe = (arr, dateField) =>
-    (Array.isArray(arr) ? arr : []).some(
-      (x) =>
-        x &&
-        String(x.user?.login || '').toLowerCase() === me &&
-        new Date(x[dateField] || 0) > requestedAt
-    );
-  if (
-    answeredByMe(upstream.rawDocsReviews, 'submitted_at') ||
-    answeredByMe(upstream.rawDocsComments, 'created_at')
-  ) {
-    return null;
-  }
+  const requestedAt = new Date(latest.at || 0);
+  const answeredByMe = [...activity.reviews, ...activity.comments].some(
+    (x) => sameLogin(x.login, me) && new Date(x.at || 0) > requestedAt
+  );
+  if (answeredByMe) return null;
 
-  return {
-    of: latest.requested_reviewer.login || null,
-    by: latest.actor?.login || null,
-    at: latest.created_at || null,
-  };
+  return { of: latest.of || null, by: latest.by || null, at: latest.at || null };
 }
 
 /**
@@ -339,20 +600,16 @@ function deriveReviewRequest(upstream, me) {
  * lane. Suppressed when an approval (live or dismissed) is already surfaced,
  * and it skips your own reviews and bot reviews (incl. allow-listed bots).
  */
-function deriveReviewedNote(upstream, approval, me) {
+function deriveReviewedNote(activity, approval, me) {
   if (approval) return null;
-  if (!upstream || !Array.isArray(upstream.rawDocsReviews)) return null;
-  const reviews = upstream.rawDocsReviews.filter((r) => {
-    if (!r) return false;
-    const login = String(r.user?.login || '').toLowerCase();
-    if (!login || login === me || isBotActor(login)) return false;
+  if (!activity || !Array.isArray(activity.reviews)) return null;
+  const reviews = activity.reviews.filter((r) => {
+    if (!r.login || sameLogin(r.login, me) || isBotActor(r.login)) return false;
     return r.state === 'COMMENTED' || r.state === 'CHANGES_REQUESTED';
   });
   if (reviews.length === 0) return null;
-  const latest = reviews.reduce((a, b) =>
-    new Date(a.submitted_at || 0) >= new Date(b.submitted_at || 0) ? a : b
-  );
-  return latest.user?.login ? { by: latest.user.login } : null;
+  const latest = newestBy(reviews);
+  return latest.login ? { by: latest.login } : null;
 }
 
 /** Logins @-mentioned in a comment body, in their original case. Loose match
@@ -381,7 +638,7 @@ function extractMentions(body) {
  * A ping to you is your turn (the caller routes it to the action lane); a ping
  * aimed only at others is their turn, surfaced to the renderer as botPing.
  */
-function deriveBotPing(upstream, local, me) {
+function deriveBotPing(activity, local, me) {
   const author = String(local?.author || '').toLowerCase();
   const lastActor = String(
     local?.lastActor ||
@@ -390,34 +647,20 @@ function deriveBotPing(upstream, local, me) {
   ).toLowerCase();
   if (!author || !isAllowedBotLogin(author) || lastActor !== author) return null;
 
-  // The bot's most recent docs comment — where a "Thanks @you…" ping lives.
-  const botComments = (Array.isArray(upstream?.rawDocsComments) ? upstream.rawDocsComments : []).filter(
-    (c) => c && String(c.user?.login || '').toLowerCase() === author
-  );
-  const latestComment = botComments.length
-    ? botComments.reduce((a, b) =>
-        new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
-      )
-    : null;
-  const mentions = latestComment ? extractMentions(latestComment.body) : [];
-  const mentionsMe = mentions.some((m) => m.toLowerCase() === me);
+  // The bot's most recent comment — where a "Thanks @you…" ping lives.
+  const comments = Array.isArray(activity?.comments) ? activity.comments : [];
+  const latestComment = newestBy(comments.filter((c) => sameLogin(c.login, author)));
+  const mentions = latestComment ? latestComment.mentions : [];
+  const mentionsMe = mentions.some((m) => sameLogin(m, me));
 
   // Who else did it ping? Prefer an @-mention of another human in the latest
   // comment; fall back to a review request aimed at someone other than you.
-  let of = mentions.find((m) => m.toLowerCase() !== me && m.toLowerCase() !== author) || null;
-  if (!of && Array.isArray(upstream?.rawReviewRequests)) {
-    const others = upstream.rawReviewRequests.filter(
-      (r) =>
-        r &&
-        r.requested_reviewer &&
-        String(r.requested_reviewer.login || '').toLowerCase() !== me
-    );
-    if (others.length) {
-      const latestReq = others.reduce((a, b) =>
-        new Date(a.created_at || 0) >= new Date(b.created_at || 0) ? a : b
-      );
-      of = latestReq.requested_reviewer.login || null;
-    }
+  let of = mentions.find((m) => !sameLogin(m, me) && !sameLogin(m, author)) || null;
+  if (!of) {
+    const requests = Array.isArray(activity?.reviewRequests) ? activity.reviewRequests : [];
+    const others = requests.filter((r) => r.of && !sameLogin(r.of, me));
+    const latestReq = newestBy(others);
+    if (latestReq) of = latestReq.of || null;
   }
 
   return { mentionsMe, of };
@@ -427,17 +670,23 @@ function deriveBotPing(upstream, local, me) {
 // Lane + next-step derivation (the tracker's model, generalized)
 // ---------------------------------------------------------------------------
 
-function idleHint(idleDays) {
-  if (idleDays >= ESCALATE_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d — escalate`;
-  if (idleDays >= FOLLOW_UP_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d — follow up`;
-  if (idleDays >= REMIND_AFTER_DAYS) return `idle ${Math.floor(idleDays)}d — send a reminder`;
-  return null;
-}
-
 /**
  * Assigns lane, ball label, and nextStep for one merged record.
- * Precedence: bot → assigned issue → approved (ready/action) → WHOSE TURN →
- * stalled.
+ *
+ * Precedence, first match wins:
+ *   1 bot lane          2 assigned issue        3 approval states
+ *   3a linked code PR   4 direct ping at me      5 changes requested
+ *   6 conflicts         7 turn-based fallback    8 stalled fold
+ *
+ * 1–3, 3a, and 8 live here; 4–7 live in deriveTurn. Rule 3a only fires for a
+ * merged or closed-unmerged linked code PR — an open or unknown (null) state
+ * falls straight through to the turn-based reading unchanged. Rules 4–6 only ever choose the
+ * WORDING — the lane and ball a row lands in are decided by the turn logic and
+ * by the staleness fold exactly as before.
+ *
+ * The missing-milestone reminder is deliberately NOT in that ladder: it appends
+ * (see withMilestone), so it can never win a place in the order and can never
+ * be crowded out of one either.
  *
  * Staleness runs LAST, and only over rows the turn logic left with someone
  * else. Age is not evidence that a row is dead — it's evidence of how overdue
@@ -449,10 +698,25 @@ function idleHint(idleDays) {
  * were carved out of that rule first (an issue you haven't started has nobody
  * touching it, so it always ages past the threshold); this generalizes the
  * carve-out to every path where the ball is yours. Age still shows: the row
- * carries idleDays, the reviewing steps escalate through idleHint, and the
- * action lane sorts oldest-first.
+ * carries idleDays (rendered on the pill), and the action lane sorts
+ * oldest-first.
  */
-function deriveLane(record, me, botPingSignal = null) {
+function deriveLane(record, me, botPingSignal = null, signals = emptySignals()) {
+  const result = laneFor(record, me, botPingSignal, signals);
+  // Surfaced as their own fields, never spliced into nextStep, so renderers
+  // can draw them as separate chips — the way the upstream docs-PR tracker
+  // renders "Add milestone" and "Add <label> label" as chips alongside (and
+  // ahead of) the review chip rather than folding them into one sentence.
+  // The bot lane is folded away precisely so it carries no instructions.
+  const quiet = result.lane === 'bot';
+  return {
+    ...result,
+    milestoneMissing: signals.milestoneMissing && !quiet,
+    pendingLabelMissing: quiet ? null : signals.pendingLabelMissing || null,
+  };
+}
+
+function laneFor(record, me, botPingSignal, signals) {
   const { relationship, approval, idleDays, linkedCodePr, upstream } = record;
 
   if (record.isBot) {
@@ -508,9 +772,24 @@ function deriveLane(record, me, botPingSignal = null) {
     return { lane: 'ready', ball: 'Approved', nextStep };
   }
 
+  // Rule 3a — the linked code PR's fate is decisive: merged means the docs are
+  // now actionable, closed-unmerged means this docs PR has nothing left to
+  // track. An 'open' or unknown (null) state carries no verdict, so it falls
+  // straight through to the turn-based reading below, unchanged.
+  if (record.linkedCodePrState === 'merged') {
+    return { lane: 'action', ball: 'Take Action', nextStep: 'Code PR merged — review the docs now' };
+  }
+  if (record.linkedCodePrState === 'closed') {
+    return {
+      lane: 'action',
+      ball: 'Take Action',
+      nextStep: 'Code PR closed unmerged — close this docs PR',
+    };
+  }
+
   // Whose turn is it? Resolved BEFORE staleness (see the note above), so a row
   // where the ball is yours keeps its action lane no matter how old it is.
-  const turn = deriveTurn(record, me, botPingSignal);
+  const turn = deriveTurn(record, me, botPingSignal, signals);
   if (turn.lane === 'action') return turn;
 
   // Waiting on someone else, and untouched for a month — fold it away. The
@@ -531,32 +810,113 @@ function deriveLane(record, me, botPingSignal = null) {
 }
 
 /**
+ * Rule 4 — a DIRECT ping at you, which outranks every turn-based reading of the
+ * row. An @-mention nobody has heard back on is the sharpest signal the board
+ * has, and a formal review request aimed at you is its review-side twin.
+ * Returns null when nothing is pointed at you.
+ *
+ * The review-request half stays scoped to rows you're reviewing: "review it"
+ * is only an instruction when reviewing is the job. The mention half applies
+ * everywhere — being named is being asked, whoever's PR it is.
+ */
+function directPingStep(record, signals) {
+  if (signals.mention && signals.mention.by) {
+    const { by, days } = signals.mention;
+    return days == null
+      ? `${by} mentioned you — reply`
+      : `${by} mentioned you ${days}d ago — reply`;
+  }
+  if (
+    record.relationship === 'reviewing' &&
+    (record.status === 'Request review' || Boolean(record.reviewRequest))
+  ) {
+    return 'Review requested — review it';
+  }
+  return null;
+}
+
+/**
+ * Rule 5 — changes requested and still unanswered. Scoped to work you're on the
+ * hook for: on a PR you're merely reviewing, someone else's change request is
+ * the AUTHOR's to address, and telling you to "address the feedback" would hand
+ * you a job that isn't yours. Your own change request on a row you review is
+ * covered by the "you reviewed, author hasn't replied" step instead.
+ */
+function changesRequestedStep(record, signals) {
+  if (record.relationship !== 'authored' && record.relationship !== 'co-authoring') return null;
+  const cr = signals.changesRequested;
+  if (!cr || !cr.by) return null;
+  return `Changes requested by ${cr.by} — address the feedback`;
+}
+
+/**
+ * Rule 6 — a definitively conflicted branch. Same scoping as rule 5: rebasing
+ * is the author's move, not the reviewer's. The base branch name is a clause
+ * that gets dropped rather than printed empty when the fetch couldn't read it.
+ */
+function conflictStep(record, signals) {
+  if (record.relationship !== 'authored' && record.relationship !== 'co-authoring') return null;
+  if (!signals.conflict) return null;
+  return signals.conflict.base
+    ? `Conflicts with ${signals.conflict.base} — rebase needed`
+    : 'Conflicts — rebase needed';
+}
+
+/**
  * The turn-based half of deriveLane: given a row that isn't a bot, an assigned
  * issue, or approved, decides whether the ball is YOURS (action) or someone
  * else's (waiting), and what the remaining step is. Split out so deriveLane can
  * run it ahead of the staleness rule — see the precedence note there.
+ *
+ * Lane and ball come from the turn reading alone. The wording is then chosen by
+ * precedence — direct ping (4), changes requested (5), conflicts (6), the
+ * turn's own step (7), and finally milestone housekeeping — so a sharper reason
+ * can replace a vaguer one WITHOUT ever moving a row between lanes.
  */
-function deriveTurn(record, me, botPingSignal = null) {
-  const { relationship, linkedCodePr } = record;
-  const lastActor = String(record.lastActor || '').toLowerCase();
-  const prAuthor = String(record.author || '').toLowerCase();
-  const isMe = lastActor === me;
-  const isAuthor = lastActor && lastActor === prAuthor;
-  const actorIsBot = !isAllowedBotLogin(lastActor) && (record.isLastActorBot || isBotLogin(lastActor));
-  const reminder = idleHint(record.idleDays);
-  const reviewRequestedOfMe = Boolean(record.reviewRequest);
+function deriveTurn(record, me, botPingSignal = null, signals = emptySignals()) {
+  return promoteForHousekeeping(turnFor(record, me, botPingSignal, signals), signals);
+}
 
+/**
+ * Missing housekeeping — a milestone, or the pending-PR label on a draft — is
+ * YOUR move, so the row cannot sit in a lane that means the opposite. "Waiting
+ * on others" reads *your part is done — awaiting review*, and "Stalled" reads
+ * *needs a decision: nudge or close*; both are false while something is still
+ * owed, and Stalled additionally folds the row shut so the chip goes unread.
+ *
+ * Promoting here rather than in deriveLane is what makes the staleness fold
+ * skip these rows for free: that fold only ever runs over rows the turn logic
+ * left with someone ELSE, so a row promoted to action keeps its lane however
+ * old it is — the same "turn beats age" rule assigned issues and review pings
+ * already rely on.
+ *
+ * The approved lane is deliberately untouched: it already reads *bring it
+ * home — still needs a final review or a maintainer nudge before it ships*, so
+ * one more thing to do before shipping is exactly what that lane is for, and
+ * the Approved pill carries information Take Action would throw away.
+ *
+ * Drafts are NOT exempt. The upstream docs-PR tracker triages them the other
+ * way round — its `needs-label-and-milestone` category fires precisely ON
+ * drafts, and carries "act" severity rather than "triage" — because a draft is
+ * exactly when the milestone is cheapest to set, before anyone is waiting on
+ * the merge.
+ */
+function promoteForHousekeeping(turn, signals) {
+  if (!signals.milestoneMissing && !signals.pendingLabelMissing) return turn;
+  if (turn.lane !== 'waiting') return turn;
+  return { ...turn, lane: 'action', ball: 'Take Action' };
+}
+
+function turnFor(record, me, botPingSignal, signals) {
   // An allow-listed bot (Promptless) authored this AND pushed last — its
   // "reply" is automated, so route by who it pinged instead of the human
   // "author replied" step (which we must never emit for a bot). A ping aimed
   // ONLY at someone else is their turn (waiting), recorded as botPing so the
-  // board can show "Promptless pinged <who>". Otherwise it's my turn — it
-  // @-mentioned me, or requested my review, or there's simply no ping pointing
-  // elsewhere and the review is still mine to do — routed to the action lane
-  // with no next-step chip, since the lane already says it's my move.
+  // board can show "Promptless pinged <who>" — and nothing below applies,
+  // because none of it is addressed to you.
   if (botPingSignal) {
     const pingsOnlyOthers =
-      !botPingSignal.mentionsMe && !reviewRequestedOfMe && Boolean(botPingSignal.of);
+      !botPingSignal.mentionsMe && !Boolean(record.reviewRequest) && Boolean(botPingSignal.of);
     if (pingsOnlyOthers) {
       return {
         lane: 'waiting',
@@ -565,27 +925,68 @@ function deriveTurn(record, me, botPingSignal = null) {
         botPing: { by: record.author, of: botPingSignal.of },
       };
     }
-    return { lane: 'action', ball: 'Take Action', nextStep: null };
+    // Pinged AT you: your turn. The wording comes from the ping itself — who
+    // named you and when, or the review it asked you for — never from the
+    // human "author replied" step, which would credit a push to a person.
+    return { lane: 'action', ball: 'Take Action', nextStep: directPingStep(record, signals) };
   }
 
+  const turn = turnReading(record, me, signals);
+
+  const nextStep =
+    directPingStep(record, signals) ??
+    changesRequestedStep(record, signals) ??
+    conflictStep(record, signals) ??
+    turn.nextStep;
+
+  return { ...turn, nextStep: nextStep ?? null };
+}
+
+/** Rule 7 — whose turn is it, and what does that alone imply? */
+function turnReading(record, me, signals) {
+  const { relationship, linkedCodePr } = record;
+  const lastActor = String(record.lastActor || '').toLowerCase();
+  const prAuthor = String(record.author || '').toLowerCase();
+  const isMe = lastActor === me;
+  const isAuthor = lastActor && lastActor === prAuthor;
+  const actorIsBot = !isAllowedBotLogin(lastActor) && (record.isLastActorBot || isBotLogin(lastActor));
+  // How long since you last spoke. The activity trail is the precise answer;
+  // row age is the fallback when no cached activity carries your name.
+  const sinceMyReply = signals.myLastReplyDays ?? Math.floor(record.idleDays);
+
   if (relationship === 'reviewing') {
-    if (isMe) return { lane: 'waiting', ball: 'Waiting', nextStep: null };
+    // You reviewed and nobody came back. Still someone else's move, but the
+    // row can now say WHY it's sitting there instead of showing a bare pill.
+    if (isMe) {
+      return {
+        lane: 'waiting',
+        ball: 'Waiting',
+        nextStep: `You reviewed ${sinceMyReply}d ago — author hasn't replied`,
+      };
+    }
     if (isAuthor) {
       return {
         lane: 'action',
         ball: 'Take Action',
-        nextStep: reminder || 'Author replied — review the latest changes',
+        nextStep: 'Author replied — review the latest changes',
       };
     }
     // A formal review request aimed at you is a "your turn" ping — treat it
-    // like an @-mention. It lands in the action lane and escalates with age
-    // (remind → follow up → escalate) through `reminder`. This generalizes the
-    // local `status === 'Request review'` flag to the tracker's
-    // rawReviewRequests so tracker-augmented rows get the same signal.
-    if (record.status === 'Request review' || reviewRequestedOfMe) {
-      return { lane: 'action', ball: 'Take Action', nextStep: reminder || 'Review requested — review it' };
+    // like an @-mention. It lands in the action lane; the pill already carries
+    // how long it's been idle. This generalizes the local `status === 'Request
+    // review'` flag to the cached review-request events, so any repo's rows
+    // get the same signal, not just tracker-covered ones.
+    if (record.status === 'Request review' || Boolean(record.reviewRequest)) {
+      return {
+        lane: 'action',
+        ball: 'Take Action',
+        nextStep: 'Review requested — review it',
+      };
     }
-    return { lane: 'waiting', ball: 'Watching', nextStep: null };
+    // A third party moved last: the outstanding review belongs to someone
+    // else. Name them and say how long they've had it — or stay silent, since
+    // "waiting on nobody in particular" is what the pill already says.
+    return { lane: 'waiting', ball: 'Watching', nextStep: waitingOnReviewStep(signals) };
   }
 
   // authored / co-authoring
@@ -604,10 +1005,34 @@ function deriveTurn(record, me, botPingSignal = null) {
     };
   }
   if (!lastActor || isMe) {
-    return { lane: 'waiting', ball: 'Waiting', nextStep: null };
+    // Your ball has been passed on. If it was never passed to anyone — ready,
+    // non-draft, nobody asked to look — that IS the remaining step; otherwise
+    // name who you're waiting on, dropping the clause when nobody resolves.
+    if (signals.noReviewerAssigned) {
+      return {
+        lane: 'waiting',
+        ball: 'Waiting',
+        nextStep: 'No reviewer assigned — request one',
+      };
+    }
+    return {
+      lane: 'waiting',
+      ball: 'Waiting',
+      nextStep: signals.waitingOn
+        ? `You replied ${sinceMyReply}d ago — waiting on ${signals.waitingOn}`
+        : `You replied ${sinceMyReply}d ago`,
+    };
   }
   if (actorIsBot) {
-    return { lane: 'waiting', ball: 'Watching', nextStep: null };
+    // An automated push on your own PR. Nothing to reply to, but the diff
+    // moved under you, so the honest step is to look at it again.
+    return {
+      lane: 'waiting',
+      ball: 'Watching',
+      nextStep: record.lastActor
+        ? `${record.lastActor} pushed ${Math.floor(record.idleDays)}d ago — re-check the changes`
+        : null,
+    };
   }
   return {
     lane: 'action',
@@ -616,6 +1041,17 @@ function deriveTurn(record, me, botPingSignal = null) {
       ? 'Address the review feedback'
       : 'Reply to the discussion, then request review',
   };
+}
+
+/** "Waiting on <login> to review — requested Nd ago", clauses dropped when a
+ * login or a date can't be resolved. No login means no step: an unattributed
+ * "waiting on someone" says nothing the Watching pill hasn't already said. */
+function waitingOnReviewStep(signals) {
+  const pending = signals.pendingReview;
+  if (!pending || !pending.of) return null;
+  return pending.days == null
+    ? `Waiting on ${pending.of} to review`
+    : `Waiting on ${pending.of} to review — requested ${pending.days}d ago`;
 }
 
 // ---------------------------------------------------------------------------
@@ -673,10 +1109,11 @@ function mergeWorkbench({
     const effectiveDate = local.lastSubstantiveDate || local.updatedAt || local.createdAt;
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
     const linkedCodePr = extractLinkedCodePr(local.body, local.repo);
-    const approval = deriveApproval(local, upstream);
-    const reviewRequest = deriveReviewRequest(upstream, me);
-    const reviewedNote = deriveReviewedNote(upstream, approval, me);
-    const botPingSignal = deriveBotPing(upstream, local, me);
+    const signals = deriveSignals(local, upstream, me, nowDate);
+    const approval = deriveApproval(local, signals.activity);
+    const reviewRequest = deriveReviewRequest(signals.activity, me);
+    const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
+    const botPingSignal = deriveBotPing(signals.activity, local, me);
 
     const record = {
       key,
@@ -699,9 +1136,13 @@ function mergeWorkbench({
       // Set by deriveLane only when an allow-listed bot pinged someone other
       // than you; null otherwise. Always present so renderers can rely on it.
       botPing: null,
+      // Set by deriveLane. Always present so renderers can rely on them.
+      milestoneMissing: false,
+      pendingLabelMissing: null,
       linkedCodePr: linkedCodePr
         ? { ref: linkedCodePr, hasActivity: Boolean(upstream && upstream.codeUpdatedAt) }
         : null,
+      linkedCodePrState: local.linkedCodePrState ?? null,
       upstream: upstream
         ? {
             docsUpdatedAt: upstream.docsUpdatedAt || null,
@@ -716,7 +1157,7 @@ function mergeWorkbench({
         local.relationship === 'assigned issue' && key ? issuePrLinks.get(key) || null : null,
     };
 
-    Object.assign(record, deriveLane(record, me, botPingSignal));
+    Object.assign(record, deriveLane(record, me, botPingSignal, signals));
     return record;
   });
 
@@ -729,9 +1170,10 @@ function mergeWorkbench({
     if (matchedKeys.has(key)) continue;
     const [repo, number] = key.split('#');
     const titleInfo = titles[key] || null;
-    const approval = deriveApproval(null, upstream);
-    const reviewRequest = deriveReviewRequest(upstream, me);
-    const reviewedNote = deriveReviewedNote(upstream, approval, me);
+    const signals = deriveSignals(null, upstream, me, nowDate);
+    const approval = deriveApproval(null, signals.activity);
+    const reviewRequest = deriveReviewRequest(signals.activity, me);
+    const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
     const effectiveDate = upstream.docsUpdatedAt || null;
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
 
@@ -760,6 +1202,8 @@ function mergeWorkbench({
       // Tracker-only rows have no local author/last-actor, so no bot-ping can be
       // derived — kept present and null for a uniform record contract.
       botPing: null,
+      milestoneMissing: false,
+      pendingLabelMissing: null,
       linkedCodePr: titleInfo?.linkedCodePr
         ? { ref: titleInfo.linkedCodePr, hasActivity: Boolean(upstream.codeUpdatedAt) }
         : upstream.codeUpdatedAt
@@ -776,7 +1220,7 @@ function mergeWorkbench({
       linkedPr: null,
     };
 
-    Object.assign(record, deriveLane(record, me));
+    Object.assign(record, deriveLane(record, me, null, signals));
     records.push(record);
   }
 
@@ -956,6 +1400,10 @@ module.exports = {
   extractLinkedCodePr,
   extractIssueRefs,
   buildIssuePrLinks,
+  normalizeActivity,
+  deriveSignals,
+  tracksMilestones,
+  usesPendingLabel,
   deriveApproval,
   deriveReviewRequest,
   deriveReviewedNote,
