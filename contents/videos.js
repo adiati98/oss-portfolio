@@ -14,7 +14,7 @@ module.exports = [
     url: 'https://www.youtube.com/watch?v=Hnzp-aJ4NWA',
     length: '11 min',
     blurb:
-      "A walkthrough of getting Mautic's documentation running on your own machine, so you can start making changes to it.",
+      "As Assistant Team Lead for Mautic's Education Team, walked contributors through setting up a local environment to contribute, test, and review documentation PRs.",
   },
   {
     title:
@@ -24,6 +24,6 @@ module.exports = [
     url: 'https://www.youtube.com/watch?v=jP-7LEyNo_k',
     length: '6 min',
     blurb:
-      'A short walkthrough of opening a pull request in the low and no code project, so your contribution gets counted.',
+      "As Assistant Team Lead for Mautic's Education Team, explained how to file a PR for low/no-code contributions so they count toward Hacktoberfest and other contribution tracking.",
   },
 ];

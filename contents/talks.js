@@ -26,7 +26,7 @@ module.exports = [
     url: 'https://www.youtube.com/watch?v=KoVX3kGMn3c',
     length: '57 min',
     blurb:
-      'Co-hosted with Bekah HW: what Open Source actually is, why it is worth contributing to, and how to make a difference once you start.',
+      "Co-hosted with Bekah HW: what open source is, why it's worth contributing to, and how to start making an impact.",
   },
   {
     title: 'Becoming an Open Source Maintainer Workshop',
@@ -44,6 +44,6 @@ module.exports = [
     url: 'https://www.youtube.com/live/pzLXQYZpOPU?t=5368',
     highlight: true,
     blurb:
-      'Why documentation is what decides whether a newcomer becomes a contributor or gives up at the README.',
+      'Gave a lightning talk explaining documentation is conversion infrastructure, not a nice-to-have. Clear docs mean faster reviews, quicker-merging PRs, and contributors who come back.',
   },
 ];
