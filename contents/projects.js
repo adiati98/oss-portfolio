@@ -15,7 +15,7 @@ module.exports = [
     url: 'https://github.com/adiati98/oss-portfolio',
     highlight: true,
     description:
-      'Built an automated system that collects, organizes, and showcases open source contributions — featuring customizable themes, progress reports, and a live dashboard for active projects.',
+      'Built a self-hosted portfolio generator that pulls GitHub activity via the API and turns it into a static site — with a PR-triage engine that ranks what needs attention now, a theme system that enforces accessible contrast at build time, and auto-generated contribution reports.',
   },
   {
     title: 'Mautic Docs PRs Tracker',
@@ -25,7 +25,7 @@ module.exports = [
     url: 'https://github.com/adiati98/mautic-docs-prs-tracker',
     highlight: true,
     description:
-      'Built an automated board showing the Education Team which documentation PRs are waiting on a review, with a reminder page that nudges developers to take a look.',
+      'Built a GitHub Actions pipeline that refreshes a live Mautic docs PR dashboard roughly every 30 minutes during work hours, sorting each PR into one of four priority groups by what needs action, with a companion reminder page to prompt code PR authors to review the docs PR against their own changes.',
   },
   {
     title: 'OSS Portfolio Template',
@@ -34,6 +34,6 @@ module.exports = [
     yearEnd: 'present',
     url: 'https://github.com/adiati98/oss-portfolio-template',
     description:
-      'Turned the portfolio generator into a template anyone can copy and point at their own GitHub account.',
+      'Extracted the OSS Portfolio engine into a template repo — same GitHub API pipeline and dual Markdown/HTML output, reduced to one config value (a GitHub username) so anyone can stand up their own.',
   },
 ];

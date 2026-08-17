@@ -15,6 +15,6 @@ module.exports = [
     url: 'https://mautic.org/blog/learnings-from-mautic-world-conference-2025/',
     highlight: true,
     description:
-      'Awarded by a panel of experts from the Mautic community at Mautic World Conference 2025, in recognition of making a significant personal impact through exceptional support, innovative ideas, or tireless dedication to the Mautic community.',
+      "Won Mautic's 2025 Mautician of the Year award, selected by a panel from the year's active contributors for exceptional support, ideas, and dedication to the community.",
   },
 ];

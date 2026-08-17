@@ -1,15 +1,13 @@
 # Curated Open Source Portfolio
 
-This repository serves as a portfolio of my open source contributions. You can check out the [Contribution Log](./contributions/markdown-generated/README.md) to see my work.
+At its core, this repository is a contribution tracker: it automatically logs my open source activity across GitHub — merged pull requests, issues, code reviews, and collaborations — and turns it into an organized, always-current record. Browse the [Contribution Log](./contributions/markdown-generated/README.md) to see the work itself.
 
 > [!TIP]
-> **Want to build your own?** I created this system to be reusable. If you want to generate a similar portfolio for your own GitHub activity, please use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template) for a clean, standard setup.
+> **Want to build your own?** This system is reusable. Use the [**Curated OSS Portfolio Template**](https://github.com/adiati98/oss-portfolio-template) to generate a similar tracker from your own GitHub activity.
 
-I created this log to maintain a detailed and organized record of my journey, including Pull Requests (PRs), bug reports, and general collaborations. 
+I built this because keeping that record by hand didn't scale. A scheduled job pulls fresh data from GitHub automatically, so the log stays current without me touching it.
 
-The content in this repository updates automatically via a Node.js script and a GitHub Actions workflow.
-
-If you want to learn about the motivation and development process for this project, read my full write-ups:
+Curious about the motivation and how it was built? Read the full write-ups:
 
 - [How I Built a Curated, Automated Open Source Portfolio](https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0)
 - [The Curated, Automated Open Source Portfolio: How It’s Going](https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98)
@@ -18,52 +16,16 @@ If you want to learn about the motivation and development process for this proje
 
 ## 💡 How It Works
 
-This project uses **GitHub Actions** as an automated engine to run a custom **Node.js** processing pipeline. This ensures the portfolio stays current without any manual intervention.
+Every day, a scheduled job checks my GitHub activity — merged pull requests, issues, code reviews, and collaborations — and adds anything new to the tracker. Once a month, it also double-checks the full history against GitHub so nothing slips through.
 
-### 🤖 The Automation: GitHub Actions
+On top of that tracked history, the site builds a few other views:
 
-The workflow file in `.github/workflows/` orchestrates the entire process. It handles environment setup, authentication, and the final commit of updated data back to the repository.
+- **Journey** — a timeline of milestones: awards, courses, projects, docs, talks, and videos, alongside the tracked contributions.
+- **Active Workbench** — open reviews and ongoing tasks, grouped by what to do next, so it's clear at a glance what's still open versus what's waiting on someone else.
+- **A persona label** — based on the pattern of my activity (reviewing, building, or planning, for example), it summarizes my role with a short title, like "Core Contributor" or "Community Mentor."
+- **My writing** — articles I publish on Dev.to sync in automatically; freeCodeCamp pieces are added by hand.
 
-| Event | Schedule | Sync Type | Automation Purpose |
-| :--- | :--- | :--- | :--- |
-| **Daily Update** | Once per day | **Incremental** | Captures activity from the last 24 hours to keep the portfolio current. |
-| **Monthly Sync** | 1st of every month | **Full Sync** | Rechecks the entire history against GitHub, while keeping existing records safe. |
-
-### 🧠 The Brain: The Node.js Script
-
-When the GitHub Action triggers the runner, the script executes a multi-stage pipeline:
-
-#### 1. Data Fetching & Processing
-
-- **GitHub API (v3):** The script communicates with the GitHub REST API to collect activity: **Merged Pull Requests (PRs), Issues, Reviewed PRs, Co-authored PRs, and Collaborations**.
-- **Active Workbench:** Tracks ongoing maintenance tasks and open reviews. It intelligently categorizes tasks into dedicated tables, separating human-centric contributions from automated bot activity (e.g., Dependabot, Snyk) to streamline workflow visibility, and shows the GitHub username of the relevant person in the "Last Interaction" column — the last actor whenever a task needs attention ("Take Action") or is awaiting someone else ("Watching"), or the reviewer who approved it ("Approved"). Additionally, it supports dynamic repository exclusions (`contents/repo-exclusions.js`) and a per-bot allowlist (`contents/allowed-bot.js`) to filter out specified organizations/projects or let trusted bots be treated as the last actor.
-- **Personal Technical Writing:**
-    - **Automated Sync:** Fetches latest articles from **Dev.to** via their API.
-    - **Curated Content:** Integrates long-form technical guides authored for freeCodeCamp, managed through manual metadata in `contents/fcc-articles.js`.
-- **Smart Syncing:** Automatically determines the fetch range (Current Year vs. Historical) based on the `last-modified` timestamp of the local data.
-- **Hierarchical Caching:** Maintains `pr-cache.json`, `commit-cache.json`, and `workbench-activity-cache.json` to optimize performance, preserve commit history, and respect GitHub API rate limits.
-
-#### 2. Output Generation
-
-The script transforms raw JSON data into a suite of high-fidelity reports:
-
-- **Quarterly & All-Time Stats:** Detailed logs and interactive dashboards built with Tailwind CSS.
-- **Authored Technical Blog:** A dedicated showcase of technical writing, documentation, and Open Source Software (OSS) articles.
-- **Journey:** Your roles and expertise, followed by your selected work on a single timeline — awards, courses, projects, documentation, talks, and videos. Your best entries are shown first, and the rest are behind a "Show more" button.
-- **Active Workbench:** Live tasks and open reviews, organized by what happens next.
-- **Markdown Ecosystem:** Generates a summary `README.md` and quarterly reports for native GitHub viewing.
-
-#### 3. Collaboration Profiles
-
-The system analyzes contribution patterns to automatically assign a persona title. This helps viewers quickly understand the primary impact style within the open source ecosystem.
-
-| Priority | Persona Title | Focus |
-| :--- | :--- | :--- |
-| 1 | **Community Mentor** | Code review and technical guidance. |
-| 2 | **Core Contributor** | Feature development and bug fixing. |
-| 3 | **Project Architect** | Problem identification and feature planning. |
-| 4 | **Collaborative Partner** | Pair programming and co-authoring code. |
-| 5 | **Ecosystem Partner** | Technical discussion and community engagement. |
+For the full technical breakdown — caching, API calls, file structure — see the write-ups above or the code itself.
 
 ---
 

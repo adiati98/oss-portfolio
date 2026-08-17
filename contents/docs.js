@@ -20,7 +20,7 @@ module.exports = [
     url: 'https://contribute.mautic.org/en/latest/contributing/contributing_docs.html',
     highlight: true,
     description:
-      "Rewrote Mautic's contributing guidelines, then moved them onto the Community Handbook site so all three documentation projects point at one set of instructions instead of keeping their own.",
+      "Rewrote Mautic's contributing guidelines and consolidated three separate per-repo CONTRIBUTING files into one shared source on the Community Handbook.",
   },
   {
     title: 'Mautic Community Handbook reStructuredText conversion',
@@ -29,7 +29,7 @@ module.exports = [
     url: 'https://contribute.mautic.org/',
     highlight: true,
     description:
-      'Rebuilt the whole Community Handbook in reStructuredText, the format Mautic publishes its documentation from — every section, from contributing and testing through to policies and the style guide.',
+      "Converted the Community Handbook's content into reStructuredText across roughly 20 sections — one merged PR per role and policy area, from Designer and Translator guides through Governance and Financial Policy.",
   },
   {
     title: 'Mautic Tester documentation overhaul',
@@ -37,7 +37,7 @@ module.exports = [
     year: 2026,
     url: 'https://contribute.mautic.org/en/latest/contributing/tester.html',
     description:
-      'Reworked the Tester guide so it starts with setting Mautic up on your own machine rather than in the cloud, rewriting about half the page.',
+      'Rewrote the Tester guide twice: first replacing sunset Gitpod instructions with GitHub Codespaces setup written from scratch, then restructuring the page to lead with local (DDEV) setup over Codespaces.',
   },
   {
     title: 'Virtual Coffee Handbook',
@@ -47,7 +47,7 @@ module.exports = [
     url: 'https://virtualcoffee.io/resources/virtual-coffee-handbook',
     highlight: true,
     description:
-      "Created and looked after Virtual Coffee's handbook — from how to join through to finding your way around Slack — including a 2023 reorganization of every community resource on the site.",
+      "Created and still maintain Virtual Coffee's handbook — onboarding, Slack navigation, glossary — including a 2023 reorg of every community resource on the site.",
   },
   {
     title: 'Virtual Coffee Monthly Challenges documentation',
@@ -56,7 +56,7 @@ module.exports = [
     yearEnd: 2025,
     url: 'https://vc-community-docs.netlify.app/docs/monthly-challenges/',
     description:
-      'Wrote the facilitator handbook and a guide for every Monthly Challenge, so the volunteers running them had something to follow instead of working it out each time.',
+      'Wrote a facilitator handbook plus individual guides for 15+ Monthly Challenges, replacing ad hoc volunteer knowledge with a documented process.',
   },
   {
     title: 'Virtual Coffee docs migration to Docusaurus',
@@ -65,6 +65,6 @@ module.exports = [
     url: 'https://vc-community-docs.netlify.app/docs/',
     highlight: true,
     description:
-      "Moved Virtual Coffee's documentation onto Docusaurus on my own — 192 files rebuilt and delivered as a single piece of work.",
+      "Migrated Virtual Coffee's documentation to Docusaurus solo — full information architecture and content rebuilt from scratch, not a lift-and-shift.",
   },
 ];

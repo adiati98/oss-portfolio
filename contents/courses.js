@@ -25,7 +25,7 @@ module.exports = [
     year: 2024,
     url: 'https://learn.osscommunities.com/becoming-a-maintainer/',
     description:
-      "Wrote and published a full course taking contributors from their first change through to helping run a project — sorting incoming issues, reviewing other people's work, and keeping a community healthy.",
+      'Co-created a free maintainer-onboarding course with Bekah HW and Jessica Wilkins — 13 chapters from first PR through running a project: triage, review, and community building.',
   },
   // Example of a course you took rather than authored — course and
   // certificate as two separate, both-optional links:
