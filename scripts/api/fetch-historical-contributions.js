@@ -150,11 +150,11 @@ async function fetchContributions(
   }
 
   /**
-   * Fetches the date of the user's first review on a given pull request.
+   * Fetches the dates of the user's first and last reviews on a given pull request.
    */
-  async function getPrMyFirstReviewDate(owner, repo, prNumber, username, logState, year, title) {
+  async function getPrMyReviewDates(owner, repo, prNumber, username, logState, year, title) {
     const url = `https://github.com/${owner}/${repo}/pull/${prNumber}`;
-    if (permanentFailures.has(url)) return null;
+    if (permanentFailures.has(url)) return { first: null, last: null };
     try {
       const response = await withRateLimitRetry(
         () => axiosInstance.get(`/repos/${owner}/${repo}/pulls/${prNumber}/reviews`),
@@ -164,16 +164,19 @@ async function fetchContributions(
         .filter((review) => review.user?.login === username)
         .sort((a, b) => new Date(a.submitted_at) - new Date(b.submitted_at));
       if (myReviews.length > 0) {
-        return myReviews[0].submitted_at;
+        return {
+          first: myReviews[0].submitted_at,
+          last: myReviews[myReviews.length - 1].submitted_at,
+        };
       }
-      return null;
+      return { first: null, last: null };
     } catch (err) {
       if (err.isPermanent403) {
         logPermanent403(url, logState, year, title);
-        return null;
+        return { first: null, last: null };
       }
       if (err.response && err.response.status === 404) {
-        return null;
+        return { first: null, last: null };
       }
       throw err;
     }
@@ -483,7 +486,7 @@ async function fetchContributions(
           rejectedCoAuthorUrls.add(pr.html_url);
         }
 
-        const myFirstReviewDate = await getPrMyFirstReviewDate(
+        const { first: myFirstReviewDate, last: myLastReviewDate } = await getPrMyReviewDates(
           owner,
           repoName,
           pr.number,
@@ -501,12 +504,13 @@ async function fetchContributions(
             title: pr.title,
             url: pr.html_url,
             repo: `${owner}/${repoName}`,
-            date: pr.updated_at,
+            date: myLastReviewDate,
             createdAt: pr.created_at,
             mergedAt,
             mergePeriod,
             myFirstReviewDate,
             myFirstReviewPeriod,
+            myLastReviewDate,
             state: pr.state,
           });
           uniqueReviewedPrs.add(pr.html_url);
@@ -608,7 +612,7 @@ async function fetchContributions(
 
       // 2. Independent Check: Is it a reviewed PR?
       if (item.pull_request && !uniqueReviewedPrs.has(item.html_url)) {
-        const myFirstReviewDate = await getPrMyFirstReviewDate(
+        const { first: myFirstReviewDate, last: myLastReviewDate } = await getPrMyReviewDates(
           owner,
           repoName,
           item.number,
@@ -634,12 +638,13 @@ async function fetchContributions(
             title: item.title,
             url: item.html_url,
             repo: `${owner}/${repoName}`,
-            date: item.updated_at,
+            date: myLastReviewDate,
             createdAt: item.created_at,
             mergedAt,
             mergePeriod,
             myFirstReviewDate,
             myFirstReviewPeriod,
+            myLastReviewDate,
             state: item.state,
           });
           uniqueReviewedPrs.add(item.html_url);
