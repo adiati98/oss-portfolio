@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.0] - 2026-08-18
+
+### Added
+
+- **Every Workbench row now gets a specific "next step" reason**: A PR waiting for review shows exactly why — a direct ping, changes requested, no reviewer assigned yet, or a merge conflict to resolve — instead of a generic status. A row with a linked code PR also shows whether that PR is merged, closed, or still open, and rows can carry a `pending-pr-merge` label or milestone reminder where relevant.
+- **A table of contents on the Glossary**: A sticky, independently-scrollable list of sections and terms now sits alongside the Glossary on large screens, and stacks above it on small screens.
+
+### Changed
+
+- **Content pages share one header style**: Quarterly Reports and the Glossary used a centered, bordered header while Journey, Writing, and Workbench used a left-aligned style; all five now match, with a shared page width.
+- **Longer Workbench next-step text now wraps cleanly**: Both the HTML grid and Markdown table renderers were hardened against horizontal overflow or truncation from the new, longer next-step strings.
+
+### Fixed
+
+- **The landing page's "Last contribution" indicator for reviewed pull requests**: It used the PR's last-updated timestamp, which advances on any activity — comments, pushes, CI — not just a submitted review. It now uses the actual last-review timestamp instead.
+
 ## [4.2.0] - 2026-08-02
 
 ### Added
