@@ -3,19 +3,22 @@
  *
  * The upstream docs-PR tracker cache (adiati98/mautic-docs-prs-tracker) only
  * carries activity arrays (reviews, comments, review requests), never a PR's
- * title or body — see workbench-merge.js's tracker-only row construction.
- * For a docs PR that's watched by the tracker but isn't in the local
- * workbench (e.g. someone else's PR triaged as maintainer), that leaves
- * nothing to render but "owner/repo#number".
+ * title, body, or draft state — see workbench-merge.js's tracker-only row
+ * construction. For a docs PR that's watched by the tracker but isn't in the
+ * local workbench (e.g. someone else's PR triaged as maintainer), that
+ * leaves nothing to render but "owner/repo#number", and no way to tell a
+ * draft PR apart from one ready for review.
  *
- * This fetches the one thing missing — title, and any linked code PR named
- * in the body — directly from the GitHub PR detail endpoint, for exactly
- * those tracker-only keys. Results are cached forever: a merged docs PR's
- * title and linked code PR never change retroactively, so every run after
- * the first costs zero API calls for a PR already seen. A fetch failure
- * (rate limit, 404 on a since-deleted PR, an SSO-gated org) is left
- * uncached rather than poisoned with a null — the row falls back to the
- * pre-existing repo#number rendering this run, and gets retried next time.
+ * This fetches what's missing — title, draft state, and any linked code PR
+ * named in the body — directly from the GitHub PR detail endpoint, for
+ * every tracker-only key, on every run. Draft state changes over a PR's
+ * open lifetime (an author marks it ready for review), so it's always
+ * re-fetched rather than cached — the upstream tracker itself re-checks it
+ * regularly, and the workbench should stay in sync with it. The last
+ * successful fetch per key is kept on disk purely as a fallback: if a fetch
+ * fails (rate limit, 404 on a since-deleted PR, an SSO-gated org), the row
+ * uses that last-known data this run instead of dropping to bare
+ * repo#number, and a fresh fetch is retried next run.
  */
 const fs = require('fs/promises');
 const path = require('path');
@@ -60,27 +63,19 @@ async function readCache(cacheFile) {
  *                         callers should exclude keys already covered by a
  *                         local record, which already carries its own title).
  * @returns {Promise<object>} map keyed by the same "owner/repo#number" →
- *                            { title, linkedCodePr }, ready to pass as
- *                            mergeWorkbench's `titles` input.
+ *                            { title, linkedCodePr, isDraft }, ready to pass
+ *                            as mergeWorkbench's `titles` input.
  */
 async function fetchTrackerTitleInfo(keys, { cacheFile = CACHE_FILE, timeoutMs = 10000 } = {}) {
   const cache = await readCache(cacheFile);
   const result = {};
 
-  const pending = (keys || []).filter((key) => {
-    if (cache[key]) {
-      result[key] = cache[key];
-      return false;
-    }
-    return true;
-  });
-
-  if (pending.length === 0) return result;
+  if (!keys || keys.length === 0) return result;
 
   const axiosInstance = buildAxiosInstance(timeoutMs);
   let dirty = false;
 
-  await mapWithConcurrency(pending, CONCURRENCY, async (key) => {
+  await mapWithConcurrency(keys, CONCURRENCY, async (key) => {
     const match = key.match(/^([^/]+\/[^#]+)#(\d+)$/);
     if (!match) return;
     const [, repo, number] = match;
@@ -92,12 +87,15 @@ async function fetchTrackerTitleInfo(keys, { cacheFile = CACHE_FILE, timeoutMs =
       const entry = {
         title: res.data.title || null,
         linkedCodePr: extractLinkedCodePr(res.data.body, repo),
+        isDraft: res.data.draft === true,
       };
       cache[key] = entry;
       result[key] = entry;
       dirty = true;
     } catch (err) {
-      // Not cached — falls back to repo#number this run, retried next run.
+      // Fetch failed — fall back to last-known data instead of dropping the
+      // row to bare repo#number; retried fresh next run.
+      if (cache[key]) result[key] = cache[key];
     }
   });
 
