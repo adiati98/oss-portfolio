@@ -426,8 +426,26 @@ function buildSignals(local, upstream, me, now) {
   );
   const stillPending = openRequests.filter((r) => pendingLogins.some((l) => sameLogin(l, r.of)));
   const chosen = newestBy(stillPending.length ? stillPending : openRequests);
-  if (chosen) {
-    signals.pendingReview = { of: chosen.of, days: daysSince(chosen.at) };
+
+  // A newer informal ping — an @-mention asking a specific person to weigh
+  // in, still unanswered by them — can supersede a stale formal review
+  // request nobody ever withdrew. Without this, a months-old "Request
+  // review" click that the reviewer never fulfilled permanently outranks
+  // someone being asked again and again through plain comments instead,
+  // even once the real ask has clearly moved on to a different person.
+  const openPings = activity.comments
+    .filter((c) => c.login && !isBotLogin(c.login))
+    .flatMap((c) =>
+      c.mentions
+        .filter((m) => m && !sameLogin(m, me) && !sameLogin(m, c.login))
+        .map((m) => ({ of: m, at: c.at }))
+    )
+    .filter((p) => !spokeAfter(p.of, p.at));
+  const latestPing = newestBy(openPings);
+
+  const timedAsk = newestBy([chosen, latestPing].filter(Boolean));
+  if (timedAsk) {
+    signals.pendingReview = { of: timedAsk.of, days: daysSince(timedAsk.at) };
   } else if (pendingLogins.length) {
     // Named on the live list but no request event survived the cache cap —
     // we can still say WHO, just not when. The date clause gets dropped.

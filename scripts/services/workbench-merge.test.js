@@ -1253,6 +1253,37 @@ run(
   }
 );
 
+// G3b. A stale, forgotten formal review request must not outrank a fresher
+// informal ping to someone else. Reproduces a real case: a reviewer was
+// formally requested via GitHub's "Request review" button months ago, never
+// answered, and never withdrawn — meanwhile the actual ask moved on to a
+// different person entirely, chased only through plain @-mentions.
+run(
+  'G3b · fresher ping to LOGIN outranks a stale, unwithdrawn formal request',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6005,
+        lastActor: ME,
+        author: ME,
+        ...detail({
+          requestedReviewers: ['favour-chibueze'],
+          reviewRequests: [
+            { requestedReviewer: 'favour-chibueze', actor: ME, createdAt: daysAgo(190) },
+          ],
+          comments: [{ login: ME, createdAt: daysAgo(10), mentions: ['andersonjeccel'] }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting');
+    assert.equal(r.nextStep, 'You replied 10d ago — waiting on andersonjeccel', r.nextStep);
+  }
+);
+
 // G4. A bot pushed to your own PR. Never "author replied" — a push is not a
 // person answering you, it's a diff that moved under you.
 run(
