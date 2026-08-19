@@ -1185,11 +1185,9 @@ function mergeWorkbench({
       repo,
       relationship: 'reviewing',
       labels: [],
-      // Draft state lives in the local fetch layer (a PR's `draft` flag), which
-      // tracker-only rows never pass through — the tracker cache stores activity
-      // arrays, not PR state. A docs PR you merely triage as maintainer also
-      // isn't a draft of yours, so false is the correct, safe default here.
-      isDraft: false,
+      // The tracker cache stores activity arrays, not PR state, so draft
+      // state comes from the same title-enrichment fetch as `title` above.
+      isDraft: titleInfo?.isDraft === true,
       isBot: false,
       lastActor: null,
       isLastActorBot: false,
