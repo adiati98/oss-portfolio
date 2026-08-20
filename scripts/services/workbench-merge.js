@@ -334,6 +334,7 @@ function emptySignals() {
     myLastReplyDays: null,
     mention: null,
     changesRequested: null,
+    othersChangesRequested: null,
     pendingReview: null,
     waitingOn: null,
     noReviewerAssigned: false,
@@ -457,6 +458,28 @@ function buildSignals(local, upstream, me, now) {
     activity.reviews.filter((r) => r.login && !sameLogin(r.login, me) && !isBotActor(r.login))
   );
   signals.waitingOn = signals.pendingReview?.of || latestOtherReviewer?.login || null;
+
+  // A fellow reviewer already asked for changes and the PR's OWN AUTHOR
+  // hasn't addressed it — distinct from `changesRequested` above, which
+  // tracks whether YOU (as the PR's author) have replied. This is for PRs
+  // you're only reviewing: your own still-pending review request isn't the
+  // real blocker while someone else's change request sits unanswered by the
+  // author, so it shouldn't read as urgently as a first, untouched request.
+  const latestChangesForAuthor = newestBy(
+    activity.reviews.filter(
+      (r) =>
+        r.state === 'CHANGES_REQUESTED' &&
+        r.login &&
+        !sameLogin(r.login, me) &&
+        !sameLogin(r.login, local?.author)
+    )
+  );
+  if (latestChangesForAuthor && !spokeAfter(local?.author, latestChangesForAuthor.at)) {
+    signals.othersChangesRequested = {
+      by: latestChangesForAuthor.login,
+      days: daysSince(latestChangesForAuthor.at),
+    };
+  }
 
   // The PR-detail fields ride along with the widened activity cache, so their
   // presence marks a record we can reason about. Without them, "nobody is
@@ -848,6 +871,16 @@ function directPingStep(record, signals) {
     record.relationship === 'reviewing' &&
     (record.status === 'Request review' || Boolean(record.reviewRequest))
   ) {
+    // Someone else already asked for changes and the author hasn't moved —
+    // your pending request isn't what's actually blocking this. Stays an
+    // instruction (never silently demoted to Watching — some projects
+    // genuinely want every requested reviewer's independent pass regardless
+    // of what others already said), but describes the real state instead of
+    // issuing a flat "review it" that may not be true yet.
+    if (signals.othersChangesRequested) {
+      const { by, days } = signals.othersChangesRequested;
+      return `${by} requested changes ${days}d ago — not yet addressed`;
+    }
     return 'Review requested — review it';
   }
   return null;

@@ -1229,6 +1229,69 @@ run(
   }
 );
 
+// G2d. You're still a pending reviewer, but a fellow reviewer already asked
+// for changes and the author hasn't addressed it — the request isn't stale
+// in the sense G3b covers, it just isn't the real blocker right now. Stays
+// in the action lane (never silently buried) with honest wording instead of
+// a flat "review it" that implies nothing has happened yet.
+run(
+  'G2d · fellow reviewer already requested changes, author silent → softened wording',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6023,
+        status: 'Request review',
+        lastActor: 'reviewerB',
+        author: 'writerA',
+        ...detail({
+          reviews: [{ login: 'reviewerB', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(6) }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'action');
+    assert.equal(r.ball, 'Take Action');
+    assert.equal(
+      r.nextStep,
+      'reviewerB requested changes 6d ago — not yet addressed',
+      r.nextStep
+    );
+  }
+);
+
+// G2e. Same setup, but the author already replied since the change request
+// (even though a third reviewer, not the author, ends up as the record's
+// last actor) — softened wording no longer applies, back to the plain
+// prompt, since there's something new for you to look at now.
+run(
+  'G2e · fellow reviewer requested changes, author already replied → plain prompt',
+  {
+    tasks: [
+      local({
+        repo: 'someorg/app',
+        number: 6024,
+        status: 'Request review',
+        lastActor: 'reviewerC',
+        author: 'writerA',
+        ...detail({
+          reviews: [{ login: 'reviewerB', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(6) }],
+          comments: [
+            { login: 'writerA', createdAt: daysAgo(3), mentions: [] },
+            { login: 'reviewerC', createdAt: daysAgo(1), mentions: [] },
+          ],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.nextStep, 'Review requested — review it', r.nextStep);
+  }
+);
+
 // G3. Your own PR, you spoke last → say when, and who owes you.
 run(
   'G3 · authored, I replied last → "You replied Nd ago — waiting on LOGIN"',
