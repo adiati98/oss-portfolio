@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.3.1] - 2026-08-20
+
+### Fixed
+
+- **Workbench could name the wrong person as who a PR is waiting on**: If someone was formally requested as a reviewer months earlier and never responded, Workbench kept naming them — even once the conversation had clearly moved on to someone else through plain comments and mentions. It now shows whoever was actually asked most recently.
+- **Misleading "review it" prompt when a fellow reviewer already asked for changes**: A PR could tell the user to review it right away, even when another reviewer had already requested changes and the author hadn't addressed them yet. It now explains the real situation — who asked for changes, and that it's still unaddressed — instead of implying nothing has happened.
+- **Inconsistent labels for how the user is involved in a PR**: A label like "reviewing" implied the user had already reviewed a pull request, even when it was still waiting on their first look. Labels are now consistent and accurate: "PR review," "co-authored," "authored," and "assigned."
+
 ## [4.3.0] - 2026-08-18
 
 ### Added
