@@ -185,9 +185,9 @@ const BALL_COLOR = {
 
 const REL_LABEL = {
   authored: '✍ authored',
-  'co-authoring': '🤝 co-authoring',
-  reviewing: '👀 reviewing',
-  'assigned issue': '📝 assigned issue',
+  'co-authoring': '🤝 co-authored',
+  reviewing: '👀 PR review',
+  'assigned issue': '📝 assigned',
 };
 
 /** Mirrors the wbx-pill: ball label as a badge, plus the same idle-day suffix rule as renderRow. */

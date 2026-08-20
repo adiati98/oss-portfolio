@@ -244,9 +244,9 @@ const WORKBENCH_CSS = `
 function relLabel(record) {
   const map = {
     authored: '✍ authored',
-    'co-authoring': '🤝 co-authoring',
-    reviewing: '👀 reviewing',
-    'assigned issue': '📝 assigned issue',
+    'co-authoring': '🤝 co-authored',
+    reviewing: '👀 PR review',
+    'assigned issue': '📝 assigned',
   };
   return map[record.relationship] || escapeHtml(record.relationship) || '';
 }
