@@ -1551,10 +1551,14 @@ run(
   }
 );
 
-// G8c. null (and any non-dirty state) means UNKNOWN, not clean and not
-// conflicted. Emit nothing — there is nothing to retry, the next build reads a
-// fresh value anyway.
-for (const state of [null, 'unknown', 'blocked', 'behind', 'clean']) {
+// G8c. Only `dirty` is a conflict. Every other state read here means UNKNOWN
+// as far as conflicts go — not clean and not conflicted — so emit nothing;
+// there is nothing to retry, the next build reads a fresh value anyway.
+//
+// `blocked` is deliberately absent from this list. It is not a conflict either,
+// but it is not inert: it is its own definitive signal, read in § H below. It
+// still never produces a rebase step, which § H2c re-asserts from that side.
+for (const state of [null, 'unknown', 'behind', 'clean']) {
   run(
     `G8c · mergeableState ${JSON.stringify(state)} → no conflict step`,
     {
@@ -1994,160 +1998,356 @@ run(
 );
 
 // ===========================================================================
-// Pending-PR label (§ L) — the second Mautic docs housekeeping rule, scoped by
-// its own repo list. Ported from the upstream tracker's
-// needs-label-and-milestone category, which prompts for the label on DRAFTS:
-// a draft docs PR is by definition still pending something. Once it is ready
-// for review, whether the label belongs is a judgement call about the linked
-// code PR, not a lapse — so the prompt stops.
+// Definitive holds (§ H) — mergeable_state was already fetched on every run
+// and read only half-way: it only ever acted on `dirty`. `blocked` says branch
+// protection isn't satisfied — required reviews missing, required checks
+// failing or still running — so nobody can merge the PR yet.
+//
+// That is not a reason to hide a row, so nothing is dropped: a held row moves
+// from "Needs your action" to "Waiting on others" and carries the reason with
+// it. The wording is read from contents/docs-workflow-repos.js so both
+// generators say the same thing.
 // ===========================================================================
 
-const PENDING_LABEL = 'pending-pr-merge';
+const DOCS_WORKFLOW_CONFIG = require('../../contents/docs-workflow-repos');
+const BLOCKED_REASON = DOCS_WORKFLOW_CONFIG.mergeBlockedReason;
 
-function draftRow(overrides) {
+/** A docs PR the ladder would otherwise put in the action lane: you're the
+ * reviewer, the author moved last. Milestone set on purpose — a missing one is
+ * a real job the owner owes, and § H must not be tested through it. */
+function heldCandidate(overrides) {
   return local({
     repo: 'mautic/user-documentation',
-    lastActor: ME,
-    author: ME,
-    isDraft: true,
+    lastActor: 'writerA',
+    author: 'writerA',
+    status: 'Review in progress',
+    isDraft: false,
     ...detail({ milestone: 'Q3 docs' }),
     ...overrides,
   });
 }
 
-// L1. Draft in a listed repo, label absent → chip, and the row is promoted the
-// same way a missing milestone promotes it.
+const AUTHOR_REPLIED_STEP = 'Author replied — review the latest changes';
+
+// H0 · the control. Same row, no blocked state → action lane, exactly as
+// today. Every H case below differs from this by one field only.
 run(
-  'L1 · draft without the label → flagged and promoted',
-  { prs: [draftRow({ number: 6101, labels: [] })] },
+  'H0 · control — no hold → action lane, unchanged',
+  { tasks: [heldCandidate({ number: 6201 })] },
   ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL, records[0].pendingLabelMissing);
     assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
-    assert.equal(records[0].ball, 'Take Action');
-    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
+    assert.equal(records[0].nextStep, AUTHOR_REPLIED_STEP, records[0].nextStep);
+    assert.deepEqual(records[0].waitingReasons, []);
   }
 );
 
-// L2. THE CLEARING CASE — the prompt is a live read of the PR's own labels
-// every build, never a stored flag. Add the label on GitHub and the chip is
-// gone on the next run, with nothing to reset by hand; the row drops back out
-// of the action lane too, since nothing is owed any more. Same fixture as L1
-// apart from the label, so the label is provably the only thing doing it.
+// H2 · mergeable_state blocked → out of the action lane, and the row names the
+// reason in words.
 run(
-  'L2 · adding the label clears the chip and the promotion',
-  { prs: [draftRow({ number: 6102, labels: [PENDING_LABEL] })] },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
-    assert.equal(records[0].lane, 'waiting', 'nothing owed → back where it was');
-    assert.equal(records[0].ball, 'Waiting');
-  }
-);
-
-// L2b. Matched case-insensitively — GitHub label casing varies by who made it.
-run(
-  'L2b · label match ignores case',
-  { prs: [draftRow({ number: 6103, labels: ['Pending-PR-Merge'] })] },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
-  }
-);
-
-// L2c. …and it is the RIGHT label that clears it, not merely having labels.
-run(
-  'L2c · unrelated labels do not clear the prompt',
-  { prs: [draftRow({ number: 6104, labels: ['needs-backport', 'content-approved'] })] },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL, records[0].pendingLabelMissing);
-  }
-);
-
-// L3. Not a draft → no prompt, however the labels look. Once a PR is ready for
-// review the label is a judgement call, not a lapse.
-run(
-  'L3 · ready-for-review PR without the label → silent',
-  {
-    prs: [
-      local({
-        repo: 'mautic/user-documentation',
-        number: 6105,
-        lastActor: ME,
-        author: ME,
-        isDraft: false,
-        labels: [],
-        ...detail({ requestedReviewers: ['escopecz'], milestone: 'Q3 docs' }),
-      }),
-    ],
-  },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
-  }
-);
-
-// L4. A draft in a repo that isn't on the list → silent. Same shape, only the
-// repo differs — the scope is the list, never the data.
-run(
-  'L4 · draft in a non-listed repo → silent',
-  { prs: [draftRow({ repo: 'someorg/app', number: 6106, labels: [], ...detail() })] },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, null, records[0].pendingLabelMissing);
-    assert.equal(records[0].lane, 'waiting', 'nothing owed → no promotion');
-  }
-);
-
-// L5. Both housekeeping rules at once — two independent fields, neither
-// crowding out the other nor the row's own instruction.
-run(
-  'L5 · label and milestone both missing → both fields set, step untouched',
-  {
-    prs: [
-      draftRow({
-        repo: 'mautic/developer-documentation-new',
-        number: 6107,
-        labels: ['needs-backport'],
-        ...detail({ milestone: null }),
-      }),
-    ],
-  },
-  ({ records }) => {
-    assert.equal(records[0].pendingLabelMissing, PENDING_LABEL);
-    assert.equal(records[0].milestoneMissing, true);
-    assert.equal(records[0].nextStep, 'Draft — finish and mark ready', records[0].nextStep);
-    assert.ok(!/label|milestone/i.test(records[0].nextStep), 'neither leaks into the prose');
-  }
-);
-
-// L6. Bot rows stay clean — the lane is folded away precisely so it carries no
-// instructions, and the upstream tracker exempts Dependabot for the same reason.
-run(
-  'L6 · never on the bot lane',
+  'H2 · mergeableState blocked → waiting lane, reason named in words',
   {
     tasks: [
       local({
+        repo: 'someorg/app',
+        number: 6205,
+        lastActor: 'writerA',
+        author: 'writerA',
+        status: 'Review in progress',
+        ...detail({ mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records[0];
+    assert.equal(r.lane, 'waiting', `lane was ${r.lane}`);
+    assert.equal(r.ball, 'Watching');
+    assert.equal(r.nextStep, null, r.nextStep);
+    assert.deepEqual(r.waitingReasons, [BLOCKED_REASON]);
+    assert.ok(BLOCKED_REASON, 'the reason must be configured, not left to the renderers');
+  }
+);
+
+// H2b · THE RULE THAT DID NOT CHANGE. Only values GitHub states definitively
+// are acted on; `unknown` (and the null this field reports while GitHub is
+// still computing) is never guessed at, and neither is any other state.
+for (const state of [null, 'unknown', 'behind', 'clean', 'unstable', 'draft']) {
+  run(
+    `H2b · mergeableState ${JSON.stringify(state)} → nothing inferred, lane untouched`,
+    {
+      tasks: [
+        local({
+          repo: 'someorg/app',
+          number: 6206,
+          lastActor: 'writerA',
+          author: 'writerA',
+          status: 'Review in progress',
+          ...detail({ mergeableState: state }),
+        }),
+      ],
+    },
+    ({ records }) => {
+      assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+      assert.deepEqual(records[0].waitingReasons, []);
+    }
+  );
+}
+
+// H2c · The two definitive states are read separately and neither swallowed
+// the other: `dirty` still means conflicts and only conflicts, and `blocked`
+// still never produces a rebase step (the § G8c case, from this side).
+run(
+  'H2c · dirty is still the conflict signal, not a hold',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6207,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({ mergeableState: 'dirty', baseRef: 'main' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].nextStep, 'Conflicts with main — rebase needed', records[0].nextStep);
+    assert.deepEqual(records[0].waitingReasons, []);
+  }
+);
+
+run(
+  'H2d · blocked never produces a rebase step',
+  {
+    prs: [
+      local({
+        repo: 'someorg/app',
+        number: 6226,
+        lastActor: 'reviewerQ',
+        author: ME,
+        hasFormalReview: true,
+        ...detail({ mergeableState: 'blocked', baseRef: 'main' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.ok(!/rebase|onflict/.test(records[0].nextStep || ''), records[0].nextStep);
+    assert.equal(records[0].lane, 'waiting', `lane was ${records[0].lane}`);
+    assert.deepEqual(records[0].waitingReasons, [BLOCKED_REASON]);
+  }
+);
+
+// ---------------------------------------------------------------------------
+// H4 · A hold never buries a request that named the owner. Each case below is
+// a held row that STAYS in the action lane — and shows no reason chip, since
+// "required checks or reviews not met" printed next to "reply to X" would
+// contradict it.
+// ---------------------------------------------------------------------------
+
+function assertNotHeld(record, step) {
+  assert.equal(record.lane, 'action', `lane was ${record.lane}`);
+  assert.deepEqual(record.waitingReasons, [], 'no contradictory reason on an action row');
+  if (step) assert.equal(record.nextStep, step, record.nextStep);
+}
+
+run(
+  'H4a · an @-mention of you outranks the hold',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6209,
+        ...detail({
+          milestone: 'Q3 docs',
+          mergeableState: 'blocked',
+          comments: [{ login: 'writerA', createdAt: daysAgo(1), mentions: [ME] }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => assertNotHeld(records[0], 'writerA mentioned you 1d ago — reply')
+);
+
+// The one that matters most for `blocked`: the missing requirement is very
+// often an approving review, and if you are the requested reviewer then YOU
+// are the block. Demoting this would hide the work the board exists to show.
+run(
+  'H4b · a review request aimed at you outranks the hold',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6210,
+        status: 'Request review',
+        ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => assertNotHeld(records[0], 'Review requested — review it')
+);
+
+run(
+  'H4c · unanswered changes requested on your own PR outrank the hold',
+  {
+    prs: [
+      local({
         repo: 'mautic/user-documentation',
-        number: 6108,
+        number: 6211,
+        lastActor: 'reviewerQ',
+        author: ME,
+        ...detail({
+          milestone: 'Q3 docs',
+          mergeableState: 'blocked',
+          reviews: [{ login: 'reviewerQ', state: 'CHANGES_REQUESTED', submittedAt: daysAgo(2) }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) =>
+    assertNotHeld(records[0], 'Changes requested by reviewerQ — address the feedback')
+);
+
+// The linked code PR having merged is decisive: the docs are actionable now,
+// whatever the merge state says.
+run(
+  'H4d · a merged linked code PR outranks the hold',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6212,
+        linkedCodePrState: 'merged',
+        ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => assertNotHeld(records[0], 'Code PR merged — review the docs now')
+);
+
+// A milestone is owed whatever the merge is waiting on, so the housekeeping
+// promotion survives — and its own chip is unaffected.
+run(
+  'H4e · missing housekeeping outranks the hold',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6213,
+        ...detail({ milestone: null, mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'action', `lane was ${records[0].lane}`);
+    assert.equal(records[0].milestoneMissing, true);
+    assert.deepEqual(records[0].waitingReasons, []);
+  }
+);
+
+// ---------------------------------------------------------------------------
+// H6 · Lane discipline — the hold only ever subtracts from the action lane.
+// ---------------------------------------------------------------------------
+
+// A held row stops at "Waiting on others" and is NOT folded on to Stalled,
+// however old it is. Stalled is collapsed by default and reads "nudge or
+// close"; a row parked on something outside the owner's control must stay
+// visible instead of being hidden behind that.
+run(
+  'H6a · a held row stops at waiting, never folds on to stalled',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6217,
+        updatedAt: daysAgo(90),
+        lastSubstantiveDate: daysAgo(90),
+        ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.ok(records[0].idleDays >= 30, `idleDays was ${records[0].idleDays}`);
+    assert.equal(records[0].lane, 'waiting', `lane was ${records[0].lane}`);
+    assert.deepEqual(records[0].waitingReasons, [BLOCKED_REASON]);
+  }
+);
+
+// A row that was ALREADY stalled keeps that lane — the hold never moves rows
+// between non-action lanes — but it gains the reason, so the fold no longer
+// says "nudge or close" without saying what it is waiting on.
+run(
+  'H6b · an already-stalled row keeps its lane and gains the reason',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6218,
+        lastActor: 'thirdparty',
+        updatedAt: daysAgo(90),
+        lastSubstantiveDate: daysAgo(90),
+        ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'stalled', `lane was ${records[0].lane}`);
+    assert.deepEqual(records[0].waitingReasons, [BLOCKED_REASON]);
+  }
+);
+
+// An approved row is never demoted either: "bring it home" is a different
+// claim from "your move", and the Approved pill carries information the
+// waiting lane would throw away.
+run(
+  'H6c · an approved row keeps the ready lane and gains the reason',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6219,
+        reviewState: 'APPROVED',
+        approvedBy: 'maintainerZ',
+        ...detail({
+          milestone: 'Q3 docs',
+          mergeableState: 'blocked',
+          reviews: [{ login: 'maintainerZ', state: 'APPROVED', submittedAt: daysAgo(1) }],
+        }),
+      }),
+    ],
+  },
+  ({ records }) => {
+    assert.equal(records[0].lane, 'ready', `lane was ${records[0].lane}`);
+    assert.equal(records[0].ball, 'Approved');
+    assert.deepEqual(records[0].waitingReasons, [BLOCKED_REASON]);
+  }
+);
+
+// H6d · Bot rows stay clean. The lane is folded away precisely so it carries
+// neither instructions nor explanations.
+run(
+  'H6d · never on the bot lane',
+  {
+    tasks: [
+      heldCandidate({
+        number: 6220,
         user: { login: 'dependabot[bot]' },
         author: 'dependabot[bot]',
         title: 'Bump lodash from 4 to 5',
-        isDraft: true,
-        labels: [],
-        ...detail({ milestone: null }),
+        ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }),
       }),
     ],
   },
   ({ records }) => {
     assert.equal(records[0].lane, 'bot');
-    assert.equal(records[0].pendingLabelMissing, null);
-    assert.equal(records[0].milestoneMissing, false);
+    assert.deepEqual(records[0].waitingReasons, []);
   }
 );
 
-// L7. Present on every record, so renderers never guard for undefined.
+// H7 · Present on every record as an array of strings, tracker-only rows
+// included, so both generators can loop over it without guarding for
+// undefined.
 run(
-  'L7 · the field is present on every record',
+  'H7 · the field is an array on every record',
   {
-    prs: [local({ repo: 'someorg/app', number: 6109, lastActor: ME, author: ME })],
+    prs: [local({ repo: 'someorg/app', number: 6221, lastActor: ME, author: ME })],
+    tasks: [
+      heldCandidate({ number: 6222, ...detail({ milestone: 'Q3 docs', mergeableState: 'blocked' }) }),
+    ],
+    issues: [local({ repo: 'mautic/user-documentation', number: 6223 })],
     tracker: {
-      'mautic/user-documentation#6110': {
+      'mautic/user-documentation#6224': {
         docsUpdatedAt: daysAgo(3),
         rawDocsReviews: [],
         rawDocsComments: [],
@@ -2156,14 +2356,256 @@ run(
   },
   ({ records }) => {
     for (const r of records) {
-      assert.ok('pendingLabelMissing' in r, `missing on ${r.key}`);
-      assert.ok(
-        r.pendingLabelMissing === null || typeof r.pendingLabelMissing === 'string',
-        `bad type on ${r.key}: ${typeof r.pendingLabelMissing}`
-      );
+      assert.ok(Array.isArray(r.waitingReasons), `not an array on ${r.key}`);
+      for (const reason of r.waitingReasons) {
+        assert.equal(typeof reason, 'string', `a non-string reason on ${r.key}`);
+        assert.ok(reason, `a reason with nothing to say on ${r.key}`);
+      }
     }
+    // An assigned issue has no merge state to read.
+    const issue = records.find((r) => r.relationship === 'assigned issue');
+    assert.deepEqual(issue.waitingReasons, []);
+    // A tracker-only row carries no local merge state to read either.
+    const trackerOnly = records.find((r) => r.source === 'tracker');
+    assert.deepEqual(trackerOnly.waitingReasons, []);
   }
 );
+
+// ===========================================================================
+// Outside verification of approvals (§ V)
+//
+// An approval from inside the education team is not the same as the content
+// being verified. An operator approving a docs PR vouches for wording and
+// style, not for whether the content is accurate — only an approval from
+// OUTSIDE that team (the code PR's author, or another outside reviewer) means
+// the work has genuinely been checked.
+//
+// The roster is `educationTeam` in maintainers.json at the root of the same
+// public tracker repo this project already reads its feed from, fetched with
+// the same degradation discipline. The logins are never written down here:
+// the roster belongs to the team and changes without reference to this tool.
+// ===========================================================================
+
+const ROSTER = { educationTeam: ['insider1', 'INSIDER2'] };
+
+/** A tracker feed covering the docs repo, which is what puts a row inside the
+ * rule's scope: the scope is read off the feed's own keys, never listed here. */
+function trackerCovering(repo, number = 9001) {
+  return {
+    [`${repo}#${number}`]: {
+      docsUpdatedAt: daysAgo(3),
+      rawDocsReviews: [],
+      rawDocsComments: [],
+    },
+  };
+}
+
+/** An approved docs PR you are reviewing, approved by `approvedBy`. */
+function approvedRow(approvedBy, overrides = {}) {
+  return local({
+    repo: 'mautic/user-documentation',
+    number: 6301,
+    lastActor: approvedBy,
+    author: 'writerA',
+    reviewState: 'APPROVED',
+    approvedBy,
+    ...detail({
+      milestone: 'Q3 docs',
+      reviews: [{ login: approvedBy, state: 'APPROVED', submittedAt: daysAgo(1) }],
+    }),
+    ...overrides,
+  });
+}
+
+// V1 · approved from INSIDE the team → not decisive. The row leaves the
+// "approved, heading to merge" lane, which is one of only two lanes published
+// on the live site, and says what it is actually waiting for. The approver is
+// still named on the row.
+run(
+  'V1 · an education-team approval is not decisive',
+  {
+    tasks: [approvedRow('insider1')],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'waiting', `lane was ${r.lane}`);
+    assert.equal(r.ball, 'Waiting');
+    assert.equal(r.approval.verified, false);
+    assert.equal(r.approval.by, 'insider1', 'who approved is still recorded');
+    assert.equal(
+      r.nextStep,
+      'Approved by the education team — waiting on an outside review',
+      r.nextStep
+    );
+  }
+);
+
+// V1b · roster logins are matched case-insensitively, the way every other
+// login comparison in this engine is.
+run(
+  'V1b · roster matching ignores case',
+  {
+    tasks: [approvedRow('Insider2')],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.approval.verified, false);
+    assert.equal(r.lane, 'waiting', `lane was ${r.lane}`);
+  }
+);
+
+// V2 · approved from OUTSIDE the team → decisive, exactly as today. The
+// content has been checked by someone who can vouch for it.
+run(
+  'V2 · an outside approval is decisive',
+  {
+    tasks: [approvedRow('outsiderX')],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+    assert.equal(r.ball, 'Approved');
+    assert.equal(r.approval.verified, true);
+  }
+);
+
+// V2b · one outside approval is enough, even alongside an in-team one.
+run(
+  'V2b · an outside approval alongside an in-team one still counts',
+  {
+    tasks: [
+      approvedRow('insider1', {
+        ...detail({
+          milestone: 'Q3 docs',
+          reviews: [
+            { login: 'insider1', state: 'APPROVED', submittedAt: daysAgo(2) },
+            { login: 'outsiderX', state: 'APPROVED', submittedAt: daysAgo(1) },
+          ],
+        }),
+      }),
+    ],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.approval.verified, true);
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+  }
+);
+
+// V3 · THE DEGRADATION CASE. The roster failed to fetch and no cached copy
+// exists, so it arrives empty — and every approval is decisive, exactly as the
+// code behaved before this rule existed. A file that failed to download must
+// never look like a judgement about someone's content.
+run(
+  'V3 · no roster (fetch failed, no cache) → every approval is decisive',
+  {
+    tasks: [approvedRow('insider1')],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: { educationTeam: [] },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+    assert.equal(r.ball, 'Approved');
+    assert.equal(r.approval.verified, true);
+  }
+);
+
+// V3b · the roster argument omitted entirely behaves the same way.
+run(
+  'V3b · no roster argument at all → every approval is decisive',
+  {
+    tasks: [approvedRow('insider1')],
+    tracker: trackerCovering('mautic/user-documentation'),
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+    assert.equal(r.approval.verified, true);
+  }
+);
+
+// V4 · SCOPE. The same in-team login approving in a repo the tracker does not
+// cover changes nothing: an education-team approval means nothing in an
+// unrelated org, and applying the rule everywhere would quietly demote
+// approvals from projects it was never about.
+run(
+  'V4 · an approval outside the tracker\'s repos is unaffected',
+  {
+    tasks: [approvedRow('insider1', { repo: 'someorg/app', number: 6302, ...detail({
+      reviews: [{ login: 'insider1', state: 'APPROVED', submittedAt: daysAgo(1) }],
+    }) })],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'someorg/app#6302');
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+    assert.equal(r.approval.verified, true);
+  }
+);
+
+// V4b · A note left AFTER an in-team approval is still a real ask the owner
+// owes whoever wrote it, so it keeps the action lane. The verification rule
+// only ever removes the "approved, heading to merge" claim — it must not
+// swallow a request that named the owner.
+run(
+  'V4b · a note since the approval still outranks the verification rule',
+  {
+    tasks: [
+      approvedRow('insider1', {
+        ...detail({
+          milestone: 'Q3 docs',
+          reviews: [{ login: 'insider1', state: 'APPROVED', submittedAt: daysAgo(2) }],
+          comments: [{ login: 'writerA', createdAt: daysAgo(1) }],
+        }),
+      }),
+    ],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'action', `lane was ${r.lane}`);
+    assert.equal(r.nextStep, 'Note since approval — take a look, then merge', r.nextStep);
+    assert.equal(r.approval.verified, false, 'the approval is still not decisive');
+  }
+);
+
+// V5 · A DISMISSED approval names an approver but is not a standing verdict on
+// the content, so it is not counted either way — the row keeps the "re-request
+// the review" reading it has today.
+run(
+  'V5 · a dismissed approval keeps its re-request reading',
+  {
+    tasks: [
+      approvedRow('insider1', {
+        reviewState: null,
+        approvedBy: null,
+        ...detail({
+          milestone: 'Q3 docs',
+          reviews: [{ login: 'insider1', state: 'DISMISSED', submittedAt: daysAgo(1) }],
+        }),
+      }),
+    ],
+    tracker: trackerCovering('mautic/user-documentation'),
+    roster: ROSTER,
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#6301');
+    assert.equal(r.lane, 'ready', `lane was ${r.lane}`);
+    assert.equal(r.nextStep, 'Re-request review from insider1', r.nextStep);
+  }
+);
+
 
 // ===========================================================================
 // Idle wording (§ I) — nextStep states the reason plainly at any age. Age

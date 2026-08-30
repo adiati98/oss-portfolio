@@ -209,6 +209,10 @@ const WORKBENCH_CSS = `
      upstream docs-PR tracker separates its teal setup chip from its blue
      act chip. */
   .wbx-step--setup{color:var(--t-brand);background:var(--t-brand-wash);border:1px solid var(--t-brand-line)}
+  /* Why this row is NOT in "Needs your action" — a hold, not an instruction,
+     so it reads muted rather than amber. text-transform is switched off on
+     purpose: this is a sentence about the PR's state, not a chip label. */
+  .wbx-step--hold{color:var(--t-ink-2);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);text-transform:none;letter-spacing:0}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
   .wbx-chip-draft{display:inline-flex;align-items:center;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.03em;color:var(--t-neutral);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);border-radius:999px;padding:1px 9px}
@@ -274,11 +278,19 @@ function statusSignatureFor(record) {
     record.botPing && record.botPing.of,
     record.linkedCodePr && record.linkedCodePr.ref,
     record.isDraft,
-    // Setting the milestone or the label is a real change of situation, so a
-    // row checked off while one was missing must not stay checked once it is.
+    // Setting the milestone is a real change of situation, so a row checked
+    // off while one was missing must not stay checked once it is.
     record.milestoneMissing,
-    record.pendingLabelMissing,
+    // A hold appearing or clearing (the merge unblocking) moves the row
+    // between lanes, so it belongs here too.
+    holdTexts(record).join('|'),
   ]);
+}
+
+/** The hold reasons as plain strings. They come from the merge engine, which
+ * reads the wording from config — see holdsFor there. */
+function holdTexts(record) {
+  return (record.waitingReasons || []).filter(Boolean);
 }
 
 function searchBlobFor(record, repoLabel) {
@@ -289,7 +301,7 @@ function searchBlobFor(record, repoLabel) {
     record.ball,
     record.nextStep,
     record.milestoneMissing ? 'add milestone' : null,
-    record.pendingLabelMissing ? `add ${record.pendingLabelMissing} label` : null,
+    ...holdTexts(record),
   ]
     .filter(Boolean)
     .join(' ')
@@ -311,13 +323,15 @@ function renderRow(record) {
   // upstream tracker, which pushes its "Add milestone" chip ahead of the
   // review chip because the milestone is the cheaper, more blocking fix.
   const nextBits = [];
-  if (record.pendingLabelMissing) {
-    nextBits.push(
-      `<span class="wbx-step wbx-step--setup">Add ${escapeHtml(record.pendingLabelMissing)} label</span>`
-    );
-  }
   if (record.milestoneMissing) {
     nextBits.push('<span class="wbx-step wbx-step--setup">Add milestone</span>');
+  }
+  // Why the row is parked, ahead of whatever step is left. On a held row this
+  // is the ONLY thing in the "next" line, because there is no action owed —
+  // and that is the point: the lane alone doesn't say why the row moved, so
+  // the reason travels with the row where a reader can check it.
+  for (const reason of holdTexts(record)) {
+    nextBits.push(`<span class="wbx-step wbx-step--hold">${escapeHtml(reason)}</span>`);
   }
   if (record.nextStep) {
     const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';

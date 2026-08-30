@@ -217,13 +217,17 @@ function repoCell(record) {
   return bits.join('<br>');
 }
 
-/** Mirrors renderRow's nextBits, in the same order: actions first (add
- * milestone, then the next step), then the context notes. */
+/** Mirrors renderRow's nextBits, in the same order: actions first (add the
+ * milestone), then why the row is held, then the next step, then the context
+ * notes. */
 function nextCell(record) {
   const bits = [];
-  if (record.pendingLabelMissing)
-    bits.push(`**Add ${mdEscapeCell(record.pendingLabelMissing)} label**`);
   if (record.milestoneMissing) bits.push('**Add milestone**');
+  // Why the row is parked. The wording comes from config via the merge engine,
+  // never from this file, so both generators say the same thing.
+  for (const reason of record.waitingReasons || []) {
+    if (reason) bits.push(mdEscapeCell(reason));
+  }
   if (record.nextStep) bits.push(mdEscapeCell(record.nextStep));
   if (record.approval && record.approval.by) {
     const dismissedNote = record.approval.dismissed ? ' — dismissed after update' : '';
