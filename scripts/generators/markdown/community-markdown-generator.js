@@ -1,7 +1,7 @@
 const fs = require('fs/promises');
 const path = require('path');
 const { BASE_DIR } = require('../../config/config');
-const { LANES } = require('../html/workbench-html-generator');
+const { LANES, sortNewestFirst } = require('../html/workbench-html-generator');
 const { THEME } = require('../../config/constants');
 const { mdEscapeCell, mdEscapeLinkText } = require('./md-escape');
 const {
@@ -171,7 +171,8 @@ const stripHash = (hex) =>
  * (badges render on GitHub's light chrome regardless of the viewer's OS
  * theme). Waiting intentionally matches Approved: both render with
  * `--t-positive` in workbench.html's PILL_CLASS (wbx-pill--wait / --ok) —
- * "waiting" here means your part is done, not that something is wrong.
+ * "waiting" here means that side of the work is done, not that something
+ * is wrong.
  */
 const BALL_COLOR = {
   'Take Action': stripHash(THEME.semantic.caution.light.text),
@@ -217,13 +218,17 @@ function repoCell(record) {
   return bits.join('<br>');
 }
 
-/** Mirrors renderRow's nextBits, in the same order: actions first (add
- * milestone, then the next step), then the context notes. */
+/** Mirrors renderRow's nextBits, in the same order: actions first (add the
+ * milestone), then why the row is held, then the next step, then the context
+ * notes. */
 function nextCell(record) {
   const bits = [];
-  if (record.pendingLabelMissing)
-    bits.push(`**Add ${mdEscapeCell(record.pendingLabelMissing)} label**`);
   if (record.milestoneMissing) bits.push('**Add milestone**');
+  // Why the row is parked. The wording comes from config via the merge engine,
+  // never from this file, so both generators say the same thing.
+  for (const reason of record.waitingReasons || []) {
+    if (reason) bits.push(mdEscapeCell(reason));
+  }
   if (record.nextStep) bits.push(mdEscapeCell(record.nextStep));
   if (record.approval && record.approval.by) {
     const dismissedNote = record.approval.dismissed ? ' — dismissed after update' : '';
@@ -253,14 +258,15 @@ function taskCell(record) {
 
 /** One `<details>` block per lane — title/explain/open/order all come from the shared LANES config. */
 function renderLaneSection(lane, records) {
-  let section = `<details${lane.open && records.length > 0 ? ' open' : ''}>\n`;
-  section += `  <summary><h3 style="display: inline-block; cursor: pointer;">${LANE_ICON[lane.id]} ${lane.title} (${records.length})</h3></summary>\n\n`;
+  const sortedRecords = sortNewestFirst(records);
+  let section = `<details${lane.open && sortedRecords.length > 0 ? ' open' : ''}>\n`;
+  section += `  <summary><h3 style="display: inline-block; cursor: pointer;">${LANE_ICON[lane.id]} ${lane.title} (${sortedRecords.length})</h3></summary>\n\n`;
   section += `  <sub>${lane.explain}</sub>\n\n`;
 
-  if (records.length > 0) {
+  if (sortedRecords.length > 0) {
     section += `  | Status | Repo | Task | Next |\n`;
     section += `  | :--- | :--- | :--- | :--- |\n`;
-    records.forEach((record) => {
+    sortedRecords.forEach((record) => {
       section += `  | ${statusCell(record)} | ${repoCell(record)} | ${taskCell(record)} | ${nextCell(record)} |\n`;
     });
     section += `\n`;
@@ -283,15 +289,15 @@ function renderImpactSection(impact, feed) {
     impact.contributorsHelpedThisMonth > 0
       ? [
           `${impact.contributorsHelpedThisMonth}`,
-          `contributors' work you've helped ship this month`,
+          `contributors' work that got help shipping this month`,
         ]
-      : [`${impact.helpedShipThisMonth}`, `contributions you helped ship this month`];
+      : [`${impact.helpedShipThisMonth}`, `contributions that got help shipping this month`];
 
   let md = `## 📊 Active across open source — live maintainer & contribution activity\n\n`;
   md += `| Metric | Activity |\n| :--- | :--- |\n`;
   md += `| 🚀 **${impact.shippedThisQuarter}** | changes shipped this quarter |\n`;
   md += `| ✅ **${impact.approvedLanding}** | approved & heading to merge |\n`;
-  md += `| 🔥 **${impact.needAction}** | need your action now |\n`;
+  md += `| 🔥 **${impact.needAction}** | items where the ball is here |\n`;
   md += `| 🤝 **${helpedTile[0]}** | ${helpedTile[1]} |\n`;
   md += `| 🌐 **${impact.projectsThisMonth}** | projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month |\n\n`;
 
@@ -323,6 +329,7 @@ async function createWorkbenchMarkdown({ records, impact, feed }) {
 
   let md = `# Active Workbench\n\n`;
   md += `Live maintainer and contribution activity, organized by what happens next.\n\n`;
+  md += `This page is the complete working board behind the summary at [adiati.com](https://adiati.com/oss-portfolio/workbench/), published in full so that summary can be checked against it.\n\n`;
   md += renderImpactSection(impact, feed);
 
   // "Approved is not done": every ready-lane row still needs a final review,
@@ -330,8 +337,8 @@ async function createWorkbenchMarkdown({ records, impact, feed }) {
   const humanRecords = records.filter((r) => r.lane !== 'bot');
 
   if (humanRecords.length === 0) {
-    md += `## ✅ Your court is clear.\n\n`;
-    md += `No open tasks locally, and the tracker has nothing waiting on you.\n\n`;
+    md += `## ✅ The court is clear.\n\n`;
+    md += `No open tasks locally, and the tracker has nothing pending.\n\n`;
   } else {
     LANES.forEach((lane) => {
       md += renderLaneSection(

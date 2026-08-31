@@ -12,6 +12,11 @@
  *   - approval    { state, by, noteSince } — "approved" starts a checklist,
  *                 it does not end one
  *   - nextStep    plain-language remaining action (required for action/ready)
+ *   - waitingReasons
+ *                 plain-language strings — why this row is NOT in the action
+ *                 lane when something definitive is holding it there (today:
+ *                 a blocked merge state). Empty on action rows. The wording
+ *                 comes from config, never a renderer.
  *   - linkedCodePr / upstream signals from the tracker cache
  *   - idleDays    how long a row has sat untouched; shown on the pill and
  *                 drives the 30d stalled fold. "Escalate" is reserved for the
@@ -46,6 +51,16 @@ const TRACKER_RAW_URL =
   'https://raw.githubusercontent.com/adiati98/mautic-docs-prs-tracker/main/data/pr-cache.json';
 const TRACKER_CACHE_FILE = path.join('data', 'tracker-cache.json');
 
+/**
+ * The docs team roster, in the same public repo the tracker feed comes from.
+ * `educationTeam` is an array of GitHub logins. The roster belongs to that
+ * team and changes without reference to this tool, so it is fetched every
+ * build rather than copied into this codebase.
+ */
+const ROSTER_RAW_URL =
+  'https://raw.githubusercontent.com/adiati98/mautic-docs-prs-tracker/main/maintainers.json';
+const ROSTER_CACHE_FILE = path.join('data', 'tracker-roster-cache.json');
+
 const STALLED_AFTER_DAYS = 30;
 const REMIND_AFTER_DAYS = 7;
 
@@ -60,11 +75,10 @@ function loadDocsWorkflow() {
     const list = (key) => (config[key] || []).map((r) => String(r).toLowerCase()).filter(Boolean);
     return {
       milestoneRepos: list('milestoneRepos'),
-      pendingLabelRepos: list('pendingLabelRepos'),
-      pendingLabel: String(config.pendingLabel || '').trim(),
+      mergeBlockedReason: String(config.mergeBlockedReason || '').trim(),
     };
   } catch (e) {
-    return { milestoneRepos: [], pendingLabelRepos: [], pendingLabel: '' };
+    return { milestoneRepos: [], mergeBlockedReason: '' };
   }
 }
 
@@ -85,12 +99,6 @@ function matchesRepoList(repo, list) {
  */
 function tracksMilestones(repo) {
   return matchesRepoList(repo, DOCS_WORKFLOW.milestoneRepos);
-}
-
-/** Whether `repo` marks docs PRs as pending their code PR with a label. */
-function usesPendingLabel(repo) {
-  if (!DOCS_WORKFLOW.pendingLabel) return false;
-  return matchesRepoList(repo, DOCS_WORKFLOW.pendingLabelRepos);
 }
 
 // ---------------------------------------------------------------------------
@@ -165,6 +173,82 @@ async function fetchTrackerFeed({ url = TRACKER_RAW_URL, timeoutMs = 10000 } = {
       fetchedAt: null,
       degraded: true,
       reason: `live fetch failed (${err.message}); no cached feed available`,
+    };
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Docs team roster: fetch → validate → cache → degrade
+// ---------------------------------------------------------------------------
+
+/** A valid roster is an object carrying an `educationTeam` array. */
+function isValidRosterShape(data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return false;
+  return Array.isArray(data.educationTeam);
+}
+
+function normalizeRoster(data) {
+  return data.educationTeam.map((s) => String(s).trim().toLowerCase()).filter(Boolean);
+}
+
+async function readRosterCacheFile() {
+  try {
+    const raw = await fs.readFile(ROSTER_CACHE_FILE, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (parsed && isValidRosterShape(parsed.data)) return parsed;
+  } catch (e) {
+    /* no usable cache */
+  }
+  return null;
+}
+
+/**
+ * Fetches the docs team roster with the same degradation discipline as the
+ * tracker feed:
+ *   live fetch OK  → { educationTeam, fetchedAt, degraded: false }
+ *   fetch fails    → last cached copy, degraded: true, reason
+ *   no cache       → EMPTY roster, degraded: true, reason
+ *
+ * The last line is the critical one. An empty roster switches the
+ * outside-approval rule off entirely (see approvalIsDecisive), so a file that
+ * failed to download behaves exactly like the code did before this rule
+ * existed: every approval counts. A fetch failure must never read as a
+ * judgement about anyone's content.
+ */
+async function fetchTeamRoster({ url = ROSTER_RAW_URL, timeoutMs = 10000 } = {}) {
+  try {
+    const res = await axios.get(url, { timeout: timeoutMs, responseType: 'json' });
+    if (!isValidRosterShape(res.data)) {
+      throw new Error('roster shape changed (schema drift)');
+    }
+    const fetchedAt = new Date().toISOString();
+    try {
+      await fs.mkdir(path.dirname(ROSTER_CACHE_FILE), { recursive: true });
+      await fs.writeFile(ROSTER_CACHE_FILE, JSON.stringify({ fetchedAt, data: res.data }), 'utf8');
+    } catch (e) {
+      /* cache write is best-effort */
+    }
+    return {
+      educationTeam: normalizeRoster(res.data),
+      fetchedAt,
+      degraded: false,
+      reason: null,
+    };
+  } catch (err) {
+    const cached = await readRosterCacheFile();
+    if (cached) {
+      return {
+        educationTeam: normalizeRoster(cached.data),
+        fetchedAt: cached.fetchedAt || null,
+        degraded: true,
+        reason: `live fetch failed (${err.message}); using cached roster`,
+      };
+    }
+    return {
+      educationTeam: [],
+      fetchedAt: null,
+      degraded: true,
+      reason: `live fetch failed (${err.message}); no cached roster — every approval counts`,
     };
   }
 }
@@ -266,6 +350,13 @@ function daysBetween(from, to) {
   return (to - new Date(from)) / (1000 * 60 * 60 * 24);
 }
 
+/** Later of two ISO date strings, tolerating either being absent. */
+function latestDate(a, b) {
+  if (!a) return b || null;
+  if (!b) return a;
+  return new Date(a) >= new Date(b) ? a : b;
+}
+
 function sameLogin(a, b) {
   const x = String(a || '').toLowerCase();
   const y = String(b || '').toLowerCase();
@@ -340,7 +431,7 @@ function emptySignals() {
     noReviewerAssigned: false,
     conflict: null,
     milestoneMissing: false,
-    pendingLabelMissing: null,
+    mergeBlocked: false,
   };
 }
 
@@ -357,6 +448,7 @@ function emptySignals() {
  *   noReviewerAssigned  ready, non-draft, nobody asked to look
  *   conflict            ONLY when the merge state is definitively dirty
  *   milestoneMissing    milestone-tracking repo, no milestone set
+ *   mergeBlocked        ONLY when the merge state is definitively blocked
  *
  * Wrapped so a drifted or malformed record produces no signals instead of a
  * throw — the merge must never fail the build.
@@ -497,54 +589,90 @@ function buildSignals(local, upstream, me, now) {
     activity.reviews.length === 0 &&
     local.hasFormalReview !== true;
 
-  // ONLY a definitively dirty merge state counts. GitHub reports `unknown`
-  // (and this field reports null) while it is still computing mergeability, so
-  // anything that isn't literally "dirty" stays silent rather than guessing —
-  // and there is nothing to retry, the next build reads a fresh value anyway.
-  if (String(local?.mergeableState || '').toLowerCase() === 'dirty') {
+  // Only DEFINITIVE merge states count. GitHub reports `unknown` (and this
+  // field reports null) while it is still computing mergeability, so a value
+  // that isn't one of the two read here stays silent rather than being guessed
+  // at — and there is nothing to retry, the next build reads a fresh value
+  // anyway. That deliberate rule is unchanged; `blocked` joins `dirty` because
+  // GitHub states it just as definitively, not because we infer it.
+  //
+  //   dirty    the branch conflicts with its base — the AUTHOR must rebase
+  //   blocked  branch protection isn't satisfied (required reviews missing,
+  //            required checks failing or still running) — nobody can merge
+  //            this yet, so it is not a job waiting on anyone here
+  const mergeState = String(local?.mergeableState || '').toLowerCase();
+  if (mergeState === 'dirty') {
     signals.conflict = { base: local.baseRef || null };
   }
+  // Gated on the reason being configured: the rule may only move a row when it
+  // can also print WHY on that row. Blank the reason in config and the rule is
+  // off, rather than silently relocating rows with nothing to show for it.
+  signals.mergeBlocked = Boolean(DOCS_WORKFLOW.mergeBlockedReason) && mergeState === 'blocked';
 
   signals.milestoneMissing = hasPrDetail && tracksMilestones(local?.repo) && !local.milestone;
 
-  // A DRAFT docs PR is by definition still pending something, so in projects
-  // that track that with a label it should be carrying one. Draft-gated on
-  // purpose, matching the upstream tracker: once the PR is ready for review
-  // the label is a judgement call about the linked code PR, not a lapse.
-  //
-  // Read live from the PR's own labels every build — never a stored flag — so
-  // adding the label on GitHub clears the chip on the next run with nothing to
-  // reset by hand. Unlike the milestone this needs no hasPrDetail gate: every
-  // PR record already carries its labels, so an empty list is a real answer.
-  //
-  // Carries the LABEL NAME when it's missing (null otherwise) so the chip can
-  // name it — the label is configurable per project, so hardcoding the wording
-  // in the renderers would silently lie for any repo that renames it.
-  const labelMissing =
-    Boolean(local) &&
-    local.isDraft === true &&
-    usesPendingLabel(local.repo) &&
-    !(Array.isArray(local.labels) ? local.labels : []).some(
-      (l) => String(l).toLowerCase() === DOCS_WORKFLOW.pendingLabel.toLowerCase()
-    );
-  signals.pendingLabelMissing = labelMissing ? DOCS_WORKFLOW.pendingLabel : null;
-
-  // A DRAFT docs PR is by definition still pending something, so in projects
-  // that track that with a label it should be carrying one. Draft-gated on
-  // purpose, matching the upstream tracker: once the PR is ready for review
-  // the label is a judgement call about the linked code PR, not a lapse.
-  // Unlike the milestone this reads a field every PR record already has, so
-  // there's no hasPrDetail gate — an empty label list is a real answer.
-
   return signals;
+}
+
+/**
+ * Everyone who APPROVED this row, from either side of the join. Dismissed
+ * reviews are deliberately excluded: a dismissed approval is not a standing
+ * verdict on the content, so it must not be counted as one either way.
+ */
+function collectApprovers(local, activity) {
+  const logins = [];
+  if (local && (local.reviewState === 'APPROVED' || local.status === 'APPROVED') && local.approvedBy) {
+    logins.push(String(local.approvedBy).trim());
+  }
+  for (const r of activity && Array.isArray(activity.reviews) ? activity.reviews : []) {
+    if (r.state === 'APPROVED' && r.login) logins.push(r.login);
+  }
+  return logins.filter(Boolean);
+}
+
+/**
+ * Whether an approval on this row means the CONTENT has been checked.
+ *
+ * An operator approving a docs PR from inside the education team vouches for
+ * wording and style — not for whether the content is accurate. Only an
+ * approval from OUTSIDE that team (the code PR's author, or another outside
+ * reviewer) means the work has genuinely been verified. Routing an in-team
+ * approval into the "approved, heading to merge" lane overstates the claim,
+ * and that lane is published, so the overstatement is public.
+ *
+ * FOUR ways this returns true — i.e. behaves exactly as the code did before
+ * the rule existed. Each one is deliberate:
+ *
+ *   - the repo is outside the tracker's scope. An education-team approval
+ *     means nothing in an unrelated org, and applying the rule everywhere
+ *     would quietly demote approvals from projects it was never about.
+ *   - the roster is empty. That is what a failed fetch with no cached copy
+ *     looks like (see fetchTeamRoster), and a download failure must never be
+ *     dressed up as a judgement about someone's content.
+ *   - nobody identifiable approved — e.g. only a DISMISSED review survives,
+ *     which names an approver but carries no standing approval. Unknown is
+ *     not the same as in-team, so the row keeps the lane it has today.
+ *   - at least one approver is from outside the team. One outside check is
+ *     enough; the content has been looked at by someone who can vouch for it.
+ */
+function approvalIsDecisive(approvers, { educationTeam = [], inTrackerScope = false } = {}) {
+  if (!inTrackerScope) return true;
+  if (!educationTeam.length) return true;
+  if (!approvers.length) return true;
+  return approvers.some((login) => !educationTeam.some((member) => sameLogin(member, login)));
 }
 
 /**
  * Latest approval visible from either side of the join, plus whether any
  * substantive (non-bot) comment landed AFTER that approval — the "note since
  * approval — take a look" signal.
+ *
+ * `context` carries the docs-team roster and whether this row's repo is one
+ * the tracker covers; together they decide `verified` — see approvalIsDecisive.
+ * Omit it and every approval is treated as decisive, which is what an absent
+ * or unfetchable roster must look like.
  */
-function deriveApproval(local, activity) {
+function deriveApproval(local, activity, context = {}) {
   let state = null;
   let by = null;
   let approvedAt = null;
@@ -599,7 +727,12 @@ function deriveApproval(local, activity) {
     );
   }
 
-  return { state, by, approvedAt, noteSince, dismissed, dismissedAt };
+  // Who approved is recorded either way — the row still shows "approved by X"
+  // as context. `verified` only decides whether that approval is allowed to
+  // route the row into the "approved, heading to merge" lane.
+  const verified = approvalIsDecisive(collectApprovers(local, activity), context);
+
+  return { state, by, approvedAt, noteSince, dismissed, dismissedAt, verified };
 }
 
 /**
@@ -712,48 +845,146 @@ function deriveBotPing(activity, local, me) {
 // ---------------------------------------------------------------------------
 
 /**
+ * The "nobody can move this yet" holds on a row, as plain-language strings.
+ *
+ * The wording comes from config (contents/docs-workflow-repos.js), never from
+ * a renderer: it is a judgement about what a GitHub state means to a reader,
+ * and both generators have to say the same thing.
+ */
+function holdsFor(signals) {
+  const holds = [];
+  if (signals.mergeBlocked) {
+    holds.push(DOCS_WORKFLOW.mergeBlockedReason);
+  }
+  return holds;
+}
+
+/**
+ * Whether something on this row names the OWNER specifically, rather than the
+ * board inferring "your turn" from whoever moved last. A hold never overrides
+ * one of these — being asked by name survives the PR being unmergeable:
+ *
+ *   - an @-mention of you nobody has heard back on, including one from an
+ *     allow-listed bot
+ *   - a review request aimed at you. This one matters most: `blocked` very
+ *     often means the missing requirement is an approving review, and if you
+ *     are the requested reviewer then YOU are the block. Demoting that would
+ *     hide exactly the work this board exists to surface.
+ *   - changes requested on a PR of yours and still unanswered — a blocked
+ *     merge state is the CONSEQUENCE of that, not a separate excuse
+ *   - the linked code PR having merged or closed, which is decisive
+ *   - a note left after approval, and missing housekeeping (a milestone is
+ *     owed whatever the merge is waiting on)
+ *   - assigned issues, which have no merge state and no PR to park
+ */
+function hasNamedAsk(record, signals, botPingSignal) {
+  if (record.relationship === 'assigned issue') return true;
+  if (signals.mention) return true;
+  if (botPingSignal && botPingSignal.mentionsMe) return true;
+  if (record.reviewRequest || record.status === 'Request review') return true;
+  if (
+    (record.relationship === 'authored' || record.relationship === 'co-authoring') &&
+    signals.changesRequested
+  ) {
+    return true;
+  }
+  if (record.linkedCodePrState === 'merged' || record.linkedCodePrState === 'closed') return true;
+  if (record.approval && record.approval.noteSince) return true;
+  if (signals.milestoneMissing) return true;
+  return false;
+}
+
+/**
+ * Where a held row lands: the WAITING lane, and nowhere else.
+ *
+ * "Needs your action" asserts a job is owed to the owner, and while GitHub
+ * reports the merge blocked that assertion is false — the row is parked on
+ * required reviews or required checks, neither of which the owner can clear by
+ * working on this row. Waiting on others already reads *your part is done —
+ * awaiting review, or blocked on a linked code PR*, which is these rows
+ * exactly.
+ *
+ * Three deliberate limits:
+ *
+ *   - It only ever moves rows OUT of the action lane. Nothing is promoted, and
+ *     ready / waiting / stalled / bot rows keep the lane they have today. Where
+ *     a signal doesn't clearly say otherwise, the row stays where it was.
+ *   - It never fires against a named ask (see hasNamedAsk).
+ *   - A demoted row stops at waiting and is NOT folded on to stalled, however
+ *     old it is. The stalled fold is collapsed by default and reads *decide:
+ *     nudge or close*; a row we just established is held on something outside
+ *     the owner's control must not be hidden behind that. Rows that were
+ *     already stalled stay stalled — they simply gain the reason chip.
+ *
+ * The instruction the row used to carry is dropped rather than reworded: it
+ * asserted an action that isn't owed. The hold's own reason chip replaces it,
+ * so the row still says why it is sitting there.
+ */
+function applyHold(placed, record, signals, botPingSignal) {
+  if (placed.lane !== 'action') return placed;
+  if (hasNamedAsk(record, signals, botPingSignal)) return placed;
+  return { ...placed, lane: 'waiting', ball: 'Watching', nextStep: null };
+}
+
+/**
  * Assigns lane, ball label, and nextStep for one merged record.
  *
  * Precedence, first match wins:
  *   1 bot lane          2 assigned issue        3 approval states
  *   3a linked code PR   4 direct ping at me      5 changes requested
  *   6 conflicts         7 turn-based fallback    8 stalled fold
+ *   9 definitive holds
  *
- * 1–3, 3a, and 8 live here; 4–7 live in deriveTurn. Rule 3a only fires for a
- * merged or closed-unmerged linked code PR — an open or unknown (null) state
- * falls straight through to the turn-based reading unchanged. Rules 4–6 only ever choose the
- * WORDING — the lane and ball a row lands in are decided by the turn logic and
- * by the staleness fold exactly as before.
+ * 1–3, 3a, and 8 live in laneFor; 4–7 live in deriveTurn. Rule 3a only fires
+ * for a merged or closed-unmerged linked code PR — an open or unknown (null)
+ * state falls straight through to the turn-based reading unchanged. Rules 4–6
+ * only ever choose the WORDING — the lane and ball a row lands in are decided
+ * by the turn logic and by the staleness fold exactly as before.
+ *
+ * Rule 9 runs after all of that, and only ever SUBTRACTS: a row the ladder put
+ * in the action lane is moved to waiting when something definitive says no
+ * action is owed yet (see applyHold). It cannot promote, and it cannot fire
+ * against a signal that named the owner.
  *
  * The missing-milestone reminder is deliberately NOT in that ladder: it appends
  * (see withMilestone), so it can never win a place in the order and can never
  * be crowded out of one either.
  *
- * Staleness runs LAST, and only over rows the turn logic left with someone
- * else. Age is not evidence that a row is dead — it's evidence of how overdue
- * it is — so it can never override whose turn it is. Ordering it before the
- * turn logic is what used to bury live work in a folded lane reading "nudge or
- * close": a review whose author replied 40 days ago, a review request aimed at
- * you 45 days ago, and your own PR carrying month-old maintainer feedback all
- * read as "stale" when every one of them was waiting on YOU. Assigned issues
- * were carved out of that rule first (an issue you haven't started has nobody
- * touching it, so it always ages past the threshold); this generalizes the
- * carve-out to every path where the ball is yours. Age still shows: the row
+ * Staleness runs LAST among 1–8, and only over rows the turn logic left with
+ * someone else. Age is not evidence that a row is dead — it's evidence of how
+ * overdue it is — so it can never override whose turn it is. Ordering it before
+ * the turn logic is what used to bury live work in a folded lane reading "nudge
+ * or close": a review whose author replied 40 days ago, a review request aimed
+ * at you 45 days ago, and your own PR carrying month-old maintainer feedback
+ * all read as "stale" when every one of them was waiting on YOU. Assigned
+ * issues were carved out of that rule first (an issue you haven't started has
+ * nobody touching it, so it always ages past the threshold); this generalizes
+ * the carve-out to every path where the ball is yours. Age still shows: the row
  * carries idleDays (rendered on the pill), and the action lane sorts
  * oldest-first.
  */
 function deriveLane(record, me, botPingSignal = null, signals = emptySignals()) {
-  const result = laneFor(record, me, botPingSignal, signals);
-  // Surfaced as their own fields, never spliced into nextStep, so renderers
-  // can draw them as separate chips — the way the upstream docs-PR tracker
-  // renders "Add milestone" and "Add <label> label" as chips alongside (and
-  // ahead of) the review chip rather than folding them into one sentence.
-  // The bot lane is folded away precisely so it carries no instructions.
-  const quiet = result.lane === 'bot';
+  const placed = laneFor(record, me, botPingSignal, signals);
+  // The bot lane is folded away precisely so it carries no instructions — and,
+  // by the same token, no explanations either.
+  const quiet = placed.lane === 'bot';
+  const holds = quiet ? [] : holdsFor(signals);
+  const result = holds.length ? applyHold(placed, record, signals, botPingSignal) : placed;
+
+  // Surfaced as its own field, never spliced into nextStep, so renderers can
+  // draw it as a separate chip — the way the upstream docs-PR tracker renders
+  // "Add milestone" as a chip alongside (and ahead of) the review chip rather
+  // than folding it into one sentence.
   return {
     ...result,
     milestoneMissing: signals.milestoneMissing && !quiet,
-    pendingLabelMissing: quiet ? null : signals.pendingLabelMissing || null,
+    // Shown wherever the hold is actually holding the row — which is every
+    // lane except action. Lane placement alone doesn't say WHY a row moved,
+    // and a board published so its conclusions can be checked has to show its
+    // reasoning. Suppressed on action rows on purpose: there a named ask won,
+    // so the hold's reason would sit next to, and contradict, the instruction
+    // printed beside it.
+    waitingReasons: result.lane === 'action' ? [] : holds,
   };
 }
 
@@ -780,7 +1011,7 @@ function laneFor(record, me, botPingSignal, signals) {
       nextStep:
         age >= REMIND_AFTER_DAYS
           ? `Assigned ${age}d ago, no PR yet — start the work`
-          : 'Assigned to you, no PR yet — start the work',
+          : 'Assigned, no PR yet — start the work',
     };
   }
 
@@ -802,6 +1033,22 @@ function laneFor(record, me, botPingSignal, signals) {
         lane: 'action',
         ball: 'Approved',
         nextStep: 'Note since approval — take a look, then merge',
+      };
+    }
+    // An approval from inside the education team vouches for wording and
+    // style, not for whether the content is right — so it cannot carry the row
+    // into the "approved, heading to merge" lane on its own. That lane is one
+    // of only two published on the live site, so the overstatement is public.
+    //
+    // Placed AFTER the two branches above on purpose. A dismissed approval is
+    // not counted for verification at all (see collectApprovers), and a note
+    // left after the approval is a real ask the owner owes whoever wrote it —
+    // neither may be swallowed by this. The approver is still named on the row.
+    if (approval.verified === false) {
+      return {
+        lane: 'waiting',
+        ball: 'Waiting',
+        nextStep: 'Approved by the education team — waiting on an outside review',
       };
     }
     const codeStillOpen = Boolean(linkedCodePr) || Boolean(upstream && upstream.codeUpdatedAt);
@@ -833,12 +1080,27 @@ function laneFor(record, me, botPingSignal, signals) {
   const turn = deriveTurn(record, me, botPingSignal, signals);
   if (turn.lane === 'action') return turn;
 
+  // Rule 3b — a draft with linked work outstanding is not idle by choice: it is
+  // waiting on someone else's PR by design, and "nudge or close" is not a
+  // decision that can be made from this side. Scoped to the SHAPE (draft +
+  // unresolved linked code PR), not to any one project — right now only Mautic
+  // docs PRs happen to look like this, but the rule must not become a repo
+  // check. Rule 3a above already peels off a merged or closed linked code PR
+  // into its own action step, so an untouched linkedCodePr reaching this line
+  // is either genuinely still open, or — on a tracker-only row — of unknown
+  // state, since that path carries no linkedCodePrState at all. A tracker-only
+  // draft whose linked code PR was quietly closed unmerged therefore stays
+  // quiet here instead of being flagged. That's a missed prompt on a private
+  // tool, not a false claim on a public page, and it's not worth an extra API
+  // call to close.
+  const draftBlockedOnLinkedWork = record.isDraft && Boolean(linkedCodePr);
+
   // Waiting on someone else, and untouched for a month — fold it away. The
   // contextual signals the turn logic derived have to survive the demotion:
   // botPing is the only one deriveLane owns (approval and reviewedNote already
   // live on the record), and without it a stalled row loses its explanation of
   // who it's actually waiting on.
-  if (idleDays >= STALLED_AFTER_DAYS) {
+  if (idleDays >= STALLED_AFTER_DAYS && !draftBlockedOnLinkedWork) {
     return {
       lane: 'stalled',
       ball: 'Stale',
@@ -864,8 +1126,8 @@ function directPingStep(record, signals) {
   if (signals.mention && signals.mention.by) {
     const { by, days } = signals.mention;
     return days == null
-      ? `${by} mentioned you — reply`
-      : `${by} mentioned you ${days}d ago — reply`;
+      ? `Mentioned by ${by} — reply`
+      : `Mentioned by ${by} ${days}d ago — reply`;
   }
   if (
     record.relationship === 'reviewing' &&
@@ -929,8 +1191,8 @@ function deriveTurn(record, me, botPingSignal = null, signals = emptySignals()) 
 }
 
 /**
- * Missing housekeeping — a milestone, or the pending-PR label on a draft — is
- * YOUR move, so the row cannot sit in a lane that means the opposite. "Waiting
+ * Missing housekeeping — a milestone — is YOUR move, so the row cannot sit in
+ * a lane that means the opposite. "Waiting
  * on others" reads *your part is done — awaiting review*, and "Stalled" reads
  * *needs a decision: nudge or close*; both are false while something is still
  * owed, and Stalled additionally folds the row shut so the chip goes unread.
@@ -953,7 +1215,7 @@ function deriveTurn(record, me, botPingSignal = null, signals = emptySignals()) 
  * the merge.
  */
 function promoteForHousekeeping(turn, signals) {
-  if (!signals.milestoneMissing && !signals.pendingLabelMissing) return turn;
+  if (!signals.milestoneMissing) return turn;
   if (turn.lane !== 'waiting') return turn;
   return { ...turn, lane: 'action', ball: 'Take Action' };
 }
@@ -1012,7 +1274,7 @@ function turnReading(record, me, signals) {
       return {
         lane: 'waiting',
         ball: 'Waiting',
-        nextStep: `You reviewed ${sinceMyReply}d ago — author hasn't replied`,
+        nextStep: `Reviewed ${sinceMyReply}d ago — author hasn't replied`,
       };
     }
     if (isAuthor) {
@@ -1070,8 +1332,8 @@ function turnReading(record, me, signals) {
       lane: 'waiting',
       ball: 'Waiting',
       nextStep: signals.waitingOn
-        ? `You replied ${sinceMyReply}d ago — waiting on ${signals.waitingOn}`
-        : `You replied ${sinceMyReply}d ago`,
+        ? `Replied ${sinceMyReply}d ago — waiting on ${signals.waitingOn}`
+        : `Replied ${sinceMyReply}d ago`,
     };
   }
   if (actorIsBot) {
@@ -1123,6 +1385,10 @@ function waitingOnReviewStep(signals) {
  *                                 (see fetchTrackerTitleInfo). Never required —
  *                                 an absent key just keeps today's null-title
  *                                 fallback.
+ * @param {object} [input.roster]  { educationTeam: [login] } from
+ *                                 fetchTeamRoster. Never required — an absent
+ *                                 or empty roster treats every approval as
+ *                                 decisive, exactly as before the rule existed.
  * @returns {{ records: Array, feed: object }}
  */
 function mergeWorkbench({
@@ -1134,10 +1400,30 @@ function mergeWorkbench({
   username,
   now,
   titles = {},
+  roster = {},
 }) {
   const me = String(username || GITHUB_USERNAME || '').toLowerCase();
   const nowDate = now || new Date();
   const tracker = (feed && feed.data) || {};
+
+  const educationTeam = (Array.isArray(roster.educationTeam) ? roster.educationTeam : [])
+    .map((s) => String(s).trim().toLowerCase())
+    .filter(Boolean);
+
+  // Which repos the tracker actually covers, read off the feed's own keys
+  // rather than listed here. That keeps the outside-approval rule scoped to
+  // the projects it is about without this repo holding a second copy of the
+  // tracker's repo list — and when the feed degrades to empty, the scope is
+  // empty too, so every approval counts exactly as it does today.
+  const trackerRepos = new Set(
+    Object.keys(tracker)
+      .map((key) => key.split('#')[0].toLowerCase())
+      .filter(Boolean)
+  );
+  const approvalContext = (repo) => ({
+    educationTeam,
+    inTrackerScope: trackerRepos.has(String(repo || '').toLowerCase()),
+  });
 
   const locals = [
     ...prs.map((r) => ({ ...r, relationship: 'authored' })),
@@ -1157,11 +1443,22 @@ function mergeWorkbench({
     const upstream = key && tracker[key] ? tracker[key] : null;
     if (upstream) matchedKeys.add(key);
 
-    const effectiveDate = local.lastSubstantiveDate || local.updatedAt || local.createdAt;
+    // A docs PR and its linked code PR are one piece of work, so idle time
+    // counts activity on either. lastSubstantiveDate/updatedAt/createdAt stays
+    // the docs-side date — lastSubstantiveDate in particular is the last
+    // genuine event (a commit or review), deliberately more precise than a raw
+    // updated_at that bots and label edits bump — codeUpdatedAt is only added
+    // as one more candidate, whichever side is later wins.
+    // codeUpdatedAt IS a raw updated_at on the code PR, so a bot comment there
+    // can make the pair look active too. The upstream tracker's own staleness
+    // rule reads the same field, so this matches its behaviour, and the error
+    // direction is safe: it under-reports staleness, never over-reports it.
+    const docsDate = local.lastSubstantiveDate || local.updatedAt || local.createdAt;
+    const effectiveDate = latestDate(docsDate, upstream ? upstream.codeUpdatedAt : null);
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
     const linkedCodePr = extractLinkedCodePr(local.body, local.repo);
     const signals = deriveSignals(local, upstream, me, nowDate);
-    const approval = deriveApproval(local, signals.activity);
+    const approval = deriveApproval(local, signals.activity, approvalContext(local.repo));
     const reviewRequest = deriveReviewRequest(signals.activity, me);
     const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
     const botPingSignal = deriveBotPing(signals.activity, local, me);
@@ -1172,6 +1469,7 @@ function mergeWorkbench({
       title: local.title || null,
       url: local.url || null,
       repo: local.repo || null,
+      number: local.number ?? null,
       relationship: local.relationship,
       labels: local.labels || [],
       isDraft: local.isDraft === true,
@@ -1189,7 +1487,7 @@ function mergeWorkbench({
       botPing: null,
       // Set by deriveLane. Always present so renderers can rely on them.
       milestoneMissing: false,
-      pendingLabelMissing: null,
+      waitingReasons: [],
       linkedCodePr: linkedCodePr
         ? { ref: linkedCodePr, hasActivity: Boolean(upstream && upstream.codeUpdatedAt) }
         : null,
@@ -1222,10 +1520,11 @@ function mergeWorkbench({
     const [repo, number] = key.split('#');
     const titleInfo = titles[key] || null;
     const signals = deriveSignals(null, upstream, me, nowDate);
-    const approval = deriveApproval(null, signals.activity);
+    // A tracker-only row is in the tracker's scope by definition.
+    const approval = deriveApproval(null, signals.activity, approvalContext(repo));
     const reviewRequest = deriveReviewRequest(signals.activity, me);
     const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
-    const effectiveDate = upstream.docsUpdatedAt || null;
+    const effectiveDate = latestDate(upstream.docsUpdatedAt, upstream.codeUpdatedAt);
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
 
     const record = {
@@ -1234,6 +1533,7 @@ function mergeWorkbench({
       title: titleInfo?.title || null,
       url: `https://github.com/${repo}/pull/${number}`,
       repo,
+      number: Number.isNaN(Number(number)) ? null : Number(number),
       relationship: 'reviewing',
       labels: [],
       // The tracker cache stores activity arrays, not PR state, so draft
@@ -1252,7 +1552,7 @@ function mergeWorkbench({
       // derived — kept present and null for a uniform record contract.
       botPing: null,
       milestoneMissing: false,
-      pendingLabelMissing: null,
+      waitingReasons: [],
       linkedCodePr: titleInfo?.linkedCodePr
         ? { ref: titleInfo.linkedCodePr, hasActivity: Boolean(upstream.codeUpdatedAt) }
         : upstream.codeUpdatedAt
@@ -1265,6 +1565,12 @@ function mergeWorkbench({
         docsCommentCount: (upstream.rawDocsComments || []).length,
       },
       idleDays,
+      // The docs PR's OWN last-updated date, deliberately not `effectiveDate`.
+      // idleDays is the field that reasons about two PRs at once; this one
+      // answers "when did this row last change", and a reader — including
+      // data/workbench.json's consumers — would fairly read it that way. It is
+      // also what the recency sort below orders on, alongside `local.updatedAt`
+      // on the matched path, so both paths must mean the same thing by it.
       updatedAt: upstream.docsUpdatedAt || null,
       linkedPr: null,
     };
@@ -1410,7 +1716,7 @@ async function readJsonOr(fallback, file) {
 }
 
 /** Loads local records + tracker feed and returns the full merged model. */
-async function loadMergedWorkbench({ dataDir = 'data', fetchOptions } = {}) {
+async function loadMergedWorkbench({ dataDir = 'data', fetchOptions, rosterOptions } = {}) {
   const [tasks, issues, prs, coauthored, contributions] = await Promise.all([
     readJsonOr([], path.join(dataDir, 'ongoing-tasks.json')),
     readJsonOr([], path.join(dataDir, 'ongoing-issues.json')),
@@ -1418,7 +1724,10 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions } = {}) {
     readJsonOr([], path.join(dataDir, 'ongoing-coauthored-prs.json')),
     readJsonOr({}, path.join(dataDir, 'all-contributions.json')),
   ]);
-  const feed = await fetchTrackerFeed(fetchOptions);
+  const [feed, roster] = await Promise.all([
+    fetchTrackerFeed(fetchOptions),
+    fetchTeamRoster(rosterOptions),
+  ]);
 
   // Only tracker-only rows need the title enrichment fetch — a row already
   // covered by a local record carries its own title, so re-fetching it would
@@ -1436,6 +1745,7 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions } = {}) {
     coauthored,
     feed,
     titles,
+    roster,
   });
   const impact = computeImpact(records, contributions);
   return { records, impact, feed: feedMeta };
@@ -1443,8 +1753,11 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions } = {}) {
 
 module.exports = {
   TRACKER_RAW_URL,
+  ROSTER_RAW_URL,
   fetchTrackerFeed,
+  fetchTeamRoster,
   isValidTrackerShape,
+  isValidRosterShape,
   taskKey,
   extractLinkedCodePr,
   extractIssueRefs,
@@ -1452,7 +1765,6 @@ module.exports = {
   normalizeActivity,
   deriveSignals,
   tracksMilestones,
-  usesPendingLabel,
   deriveApproval,
   deriveReviewRequest,
   deriveReviewedNote,

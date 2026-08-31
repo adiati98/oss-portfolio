@@ -4,7 +4,7 @@
  *
  * Layer 1: plain-language impact header (any recruiter can read it).
  * Layer 2: five lanes ordered by what happens next —
- *   Needs your action (open by default)
+ *   Action needed (open by default)
  *   Approved — bring it home / Waiting on others / Stalled 30+ days /
  *   Automated (folded)
  *
@@ -33,8 +33,8 @@ const { escapeHtml } = require('../../utils/escape-html');
 const LANES = [
   {
     id: 'action',
-    title: 'Needs your action',
-    explain: 'Your move — feedback to address, a review waiting on you, or a note left after approval.',
+    title: 'Action needed',
+    explain: 'Feedback to address, a review waiting on a response, or a note left after approval.',
     open: true,
     stripe: 'var(--t-caution)',
   },
@@ -49,7 +49,7 @@ const LANES = [
   {
     id: 'waiting',
     title: 'Waiting on others',
-    explain: 'Your part is done — awaiting review, or blocked on a linked code PR.',
+    explain: 'Nothing left to do here — awaiting review, or blocked on a linked code PR.',
     open: false,
     stripe: 'var(--t-brand)',
   },
@@ -209,6 +209,10 @@ const WORKBENCH_CSS = `
      upstream docs-PR tracker separates its teal setup chip from its blue
      act chip. */
   .wbx-step--setup{color:var(--t-brand);background:var(--t-brand-wash);border:1px solid var(--t-brand-line)}
+  /* Why this row is NOT in "Action needed" — a hold, not an instruction,
+     so it reads muted rather than amber. text-transform is switched off on
+     purpose: this is a sentence about the PR's state, not a chip label. */
+  .wbx-step--hold{color:var(--t-ink-2);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);text-transform:none;letter-spacing:0}
   .wbx-empty{text-align:center;padding:44px 20px;color:var(--t-ink-2)}
   .wbx-empty .g{font-size:2rem;color:var(--t-positive);font-weight:800}
   .wbx-chip-draft{display:inline-flex;align-items:center;font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.03em;color:var(--t-neutral);background:var(--t-neutral-wash);border:1px solid var(--t-neutral-line);border-radius:999px;padding:1px 9px}
@@ -274,11 +278,19 @@ function statusSignatureFor(record) {
     record.botPing && record.botPing.of,
     record.linkedCodePr && record.linkedCodePr.ref,
     record.isDraft,
-    // Setting the milestone or the label is a real change of situation, so a
-    // row checked off while one was missing must not stay checked once it is.
+    // Setting the milestone is a real change of situation, so a row checked
+    // off while one was missing must not stay checked once it is.
     record.milestoneMissing,
-    record.pendingLabelMissing,
+    // A hold appearing or clearing (the merge unblocking) moves the row
+    // between lanes, so it belongs here too.
+    holdTexts(record).join('|'),
   ]);
+}
+
+/** The hold reasons as plain strings. They come from the merge engine, which
+ * reads the wording from config — see holdsFor there. */
+function holdTexts(record) {
+  return (record.waitingReasons || []).filter(Boolean);
 }
 
 function searchBlobFor(record, repoLabel) {
@@ -289,7 +301,7 @@ function searchBlobFor(record, repoLabel) {
     record.ball,
     record.nextStep,
     record.milestoneMissing ? 'add milestone' : null,
-    record.pendingLabelMissing ? `add ${record.pendingLabelMissing} label` : null,
+    ...holdTexts(record),
   ]
     .filter(Boolean)
     .join(' ')
@@ -311,13 +323,15 @@ function renderRow(record) {
   // upstream tracker, which pushes its "Add milestone" chip ahead of the
   // review chip because the milestone is the cheaper, more blocking fix.
   const nextBits = [];
-  if (record.pendingLabelMissing) {
-    nextBits.push(
-      `<span class="wbx-step wbx-step--setup">Add ${escapeHtml(record.pendingLabelMissing)} label</span>`
-    );
-  }
   if (record.milestoneMissing) {
     nextBits.push('<span class="wbx-step wbx-step--setup">Add milestone</span>');
+  }
+  // Why the row is parked, ahead of whatever step is left. On a held row this
+  // is the ONLY thing in the "next" line, because there is no action owed —
+  // and that is the point: the lane alone doesn't say why the row moved, so
+  // the reason travels with the row where a reader can check it.
+  for (const reason of holdTexts(record)) {
+    nextBits.push(`<span class="wbx-step wbx-step--hold">${escapeHtml(reason)}</span>`);
   }
   if (record.nextStep) {
     const stepClass = record.lane === 'ready' ? 'wbx-step--ship' : 'wbx-step--do';
@@ -368,21 +382,30 @@ function renderRow(record) {
   `;
 }
 
+/** Newest activity first — lower idleDays means the row moved more
+ * recently. Both generators render rows in this order by default (a
+ * fresh copy so the caller's array/order is untouched). */
+function sortNewestFirst(records) {
+  return [...records].sort((a, b) => (a.idleDays || 0) - (b.idleDays || 0));
+}
+
 function renderLane(lane, records) {
-  const rows = records.map(renderRow).join('');
+  const sortedRecords = sortNewestFirst(records);
+  const rows = sortedRecords.map(renderRow).join('');
   const body =
-    records.length > 0
+    sortedRecords.length > 0
       ? `<div class="wbx-rows">${rows}</div>`
       : '';
-  // Sorts by idle time, not the lane's own default order (idle desc for
-  // action/stalled, recency for the rest) — a manual override for anyone
-  // who wants to work oldest-first or newest-first regardless of lane.
+  // The manual sort button still sorts by idle time — a toggle for anyone
+  // who wants to work oldest-first or newest-first regardless of the
+  // newest-first default below. Starts at "asc" (matching the default
+  // render order) so the first click flips it to oldest-first.
   // Skipped below one row: nothing to reorder.
   const sortBtn =
-    records.length > 1
-      ? `<button type="button" class="wbx-sort-btn" data-lane-sort="${lane.id}" data-dir="desc" data-active="0" title="Sort by idle time" aria-label="Sort ${escapeHtml(lane.title)} by idle time, currently oldest first"><span class="wbx-sort-icon" aria-hidden="true">↕</span></button>`
+    sortedRecords.length > 1
+      ? `<button type="button" class="wbx-sort-btn" data-lane-sort="${lane.id}" data-dir="asc" data-active="0" title="Sort by idle time" aria-label="Sort ${escapeHtml(lane.title)} by idle time, currently newest first"><span class="wbx-sort-icon" aria-hidden="true">↕</span></button>`
       : '';
-  const defaultOpen = lane.open && records.length ? '1' : '0';
+  const defaultOpen = lane.open && sortedRecords.length ? '1' : '0';
   return dedent`
     <details class="wbx-lane" id="wbx-lane-${lane.id}" style="border-left-color:${lane.stripe}" data-default-open="${defaultOpen}" ${defaultOpen === '1' ? 'open' : ''}>
       <summary>
@@ -415,7 +438,7 @@ function renderLaneIndex(records) {
 
 function renderImpact(impact, feed) {
   // Captions carry the scope explicitly because they don't all share
-  // one: the hero is quarter-scoped, "approved" and "need your action"
+  // one: the hero is quarter-scoped, "approved" and "the ball is here"
   // describe the board's state right now (not a time window), and the
   // last two are calendar-month scoped. That mix is deliberate — this
   // board answers "what's happening right now," not a running lifetime
@@ -424,7 +447,7 @@ function renderImpact(impact, feed) {
   // its own scope rather than relying on a shared, unstated one.
   const helpedTile = {
     n: `${impact.helpedShipThisMonth}`,
-    c: 'contributions you helped ship this month',
+    c: 'contributions that got help shipping this month',
   };
   // Server-rendered fallback is always the absolute build time — a static
   // page can be viewed long after generation, so "just now" would go stale
@@ -446,7 +469,7 @@ function renderImpact(impact, feed) {
       <div class="wbx-tiles">
         <div class="wbx-tile wbx-tile--hero"><span class="n">${impact.shippedThisQuarter}</span><span class="c">changes shipped in ${currentQuarterLabel()}</span></div>
         <div class="wbx-tile wbx-tile--good"><span class="n">${impact.approvedLanding}</span><span class="c">approved &amp; heading to merge — on the board now</span></div>
-        <div class="wbx-tile wbx-tile--hot"><span class="n">${impact.needAction}</span><span class="c">need your action now</span></div>
+        <div class="wbx-tile wbx-tile--hot"><span class="n">${impact.needAction}</span><span class="c">items where the ball is here</span></div>
         <div class="wbx-tile"><span class="n">${helpedTile.n}</span><span class="c">${helpedTile.c}</span></div>
         <div class="wbx-tile"><span class="n">${impact.projectsThisMonth}</span><span class="c">projects across ${impact.organizationsThisMonth} organization${impact.organizationsThisMonth === 1 ? '' : 's'} this month</span></div>
       </div>
@@ -493,8 +516,8 @@ async function createWorkbenchHtml({ records, impact, feed }) {
       ? dedent`
         <div class="wbx-empty">
           <div class="g">✓</div>
-          <h2 style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--t-ink)">Your court is clear.</h2>
-          <p style="max-width:44ch;margin:10px auto 0;font-size:.9rem">No open tasks locally, and the tracker has nothing waiting on you.</p>
+          <h2 style="font-size:1.25rem;font-weight:800;margin-top:8px;color:var(--t-ink)">The court is clear.</h2>
+          <p style="max-width:44ch;margin:10px auto 0;font-size:.9rem">No open tasks locally, and the tracker has nothing pending.</p>
         </div>`
       : `<div class="wbx-lanes">${LANES.map((lane) =>
           renderLane(lane, records.filter((r) => r.lane === lane.id))
@@ -522,6 +545,7 @@ async function createWorkbenchHtml({ records, impact, feed }) {
             <header class="mt-16 mb-10">
               <p style="font-family:ui-monospace,monospace;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--t-ink-3)">active workbench</p>
               <h1 class="text-4xl sm:text-5xl font-extrabold mt-2 mb-4" style="color:var(--t-brand);letter-spacing:-.01em">Organized by what happens next</h1>
+              <p style="max-width:60ch;color:var(--t-ink-2);font-size:.92rem">This page is the complete working board behind the summary at <a href="https://adiati.com/oss-portfolio/workbench/" target="_blank" rel="noopener noreferrer" style="color:var(--t-brand)">adiati.com</a>, published in full so that summary can be checked against it.</p>
             </header>
             ${renderImpact(impact, feed)}
             ${humanRecords.length > 0 ? renderLaneIndex(records) : ''}
@@ -709,4 +733,4 @@ async function createWorkbenchHtml({ records, impact, feed }) {
   console.log(`Generated Workbench page at ${outputPath}`);
 }
 
-module.exports = { createWorkbenchHtml, LANES };
+module.exports = { createWorkbenchHtml, LANES, sortNewestFirst };
