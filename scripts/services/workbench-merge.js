@@ -1436,6 +1436,7 @@ function mergeWorkbench({
       title: local.title || null,
       url: local.url || null,
       repo: local.repo || null,
+      number: local.number ?? null,
       relationship: local.relationship,
       labels: local.labels || [],
       isDraft: local.isDraft === true,
@@ -1499,6 +1500,7 @@ function mergeWorkbench({
       title: titleInfo?.title || null,
       url: `https://github.com/${repo}/pull/${number}`,
       repo,
+      number: Number.isNaN(Number(number)) ? null : Number(number),
       relationship: 'reviewing',
       labels: [],
       // The tracker cache stores activity arrays, not PR state, so draft

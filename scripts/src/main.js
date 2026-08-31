@@ -49,6 +49,7 @@ const { createWorkbenchHtml } = require('../generators/html/workbench-html-gener
 const { createRedirectStubs } = require('../generators/html/redirect-stub-generator');
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 const { loadMergedWorkbench } = require('../services/workbench-merge');
+const { writeWorkbenchData } = require('../services/workbench-data');
 const skillsData = require('../../contents/skills');
 const recognitionsData = require('../../contents/recognitions');
 // Milestone sources — keys must match MILESTONE_SOURCES in
@@ -498,6 +499,12 @@ async function main() {
     if (workbenchModel.feed.degraded) {
       console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
     }
+
+    // Publish the classified model as data, from the same in-memory object the
+    // generators below render from. See services/workbench-data.js for the
+    // contract — other projects read this file.
+    const workbenchDataFile = await writeWorkbenchData(workbenchModel, { dataDir });
+    console.log(`Saved merged workbench model to ${workbenchDataFile}.`);
 
     // 4. Generate landing page (index.html)
     console.log('Generating landing page...');
