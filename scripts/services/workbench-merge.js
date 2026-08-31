@@ -350,6 +350,13 @@ function daysBetween(from, to) {
   return (to - new Date(from)) / (1000 * 60 * 60 * 24);
 }
 
+/** Later of two ISO date strings, tolerating either being absent. */
+function latestDate(a, b) {
+  if (!a) return b || null;
+  if (!b) return a;
+  return new Date(a) >= new Date(b) ? a : b;
+}
+
 function sameLogin(a, b) {
   const x = String(a || '').toLowerCase();
   const y = String(b || '').toLowerCase();
@@ -1421,7 +1428,18 @@ function mergeWorkbench({
     const upstream = key && tracker[key] ? tracker[key] : null;
     if (upstream) matchedKeys.add(key);
 
-    const effectiveDate = local.lastSubstantiveDate || local.updatedAt || local.createdAt;
+    // A docs PR and its linked code PR are one piece of work, so idle time
+    // counts activity on either. lastSubstantiveDate/updatedAt/createdAt stays
+    // the docs-side date — lastSubstantiveDate in particular is the last
+    // genuine event (a commit or review), deliberately more precise than a raw
+    // updated_at that bots and label edits bump — codeUpdatedAt is only added
+    // as one more candidate, whichever side is later wins.
+    // codeUpdatedAt IS a raw updated_at on the code PR, so a bot comment there
+    // can make the pair look active too. The upstream tracker's own staleness
+    // rule reads the same field, so this matches its behaviour, and the error
+    // direction is safe: it under-reports staleness, never over-reports it.
+    const docsDate = local.lastSubstantiveDate || local.updatedAt || local.createdAt;
+    const effectiveDate = latestDate(docsDate, upstream ? upstream.codeUpdatedAt : null);
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
     const linkedCodePr = extractLinkedCodePr(local.body, local.repo);
     const signals = deriveSignals(local, upstream, me, nowDate);
@@ -1491,7 +1509,7 @@ function mergeWorkbench({
     const approval = deriveApproval(null, signals.activity, approvalContext(repo));
     const reviewRequest = deriveReviewRequest(signals.activity, me);
     const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
-    const effectiveDate = upstream.docsUpdatedAt || null;
+    const effectiveDate = latestDate(upstream.docsUpdatedAt, upstream.codeUpdatedAt);
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
 
     const record = {
@@ -1532,6 +1550,12 @@ function mergeWorkbench({
         docsCommentCount: (upstream.rawDocsComments || []).length,
       },
       idleDays,
+      // The docs PR's OWN last-updated date, deliberately not `effectiveDate`.
+      // idleDays is the field that reasons about two PRs at once; this one
+      // answers "when did this row last change", and a reader — including
+      // data/workbench.json's consumers — would fairly read it that way. It is
+      // also what the recency sort below orders on, alongside `local.updatedAt`
+      // on the matched path, so both paths must mean the same thing by it.
       updatedAt: upstream.docsUpdatedAt || null,
       linkedPr: null,
     };

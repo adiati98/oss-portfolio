@@ -2919,6 +2919,201 @@ run(
   }
 );
 
+
+// ===========================================================================
+// Tracker-only idleDays: docs PR and code PR move on separate clocks, so
+// staleness must look at whichever one moved last.
+// ===========================================================================
+
+// TID1. Docs PR moved recently, code PR is stale → idleDays follows docs.
+run(
+  'TID1 · tracker-only, docs newer than code → idleDays from docs date',
+  {
+    tracker: {
+      'mautic/user-documentation#900': {
+        docsUpdatedAt: daysAgo(2),
+        codeUpdatedAt: daysAgo(83),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#900');
+    assert.ok(Math.abs(r.idleDays - 2) < 0.01, `idleDays was ${r.idleDays}`);
+    assert.notEqual(r.lane, 'stalled', `lane was ${r.lane}`);
+  }
+);
+
+// TID1b. The combined clock feeds idleDays and STOPS THERE. `updatedAt` stays
+// the docs PR's own date on both record paths, because it answers a different
+// question ("when did this row last change") and is published in
+// data/workbench.json, where a consumer would read it that way. Pinned as a
+// test because the two fields sit on adjacent lines and the wrong one is an
+// easy, silent thing to reach for.
+run(
+  'TID1b · tracker-only, updatedAt stays the docs date even when code is newer',
+  {
+    tracker: {
+      'mautic/user-documentation#902': {
+        docsUpdatedAt: daysAgo(83),
+        codeUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#902');
+    assert.equal(r.updatedAt, r.upstream.docsUpdatedAt, `updatedAt was ${r.updatedAt}`);
+    assert.notEqual(r.updatedAt, r.upstream.codeUpdatedAt, 'updatedAt must not follow the code PR');
+    assert.ok(Math.abs(r.idleDays - 1) < 0.01, `idleDays was ${r.idleDays}`);
+  }
+);
+
+// TID2. Code PR moved recently, docs PR is stale → idleDays follows code, not
+// docs. This is the bug: previously idleDays only ever looked at docsUpdatedAt,
+// so a pair whose code PR moved today still reported 83 days idle.
+run(
+  'TID2 · tracker-only, code newer than docs → idleDays from code date',
+  {
+    tracker: {
+      'mautic/user-documentation#901': {
+        docsUpdatedAt: daysAgo(83),
+        codeUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#901');
+    assert.ok(Math.abs(r.idleDays - 1) < 0.01, `idleDays was ${r.idleDays}`);
+    assert.notEqual(r.lane, 'stalled', `lane was ${r.lane}`);
+  }
+);
+
+// TID3. codeUpdatedAt absent → idleDays falls back to docsUpdatedAt alone.
+run(
+  'TID3 · tracker-only, codeUpdatedAt missing → idleDays from docs date',
+  {
+    tracker: {
+      'mautic/user-documentation#902': {
+        docsUpdatedAt: daysAgo(5),
+        codeUpdatedAt: null,
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#902');
+    assert.ok(Math.abs(r.idleDays - 5) < 0.01, `idleDays was ${r.idleDays}`);
+  }
+);
+
+// TID4. Both dates absent → idleDays stays 0, matching the pre-existing
+// no-date fallback (a missing date is not the same as "idle forever").
+run(
+  'TID4 · tracker-only, both dates missing → idleDays is 0',
+  {
+    tracker: {
+      'mautic/user-documentation#903': {
+        docsUpdatedAt: null,
+        codeUpdatedAt: null,
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#903');
+    assert.equal(r.idleDays, 0, `idleDays was ${r.idleDays}`);
+  }
+);
+
+// TID5. Matched local+tracker row: lastSubstantiveDate is more recent than
+// codeUpdatedAt → the local, more-precise date still wins.
+run(
+  'TID5 · matched pair, lastSubstantiveDate newer than code → local date wins',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 910,
+        lastSubstantiveDate: daysAgo(2),
+        updatedAt: daysAgo(2),
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#910': {
+        docsUpdatedAt: daysAgo(2),
+        codeUpdatedAt: daysAgo(40),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#910');
+    assert.equal(r.source, 'local+tracker');
+    assert.ok(Math.abs(r.idleDays - 2) < 0.01, `idleDays was ${r.idleDays}`);
+  }
+);
+
+// TID6. Matched local+tracker row: codeUpdatedAt is more recent than
+// lastSubstantiveDate → the code PR's activity pulls the row out of stalled,
+// same as the tracker-only path.
+run(
+  'TID6 · matched pair, code newer than lastSubstantiveDate → code date wins, leaves stalled',
+  {
+    tasks: [
+      local({
+        repo: 'mautic/user-documentation',
+        number: 911,
+        lastSubstantiveDate: daysAgo(83),
+        updatedAt: daysAgo(83),
+      }),
+    ],
+    tracker: {
+      'mautic/user-documentation#911': {
+        docsUpdatedAt: daysAgo(83),
+        codeUpdatedAt: daysAgo(1),
+        rawDocsReviews: [],
+        rawDocsComments: [],
+      },
+    },
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'mautic/user-documentation#911');
+    assert.equal(r.source, 'local+tracker');
+    assert.ok(Math.abs(r.idleDays - 1) < 0.01, `idleDays was ${r.idleDays}`);
+    assert.notEqual(r.lane, 'stalled', `lane was ${r.lane}`);
+  }
+);
+
+// TID7. Matched row with no tracker entry (source 'local', upstream null) →
+// codeUpdatedAt has nothing to read, idleDays falls back to the local chain
+// exactly as before. Guards against a null-upstream crash.
+run(
+  'TID7 · local-only row, no tracker entry → idleDays from local chain, no crash',
+  {
+    tasks: [
+      local({
+        repo: 'x/y',
+        number: 912,
+        lastSubstantiveDate: daysAgo(6),
+        updatedAt: daysAgo(6),
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'x/y#912');
+    assert.equal(r.source, 'local');
+    assert.ok(Math.abs(r.idleDays - 6) < 0.01, `idleDays was ${r.idleDays}`);
+  }
+);
+
 // ===========================================================================
 // UTC period boundaries
 // ===========================================================================
