@@ -1080,12 +1080,27 @@ function laneFor(record, me, botPingSignal, signals) {
   const turn = deriveTurn(record, me, botPingSignal, signals);
   if (turn.lane === 'action') return turn;
 
+  // Rule 3b — a draft with linked work outstanding is not idle by choice: it is
+  // waiting on someone else's PR by design, and "nudge or close" is not a
+  // decision that can be made from this side. Scoped to the SHAPE (draft +
+  // unresolved linked code PR), not to any one project — right now only Mautic
+  // docs PRs happen to look like this, but the rule must not become a repo
+  // check. Rule 3a above already peels off a merged or closed linked code PR
+  // into its own action step, so an untouched linkedCodePr reaching this line
+  // is either genuinely still open, or — on a tracker-only row — of unknown
+  // state, since that path carries no linkedCodePrState at all. A tracker-only
+  // draft whose linked code PR was quietly closed unmerged therefore stays
+  // quiet here instead of being flagged. That's a missed prompt on a private
+  // tool, not a false claim on a public page, and it's not worth an extra API
+  // call to close.
+  const draftBlockedOnLinkedWork = record.isDraft && Boolean(linkedCodePr);
+
   // Waiting on someone else, and untouched for a month — fold it away. The
   // contextual signals the turn logic derived have to survive the demotion:
   // botPing is the only one deriveLane owns (approval and reviewedNote already
   // live on the record), and without it a stalled row loses its explanation of
   // who it's actually waiting on.
-  if (idleDays >= STALLED_AFTER_DAYS) {
+  if (idleDays >= STALLED_AFTER_DAYS && !draftBlockedOnLinkedWork) {
     return {
       lane: 'stalled',
       ball: 'Stale',

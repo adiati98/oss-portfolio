@@ -2919,7 +2919,6 @@ run(
   }
 );
 
-
 // ===========================================================================
 // Tracker-only idleDays: docs PR and code PR move on separate clocks, so
 // staleness must look at whichever one moved last.
@@ -3111,6 +3110,114 @@ run(
     const r = records.find((x) => x.key === 'x/y#912');
     assert.equal(r.source, 'local');
     assert.ok(Math.abs(r.idleDays - 6) < 0.01, `idleDays was ${r.idleDays}`);
+  }
+);
+
+// ===========================================================================
+// Draft with linked work outstanding: never stale, regardless of project
+// ===========================================================================
+
+// DLW1. Draft with an unmerged (open) linked code PR, idle 40d → not stale.
+// It falls through to the normal turn-based reading instead of "nudge or
+// close" — no decision is possible from this side.
+run(
+  'DLW1 · draft with unmerged linked code PR, idle 40d → not stale',
+  {
+    tasks: [
+      local({
+        repo: 'x/y',
+        number: 920,
+        isDraft: true,
+        author: 'authorX',
+        lastActor: 'someoneElse',
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        body: 'Docs for https://github.com/x/y-code/pull/5000',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'x/y#920');
+    assert.notEqual(r.lane, 'stalled', `lane was ${r.lane}`);
+    assert.notEqual(r.ball, 'Stale');
+  }
+);
+
+// DLW2. Draft with NO linked code PR, idle 30+d → still stale. This is
+// genuinely parked work with nothing blocking it, so the carve-out must not
+// catch it.
+run(
+  'DLW2 · draft with no linked code PR, idle 35d → still stale',
+  {
+    tasks: [
+      local({
+        repo: 'x/y',
+        number: 921,
+        isDraft: true,
+        author: 'authorX',
+        lastActor: 'someoneElse',
+        updatedAt: daysAgo(35),
+        lastSubstantiveDate: daysAgo(35),
+        body: null,
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'x/y#921');
+    assert.equal(r.lane, 'stalled', `lane was ${r.lane}`);
+    assert.ok(/nudge or close/.test(r.nextStep), r.nextStep);
+  }
+);
+
+// DLW3. Draft whose linked code PR has MERGED → rule 3a's existing verdict
+// still wins; the new draft carve-out never gets a chance to apply, and never
+// needs to.
+run(
+  'DLW3 · draft whose linked code PR merged → normal linkedCodePrState rules apply',
+  {
+    tasks: [
+      local({
+        repo: 'x/y',
+        number: 922,
+        isDraft: true,
+        author: 'authorX',
+        lastActor: 'someoneElse',
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        body: 'Docs for https://github.com/x/y-code/pull/5001',
+        linkedCodePrState: 'merged',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'x/y#922');
+    assert.equal(r.lane, 'action');
+    assert.equal(r.nextStep, 'Code PR merged — review the docs now');
+  }
+);
+
+// DLW4. Non-draft with an open linked code PR, idle 40d → the carve-out is
+// scoped to drafts only; a ready-for-review row still stales normally.
+run(
+  'DLW4 · non-draft with linked code PR, idle 40d → unaffected, still stales',
+  {
+    tasks: [
+      local({
+        repo: 'x/y',
+        number: 923,
+        isDraft: false,
+        author: 'authorX',
+        lastActor: 'someoneElse',
+        updatedAt: daysAgo(40),
+        lastSubstantiveDate: daysAgo(40),
+        body: 'Docs for https://github.com/x/y-code/pull/5002',
+      }),
+    ],
+  },
+  ({ records }) => {
+    const r = records.find((x) => x.key === 'x/y#923');
+    assert.equal(r.lane, 'stalled', `lane was ${r.lane}`);
+    assert.ok(/nudge or close/.test(r.nextStep), r.nextStep);
   }
 );
 
