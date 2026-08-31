@@ -1004,7 +1004,7 @@ function laneFor(record, me, botPingSignal, signals) {
       nextStep:
         age >= REMIND_AFTER_DAYS
           ? `Assigned ${age}d ago, no PR yet — start the work`
-          : 'Assigned to you, no PR yet — start the work',
+          : 'Assigned, no PR yet — start the work',
     };
   }
 
@@ -1104,8 +1104,8 @@ function directPingStep(record, signals) {
   if (signals.mention && signals.mention.by) {
     const { by, days } = signals.mention;
     return days == null
-      ? `${by} mentioned you — reply`
-      : `${by} mentioned you ${days}d ago — reply`;
+      ? `Mentioned by ${by} — reply`
+      : `Mentioned by ${by} ${days}d ago — reply`;
   }
   if (
     record.relationship === 'reviewing' &&
@@ -1252,7 +1252,7 @@ function turnReading(record, me, signals) {
       return {
         lane: 'waiting',
         ball: 'Waiting',
-        nextStep: `You reviewed ${sinceMyReply}d ago — author hasn't replied`,
+        nextStep: `Reviewed ${sinceMyReply}d ago — author hasn't replied`,
       };
     }
     if (isAuthor) {
@@ -1310,8 +1310,8 @@ function turnReading(record, me, signals) {
       lane: 'waiting',
       ball: 'Waiting',
       nextStep: signals.waitingOn
-        ? `You replied ${sinceMyReply}d ago — waiting on ${signals.waitingOn}`
-        : `You replied ${sinceMyReply}d ago`,
+        ? `Replied ${sinceMyReply}d ago — waiting on ${signals.waitingOn}`
+        : `Replied ${sinceMyReply}d ago`,
     };
   }
   if (actorIsBot) {

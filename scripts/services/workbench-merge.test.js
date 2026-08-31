@@ -726,7 +726,7 @@ run(
     assert.equal(r.ball, 'Take Action');
     assert.equal(
       r.nextStep,
-      'promptless-for-oss mentioned you 1d ago — reply',
+      'Mentioned by promptless-for-oss 1d ago — reply',
       `nextStep was: ${r.nextStep}`
     );
     assert.ok(!r.botPing, 'no botPing when the bot pinged me');
@@ -1140,7 +1140,7 @@ function detail(overrides = {}) {
 
 // G1. Reviewing, you moved last → the row can finally say why it's parked.
 run(
-  'G1 · reviewing, I reviewed last → "You reviewed Nd ago — author hasn\'t replied"',
+  'G1 · reviewing, I reviewed last → "Reviewed Nd ago — author hasn\'t replied"',
   {
     tasks: [
       local({
@@ -1158,7 +1158,7 @@ run(
     assert.equal(r.upstream, null);
     assert.equal(r.lane, 'waiting');
     assert.equal(r.ball, 'Waiting');
-    assert.equal(r.nextStep, "You reviewed 4d ago — author hasn't replied", r.nextStep);
+    assert.equal(r.nextStep, "Reviewed 4d ago — author hasn't replied", r.nextStep);
   }
 );
 
@@ -1294,7 +1294,7 @@ run(
 
 // G3. Your own PR, you spoke last → say when, and who owes you.
 run(
-  'G3 · authored, I replied last → "You replied Nd ago — waiting on LOGIN"',
+  'G3 · authored, I replied last → "Replied Nd ago — waiting on LOGIN"',
   {
     prs: [
       local({
@@ -1312,7 +1312,7 @@ run(
   ({ records }) => {
     const r = records[0];
     assert.equal(r.lane, 'waiting');
-    assert.equal(r.nextStep, 'You replied 3d ago — waiting on maintainerZ', r.nextStep);
+    assert.equal(r.nextStep, 'Replied 3d ago — waiting on maintainerZ', r.nextStep);
   }
 );
 
@@ -1343,7 +1343,7 @@ run(
   ({ records }) => {
     const r = records[0];
     assert.equal(r.lane, 'waiting');
-    assert.equal(r.nextStep, 'You replied 10d ago — waiting on andersonjeccel', r.nextStep);
+    assert.equal(r.nextStep, 'Replied 10d ago — waiting on andersonjeccel', r.nextStep);
   }
 );
 
@@ -1422,7 +1422,7 @@ run(
 
 // G6. A direct @-mention outranks the turn reading — being named is being asked.
 run(
-  'G6 · @-mention of me → "LOGIN mentioned you Nd ago — reply"',
+  'G6 · @-mention of me → "Mentioned by LOGIN Nd ago — reply"',
   {
     tasks: [
       local({
@@ -1439,7 +1439,7 @@ run(
   ({ records }) => {
     const r = records[0];
     assert.equal(r.lane, 'action', 'lane still comes from the turn reading');
-    assert.equal(r.nextStep, 'writerA mentioned you 2d ago — reply', r.nextStep);
+    assert.equal(r.nextStep, 'Mentioned by writerA 2d ago — reply', r.nextStep);
   }
 );
 
@@ -1464,7 +1464,7 @@ run(
     ],
   },
   ({ records }) => {
-    assert.ok(!/mentioned you/.test(records[0].nextStep || ''), records[0].nextStep);
+    assert.ok(!/^Mentioned by/.test(records[0].nextStep || ''), records[0].nextStep);
   }
 );
 
@@ -1612,7 +1612,7 @@ run(
   ({ records }) => {
     assert.equal(
       records[0].nextStep,
-      'reviewerQ mentioned you 1d ago — reply',
+      'Mentioned by reviewerQ 1d ago — reply',
       records[0].nextStep
     );
   }
@@ -1644,7 +1644,7 @@ run(
   ({ records }) => {
     assert.equal(
       records[0].nextStep,
-      'You replied 2d ago — waiting on escopecz',
+      'Replied 2d ago — waiting on escopecz',
       records[0].nextStep
     );
   }
@@ -1693,7 +1693,7 @@ run(
     assertMilestone(records[0], true);
     assert.equal(
       records[0].nextStep,
-      'You replied 2d ago — waiting on escopecz',
+      'Replied 2d ago — waiting on escopecz',
       records[0].nextStep
     );
   }
@@ -1718,7 +1718,7 @@ run(
     assertMilestone(records[0], false);
     assert.equal(
       records[0].nextStep,
-      'You replied 2d ago — waiting on escopecz',
+      'Replied 2d ago — waiting on escopecz',
       records[0].nextStep
     );
   }
@@ -2163,7 +2163,7 @@ run(
       }),
     ],
   },
-  ({ records }) => assertNotHeld(records[0], 'writerA mentioned you 1d ago — reply')
+  ({ records }) => assertNotHeld(records[0], 'Mentioned by writerA 1d ago — reply')
 );
 
 // The one that matters most for `blocked`: the missing requirement is very
@@ -2670,7 +2670,7 @@ run(
   ({ records }) => {
     assert.equal(
       records[0].nextStep,
-      "You reviewed 20d ago — author hasn't replied",
+      "Reviewed 20d ago — author hasn't replied",
       records[0].nextStep
     );
     assert.ok(!/idle 20d/.test(records[0].nextStep), 'no "20d ago · idle 20d"');
