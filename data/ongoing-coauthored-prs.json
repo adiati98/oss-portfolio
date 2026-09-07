@@ -5,7 +5,7 @@
     "repo": "mautic/user-documentation",
     "status": "Co-authoring",
     "createdAt": "2026-05-15T15:48:41Z",
-    "updatedAt": "2026-08-14T19:39:48Z",
+    "updatedAt": "2026-09-06T18:29:41Z",
     "number": 712,
     "user": {
       "login": "andersonjeccel",
@@ -33,11 +33,15 @@
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": "CHANGES_REQUESTED",
+    "reviewState": "PENDING",
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-08-14T19:39:48.000Z",
+    "lastSubstantiveDate": "2026-09-06T18:29:41.000Z",
     "author": "andersonjeccel",
     "reviews": [
+      {
+        "login": "adiati98",
+        "state": "PENDING"
+      },
       {
         "login": "adiati98",
         "state": "COMMENTED",
@@ -77,63 +81,19 @@
         "login": "copilot-pull-request-reviewer[bot]",
         "state": "COMMENTED",
         "submittedAt": "2026-08-14T19:22:06Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-06T08:18:49Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-06T17:43:39Z"
       }
     ],
     "comments": [
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:51:37Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:51:48Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:52:00Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:52:12Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:52:21Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:57:01Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-08-13T09:57:33Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T09:57:46Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "RCheesley",
-        "createdAt": "2026-08-13T10:01:27Z",
-        "isBot": false,
-        "mentions": ["andersonjeccel"]
-      },
       {
         "login": "RCheesley",
         "createdAt": "2026-08-13T10:03:54Z",
@@ -259,6 +219,60 @@
         "createdAt": "2026-08-14T19:39:48Z",
         "isBot": false,
         "mentions": ["RCheesley"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-09-06T08:18:49Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T08:20:22Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T08:29:59Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T08:50:11Z",
+        "isBot": false,
+        "mentions": ["adiati98", "andersonjeccel"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-09-06T08:59:40Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T09:00:22Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T17:45:33Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T17:53:25Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-06T18:29:41Z",
+        "isBot": false,
+        "mentions": ["adiati98", "andersonjeccel"]
       }
     ],
     "reviewRequests": [
@@ -303,12 +317,12 @@
         "createdAt": "2026-08-14T19:18:26Z"
       }
     ],
-    "requestedReviewers": ["RCheesley", "adiati98", "favour-chibueze"],
+    "requestedReviewers": ["RCheesley", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.0",
     "milestone": null,
     "linkedCodePrState": null,
-    "body": "## Description\r\n\r\nThis PR adds docs about literally every information found in backend about how UTM tags work in all features.\r\nCovers more than 14 features.\r\nA lot of info that there's nowhere in the internet available, since investigation was done in backend to get a full picture. \r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->\r\n\r\n<img width=\"1238\" height=\"459\" alt=\"image\" src=\"https://github.com/user-attachments/assets/54bb82b7-0fab-4fc5-9872-b50f03369b2b\" />\r\n"
+    "body": "## Description\r\n\r\nThis PR adds docs about literally every information found in backend about how UTM tags work in all features.\r\nCovers more than 14 features.\r\nA lot of info that there's nowhere in the internet available, since investigation was done in backend to get a full picture. \r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\nCloses #925 \r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->\r\n\r\n<img width=\"1238\" height=\"459\" alt=\"image\" src=\"https://github.com/user-attachments/assets/54bb82b7-0fab-4fc5-9872-b50f03369b2b\" />\r\n"
   },
   {
     "title": "docs: Clarify that value 0 is valid when setting contact fields via API",
