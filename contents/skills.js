@@ -11,7 +11,7 @@
 module.exports = {
   expertise: [
     {
-      title: 'Technical writing and content strategy',
+      title: 'Technical writing & content strategy',
       blurb: 'Writing blogs, updating user and developer docs, and editing AI-drafted PRs.',
     },
     {
