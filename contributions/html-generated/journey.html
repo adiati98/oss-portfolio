@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+          var mq = window.matchMedia("(prefers-color-scheme: dark)");
 
           function isDark() {
-            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
-            if (stored === 'dark') return true;
-            if (stored === 'light') return false;
+            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
+            if (stored === "dark") return true;
+            if (stored === "light") return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle('dark', isDark());
+          document.documentElement.classList.toggle("dark", isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener('change', function () {
-            document.documentElement.classList.toggle('dark', isDark());
+          mq.addEventListener("change", function () {
+            document.documentElement.classList.toggle("dark", isDark());
           });
         } catch (e) {}
       })();
@@ -296,8 +296,11 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow:
+          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg:
+          0 2px 4px rgba(20, 20, 30, 0.04),
+          0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -338,8 +341,10 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg:
+          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       .jy-eyebrow {
         font-family: ui-monospace, monospace;
@@ -360,7 +365,7 @@
         max-width: 660px;
       }
       .jy-tl::before {
-        content: '';
+        content: "";
         position: absolute;
         left: 6px;
         top: 6px;
@@ -382,7 +387,7 @@
         scroll-margin-top: 8rem;
       }
       .jy-yr::before {
-        content: '';
+        content: "";
         position: absolute;
         left: -24px;
         top: 7px;
@@ -398,7 +403,7 @@
         padding: 14px 0 10px;
       }
       .jy-ms::before {
-        content: '';
+        content: "";
         position: absolute;
         left: -24.5px;
         top: 23px;
@@ -531,7 +536,7 @@
         color: var(--t-brand);
         border-color: var(--t-brand-line);
       }
-      .jy-index button[aria-pressed='true'] {
+      .jy-index button[aria-pressed="true"] {
         color: var(--t-caution);
         border-color: var(--t-caution-line);
         background: var(--t-caution-wash);
@@ -646,7 +651,7 @@
         position: relative;
       }
       .jy-xp::before {
-        content: '';
+        content: "";
         position: absolute;
         left: -5px;
         top: 20px;
@@ -732,13 +737,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target='_blank']:not(.no-underline) {
+      a[target="_blank"]:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target='_blank']:not(.no-underline):hover {
+      a[target="_blank"]:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -785,7 +790,9 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div
+        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
+      >
         <div class="flex items-center space-x-4">
           <a
             href="./index.html"
@@ -859,7 +866,10 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                <span
+                  data-theme-icon-for="light"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -875,7 +885,10 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="dark"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -888,7 +901,10 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="system"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -930,7 +946,9 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -949,11 +967,15 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                      <path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                      />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1086,7 +1108,10 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+              <span
+                data-theme-icon-for="light"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1102,7 +1127,10 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="dark"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1115,7 +1143,10 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="system"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1157,7 +1188,9 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1180,7 +1213,9 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1212,79 +1247,95 @@
       </div>
 
       <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const button = document.getElementById('menu-button');
-          const menu = document.getElementById('mobile-menu');
-          const openIcon = document.getElementById('menu-open-icon');
-          const closeIcon = document.getElementById('menu-close-icon');
+        document.addEventListener("DOMContentLoaded", () => {
+          const button = document.getElementById("menu-button");
+          const menu = document.getElementById("mobile-menu");
+          const openIcon = document.getElementById("menu-open-icon");
+          const closeIcon = document.getElementById("menu-close-icon");
 
           if (button && menu) {
-            button.addEventListener('click', () => {
-              const isExpanded = button.getAttribute('aria-expanded') === 'true';
-              button.setAttribute('aria-expanded', String(!isExpanded));
-              menu.classList.toggle('hidden');
-              openIcon.classList.toggle('hidden', !isExpanded);
-              closeIcon.classList.toggle('hidden', isExpanded);
+            button.addEventListener("click", () => {
+              const isExpanded =
+                button.getAttribute("aria-expanded") === "true";
+              button.setAttribute("aria-expanded", String(!isExpanded));
+              menu.classList.toggle("hidden");
+              openIcon.classList.toggle("hidden", !isExpanded);
+              closeIcon.classList.toggle("hidden", isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
+          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-              const menu = dropdown.querySelector('.theme-dropdown-menu');
-              const wasOpen = !menu.classList.contains('hidden');
-              menu.classList.add('hidden');
-              trigger.setAttribute('aria-expanded', 'false');
+              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+              const menu = dropdown.querySelector(".theme-dropdown-menu");
+              const wasOpen = !menu.classList.contains("hidden");
+              menu.classList.add("hidden");
+              trigger.setAttribute("aria-expanded", "false");
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-            const menu = dropdown.querySelector('.theme-dropdown-menu');
+            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+            const menu = dropdown.querySelector(".theme-dropdown-menu");
             closeAllDropdowns();
-            menu.classList.remove('hidden');
-            trigger.setAttribute('aria-expanded', 'true');
-            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
-            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
+            menu.classList.remove("hidden");
+            trigger.setAttribute("aria-expanded", "true");
+            const items = Array.from(
+              dropdown.querySelectorAll("[data-theme-choice]"),
+            );
+            const checked = items.find(
+              (item) => item.getAttribute("aria-checked") === "true",
+            );
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === 'system') {
-              localStorage.removeItem('theme');
+            if (choice === "system") {
+              localStorage.removeItem("theme");
             } else {
-              localStorage.setItem('theme', choice);
+              localStorage.setItem("theme", choice);
             }
             const isDark =
-              choice === 'dark' ||
-              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.documentElement.classList.toggle('dark', isDark);
+              choice === "dark" ||
+              (choice === "system" &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches);
+            document.documentElement.classList.toggle("dark", isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem('theme') || 'system';
+            const current = localStorage.getItem("theme") || "system";
             dropdowns.forEach((dropdown) => {
-              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
-                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
-              });
-              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
-              });
+              dropdown
+                .querySelectorAll("[data-theme-icon-for]")
+                .forEach((icon) => {
+                  icon.classList.toggle(
+                    "hidden",
+                    icon.dataset.themeIconFor !== current,
+                  );
+                });
+              dropdown
+                .querySelectorAll("[data-theme-choice]")
+                .forEach((item) => {
+                  item.setAttribute(
+                    "aria-checked",
+                    String(item.dataset.themeChoice === current),
+                  );
+                });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-            const menu = dropdown.querySelector('.theme-dropdown-menu');
+            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+            const menu = dropdown.querySelector(".theme-dropdown-menu");
 
-            trigger.addEventListener('click', (e) => {
+            trigger.addEventListener("click", (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains('hidden');
+              const isOpen = !menu.classList.contains("hidden");
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1292,44 +1343,46 @@
               }
             });
 
-            trigger.addEventListener('keydown', (e) => {
-              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            trigger.addEventListener("keydown", (e) => {
+              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener('keydown', (e) => {
-              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            menu.addEventListener("keydown", (e) => {
+              const items = Array.from(
+                dropdown.querySelectorAll("[data-theme-choice]"),
+              );
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === 'ArrowDown') {
+              if (e.key === "ArrowDown") {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === 'ArrowUp') {
+              } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === 'Home') {
+              } else if (e.key === "Home") {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === 'End') {
+              } else if (e.key === "End") {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === 'Tab') {
+              } else if (e.key === "Tab") {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-              item.addEventListener('click', () => {
+            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
+              item.addEventListener("click", () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener('click', () => closeAllDropdowns());
-          document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
+          document.addEventListener("click", () => closeAllDropdowns());
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1392,7 +1445,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded='true'] {
+      .theme-dropdown-trigger[aria-expanded="true"] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1451,7 +1504,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1586,37 +1639,48 @@
             <section aria-labelledby="jy-expertise">
               <h2 id="jy-expertise" class="jy-sec-label">Expertise</h2>
               <div class="jy-expertise">
-                <b>Technical writing & docs architecture</b>
+                <b>Technical writing and content strategy</b>
                 <span
-                  >Information architecture, style guides, and versioned docs programs for user- and
-                  developer-facing documentation.</span
+                  >Writing blogs, updating user and developer docs, and editing
+                  AI-drafted PRs.</span
                 >
               </div>
               <div class="jy-expertise">
-                <b>Code review & contributor mentoring</b>
+                <b>Docs architecture</b>
                 <span
-                  >Reviewing docs and code PRs, and guiding first-time contributors to merged
-                  work.</span
+                  >Building style guides and managing multi-version
+                  documentation.</span
+                >
+              </div>
+              <div class="jy-expertise">
+                <b>Docs review & contributor mentoring</b>
+                <span
+                  >Reviewing PRs and guiding first-time contributors all the way
+                  to merged work.</span
                 >
               </div>
               <div class="jy-expertise">
                 <b>Docs leadership</b>
                 <span
-                  >Leading documentation teams and programs across Mautic, Virtual Coffee, and Open
-                  Source Communities.</span
+                  >Owning documentation standards, repositories, and
+                  decisions.</span
                 >
               </div>
               <h2 class="jy-sec-label" style="margin-top: 26px">Tools</h2>
               <div class="jy-chips">
                 <span class="jy-chip jy-chip--hd">Git</span
                 ><span class="jy-chip jy-chip--hd">GitHub</span
-                ><span class="jy-chip">Docusaurus</span><span class="jy-chip">Sphinx</span
-                ><span class="jy-chip">Vale</span><span class="jy-chip">Markdown</span
-                ><span class="jy-chip">MDX</span><span class="jy-chip">RST</span>
+                ><span class="jy-chip">Docusaurus</span
+                ><span class="jy-chip">Sphinx</span
+                ><span class="jy-chip">Vale</span
+                ><span class="jy-chip">Markdown</span
+                ><span class="jy-chip">MDX</span
+                ><span class="jy-chip">RST</span>
               </div>
               <h2 class="jy-sec-label" style="margin-top: 26px">Skills</h2>
               <div class="jy-chips">
-                <span class="jy-chip">JavaScript</span><span class="jy-chip">React</span>
+                <span class="jy-chip">JavaScript</span
+                ><span class="jy-chip">React</span>
               </div>
             </section>
           </div>
@@ -1624,15 +1688,17 @@
           <section aria-labelledby="jy-milestones">
             <h2 id="jy-milestones" class="jy-sec-label">Selected work</h2>
             <p class="jy-scale">
-              <b>17</b> entries across <b>7</b> organizations, <b>2021</b>–<b>2026</b>.
+              <b>17</b> entries across <b>7</b> organizations,
+              <b>2021</b>–<b>2026</b>.
             </p>
             <div class="jy-index">
               <button type="button" id="jy-show-highlights" aria-pressed="true">
                 ★ Highlights
               </button>
               <nav class="jy-jump" aria-label="Jump to year">
-                <span class="jy-jump-label">Jump to:</span><a href="#jy-2026">2026</a
-                ><a href="#jy-2025">2025</a><a href="#jy-2024">2024</a>
+                <span class="jy-jump-label">Jump to:</span
+                ><a href="#jy-2026">2026</a><a href="#jy-2025">2025</a
+                ><a href="#jy-2024">2024</a>
               </nav>
             </div>
             <div class="jy-tl">
@@ -1649,12 +1715,14 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🛠 Project</span><b>Personal</b> · 2025–present
+                  <span class="jy-ms-tag">🛠 Project</span><b>Personal</b> ·
+                  2025–present
                 </div>
                 <p class="jy-desc">
-                  Built a self-hosted portfolio generator that pulls GitHub activity via the API and
-                  turns it into a static site — with a PR-triage engine that ranks what needs
-                  attention now, a theme system that enforces accessible contrast at build time, and
+                  Built a self-hosted portfolio generator that pulls GitHub
+                  activity via the API and turns it into a static site — with a
+                  PR-triage engine that ranks what needs attention now, a theme
+                  system that enforces accessible contrast at build time, and
                   auto-generated contribution reports.
                 </p>
               </article>
@@ -1670,13 +1738,15 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🛠 Project</span><b>Personal / Mautic</b> · 2026–present
+                  <span class="jy-ms-tag">🛠 Project</span
+                  ><b>Personal / Mautic</b> · 2026–present
                 </div>
                 <p class="jy-desc">
-                  Built a GitHub Actions pipeline that refreshes a live Mautic docs PR dashboard
-                  roughly every 30 minutes during work hours, sorting each PR into one of four
-                  priority groups by what needs action, with a companion reminder page to prompt
-                  code PR authors to review the docs PR against their own changes.
+                  Built a GitHub Actions pipeline that refreshes a live Mautic
+                  docs PR dashboard roughly every 30 minutes during work hours,
+                  sorting each PR into one of four priority groups by what needs
+                  action, with a companion reminder page to prompt code PR
+                  authors to review the docs PR against their own changes.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1689,12 +1759,14 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🛠 Project</span><b>Personal</b> · 2026–present
+                  <span class="jy-ms-tag">🛠 Project</span><b>Personal</b> ·
+                  2026–present
                 </div>
                 <p class="jy-desc">
-                  Extracted the OSS Portfolio engine into a template repo — same GitHub API pipeline
-                  and dual Markdown/HTML output, reduced to one config value (a GitHub username) so
-                  anyone can stand up their own.
+                  Extracted the OSS Portfolio engine into a template repo — same
+                  GitHub API pipeline and dual Markdown/HTML output, reduced to
+                  one config value (a GitHub username) so anyone can stand up
+                  their own.
                 </p>
               </article>
               <article class="jy-ms jy-ms--hl" data-earlier="0">
@@ -1709,11 +1781,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> · 2025–2026
+                  <span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> ·
+                  2025–2026
                 </div>
                 <p class="jy-desc">
-                  Rewrote Mautic's contributing guidelines and consolidated three separate per-repo
-                  CONTRIBUTING files into one shared source on the Community Handbook.
+                  Rewrote Mautic's contributing guidelines and consolidated
+                  three separate per-repo CONTRIBUTING files into one shared
+                  source on the Community Handbook.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1725,11 +1799,14 @@
                     >Mautic Tester documentation overhaul</a
                   >
                 </h3>
-                <div class="jy-org"><span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> · 2026</div>
+                <div class="jy-org">
+                  <span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> · 2026
+                </div>
                 <p class="jy-desc">
-                  Rewrote the Tester guide twice: first replacing sunset Gitpod instructions with
-                  GitHub Codespaces setup written from scratch, then restructuring the page to lead
-                  with local (DDEV) setup over Codespaces.
+                  Rewrote the Tester guide twice: first replacing sunset Gitpod
+                  instructions with GitHub Codespaces setup written from
+                  scratch, then restructuring the page to lead with local (DDEV)
+                  setup over Codespaces.
                 </p>
               </article>
               <div class="jy-yr" id="jy-2025" data-earlier="0">2025</div>
@@ -1748,9 +1825,9 @@
                   <span class="jy-ms-tag">🏆 Award</span><b>Mautic</b> · 2025
                 </div>
                 <p class="jy-desc">
-                  Won Mautic's 2025 Mautician of the Year award, selected by a panel from the year's
-                  active contributors for exceptional support, ideas, and dedication to the
-                  community.
+                  Won Mautic's 2025 Mautician of the Year award, selected by a
+                  panel from the year's active contributors for exceptional
+                  support, ideas, and dedication to the community.
                 </p>
               </article>
               <article class="jy-ms jy-ms--hl" data-earlier="0">
@@ -1764,11 +1841,14 @@
                     >Mautic Community Handbook reStructuredText conversion</a
                   >
                 </h3>
-                <div class="jy-org"><span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> · 2025</div>
+                <div class="jy-org">
+                  <span class="jy-ms-tag">📚 Docs</span><b>Mautic</b> · 2025
+                </div>
                 <p class="jy-desc">
-                  Converted the Community Handbook's content into reStructuredText across roughly 20
-                  sections — one merged PR per role and policy area, from Designer and Translator
-                  guides through Governance and Financial Policy.
+                  Converted the Community Handbook's content into
+                  reStructuredText across roughly 20 sections — one merged PR
+                  per role and policy area, from Designer and Translator guides
+                  through Governance and Financial Policy.
                 </p>
               </article>
               <article class="jy-ms jy-ms--hl" data-earlier="0">
@@ -1783,12 +1863,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> · 2021–2025
+                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> ·
+                  2021–2025
                 </div>
                 <p class="jy-desc">
-                  Created and still maintain Virtual Coffee's handbook — onboarding, Slack
-                  navigation, glossary — including a 2023 reorg of every community resource on the
-                  site.
+                  Created and still maintain Virtual Coffee's handbook —
+                  onboarding, Slack navigation, glossary — including a 2023
+                  reorg of every community resource on the site.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1801,11 +1882,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> · 2024–2025
+                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> ·
+                  2024–2025
                 </div>
                 <p class="jy-desc">
-                  Wrote a facilitator handbook plus individual guides for 15+ Monthly Challenges,
-                  replacing ad hoc volunteer knowledge with a documented process.
+                  Wrote a facilitator handbook plus individual guides for 15+
+                  Monthly Challenges, replacing ad hoc volunteer knowledge with
+                  a documented process.
                 </p>
               </article>
               <article class="jy-ms jy-ms--hl" data-earlier="0">
@@ -1820,11 +1903,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> · 2025
+                  <span class="jy-ms-tag">📚 Docs</span><b>Virtual Coffee</b> ·
+                  2025
                 </div>
                 <p class="jy-desc">
-                  Migrated Virtual Coffee's documentation to Docusaurus solo — full information
-                  architecture and content rebuilt from scratch, not a lift-and-shift.
+                  Migrated Virtual Coffee's documentation to Docusaurus solo —
+                  full information architecture and content rebuilt from
+                  scratch, not a lift-and-shift.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1837,12 +1922,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🎤 Talk</span><b>Women Techmakers Vienna — IWD 2025</b> ·
-                  2025
+                  <span class="jy-ms-tag">🎤 Talk</span
+                  ><b>Women Techmakers Vienna — IWD 2025</b> · 2025
                 </div>
                 <p class="jy-desc">
-                  How keeping notes for myself turned into writing for communities, and then into
-                  leading the teams that maintain the docs.
+                  How keeping notes for myself turned into writing for
+                  communities, and then into leading the teams that maintain the
+                  docs.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1851,15 +1937,17 @@
                     href="https://www.youtube.com/watch?v=Hnzp-aJ4NWA"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Setting up your local environment to work with the Mautic Documentation</a
+                    >Setting up your local environment to work with the Mautic
+                    Documentation</a
                   >
                 </h3>
                 <div class="jy-org">
                   <span class="jy-ms-tag">🎥 Video</span><b>Mautic</b> · 2025
                 </div>
                 <p class="jy-desc">
-                  As Assistant Team Lead for Mautic's Education Team, walked contributors through
-                  setting up a local environment to contribute, test, and review documentation PRs.
+                  As Assistant Team Lead for Mautic's Education Team, walked
+                  contributors through setting up a local environment to
+                  contribute, test, and review documentation PRs.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1868,17 +1956,17 @@
                     href="https://www.youtube.com/watch?v=jP-7LEyNo_k"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >How to create a PR in the low and no code repository for your contribution to
-                    be counted</a
+                    >How to create a PR in the low and no code repository for
+                    your contribution to be counted</a
                   >
                 </h3>
                 <div class="jy-org">
                   <span class="jy-ms-tag">🎥 Video</span><b>Mautic</b> · 2025
                 </div>
                 <p class="jy-desc">
-                  As Assistant Team Lead for Mautic's Education Team, explained how to file a PR for
-                  low/no-code contributions so they count toward Hacktoberfest and other
-                  contribution tracking.
+                  As Assistant Team Lead for Mautic's Education Team, explained
+                  how to file a PR for low/no-code contributions so they count
+                  toward Hacktoberfest and other contribution tracking.
                 </p>
               </article>
               <div class="jy-yr" id="jy-2024" data-earlier="0">2024</div>
@@ -1892,12 +1980,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🎓 Course</span><b>Open Source Communities</b> · 2024
+                  <span class="jy-ms-tag">🎓 Course</span
+                  ><b>Open Source Communities</b> · 2024
                 </div>
                 <p class="jy-desc">
-                  Co-created a free maintainer-onboarding course with Bekah HW and Jessica Wilkins —
-                  13 chapters from first PR through running a project: triage, review, and community
-                  building.
+                  Co-created a free maintainer-onboarding course with Bekah HW
+                  and Jessica Wilkins — 13 chapters from first PR through
+                  running a project: triage, review, and community building.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1910,11 +1999,12 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🎤 Talk</span><b>Virtual Coffee</b> · 2024
+                  <span class="jy-ms-tag">🎤 Talk</span><b>Virtual Coffee</b> ·
+                  2024
                 </div>
                 <p class="jy-desc">
-                  Co-hosted with Bekah HW: what open source is, why it's worth contributing to, and
-                  how to start making an impact.
+                  Co-hosted with Bekah HW: what open source is, why it's worth
+                  contributing to, and how to start making an impact.
                 </p>
               </article>
               <article class="jy-ms jy-hidden" data-earlier="1">
@@ -1927,11 +2017,13 @@
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🎤 Talk</span><b>Virtual Coffee</b> · 2024
+                  <span class="jy-ms-tag">🎤 Talk</span><b>Virtual Coffee</b> ·
+                  2024
                 </div>
                 <p class="jy-desc">
-                  Co-hosted with Bekah HW: the path from regular contributor to maintainer, and what
-                  changes once you are the one deciding what gets accepted.
+                  Co-hosted with Bekah HW: the path from regular contributor to
+                  maintainer, and what changes once you are the one deciding
+                  what gets accepted.
                 </p>
               </article>
               <article class="jy-ms jy-ms--hl" data-earlier="0">
@@ -1942,17 +2034,18 @@
                     href="https://www.youtube.com/live/pzLXQYZpOPU?t=5368"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >Building Bridges, Not Walls: The Importance of Documentation in Open Source
-                    Projects</a
+                    >Building Bridges, Not Walls: The Importance of
+                    Documentation in Open Source Projects</a
                   >
                 </h3>
                 <div class="jy-org">
-                  <span class="jy-ms-tag">🎤 Talk</span><b>Virtual Coffee Lightning Talks</b> · 2024
+                  <span class="jy-ms-tag">🎤 Talk</span
+                  ><b>Virtual Coffee Lightning Talks</b> · 2024
                 </div>
                 <p class="jy-desc">
-                  Gave a lightning talk explaining documentation is conversion infrastructure, not a
-                  nice-to-have. Clear docs mean faster reviews, quicker-merging PRs, and
-                  contributors who come back.
+                  Gave a lightning talk explaining documentation is conversion
+                  infrastructure, not a nice-to-have. Clear docs mean faster
+                  reviews, quicker-merging PRs, and contributors who come back.
                 </p>
               </article>
               <div class="jy-more">
@@ -1973,21 +2066,23 @@
     </main>
     <script>
       (function () {
-        var btn = document.getElementById('jy-show-earlier');
+        var btn = document.getElementById("jy-show-earlier");
         if (!btn) return;
-        var hlBtn = document.getElementById('jy-show-highlights');
+        var hlBtn = document.getElementById("jy-show-highlights");
         var expanded = false;
 
         function setExpanded(next) {
           expanded = next;
-          document.querySelectorAll('[data-earlier="1"]').forEach(function (el) {
-            el.classList.toggle('jy-hidden', !expanded);
-          });
-          btn.setAttribute('aria-expanded', String(expanded));
+          document
+            .querySelectorAll('[data-earlier="1"]')
+            .forEach(function (el) {
+              el.classList.toggle("jy-hidden", !expanded);
+            });
+          btn.setAttribute("aria-expanded", String(expanded));
           btn.textContent = expanded
-            ? btn.getAttribute('data-label-less')
-            : btn.getAttribute('data-label-more');
-          if (hlBtn) hlBtn.setAttribute('aria-pressed', String(!expanded));
+            ? btn.getAttribute("data-label-less")
+            : btn.getAttribute("data-label-more");
+          if (hlBtn) hlBtn.setAttribute("aria-pressed", String(!expanded));
         }
 
         // Either toggle direction reflows the list around wherever you're
@@ -1995,22 +2090,24 @@
         // pulls the ground out from under you — so both return to the top
         // of the section rather than leaving you mid-timeline.
         function scrollToSection() {
-          var top = document.getElementById('jy-milestones');
+          var top = document.getElementById("jy-milestones");
           if (!top) return;
-          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          var reduce = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
           top.scrollIntoView({
-            behavior: reduce ? 'auto' : 'smooth',
-            block: 'start',
+            behavior: reduce ? "auto" : "smooth",
+            block: "start",
           });
         }
 
-        btn.addEventListener('click', function () {
+        btn.addEventListener("click", function () {
           setExpanded(!expanded);
           scrollToSection();
         });
 
         if (hlBtn) {
-          hlBtn.addEventListener('click', function () {
+          hlBtn.addEventListener("click", function () {
             setExpanded(false);
             scrollToSection();
           });
@@ -2019,8 +2116,8 @@
         // Picking a year means "show me that year", so it always expands:
         // otherwise the year opens holding only its highlighted entries,
         // which is the one view the year chips exist to get you out of.
-        document.querySelectorAll('.jy-jump a').forEach(function (link) {
-          link.addEventListener('click', function () {
+        document.querySelectorAll(".jy-jump a").forEach(function (link) {
+          link.addEventListener("click", function () {
             setExpanded(true);
           });
         });
@@ -2029,7 +2126,10 @@
       })();
     </script>
     <footer
-      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
+      style="
+        border-top-color: var(--c-neutral-10);
+        color: var(--c-text-secondary-rgb);
+      "
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -2069,23 +2169,31 @@
         </a>
       </div>
     </footer>
-    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
+    <button
+      type="button"
+      id="back-to-top"
+      class="back-to-top"
+      aria-label="Back to top"
+      hidden
+    >
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById('back-to-top');
+        var btn = document.getElementById("back-to-top");
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener("scroll", onScroll, { passive: true });
         onScroll();
-        btn.addEventListener('click', function () {
-          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        btn.addEventListener("click", function () {
+          var reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? 'auto' : 'smooth',
+            behavior: reduceMotion ? "auto" : "smooth",
           });
         });
       })();

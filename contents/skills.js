@@ -11,18 +11,20 @@
 module.exports = {
   expertise: [
     {
-      title: 'Technical writing & docs architecture',
-      blurb:
-        'Information architecture, style guides, and versioned docs programs for user- and developer-facing documentation.',
+      title: 'Technical writing & content strategy',
+      blurb: 'Writing blogs, updating user and developer docs, and editing AI-drafted PRs.',
     },
     {
-      title: 'Code review & contributor mentoring',
-      blurb: 'Reviewing docs and code PRs, and guiding first-time contributors to merged work.',
+      title: 'Docs architecture',
+      blurb: 'Building style guides and managing multi-version documentation.',
+    },
+    {
+      title: 'Docs review & contributor mentoring',
+      blurb: 'Reviewing PRs and guiding first-time contributors all the way to merged work.',
     },
     {
       title: 'Docs leadership',
-      blurb:
-        'Leading documentation teams and programs across Mautic, Virtual Coffee, and Open Source Communities.',
+      blurb: 'Owning documentation standards, repositories, and decisions.',
     },
   ],
   tools: ['Git', 'GitHub', 'Docusaurus', 'Sphinx', 'Vale', 'Markdown', 'MDX', 'RST'],
