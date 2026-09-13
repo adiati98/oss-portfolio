@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia('(prefers-color-scheme: dark)');
+          var mq = window.matchMedia("(prefers-color-scheme: dark)");
 
           function isDark() {
-            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
-            if (stored === 'dark') return true;
-            if (stored === 'light') return false;
+            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
+            if (stored === "dark") return true;
+            if (stored === "light") return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle('dark', isDark());
+          document.documentElement.classList.toggle("dark", isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener('change', function () {
-            document.documentElement.classList.toggle('dark', isDark());
+          mq.addEventListener("change", function () {
+            document.documentElement.classList.toggle("dark", isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
       :root {
         --c-primary-hex: #232963;
         --c-primary-rgb: rgb(35, 41, 99);
@@ -297,8 +297,11 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow:
+          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg:
+          0 2px 4px rgba(20, 20, 30, 0.04),
+          0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -339,8 +342,10 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow:
+          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg:
+          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -357,7 +362,7 @@
          button on every page built from this base CSS. */
         overflow-x: hidden;
         position: relative;
-        font-family: 'Inter', sans-serif;
+        font-family: "Inter", sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -524,13 +529,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target='_blank']:not(.no-underline) {
+      a[target="_blank"]:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target='_blank']:not(.no-underline):hover {
+      a[target="_blank"]:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -577,7 +582,9 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div
+        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
+      >
         <div class="flex items-center space-x-4">
           <a
             href="./index.html"
@@ -651,7 +658,10 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+                <span
+                  data-theme-icon-for="light"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -667,7 +677,10 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="dark"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -680,7 +693,10 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+                ><span
+                  data-theme-icon-for="system"
+                  class="theme-dropdown-trigger-icon hidden"
+                >
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -722,7 +738,9 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -741,11 +759,15 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                      <path
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                      />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                  <span class="theme-dropdown-check" aria-hidden="true"
+                    >✓</span
+                  ></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -878,7 +900,10 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
+              <span
+                data-theme-icon-for="light"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -894,7 +919,10 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="dark"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -907,7 +935,10 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
+              ><span
+                data-theme-icon-for="system"
+                class="theme-dropdown-trigger-icon hidden"
+              >
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -949,7 +980,9 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -972,7 +1005,9 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
+                <span class="theme-dropdown-check" aria-hidden="true"
+                  >✓</span
+                ></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1004,79 +1039,95 @@
       </div>
 
       <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          const button = document.getElementById('menu-button');
-          const menu = document.getElementById('mobile-menu');
-          const openIcon = document.getElementById('menu-open-icon');
-          const closeIcon = document.getElementById('menu-close-icon');
+        document.addEventListener("DOMContentLoaded", () => {
+          const button = document.getElementById("menu-button");
+          const menu = document.getElementById("mobile-menu");
+          const openIcon = document.getElementById("menu-open-icon");
+          const closeIcon = document.getElementById("menu-close-icon");
 
           if (button && menu) {
-            button.addEventListener('click', () => {
-              const isExpanded = button.getAttribute('aria-expanded') === 'true';
-              button.setAttribute('aria-expanded', String(!isExpanded));
-              menu.classList.toggle('hidden');
-              openIcon.classList.toggle('hidden', !isExpanded);
-              closeIcon.classList.toggle('hidden', isExpanded);
+            button.addEventListener("click", () => {
+              const isExpanded =
+                button.getAttribute("aria-expanded") === "true";
+              button.setAttribute("aria-expanded", String(!isExpanded));
+              menu.classList.toggle("hidden");
+              openIcon.classList.toggle("hidden", !isExpanded);
+              closeIcon.classList.toggle("hidden", isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
+          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-              const menu = dropdown.querySelector('.theme-dropdown-menu');
-              const wasOpen = !menu.classList.contains('hidden');
-              menu.classList.add('hidden');
-              trigger.setAttribute('aria-expanded', 'false');
+              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+              const menu = dropdown.querySelector(".theme-dropdown-menu");
+              const wasOpen = !menu.classList.contains("hidden");
+              menu.classList.add("hidden");
+              trigger.setAttribute("aria-expanded", "false");
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-            const menu = dropdown.querySelector('.theme-dropdown-menu');
+            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+            const menu = dropdown.querySelector(".theme-dropdown-menu");
             closeAllDropdowns();
-            menu.classList.remove('hidden');
-            trigger.setAttribute('aria-expanded', 'true');
-            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
-            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
+            menu.classList.remove("hidden");
+            trigger.setAttribute("aria-expanded", "true");
+            const items = Array.from(
+              dropdown.querySelectorAll("[data-theme-choice]"),
+            );
+            const checked = items.find(
+              (item) => item.getAttribute("aria-checked") === "true",
+            );
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === 'system') {
-              localStorage.removeItem('theme');
+            if (choice === "system") {
+              localStorage.removeItem("theme");
             } else {
-              localStorage.setItem('theme', choice);
+              localStorage.setItem("theme", choice);
             }
             const isDark =
-              choice === 'dark' ||
-              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-            document.documentElement.classList.toggle('dark', isDark);
+              choice === "dark" ||
+              (choice === "system" &&
+                window.matchMedia("(prefers-color-scheme: dark)").matches);
+            document.documentElement.classList.toggle("dark", isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem('theme') || 'system';
+            const current = localStorage.getItem("theme") || "system";
             dropdowns.forEach((dropdown) => {
-              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
-                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
-              });
-              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
-              });
+              dropdown
+                .querySelectorAll("[data-theme-icon-for]")
+                .forEach((icon) => {
+                  icon.classList.toggle(
+                    "hidden",
+                    icon.dataset.themeIconFor !== current,
+                  );
+                });
+              dropdown
+                .querySelectorAll("[data-theme-choice]")
+                .forEach((item) => {
+                  item.setAttribute(
+                    "aria-checked",
+                    String(item.dataset.themeChoice === current),
+                  );
+                });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
-            const menu = dropdown.querySelector('.theme-dropdown-menu');
+            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
+            const menu = dropdown.querySelector(".theme-dropdown-menu");
 
-            trigger.addEventListener('click', (e) => {
+            trigger.addEventListener("click", (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains('hidden');
+              const isOpen = !menu.classList.contains("hidden");
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1084,44 +1135,46 @@
               }
             });
 
-            trigger.addEventListener('keydown', (e) => {
-              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            trigger.addEventListener("keydown", (e) => {
+              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener('keydown', (e) => {
-              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            menu.addEventListener("keydown", (e) => {
+              const items = Array.from(
+                dropdown.querySelectorAll("[data-theme-choice]"),
+              );
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === 'ArrowDown') {
+              if (e.key === "ArrowDown") {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === 'ArrowUp') {
+              } else if (e.key === "ArrowUp") {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === 'Home') {
+              } else if (e.key === "Home") {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === 'End') {
+              } else if (e.key === "End") {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === 'Tab') {
+              } else if (e.key === "Tab") {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
-              item.addEventListener('click', () => {
+            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
+              item.addEventListener("click", () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener('click', () => closeAllDropdowns());
-          document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
+          document.addEventListener("click", () => closeAllDropdowns());
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1184,7 +1237,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded='true'] {
+      .theme-dropdown-trigger[aria-expanded="true"] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1243,7 +1296,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1276,9 +1329,13 @@
             >
               Quarterly Reports
             </h1>
-            <p style="color: var(--t-ink-2)" class="text-lg max-w-3xl leading-relaxed">
-              Organized by calendar quarter, these reports track external open source involvement,
-              aggregating key community activities across all tracked repositories.
+            <p
+              style="color: var(--t-ink-2)"
+              class="text-lg max-w-3xl leading-relaxed"
+            >
+              Organized by calendar quarter, these reports track external open
+              source involvement, aggregating key community activities across
+              all tracked repositories.
             </p>
           </header>
 
@@ -1297,18 +1354,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2026 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2026/Q3-2026.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">225</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        225
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1317,12 +1387,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">497</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        497
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1331,12 +1412,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 1
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">207</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        207
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1355,18 +1447,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2025 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2025/Q4-2025.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">204</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        204
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1375,12 +1480,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">294</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        294
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1389,12 +1505,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">123</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        123
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1403,12 +1530,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 1
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">106</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        106
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1427,18 +1565,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2024 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2024/Q4-2024.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">165</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        165
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1447,12 +1598,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">127</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        127
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1461,12 +1623,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">273</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        273
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1475,12 +1648,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 1
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">203</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        203
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1499,18 +1683,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2023 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2023/Q4-2023.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">215</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        215
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1519,12 +1716,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">73</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        73
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1533,12 +1741,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">18</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        18
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1547,12 +1766,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 1
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">30</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        30
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1571,18 +1801,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2022 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2022/Q4-2022.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">28</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        28
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1591,12 +1834,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">38</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        38
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1605,12 +1859,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">17</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        17
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1619,12 +1884,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 1
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">11</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        11
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1643,18 +1919,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2021 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2021/Q4-2021.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">50</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        50
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1663,12 +1952,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 3
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">14</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        14
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl> </a
@@ -1677,12 +1977,23 @@
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 2
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        1
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1701,18 +2012,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2020 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2020/Q4-2020.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">7</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        7
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1731,32 +2055,31 @@
                     <span class="mr-3" aria-hidden="true">📅</span> 2019 Reports
                   </h2>
                 </summary>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+                <div
+                  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 p-8"
+                >
                   <a
                     href="./2019/Q4-2019.html"
                     style="border-color: var(--t-line)"
                     class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
                   >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
+                    <h3
+                      style="color: var(--t-brand)"
+                      class="m-0 text-sm font-semibold"
+                    >
                       Quarter 4
                     </h3>
                     <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
-                        Total Contributions
-                      </dt>
-                    </dl> </a
-                  ><a
-                    href="./2019/Q3-2019.html"
-                    style="border-color: var(--t-line)"
-                    class="report-card-link rpt-card-link border rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-6"
-                  >
-                    <h3 style="color: var(--t-brand)" class="m-0 text-sm font-semibold">
-                      Quarter 3
-                    </h3>
-                    <dl class="rpt-stat m-0 mt-1">
-                      <dd style="color: var(--t-ink)" class="text-3xl font-extrabold m-0">1</dd>
-                      <dt style="color: var(--t-ink-3)" class="text-xs font-normal">
+                      <dd
+                        style="color: var(--t-ink)"
+                        class="text-3xl font-extrabold m-0"
+                      >
+                        2
+                      </dd>
+                      <dt
+                        style="color: var(--t-ink-3)"
+                        class="text-xs font-normal"
+                      >
                         Total Contributions
                       </dt>
                     </dl>
@@ -1769,7 +2092,10 @@
       </div>
     </main>
     <footer
-      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
+      style="
+        border-top-color: var(--c-neutral-10);
+        color: var(--c-text-secondary-rgb);
+      "
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -1809,23 +2135,31 @@
         </a>
       </div>
     </footer>
-    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
+    <button
+      type="button"
+      id="back-to-top"
+      class="back-to-top"
+      aria-label="Back to top"
+      hidden
+    >
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById('back-to-top');
+        var btn = document.getElementById("back-to-top");
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener("scroll", onScroll, { passive: true });
         onScroll();
-        btn.addEventListener('click', function () {
-          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        btn.addEventListener("click", function () {
+          var reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? 'auto' : 'smooth',
+            behavior: reduceMotion ? "auto" : "smooth",
           });
         });
       })();
