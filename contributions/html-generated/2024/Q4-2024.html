@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
           function isDark() {
-            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
-            if (stored === "dark") return true;
-            if (stored === "light") return false;
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle("dark", isDark());
+          document.documentElement.classList.toggle('dark', isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener("change", function () {
-            document.documentElement.classList.toggle("dark", isDark());
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
       :root {
         --c-primary-hex: #232963;
         --c-primary-rgb: rgb(35, 41, 99);
@@ -297,11 +297,8 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow:
-          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg:
-          0 2px 4px rgba(20, 20, 30, 0.04),
-          0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -342,10 +339,8 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg:
-          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -362,7 +357,7 @@
          button on every page built from this base CSS. */
         overflow-x: hidden;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -442,11 +437,7 @@
       .qr-impact-top {
         padding: 14px 18px;
         border-bottom: 1px solid var(--t-line);
-        background: linear-gradient(
-          120deg,
-          var(--t-brand-wash),
-          var(--t-card-2) 62%
-        );
+        background: linear-gradient(120deg, var(--t-brand-wash), var(--t-card-2) 62%);
       }
       .qr-impact-top h2 {
         font-size: 1.05rem;
@@ -505,11 +496,7 @@
         line-height: 1.35;
       }
       .qr-tile--hero {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--hero .n,
       .qr-tile--hero .c {
@@ -519,11 +506,7 @@
         opacity: 0.85;
       }
       a.qr-tile--hero:hover {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--good .n {
         color: var(--t-positive);
@@ -568,10 +551,7 @@
         top: 0;
         z-index: 10;
         background-color: var(--t-card);
-        background-image: linear-gradient(
-          var(--t-brand-wash),
-          var(--t-brand-wash)
-        );
+        background-image: linear-gradient(var(--t-brand-wash), var(--t-brand-wash));
         font-weight: 700;
         padding: 12px;
         text-align: left;
@@ -1058,13 +1038,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target="_blank"]:not(.no-underline) {
+      a[target='_blank']:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target="_blank"]:not(.no-underline):hover {
+      a[target='_blank']:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -1111,9 +1091,7 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="../index.html"
@@ -1187,10 +1165,7 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span
-                  data-theme-icon-for="light"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1206,10 +1181,7 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="dark"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1222,10 +1194,7 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="system"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1267,9 +1236,7 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1288,15 +1255,11 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      />
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1429,10 +1392,7 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span
-                data-theme-icon-for="light"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1448,10 +1408,7 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span
-                data-theme-icon-for="dark"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1464,10 +1421,7 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span
-                data-theme-icon-for="system"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1509,9 +1463,7 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1534,9 +1486,7 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1568,95 +1518,79 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-              const menu = dropdown.querySelector(".theme-dropdown-menu");
-              const wasOpen = !menu.classList.contains("hidden");
-              menu.classList.add("hidden");
-              trigger.setAttribute("aria-expanded", "false");
+              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+              const menu = dropdown.querySelector('.theme-dropdown-menu');
+              const wasOpen = !menu.classList.contains('hidden');
+              menu.classList.add('hidden');
+              trigger.setAttribute('aria-expanded', 'false');
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
             closeAllDropdowns();
-            menu.classList.remove("hidden");
-            trigger.setAttribute("aria-expanded", "true");
-            const items = Array.from(
-              dropdown.querySelectorAll("[data-theme-choice]"),
-            );
-            const checked = items.find(
-              (item) => item.getAttribute("aria-checked") === "true",
-            );
+            menu.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === "system") {
-              localStorage.removeItem("theme");
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
             } else {
-              localStorage.setItem("theme", choice);
+              localStorage.setItem('theme', choice);
             }
             const isDark =
-              choice === "dark" ||
-              (choice === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches);
-            document.documentElement.classList.toggle("dark", isDark);
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem("theme") || "system";
+            const current = localStorage.getItem('theme') || 'system';
             dropdowns.forEach((dropdown) => {
-              dropdown
-                .querySelectorAll("[data-theme-icon-for]")
-                .forEach((icon) => {
-                  icon.classList.toggle(
-                    "hidden",
-                    icon.dataset.themeIconFor !== current,
-                  );
-                });
-              dropdown
-                .querySelectorAll("[data-theme-choice]")
-                .forEach((item) => {
-                  item.setAttribute(
-                    "aria-checked",
-                    String(item.dataset.themeChoice === current),
-                  );
-                });
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
 
-            trigger.addEventListener("click", (e) => {
+            trigger.addEventListener('click', (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains("hidden");
+              const isOpen = !menu.classList.contains('hidden');
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1664,46 +1598,44 @@
               }
             });
 
-            trigger.addEventListener("keydown", (e) => {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            trigger.addEventListener('keydown', (e) => {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener("keydown", (e) => {
-              const items = Array.from(
-                dropdown.querySelectorAll("[data-theme-choice]"),
-              );
+            menu.addEventListener('keydown', (e) => {
+              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === "ArrowDown") {
+              if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === "ArrowUp") {
+              } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === "Home") {
+              } else if (e.key === 'Home') {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === "End") {
+              } else if (e.key === 'End') {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === "Tab") {
+              } else if (e.key === 'Tab') {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
-              item.addEventListener("click", () => {
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener("click", () => closeAllDropdowns());
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
+          document.addEventListener('click', () => closeAllDropdowns());
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1766,7 +1698,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded="true"] {
+      .theme-dropdown-trigger[aria-expanded='true'] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1825,7 +1757,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1844,10 +1776,7 @@
             style="border-bottom-color: var(--t-brand-line)"
             class="text-center mt-16 mb-12 pb-4 border-b-2"
           >
-            <h1
-              style="color: var(--t-brand)"
-              class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
-            >
+            <h1 style="color: var(--t-brand)" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
               Q4 2024
             </h1>
             <p class="text-lg qr-ink2 mt-2">Open Source Contributions Report</p>
@@ -1857,12 +1786,10 @@
             <div class="qr-brief">
               <p class="qr-brief-eyebrow">Quarter in brief — Q4 2024</p>
               <p class="qr-brief-sentence">
-                This quarter: reviewed 58 PRs for <b>OpenSource-Communities</b>,
-                co-authored 38, and shipped 20 changes across 9 repositories.
+                This quarter: reviewed 58 PRs for <b>OpenSource-Communities</b>, co-authored 38, and
+                shipped 20 changes across 9 repositories.
               </p>
-              <p class="qr-brief-sentence">
-                Also opened 16 issues along the way.
-              </p>
+              <p class="qr-brief-sentence">Also opened 16 issues along the way.</p>
               <div class="qr-worked-with">
                 <span class="qr-worked-with-label">Worked with</span>
                 <div class="qr-org-chips">
@@ -1920,9 +1847,7 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Merged PR</span>
-                <span class="qr-highlight-repo"
-                  >Virtual-Coffee/virtualcoffee.io</span
-                >
+                <span class="qr-highlight-repo">Virtual-Coffee/virtualcoffee.io</span>
                 <span class="qr-highlight-title"
                   >feat: Add January 2025 Challenge to the Website</span
                 >
@@ -1934,12 +1859,10 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Collaboration</span>
-                <span class="qr-highlight-repo"
-                  >OpenSource-Communities/intro</span
-                >
+                <span class="qr-highlight-repo">OpenSource-Communities/intro</span>
                 <span class="qr-highlight-title"
-                  >Feature: We Can Add A Repo To Interactive Learning And Also
-                  Add Github Action And Use Of Codespaces How it work</span
+                  >Feature: We Can Add A Repo To Interactive Learning And Also Add Github Action And
+                  Use Of Codespaces How it work</span
                 >
                 <span class="qr-highlight-meta">2024-12-23</span>
               </a>
@@ -1953,20 +1876,14 @@
             >
               Contribution Breakdown
             </h2>
-            <div
-              class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm"
-            >
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
               <a
                 href="#merged-prs"
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >20</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">20</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -1990,12 +1907,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >16</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">16</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2020,12 +1933,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >58</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">58</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2049,12 +1958,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >38</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">38</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2081,12 +1986,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >33</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">33</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2172,10 +2073,7 @@
           <hr class="my-8" style="border-color: var(--t-line)" />
 
           <section class="space-y-6">
-            <details
-              id="merged-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="merged-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2198,9 +2096,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Merged PRs (20)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (20)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2250,11 +2146,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Merged</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1308</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1308" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add January 2025 Challenge to the Website (#1308)">feat: Add January 2025 Challenge to the Website</a></td><td data-value="2024-12-22T20:16:30Z" data-label="Created">2024-12-22</td><td data-value="2024-12-30T18:47:46Z" data-label="Merged">2024-12-30</td><td data-value="8" data-label="Review Period">8 days</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #441</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/441" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add &quot;Creating Audio/Visual Content&quot; challenge (#441)">docs: Add &quot;Creating Audio/Visual Content&quot; challenge</a></td><td data-value="2024-10-30T19:02:54Z" data-label="Created">2024-10-30</td><td data-value="2024-12-18T20:55:12Z" data-label="Merged">2024-12-18</td><td data-value="49" data-label="Review Period">49 days</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #440</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/440" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add &quot;Mid-Year Check-In&quot; challenge (#440)">docs: Add &quot;Mid-Year Check-In&quot; challenge</a></td><td data-value="2024-10-30T18:44:50Z" data-label="Created">2024-10-30</td><td data-value="2024-12-15T01:12:39Z" data-label="Merged">2024-12-15</td><td data-value="45" data-label="Review Period">45 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1303</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1303" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add December 2024 newsletter to the website (#1303)">Add December 2024 newsletter to the website</a></td><td data-value="2024-12-11T10:59:50Z" data-label="Created">2024-12-11</td><td data-value="2024-12-15T00:48:53Z" data-label="Merged">2024-12-15</td><td data-value="4" data-label="Review Period">4 days</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #442</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/442" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add &quot;Pairing&quot; challenge (#442)">docs: Add &quot;Pairing&quot; challenge</a></td><td data-value="2024-10-30T19:09:24Z" data-label="Created">2024-10-30</td><td data-value="2024-12-12T01:17:22Z" data-label="Merged">2024-12-12</td><td data-value="42" data-label="Review Period">42 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #443</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/443" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add &quot;Month of Feedback&quot; challenge (#443)">docs: Add &quot;Month of Feedback&quot; challenge</a></td><td data-value="2024-10-30T19:17:27Z" data-label="Created">2024-10-30</td><td data-value="2024-12-12T01:09:27Z" data-label="Merged">2024-12-12</td><td data-value="42" data-label="Review Period">42 days</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #445</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/445" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the docs for &quot;Preptember&quot; challenge (#445)">docs: Update the docs for &quot;Preptember&quot; challenge</a></td><td data-value="2024-10-31T09:53:10Z" data-label="Created">2024-10-31</td><td data-value="2024-12-12T01:07:39Z" data-label="Merged">2024-12-12</td><td data-value="42" data-label="Review Period">42 days</td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #446</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/446" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the facilitators docs (#446)">docs: Update the facilitators docs</a></td><td data-value="2024-10-31T12:06:55Z" data-label="Created">2024-10-31</td><td data-value="2024-12-12T01:06:37Z" data-label="Merged">2024-12-12</td><td data-value="42" data-label="Review Period">42 days</td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #448</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/448" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the docs for &quot;VC Hacktoberfest Initiative&quot; challenge (#448)">docs: Update the docs for &quot;VC Hacktoberfest Initiative&quot; challenge</a></td><td data-value="2024-10-31T13:37:11Z" data-label="Created">2024-10-31</td><td data-value="2024-12-12T00:56:22Z" data-label="Merged">2024-12-12</td><td data-value="41" data-label="Review Period">41 days</td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #451</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/451" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the docs for &quot;Blogging&quot; challenge (#451)">docs: Update the docs for &quot;Blogging&quot; challenge</a></td><td data-value="2024-12-11T09:09:10Z" data-label="Created">2024-12-11</td><td data-value="2024-12-12T00:54:31Z" data-label="Merged">2024-12-12</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1291</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1291" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add November 2024 newsletter to the website (#1291)">Add November 2024 newsletter to the website</a></td><td data-value="2024-11-11T20:24:18Z" data-label="Created">2024-11-11</td><td data-value="2024-11-30T18:57:20Z" data-label="Merged">2024-11-30</td><td data-value="19" data-label="Review Period">19 days</td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1296</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1296" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add December 2024 Challenge to the Website (#1296)">feat: Add December 2024 Challenge to the Website</a></td><td data-value="2024-11-29T20:54:50Z" data-label="Created">2024-11-29</td><td data-value="2024-11-30T16:07:47Z" data-label="Merged">2024-11-30</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1286</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1286" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add November 2024 Challenge to the Website (#1286)">feat: Add November 2024 Challenge to the Website</a></td><td data-value="2024-10-29T07:29:28Z" data-label="Created">2024-10-29</td><td data-value="2024-10-31T17:32:48Z" data-label="Merged">2024-10-31</td><td data-value="2" data-label="Review Period">2 days</td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">mautic/low-no-code #81</span></td><td data-label="Title"><a href="https://github.com/mautic/low-no-code/pull/81" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add Ayu Adiati&#39;s contribution to 2024.md (#81)">feat: Add Ayu Adiati&#39;s contribution to 2024.md</a></td><td data-value="2024-10-28T08:31:54Z" data-label="Created">2024-10-28</td><td data-value="2024-10-28T10:31:33Z" data-label="Merged">2024-10-28</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1275</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1275" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add October 2024 newsletter to the website (#1275)">Add October 2024 newsletter to the website</a></td><td data-value="2024-10-17T20:03:47Z" data-label="Created">2024-10-17</td><td data-value="2024-10-22T15:59:32Z" data-label="Merged">2024-10-22</td><td data-value="5" data-label="Review Period">5 days</td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">WriteTech-Hub/writetech-doc-review #8</span></td><td data-label="Title"><a href="https://github.com/WriteTech-Hub/writetech-doc-review/pull/8" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add docs review for Crawlee (#8)">feat: add docs review for Crawlee</a></td><td data-value="2024-09-25T14:21:40Z" data-label="Created">2024-09-25</td><td data-value="2024-10-21T10:21:57Z" data-label="Merged">2024-10-21</td><td data-value="26" data-label="Review Period">26 days</td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1269</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1269" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add Hacktoberfest 2024 badge (#1269)">feat: Add Hacktoberfest 2024 badge</a></td><td data-value="2024-10-10T11:15:57Z" data-label="Created">2024-10-10</td><td data-value="2024-10-10T13:13:32Z" data-label="Merged">2024-10-10</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #483</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/483" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update guidelines (#483)">docs: Update guidelines</a></td><td data-value="2024-09-25T14:42:19Z" data-label="Created">2024-09-25</td><td data-value="2024-10-05T04:00:37Z" data-label="Merged">2024-10-05</td><td data-value="10" data-label="Review Period">10 days</td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1239</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1239" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: Update Slack channels for VCHI in the challenge page (#1239)">fix: Update Slack channels for VCHI in the challenge page</a></td><td data-value="2024-10-02T08:03:17Z" data-label="Created">2024-10-02</td><td data-value="2024-10-02T20:37:36Z" data-label="Merged">2024-10-02</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1230</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1230" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add October 2024 Challenge to the Website (#1230)">feat: Add October 2024 Challenge to the Website</a></td><td data-value="2024-09-30T18:37:27Z" data-label="Created">2024-09-30</td><td data-value="2024-10-01T14:07:09Z" data-label="Merged">2024-10-01</td><td data-value="1" data-label="Review Period">1 day</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="merged-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="merged-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2283,9 +2175,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Issues (16)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Issues (16)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2335,19 +2225,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closed</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closing Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #456</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/456" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix: Markdown and structure for monthly challenge docs (#456)">Fix: Markdown and structure for monthly challenge docs</a></td><td data-value="2024-12-23T10:26:47Z" data-label="Created">2024-12-23</td><td data-value="2025-01-08T13:42:09Z" data-label="Closed">2025-01-08</td><td data-value="16" data-label="Closing Period">16 days</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #455</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/455" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add maintainers responsibilities to the README (#455)">Add maintainers responsibilities to the README</a></td><td data-value="2024-12-23T10:08:01Z" data-label="Created">2024-12-23</td><td data-value="2025-01-23T14:39:10Z" data-label="Closed">2025-01-23</td><td data-value="31" data-label="Closing Period">31 days</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #454</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/454" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feat: Add Docusaurus (#454)">Feat: Add Docusaurus</a></td><td data-value="2024-12-23T10:00:37Z" data-label="Created">2024-12-23</td><td data-value="2025-03-19T13:00:54Z" data-label="Closed">2025-03-19</td><td data-value="86" data-label="Closing Period">86 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1309</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1309" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Local preview for resources leads to 404 (#1309)">Bug: Local preview for resources leads to 404</a></td><td data-value="2024-12-23T09:47:03Z" data-label="Created">2024-12-23</td><td data-value="2025-04-17T19:52:17Z" data-label="Closed">2025-04-17</td><td data-value="115" data-label="Closing Period">115 days</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1307</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1307" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add January 2025 Challenge to the Website (#1307)">Add January 2025 Challenge to the Website</a></td><td data-value="2024-12-22T15:09:13Z" data-label="Created">2024-12-22</td><td data-value="2024-12-30T18:47:47Z" data-label="Closed">2024-12-30</td><td data-value="8" data-label="Closing Period">8 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1301</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1301" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add December 2024 newsletter to the website (#1301)">Add December 2024 newsletter to the website</a></td><td data-value="2024-12-11T10:11:26Z" data-label="Created">2024-12-11</td><td data-value="2024-12-15T00:48:54Z" data-label="Closed">2024-12-15</td><td data-value="4" data-label="Closing Period">4 days</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #450</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/450" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the November 2024 challenge documentation (#450)">docs: Update the November 2024 challenge documentation</a></td><td data-value="2024-12-11T09:03:10Z" data-label="Created">2024-12-11</td><td data-value="2024-12-12T00:54:32Z" data-label="Closed">2024-12-12</td><td data-value="1" data-label="Closing Period">1 day</td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1295</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1295" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add December 2024 Challenge to the Website (#1295)">Add December 2024 Challenge to the Website</a></td><td data-value="2024-11-29T20:31:35Z" data-label="Created">2024-11-29</td><td data-value="2024-11-30T16:07:48Z" data-label="Closed">2024-11-30</td><td data-value="1" data-label="Closing Period">1 day</td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1290</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1290" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add November 2024 newsletter to the website (#1290)">Add November 2024 newsletter to the website</a></td><td data-value="2024-11-11T18:24:33Z" data-label="Created">2024-11-11</td><td data-value="2024-11-30T18:57:21Z" data-label="Closed">2024-11-30</td><td data-value="19" data-label="Closing Period">19 days</td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">mautic/user-documentation #343</span></td><td data-label="Title"><a href="https://github.com/mautic/user-documentation/issues/343" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Some instructions in the &quot;Making a PR&quot; section on README are inline (#343)">Some instructions in the &quot;Making a PR&quot; section on README are inline</a></td><td data-value="2024-11-08T20:48:20Z" data-label="Created">2024-11-08</td><td data-value="2025-10-10T11:50:54Z" data-label="Closed">2025-10-10</td><td data-value="336" data-label="Closing Period">336 days</td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #447</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/447" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the October 2024 challenge documentation (#447)">docs: Update the October 2024 challenge documentation</a></td><td data-value="2024-10-31T13:09:05Z" data-label="Created">2024-10-31</td><td data-value="2024-12-12T00:56:23Z" data-label="Closed">2024-12-12</td><td data-value="41" data-label="Closing Period">41 days</td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #444</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/444" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Update the September 2024 challenge documentation (#444)">docs: Update the September 2024 challenge documentation</a></td><td data-value="2024-10-30T19:25:35Z" data-label="Created">2024-10-30</td><td data-value="2024-12-12T01:07:40Z" data-label="Closed">2024-12-12</td><td data-value="42" data-label="Closing Period">42 days</td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1285</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1285" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add November 2024 Challenge to the Website (#1285)">Add November 2024 Challenge to the Website</a></td><td data-value="2024-10-28T08:58:15Z" data-label="Created">2024-10-28</td><td data-value="2024-10-31T17:32:49Z" data-label="Closed">2024-10-31</td><td data-value="3" data-label="Closing Period">3 days</td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1274</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1274" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add October 2024 newsletter to the website (#1274)">Add October 2024 newsletter to the website</a></td><td data-value="2024-10-17T18:51:37Z" data-label="Created">2024-10-17</td><td data-value="2024-10-22T15:59:33Z" data-label="Closed">2024-10-22</td><td data-value="5" data-label="Closing Period">5 days</td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #521</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/521" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Docs: Add information to write PR details (#521)">Docs: Add information to write PR details</a></td><td data-value="2024-10-12T06:28:00Z" data-label="Created">2024-10-12</td><td data-value="2024-10-22T16:55:44Z" data-label="Closed">2024-10-22</td><td data-value="10" data-label="Closing Period">10 days</td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #1238</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/1238" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: Slack channel(s) for October challenge (#1238)">fix: Slack channel(s) for October challenge</a></td><td data-value="2024-10-02T07:46:36Z" data-label="Created">2024-10-02</td><td data-value="2024-10-02T20:37:37Z" data-label="Closed">2024-10-02</td><td data-value="1" data-label="Closing Period">1 day</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="issues-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="issues-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="reviewed-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="reviewed-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2370,9 +2253,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Reviewed PRs (58)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (58)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2422,19 +2303,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Review</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #572</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/572" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Fix my profile broken link (#572)">docs: Fix my profile broken link</a></td><td data-value="2024-11-13T10:03:42Z" data-label="Created At">2024-11-13</td><td data-value="2024-12-18T11:30:31Z" data-label="First Review">2024-12-18</td><td data-value="35" data-label="Review Period">35 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #453</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/453" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Coffee Table Groups (#453)">Update Coffee Table Groups</a></td><td data-value="2024-12-15T01:36:07Z" data-label="Created At">2024-12-15</td><td data-value="2024-12-17T19:20:57Z" data-label="First Review">2024-12-17</td><td data-value="3" data-label="Review Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2025-01-09<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #601</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/601" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @SusanGithaigaN as a contributor (#601)">docs: add @SusanGithaigaN as a contributor</a></td><td data-value="2024-12-10T10:35:20Z" data-label="Created At">2024-12-10</td><td data-value="2024-12-11T14:46:46Z" data-label="First Review">2024-12-11</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #597</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/597" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @adaniel105 as a contributor (#597)">docs: add @adaniel105 as a contributor</a></td><td data-value="2024-12-09T08:14:53Z" data-label="Created At">2024-12-09</td><td data-value="2024-12-11T14:45:26Z" data-label="First Review">2024-12-11</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #599</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/599" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @stephmukami as a contributor (#599)">feat: Add @stephmukami as a contributor</a></td><td data-value="2024-12-09T15:26:43Z" data-label="Created At">2024-12-09</td><td data-value="2024-12-11T14:43:45Z" data-label="First Review">2024-12-11</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #594</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/594" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @SusanGithaigaN as a contributor (#594)">docs: add @SusanGithaigaN as a contributor</a></td><td data-value="2024-12-05T20:49:48Z" data-label="Created At">2024-12-05</td><td data-value="2024-12-06T16:47:58Z" data-label="First Review">2024-12-06</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-06<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #592</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/592" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @luciano665 as contributor (#592)">feat: Add @luciano665 as contributor</a></td><td data-value="2024-12-03T21:42:04Z" data-label="Created At">2024-12-03</td><td data-value="2024-12-04T12:19:21Z" data-label="First Review">2024-12-04</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #560</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/560" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @tkim602 as a contributor (#560)">docs: add @tkim602 as a contributor</a></td><td data-value="2024-11-03T21:44:57Z" data-label="Created At">2024-11-03</td><td data-value="2024-12-03T16:02:50Z" data-label="First Review">2024-12-03</td><td data-value="30" data-label="Review Period">30 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #590</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/590" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add andymartinez1 as a contributor (#590)">feat: Add andymartinez1 as a contributor</a></td><td data-value="2024-12-02T13:45:45Z" data-label="Created At">2024-12-02</td><td data-value="2024-12-03T16:01:37Z" data-label="First Review">2024-12-03</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #588</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/588" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @ivngzmn as a contributor (#588)">docs: add @ivngzmn as a contributor</a></td><td data-value="2024-12-02T06:22:38Z" data-label="Created At">2024-12-02</td><td data-value="2024-12-03T16:00:57Z" data-label="First Review">2024-12-03</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2025-01-08<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #586</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/586" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Shin1ma as a contributor (#586)">docs: add @Shin1ma as a contributor</a></td><td data-value="2024-11-27T20:38:21Z" data-label="Created At">2024-11-27</td><td data-value="2024-11-29T21:04:39Z" data-label="First Review">2024-11-29</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #584</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/584" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add Jeff to the contribution list (#584)">feat: add Jeff to the contribution list</a></td><td data-value="2024-11-26T17:10:14Z" data-label="Created At">2024-11-26</td><td data-value="2024-11-29T21:03:24Z" data-label="First Review">2024-11-29</td><td data-value="3" data-label="Review Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #581</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/581" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @hurshore as a contributor (#581)">feat: Add @hurshore as a contributor</a></td><td data-value="2024-11-21T21:01:26Z" data-label="Created At">2024-11-21</td><td data-value="2024-11-25T18:49:16Z" data-label="First Review">2024-11-25</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #579</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/579" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @sasori-morningstar as a contributor (#579)">feat: Add @sasori-morningstar as a contributor</a></td><td data-value="2024-11-21T16:37:04Z" data-label="Created At">2024-11-21</td><td data-value="2024-11-25T18:46:35Z" data-label="First Review">2024-11-25</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2025-01-08<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #577</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/577" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @dehanli as a contributor (#577)">feat: Add @dehanli as a contributor</a></td><td data-value="2024-11-21T07:31:29Z" data-label="Created At">2024-11-21</td><td data-value="2024-11-25T18:43:04Z" data-label="First Review">2024-11-25</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #575</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/575" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @sank8-2 as a contributor (#575)">docs: add @sank8-2 as a contributor</a></td><td data-value="2024-11-13T15:49:13Z" data-label="Created At">2024-11-13</td><td data-value="2024-11-14T11:48:20Z" data-label="First Review">2024-11-14</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #565</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/565" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add livlaurel as a contributor (#565)">feat: Add livlaurel as a contributor</a></td><td data-value="2024-11-06T19:35:22Z" data-label="Created At">2024-11-06</td><td data-value="2024-11-11T16:44:57Z" data-label="First Review">2024-11-11</td><td data-value="5" data-label="Review Period">5 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #570</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/570" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feat2/josep (#570)">Feat2/josep</a></td><td data-value="2024-11-09T17:09:34Z" data-label="Created At">2024-11-09</td><td data-value="2024-11-11T16:39:57Z" data-label="First Review">2024-11-11</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #563</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/563" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @nhim-uit as a contributor (#563)">feat: Add @nhim-uit as a contributor</a></td><td data-value="2024-11-05T03:42:52Z" data-label="Created At">2024-11-05</td><td data-value="2024-11-08T20:11:22Z" data-label="First Review">2024-11-08</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #562</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/562" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @liaxoo as a contributor (#562)">docs: add @liaxoo as a contributor</a></td><td data-value="2024-11-05T01:55:55Z" data-label="Created At">2024-11-05</td><td data-value="2024-11-08T20:05:49Z" data-label="First Review">2024-11-08</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>21.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #556</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/556" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @lorenzjdr as a contributor (#556)">feat: add @lorenzjdr as a contributor</a></td><td data-value="2024-11-03T04:50:59Z" data-label="Created At">2024-11-03</td><td data-value="2024-11-04T21:37:23Z" data-label="First Review">2024-11-04</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-05<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>22.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #412</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/412" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add section for key metrics guide (#412)">feat: add section for key metrics guide</a></td><td data-value="2024-10-26T17:55:13Z" data-label="Created At">2024-10-26</td><td data-value="2024-11-04T16:56:35Z" data-label="First Review">2024-11-04</td><td data-value="9" data-label="Review Period">9 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-04<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>23.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #554</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/554" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @mohanamisra as a contributor (#554)">feat: Add @mohanamisra as a contributor</a></td><td data-value="2024-11-01T17:21:40Z" data-label="Created At">2024-11-01</td><td data-value="2024-11-02T16:34:31Z" data-label="First Review">2024-11-02</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-04<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>24.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #552</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/552" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @satyam0827 as a contributor (#552)">docs: add @satyam0827 as a contributor</a></td><td data-value="2024-10-31T18:29:45Z" data-label="Created At">2024-10-31</td><td data-value="2024-10-31T19:25:11Z" data-label="First Review">2024-10-31</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>25.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #496</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/496" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @ChinmayBagad as a contributor (#496)">feat: Add @ChinmayBagad as a contributor</a></td><td data-value="2024-09-30T06:06:46Z" data-label="Created At">2024-09-30</td><td data-value="2024-10-30T15:57:38Z" data-label="First Review">2024-10-30</td><td data-value="30" data-label="Review Period">30 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>26.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #475</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/475" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: update @hferguson as a contributor (#475)">docs: update @hferguson as a contributor</a></td><td data-value="2024-09-16T14:29:16Z" data-label="Created At">2024-09-16</td><td data-value="2024-10-30T15:54:33Z" data-label="First Review">2024-10-30</td><td data-value="44" data-label="Review Period">44 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>27.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #459</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/459" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @kolapowariz as a contributor (#459)">feat: Add @kolapowariz as a contributor</a></td><td data-value="2024-09-08T13:34:36Z" data-label="Created At">2024-09-08</td><td data-value="2024-10-30T15:47:38Z" data-label="First Review">2024-10-30</td><td data-value="52" data-label="Review Period">52 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>28.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #453</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/453" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @FahimJadid as a contributor (#453)">feat: Add @FahimJadid as a contributor</a></td><td data-value="2024-09-05T14:13:49Z" data-label="Created At">2024-09-05</td><td data-value="2024-10-30T15:46:41Z" data-label="First Review">2024-10-30</td><td data-value="55" data-label="Review Period">55 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>29.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #428</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/428" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @wisdombe as a contributor (#428)">feat: Add @wisdombe as a contributor</a></td><td data-value="2024-08-14T15:06:56Z" data-label="Created At">2024-08-14</td><td data-value="2024-10-30T15:45:58Z" data-label="First Review">2024-10-30</td><td data-value="77" data-label="Review Period">77 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>30.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #548</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/548" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @asheinT as a contributor (#548)">docs: add @asheinT as a contributor</a></td><td data-value="2024-10-30T08:00:17Z" data-label="Created At">2024-10-30</td><td data-value="2024-10-30T15:40:18Z" data-label="First Review">2024-10-30</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>31.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #542</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/542" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @sridhar-geek as a contributor (#542)">docs: add @sridhar-geek as a contributor</a></td><td data-value="2024-10-25T09:22:01Z" data-label="Created At">2024-10-25</td><td data-value="2024-10-28T19:31:53Z" data-label="First Review">2024-10-28</td><td data-value="3" data-label="Review Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>32.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #545</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/545" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @gaffarabdul as a contributor (#545)">feat: Add @gaffarabdul as a contributor</a></td><td data-value="2024-10-26T15:36:05Z" data-label="Created At">2024-10-26</td><td data-value="2024-10-28T08:47:29Z" data-label="First Review">2024-10-28</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>33.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #538</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/538" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @shristirwt as a contributor (#538)">feat: Add @shristirwt as a contributor</a></td><td data-value="2024-10-21T15:28:54Z" data-label="Created At">2024-10-21</td><td data-value="2024-10-23T10:58:56Z" data-label="First Review">2024-10-23</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-23<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>34.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #535</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/535" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @SamarMst as a contributor (#535)">feat: Add @SamarMst as a contributor</a></td><td data-value="2024-10-18T16:22:56Z" data-label="Created At">2024-10-18</td><td data-value="2024-10-21T10:57:59Z" data-label="First Review">2024-10-21</td><td data-value="3" data-label="Review Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-23<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>35.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #534</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/534" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Firdous2307 as a contributor (#534)">docs: add @Firdous2307 as a contributor</a></td><td data-value="2024-10-18T06:04:12Z" data-label="Created At">2024-10-18</td><td data-value="2024-10-21T10:50:33Z" data-label="First Review">2024-10-21</td><td data-value="3" data-label="Review Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-21<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>36.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #532</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/532" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @mrutunjay-kinagi as a contributor (#532)">feat: add @mrutunjay-kinagi as a contributor</a></td><td data-value="2024-10-17T16:22:14Z" data-label="Created At">2024-10-17</td><td data-value="2024-10-17T18:22:05Z" data-label="First Review">2024-10-17</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-21<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>37.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #527</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/527" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @Firdous2307 as a contributor (#527)">feat: Add @Firdous2307 as a contributor</a></td><td data-value="2024-10-13T11:43:55Z" data-label="Created At">2024-10-13</td><td data-value="2024-10-13T15:22:46Z" data-label="First Review">2024-10-13</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-14<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>38.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #523</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/523" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @koja-amir as a contributor (#523)">docs: add @koja-amir as a contributor</a></td><td data-value="2024-10-12T15:11:21Z" data-label="Created At">2024-10-12</td><td data-value="2024-10-13T15:19:59Z" data-label="First Review">2024-10-13</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>39.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #524</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/524" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add information to write PR details outside the comments (#524)">docs: Add information to write PR details outside the comments</a></td><td data-value="2024-10-12T16:37:25Z" data-label="Created At">2024-10-12</td><td data-value="2024-10-13T14:59:48Z" data-label="First Review">2024-10-13</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-13<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>40.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #249</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/249" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: Update UI component for improved design (#249)">fix: Update UI component for improved design</a></td><td data-value="2024-10-12T21:15:22Z" data-label="Created At">2024-10-12</td><td data-value="2024-10-13T08:51:37Z" data-label="First Review">2024-10-13</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-24<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>41.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #519</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/519" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @SamarMst as a contributor (#519)">feat: Add @SamarMst as a contributor</a></td><td data-value="2024-10-10T20:25:29Z" data-label="Created At">2024-10-10</td><td data-value="2024-10-11T16:04:13Z" data-label="First Review">2024-10-11</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>42.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #515</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/515" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Ayamigah16 as a contributor (#515)">docs: add @Ayamigah16 as a contributor</a></td><td data-value="2024-10-09T14:06:43Z" data-label="Created At">2024-10-09</td><td data-value="2024-10-09T17:39:20Z" data-label="First Review">2024-10-09</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>43.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #513</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/513" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @02zeda as a contributor (#513)">docs: add @02zeda as a contributor</a></td><td data-value="2024-10-08T08:32:14Z" data-label="Created At">2024-10-08</td><td data-value="2024-10-08T11:47:25Z" data-label="First Review">2024-10-08</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-08<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>44.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #245</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/245" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add screenshot of completed pr template to the how to contribute to o… (#245)">feat: add screenshot of completed pr template to the how to contribute to o…</a></td><td data-value="2024-10-03T21:22:59Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-08T11:26:21Z" data-label="First Review">2024-10-08</td><td data-value="5" data-label="Review Period">5 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-16<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>45.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #403</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/403" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: how OSCR is calculated and how to improve it (#403)">docs: how OSCR is calculated and how to improve it</a></td><td data-value="2024-09-27T09:33:31Z" data-label="Created At">2024-09-27</td><td data-value="2024-10-08T10:57:05Z" data-label="First Review">2024-10-08</td><td data-value="11" data-label="Review Period">11 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-09<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>46.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #510</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/510" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @MidhaShrey as a contributor (#510)">docs: add @MidhaShrey as a contributor</a></td><td data-value="2024-10-07T17:02:17Z" data-label="Created At">2024-10-07</td><td data-value="2024-10-07T18:19:05Z" data-label="First Review">2024-10-07</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>47.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #508</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/508" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Harshh18 as a contributor (#508)">docs: add @Harshh18 as a contributor</a></td><td data-value="2024-10-05T10:35:34Z" data-label="Created At">2024-10-05</td><td data-value="2024-10-07T14:35:57Z" data-label="First Review">2024-10-07</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>48.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #506</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/506" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @pedaars as a contributor (#506)">feat: add @pedaars as a contributor</a></td><td data-value="2024-10-03T19:59:14Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-07T14:27:21Z" data-label="First Review">2024-10-07</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>49.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #247</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/247" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: dynamic &#96;editUrl&#96; path for documentation subfolder structure (#247)">fix: dynamic &#96;editUrl&#96; path for documentation subfolder structure</a></td><td data-value="2024-10-05T06:25:57Z" data-label="Created At">2024-10-05</td><td data-value="2024-10-07T09:45:24Z" data-label="First Review">2024-10-07</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-10<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>50.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #486</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/486" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @SoufianeJm as a contributor (#486)">docs: add @SoufianeJm as a contributor</a></td><td data-value="2024-09-26T22:44:07Z" data-label="Created At">2024-09-26</td><td data-value="2024-10-03T19:34:07Z" data-label="First Review">2024-10-03</td><td data-value="7" data-label="Review Period">7 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>51.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #489</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/489" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add &lt;@MehediMubin&gt; as a contributor (#489)">feat: Add &lt;@MehediMubin&gt; as a contributor</a></td><td data-value="2024-09-28T05:47:56Z" data-label="Created At">2024-09-28</td><td data-value="2024-10-03T19:32:36Z" data-label="First Review">2024-10-03</td><td data-value="6" data-label="Review Period">6 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>52.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #492</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/492" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @MadAvidCoder as a contributor (#492)">docs: add @MadAvidCoder as a contributor</a></td><td data-value="2024-09-29T09:33:28Z" data-label="Created At">2024-09-29</td><td data-value="2024-10-03T19:31:30Z" data-label="First Review">2024-10-03</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>53.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #499</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/499" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @ekastn as a contributor (#499)">docs: add @ekastn as a contributor</a></td><td data-value="2024-10-01T14:05:51Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-03T19:30:37Z" data-label="First Review">2024-10-03</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>54.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #504</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/504" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @allanoguis as a contributor (#504)">docs: add @allanoguis as a contributor</a></td><td data-value="2024-10-03T12:43:28Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-03T14:41:05Z" data-label="First Review">2024-10-03</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>55.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #501</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/501" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add &lt;@github-username&gt; as a contributor #500 (#501)">feat: Add &lt;@github-username&gt; as a contributor #500</a></td><td data-value="2024-10-03T02:31:51Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-03T14:39:29Z" data-label="First Review">2024-10-03</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>56.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #62</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/62" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add a few repositories participating in Hacktoberfest 2024 (#62)">Add a few repositories participating in Hacktoberfest 2024</a></td><td data-value="2024-10-03T13:38:04Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-03T14:24:24Z" data-label="First Review">2024-10-03</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>57.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #61</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/61" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Christina to Preptember participants (#61)">Add Christina to Preptember participants</a></td><td data-value="2024-10-02T15:14:47Z" data-label="Created At">2024-10-02</td><td data-value="2024-10-03T14:23:04Z" data-label="First Review">2024-10-03</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>58.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #238</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/238" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="chore: remove existing .DS_Store file (#238)">chore: remove existing .DS_Store file</a></td><td data-value="2024-09-25T02:08:57Z" data-label="Created At">2024-09-25</td><td data-value="2024-10-01T15:18:25Z" data-label="First Review">2024-10-01</td><td data-value="7" data-label="Review Period">7 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="reviewed-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="reviewed-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="co-authored-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="co-authored-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2460,9 +2334,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Co-Authored PRs (38)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (38)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2512,19 +2384,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Commit</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Commit Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #453</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/pull/453" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Coffee Table Groups (#453)">Update Coffee Table Groups</a></td><td data-value="2024-12-15T01:36:07Z" data-label="Created At">2024-12-15</td><td data-value="2024-12-18T20:56:10Z" data-label="First Commit">2024-12-18</td><td data-value="4" data-label="Commit Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2025-01-09<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #572</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/572" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Fix my profile broken link (#572)">docs: Fix my profile broken link</a></td><td data-value="2024-11-13T10:03:42Z" data-label="Created At">2024-11-13</td><td data-value="2024-12-18T11:28:06Z" data-label="First Commit">2024-12-18</td><td data-value="35" data-label="Commit Period">35 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #560</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/560" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @tkim602 as a contributor (#560)">docs: add @tkim602 as a contributor</a></td><td data-value="2024-11-03T21:44:57Z" data-label="Created At">2024-11-03</td><td data-value="2024-12-18T11:12:57Z" data-label="First Commit">2024-12-18</td><td data-value="45" data-label="Commit Period">45 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #601</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/601" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @SusanGithaigaN as a contributor (#601)">docs: add @SusanGithaigaN as a contributor</a></td><td data-value="2024-12-10T10:35:20Z" data-label="Created At">2024-12-10</td><td data-value="2024-12-18T11:02:14Z" data-label="First Commit">2024-12-18</td><td data-value="8" data-label="Commit Period">8 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #599</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/599" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @stephmukami as a contributor (#599)">feat: Add @stephmukami as a contributor</a></td><td data-value="2024-12-09T15:26:43Z" data-label="Created At">2024-12-09</td><td data-value="2024-12-18T10:56:45Z" data-label="First Commit">2024-12-18</td><td data-value="9" data-label="Commit Period">9 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #597</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/597" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @adaniel105 as a contributor (#597)">docs: add @adaniel105 as a contributor</a></td><td data-value="2024-12-09T08:14:53Z" data-label="Created At">2024-12-09</td><td data-value="2024-12-18T10:51:39Z" data-label="First Commit">2024-12-18</td><td data-value="9" data-label="Commit Period">9 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #592</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/592" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @luciano665 as contributor (#592)">feat: Add @luciano665 as contributor</a></td><td data-value="2024-12-03T21:42:04Z" data-label="Created At">2024-12-03</td><td data-value="2024-12-18T10:43:21Z" data-label="First Commit">2024-12-18</td><td data-value="15" data-label="Commit Period">15 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #590</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/590" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add andymartinez1 as a contributor (#590)">feat: Add andymartinez1 as a contributor</a></td><td data-value="2024-12-02T13:45:45Z" data-label="Created At">2024-12-02</td><td data-value="2024-12-18T10:38:37Z" data-label="First Commit">2024-12-18</td><td data-value="16" data-label="Commit Period">16 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #584</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/584" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add Jeff to the contribution list (#584)">feat: add Jeff to the contribution list</a></td><td data-value="2024-11-26T17:10:14Z" data-label="Created At">2024-11-26</td><td data-value="2024-12-03T15:59:18Z" data-label="First Commit">2024-12-03</td><td data-value="7" data-label="Commit Period">7 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #586</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/586" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Shin1ma as a contributor (#586)">docs: add @Shin1ma as a contributor</a></td><td data-value="2024-11-27T20:38:21Z" data-label="Created At">2024-11-27</td><td data-value="2024-12-03T15:52:35Z" data-label="First Commit">2024-12-03</td><td data-value="6" data-label="Commit Period">6 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #581</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/581" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @hurshore as a contributor (#581)">feat: Add @hurshore as a contributor</a></td><td data-value="2024-11-21T21:01:26Z" data-label="Created At">2024-11-21</td><td data-value="2024-12-03T15:48:48Z" data-label="First Commit">2024-12-03</td><td data-value="12" data-label="Commit Period">12 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #577</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/577" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @dehanli as a contributor (#577)">feat: Add @dehanli as a contributor</a></td><td data-value="2024-11-21T07:31:29Z" data-label="Created At">2024-11-21</td><td data-value="2024-12-03T15:42:19Z" data-label="First Commit">2024-12-03</td><td data-value="12" data-label="Commit Period">12 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #575</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/575" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @sank8-2 as a contributor (#575)">docs: add @sank8-2 as a contributor</a></td><td data-value="2024-11-13T15:49:13Z" data-label="Created At">2024-11-13</td><td data-value="2024-12-03T15:35:30Z" data-label="First Commit">2024-12-03</td><td data-value="20" data-label="Commit Period">20 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #565</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/565" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add livlaurel as a contributor (#565)">feat: Add livlaurel as a contributor</a></td><td data-value="2024-11-06T19:35:22Z" data-label="Created At">2024-11-06</td><td data-value="2024-11-11T20:57:29Z" data-label="First Commit">2024-11-11</td><td data-value="5" data-label="Commit Period">5 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #381</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/381" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @mrcentimetre as a contributor (#381)">feat: add @mrcentimetre as a contributor</a></td><td data-value="2024-07-11T03:51:58Z" data-label="Created At">2024-07-11</td><td data-value="2024-11-11T20:44:59Z" data-label="First Commit">2024-11-11</td><td data-value="124" data-label="Commit Period">124 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #563</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/563" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @nhim-uit as a contributor (#563)">feat: Add @nhim-uit as a contributor</a></td><td data-value="2024-11-05T03:42:52Z" data-label="Created At">2024-11-05</td><td data-value="2024-11-11T20:38:09Z" data-label="First Commit">2024-11-11</td><td data-value="7" data-label="Commit Period">7 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #562</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/562" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @liaxoo as a contributor (#562)">docs: add @liaxoo as a contributor</a></td><td data-value="2024-11-05T01:55:55Z" data-label="Created At">2024-11-05</td><td data-value="2024-11-08T20:02:10Z" data-label="First Commit">2024-11-08</td><td data-value="4" data-label="Commit Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #556</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/556" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @lorenzjdr as a contributor (#556)">feat: add @lorenzjdr as a contributor</a></td><td data-value="2024-11-03T04:50:59Z" data-label="Created At">2024-11-03</td><td data-value="2024-11-04T21:36:33Z" data-label="First Commit">2024-11-04</td><td data-value="2" data-label="Commit Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-05<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #496</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/496" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @ChinmayBagad as a contributor (#496)">feat: Add @ChinmayBagad as a contributor</a></td><td data-value="2024-09-30T06:06:46Z" data-label="Created At">2024-09-30</td><td data-value="2024-10-31T12:23:20Z" data-label="First Commit">2024-10-31</td><td data-value="31" data-label="Commit Period">31 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #548</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/548" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @asheinT as a contributor (#548)">docs: add @asheinT as a contributor</a></td><td data-value="2024-10-30T08:00:17Z" data-label="Created At">2024-10-30</td><td data-value="2024-10-31T08:09:22Z" data-label="First Commit">2024-10-31</td><td data-value="1" data-label="Commit Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>21.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #475</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/475" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: update @hferguson as a contributor (#475)">docs: update @hferguson as a contributor</a></td><td data-value="2024-09-16T14:29:16Z" data-label="Created At">2024-09-16</td><td data-value="2024-10-30T16:54:52Z" data-label="First Commit">2024-10-30</td><td data-value="44" data-label="Commit Period">44 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>22.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #468</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/468" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @anka-afk as a contributor (#468)">docs: add @anka-afk as a contributor</a></td><td data-value="2024-09-13T03:53:07Z" data-label="Created At">2024-09-13</td><td data-value="2024-10-30T16:52:00Z" data-label="First Commit">2024-10-30</td><td data-value="48" data-label="Commit Period">48 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>23.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #459</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/459" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @kolapowariz as a contributor (#459)">feat: Add @kolapowariz as a contributor</a></td><td data-value="2024-09-08T13:34:36Z" data-label="Created At">2024-09-08</td><td data-value="2024-10-30T16:48:32Z" data-label="First Commit">2024-10-30</td><td data-value="52" data-label="Commit Period">52 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>24.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #453</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/453" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @FahimJadid as a contributor (#453)">feat: Add @FahimJadid as a contributor</a></td><td data-value="2024-09-05T14:13:49Z" data-label="Created At">2024-09-05</td><td data-value="2024-10-30T16:45:03Z" data-label="First Commit">2024-10-30</td><td data-value="55" data-label="Commit Period">55 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>25.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #428</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/428" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @wisdombe as a contributor (#428)">feat: Add @wisdombe as a contributor</a></td><td data-value="2024-08-14T15:06:56Z" data-label="Created At">2024-08-14</td><td data-value="2024-10-30T16:40:27Z" data-label="First Commit">2024-10-30</td><td data-value="77" data-label="Commit Period">77 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>26.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #377</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/377" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @amateurManu as a contributor (#377)">feat: add @amateurManu as a contributor</a></td><td data-value="2024-07-06T18:01:16Z" data-label="Created At">2024-07-06</td><td data-value="2024-10-30T16:33:54Z" data-label="First Commit">2024-10-30</td><td data-value="116" data-label="Commit Period">116 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>27.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #515</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/515" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Ayamigah16 as a contributor (#515)">docs: add @Ayamigah16 as a contributor</a></td><td data-value="2024-10-09T14:06:43Z" data-label="Created At">2024-10-09</td><td data-value="2024-10-28T19:37:21Z" data-label="First Commit">2024-10-28</td><td data-value="19" data-label="Commit Period">19 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>28.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #542</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/542" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @sridhar-geek as a contributor (#542)">docs: add @sridhar-geek as a contributor</a></td><td data-value="2024-10-25T09:22:01Z" data-label="Created At">2024-10-25</td><td data-value="2024-10-28T19:30:58Z" data-label="First Commit">2024-10-28</td><td data-value="3" data-label="Commit Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>29.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #538</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/538" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @shristirwt as a contributor (#538)">feat: Add @shristirwt as a contributor</a></td><td data-value="2024-10-21T15:28:54Z" data-label="Created At">2024-10-21</td><td data-value="2024-10-23T10:57:30Z" data-label="First Commit">2024-10-23</td><td data-value="2" data-label="Commit Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-23<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>30.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #535</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/535" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @SamarMst as a contributor (#535)">feat: Add @SamarMst as a contributor</a></td><td data-value="2024-10-18T16:22:56Z" data-label="Created At">2024-10-18</td><td data-value="2024-10-21T10:55:03Z" data-label="First Commit">2024-10-21</td><td data-value="3" data-label="Commit Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-23<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>31.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #534</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/534" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Firdous2307 as a contributor (#534)">docs: add @Firdous2307 as a contributor</a></td><td data-value="2024-10-18T06:04:12Z" data-label="Created At">2024-10-18</td><td data-value="2024-10-21T10:50:01Z" data-label="First Commit">2024-10-21</td><td data-value="3" data-label="Commit Period">3 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-21<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>32.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #245</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/245" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add screenshot of completed pr template to the how to contribute to o… (#245)">feat: add screenshot of completed pr template to the how to contribute to o…</a></td><td data-value="2024-10-03T21:22:59Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-08T12:07:05Z" data-label="First Commit">2024-10-08</td><td data-value="5" data-label="Commit Period">5 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-16<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>33.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #403</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/403" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: how OSCR is calculated and how to improve it (#403)">docs: how OSCR is calculated and how to improve it</a></td><td data-value="2024-09-27T09:33:31Z" data-label="Created At">2024-09-27</td><td data-value="2024-10-07T15:06:52Z" data-label="First Commit">2024-10-07</td><td data-value="10" data-label="Commit Period">10 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-09<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>34.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #508</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/508" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Harshh18 as a contributor (#508)">docs: add @Harshh18 as a contributor</a></td><td data-value="2024-10-05T10:35:34Z" data-label="Created At">2024-10-05</td><td data-value="2024-10-07T14:31:24Z" data-label="First Commit">2024-10-07</td><td data-value="2" data-label="Commit Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>35.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #506</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/506" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add @pedaars as a contributor (#506)">feat: add @pedaars as a contributor</a></td><td data-value="2024-10-03T19:59:14Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-07T14:25:34Z" data-label="First Commit">2024-10-07</td><td data-value="4" data-label="Commit Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>36.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #499</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/499" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @ekastn as a contributor (#499)">docs: add @ekastn as a contributor</a></td><td data-value="2024-10-01T14:05:51Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-07T14:11:49Z" data-label="First Commit">2024-10-07</td><td data-value="6" data-label="Commit Period">6 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>37.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #489</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/489" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add &lt;@MehediMubin&gt; as a contributor (#489)">feat: Add &lt;@MehediMubin&gt; as a contributor</a></td><td data-value="2024-09-28T05:47:56Z" data-label="Created At">2024-09-28</td><td data-value="2024-10-07T14:06:46Z" data-label="First Commit">2024-10-07</td><td data-value="9" data-label="Commit Period">9 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>38.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #486</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/486" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @SoufianeJm as a contributor (#486)">docs: add @SoufianeJm as a contributor</a></td><td data-value="2024-09-26T22:44:07Z" data-label="Created At">2024-09-26</td><td data-value="2024-10-07T14:02:31Z" data-label="First Commit">2024-10-07</td><td data-value="11" data-label="Commit Period">11 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="co-authored-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="co-authored-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="collaborations"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="collaborations" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2566,9 +2431,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Collaborations (33)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (33)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2618,11 +2481,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Comment</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #252</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/issues/252" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: We Can Add A Repo To Interactive Learning And Also Add Github Action And Use Of Codespaces How it work (#252)">Feature: We Can Add A Repo To Interactive Learning And Also Add Github Action And Use Of Codespaces How it work</a></td><td data-value="2024-12-10T12:11:05Z" data-label="Created At">2024-12-10</td><td data-value="2024-12-22T15:16:50Z" data-label="First Comment">2024-12-22</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-23<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #424</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/issues/424" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: typescript support for codebase (#424)">Feature: typescript support for codebase</a></td><td data-value="2024-11-25T21:52:23Z" data-label="Created At">2024-11-25</td><td data-value="2024-12-18T11:46:14Z" data-label="First Comment">2024-12-18</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #605</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/605" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @livcia as a contributor (#605)">feat: Add @livcia as a contributor</a></td><td data-value="2024-12-13T20:49:07Z" data-label="Created At">2024-12-13</td><td data-value="2024-12-18T11:07:57Z" data-label="First Comment">2024-12-18</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #425</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/issues/425" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: follow markdown lint rules (#425)">Feature: follow markdown lint rules</a></td><td data-value="2024-11-25T21:55:15Z" data-label="Created At">2024-11-25</td><td data-value="2024-11-29T21:14:37Z" data-label="First Comment">2024-11-29</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2025-04-12<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #582</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/582" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="@all-contributors please add @sowndappan5 for code (#582)">@all-contributors please add @sowndappan5 for code</a></td><td data-value="2024-11-26T13:57:29Z" data-label="Created At">2024-11-26</td><td data-value="2024-11-29T21:01:17Z" data-label="First Comment">2024-11-29</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-29<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #422</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/422" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: formatting and punctuation in blog files (#422)">fix: formatting and punctuation in blog files</a></td><td data-value="2024-11-19T14:04:53Z" data-label="Created At">2024-11-19</td><td data-value="2024-11-25T18:39:01Z" data-label="First Comment">2024-11-25</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2025-04-12<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #421</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/421" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: fix formatting and punctuation in documentation files (#421)">docs: fix formatting and punctuation in documentation files</a></td><td data-value="2024-11-19T13:41:46Z" data-label="Created At">2024-11-19</td><td data-value="2024-11-25T18:38:43Z" data-label="First Comment">2024-11-25</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2025-04-12<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #420</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/pull/420" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add TypeScript support and recommended extensions (#420)">feat: add TypeScript support and recommended extensions</a></td><td data-value="2024-11-19T13:02:41Z" data-label="Created At">2024-11-19</td><td data-value="2024-11-25T18:37:08Z" data-label="First Comment">2024-11-25</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2025-04-12<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #480</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/480" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature:Add @Michal-Nithesh as a contributor (#480)">Feature:Add @Michal-Nithesh as a contributor</a></td><td data-value="2024-09-18T06:37:55Z" data-label="Created At">2024-09-18</td><td data-value="2024-11-11T20:49:14Z" data-label="First Comment">2024-11-11</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-11<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #558</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/558" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Add @nhim-uit as a contributor (#558)">feat: Add @nhim-uit as a contributor</a></td><td data-value="2024-11-03T11:56:15Z" data-label="Created At">2024-11-03</td><td data-value="2024-11-04T16:51:46Z" data-label="First Comment">2024-11-04</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-04<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #550</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/550" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @asirialwis as a contributor (#550)">docs: add @asirialwis as a contributor</a></td><td data-value="2024-10-31T15:08:15Z" data-label="Created At">2024-10-31</td><td data-value="2024-10-31T15:48:29Z" data-label="First Comment">2024-10-31</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-31<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #540</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/540" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @Brijeshthummar02 as a contributor (#540)">docs: add @Brijeshthummar02 as a contributor</a></td><td data-value="2024-10-21T16:14:14Z" data-label="Created At">2024-10-21</td><td data-value="2024-10-31T12:27:29Z" data-label="First Comment">2024-10-31</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-22<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #493</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/493" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @KarmaVanshi as a Contributor (#493)">Feature: Add @KarmaVanshi as a Contributor</a></td><td data-value="2024-09-29T15:00:35Z" data-label="Created At">2024-09-29</td><td data-value="2024-10-30T18:20:09Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #484</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/484" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @KevinVidomski as a contributor (#484)">Feature: Add @KevinVidomski as a contributor</a></td><td data-value="2024-09-25T20:25:26Z" data-label="Created At">2024-09-25</td><td data-value="2024-10-30T18:19:28Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #470</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/470" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @CarlosCordobaR as contributor (#470)">Feature: Add @CarlosCordobaR as contributor</a></td><td data-value="2024-09-14T11:20:51Z" data-label="Created At">2024-09-14</td><td data-value="2024-10-30T16:58:45Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #469</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/469" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @hichem-18 as a contributor (#469)">Feature: Add @hichem-18 as a contributor</a></td><td data-value="2024-09-13T19:26:04Z" data-label="Created At">2024-09-13</td><td data-value="2024-10-30T16:58:09Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #461</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/461" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @DecentralizeGeeky as a contributor (#461)">Feature: Add @DecentralizeGeeky as a contributor</a></td><td data-value="2024-09-09T22:26:51Z" data-label="Created At">2024-09-09</td><td data-value="2024-10-30T16:57:43Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #446</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/446" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @VinayShetyeOfficial as a contributor (#446)">Feature: Add @VinayShetyeOfficial as a contributor</a></td><td data-value="2024-09-02T14:38:44Z" data-label="Created At">2024-09-02</td><td data-value="2024-10-30T16:56:57Z" data-label="First Comment">2024-10-30</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #543</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/543" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update README.md (#543)">Update README.md</a></td><td data-value="2024-10-26T10:48:47Z" data-label="Created At">2024-10-26</td><td data-value="2024-10-28T08:41:44Z" data-label="First Comment">2024-10-28</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #529</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/529" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Added information to write PR details outside the comments (#529)">docs: Added information to write PR details outside the comments</a></td><td data-value="2024-10-13T15:54:09Z" data-label="Created At">2024-10-13</td><td data-value="2024-10-14T15:08:01Z" data-label="First Comment">2024-10-14</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-14<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>21.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #528</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/528" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Added information to write PR details outside the comments (#528)">docs: Added information to write PR details outside the comments</a></td><td data-value="2024-10-13T15:34:53Z" data-label="Created At">2024-10-13</td><td data-value="2024-10-13T15:41:49Z" data-label="First Comment">2024-10-13</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-13<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>22.</td><td data-label="Project"><span class="qr-repo">open-sauced/docs #405</span></td><td data-label="Title"><a href="https://github.com/open-sauced/docs/issues/405" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Add truncate to blog posts (#405)">Bug: Add truncate to blog posts</a></td><td data-value="2024-10-03T16:29:26Z" data-label="Created At">2024-10-03</td><td data-value="2024-10-13T15:26:00Z" data-label="First Comment">2024-10-13</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>23.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #243</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/issues/243" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Misaligned Buttons in Course Cards on the Homepage Due to Varying Content Length (#243)">Bug: Misaligned Buttons in Course Cards on the Homepage Due to Varying Content Length</a></td><td data-value="2024-10-01T15:56:06Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-12T06:44:57Z" data-label="First Comment">2024-10-12</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-24<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>24.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #248</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/issues/248" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Forking feature can be added in documentation for learners. (#248)">Feature: Forking feature can be added in documentation for learners.</a></td><td data-value="2024-10-11T11:59:19Z" data-label="Created At">2024-10-11</td><td data-value="2024-10-12T06:42:33Z" data-label="First Comment">2024-10-12</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-12-22<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>25.</td><td data-label="Project"><span class="qr-repo">mautic/low-no-code #25</span></td><td data-label="Title"><a href="https://github.com/mautic/low-no-code/issues/25" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="[Content] Review and update the content on the communication channels page (#25)">[Content] Review and update the content on the communication channels page</a></td><td data-value="2024-10-05T18:03:23Z" data-label="Created At">2024-10-05</td><td data-value="2024-10-09T14:55:46Z" data-label="First Comment">2024-10-09</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-11-13<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>26.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #435</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/435" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @nobleststriver as a contributor (#435)">Feature: Add @nobleststriver as a contributor</a></td><td data-value="2024-08-22T14:39:04Z" data-label="Created At">2024-08-22</td><td data-value="2024-10-07T14:40:39Z" data-label="First Comment">2024-10-07</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>27.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #434</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/434" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @tomasplz as a contributor (#434)">Feature: Add @tomasplz as a contributor</a></td><td data-value="2024-08-18T01:21:41Z" data-label="Created At">2024-08-18</td><td data-value="2024-10-07T14:40:04Z" data-label="First Comment">2024-10-07</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>28.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #420</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/420" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @chufenghuang as a contributor. (#420)">Feature: Add @chufenghuang as a contributor.</a></td><td data-value="2024-08-08T15:16:06Z" data-label="Created At">2024-08-08</td><td data-value="2024-10-07T14:39:24Z" data-label="First Comment">2024-10-07</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>29.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #419</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/419" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @kaashlai as a contributor (#419)">Feature: Add @kaashlai as a contributor</a></td><td data-value="2024-08-08T06:12:58Z" data-label="Created At">2024-08-08</td><td data-value="2024-10-07T14:38:49Z" data-label="First Comment">2024-10-07</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>30.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #413</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/413" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Add @tanush-g as a Contributor (#413)">Feature: Add @tanush-g as a Contributor</a></td><td data-value="2024-07-31T13:56:35Z" data-label="Created At">2024-07-31</td><td data-value="2024-10-07T14:37:50Z" data-label="First Comment">2024-10-07</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-07<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>31.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #497</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/497" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: add @uozcan12 as a contributor (#497)">docs: add @uozcan12 as a contributor</a></td><td data-value="2024-10-01T10:26:35Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-03T14:32:42Z" data-label="First Comment">2024-10-03</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>32.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #241</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/issues/241" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug : Broken &quot;Edit the Page&quot; Link on Intro to OSS Page (#241)">Bug : Broken &quot;Edit the Page&quot; Link on Intro to OSS Page</a></td><td data-value="2024-10-01T10:02:56Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-03T08:36:07Z" data-label="First Comment">2024-10-03</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-10<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>33.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/intro #242</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/intro/pull/242" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Update UI for card component (#242)">feat: Update UI for card component</a></td><td data-value="2024-10-01T10:52:50Z" data-label="Created At">2024-10-01</td><td data-value="2024-10-01T14:30:58Z" data-label="First Comment">2024-10-01</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-10-01<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="collaborations-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="collaborations-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2636,9 +2495,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-left"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Previous</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Previous</span>
                 <span
                   class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2670,9 +2527,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-right"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Next</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Next</span>
                 <span
                   class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2715,7 +2570,7 @@
         OPEN: 3,
         MERGED: 2,
         CLOSED: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       // Custom Priority 2: Closed -> Merged -> Open (Historical view)
@@ -2723,50 +2578,45 @@
         CLOSED: 3,
         MERGED: 2,
         OPEN: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       class ReportTableManager {
         constructor(detailsElement) {
           this.detailsElement = detailsElement;
-          this.table = detailsElement.querySelector("table");
-          this.tbody = this.table.querySelector("tbody");
-          this.rows = Array.from(this.tbody.querySelectorAll("tr"));
-          this.searchInput = detailsElement.querySelector(".search-input");
-          this.resetBtn = detailsElement.querySelector(".reset-btn");
-          this.headers = detailsElement.querySelectorAll("th");
+          this.table = detailsElement.querySelector('table');
+          this.tbody = this.table.querySelector('tbody');
+          this.rows = Array.from(this.tbody.querySelectorAll('tr'));
+          this.searchInput = detailsElement.querySelector('.search-input');
+          this.resetBtn = detailsElement.querySelector('.reset-btn');
+          this.headers = detailsElement.querySelectorAll('th');
 
           // Store original order for reset
-          this.rows.forEach((row, index) =>
-            row.setAttribute("data-original-index", index),
-          );
+          this.rows.forEach((row, index) => row.setAttribute('data-original-index', index));
 
-          this.currentSort = { column: null, direction: "default" };
+          this.currentSort = { column: null, direction: 'default' };
 
           this.init();
         }
 
         init() {
           this.headers.forEach((th, index) => {
-            if (th.hasAttribute("data-type")) {
+            if (th.hasAttribute('data-type')) {
               // The <button> inside the <th> is the actual interactive control
               // (see quarterly-reports-html-generator.js) — native buttons are
               // keyboard-operable for free, so sort is reachable via Tab/Enter/
               // Space, not just a mouse click.
-              const btn = th.querySelector(".th-sort-btn");
-              if (btn)
-                btn.addEventListener("click", () => this.handleSort(th, index));
+              const btn = th.querySelector('.th-sort-btn');
+              if (btn) btn.addEventListener('click', () => this.handleSort(th, index));
             }
           });
 
           if (this.searchInput) {
-            this.searchInput.addEventListener("input", (e) =>
-              this.handleSearch(e.target.value),
-            );
+            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
           }
 
           if (this.resetBtn) {
-            this.resetBtn.addEventListener("click", () => this.resetAll());
+            this.resetBtn.addEventListener('click', () => this.resetAll());
           }
         }
 
@@ -2774,24 +2624,24 @@
           const { column, direction } = this.currentSort;
 
           if (column !== columnIndex) {
-            if (type === "date") return "desc";
-            if (type === "number") return "asc";
-            if (type === "status") return "custom1";
-            return "asc";
+            if (type === 'date') return 'desc';
+            if (type === 'number') return 'asc';
+            if (type === 'status') return 'custom1';
+            return 'asc';
           }
 
-          if (type === "status") {
-            if (direction === "custom1") return "custom2";
-            if (direction === "custom2") return "default";
-            return "custom1";
-          } else if (type === "date") {
-            if (direction === "desc") return "asc";
-            if (direction === "asc") return "default";
-            return "desc";
+          if (type === 'status') {
+            if (direction === 'custom1') return 'custom2';
+            if (direction === 'custom2') return 'default';
+            return 'custom1';
+          } else if (type === 'date') {
+            if (direction === 'desc') return 'asc';
+            if (direction === 'asc') return 'default';
+            return 'desc';
           } else {
-            if (direction === "asc") return "desc";
-            if (direction === "desc") return "default";
-            return "asc";
+            if (direction === 'asc') return 'desc';
+            if (direction === 'desc') return 'default';
+            return 'asc';
           }
         }
 
@@ -2799,15 +2649,13 @@
           const numericVal = parseFloat(val);
           const isNumeric = !isNaN(numericVal) && isFinite(numericVal);
           if (isNumeric) return numericVal;
-          return direction === "asc"
-            ? Number.NEGATIVE_INFINITY
-            : Number.POSITIVE_INFINITY;
+          return direction === 'asc' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         }
 
         updateRowNumbers() {
           let visibleCounter = 1;
           this.rows.forEach((row) => {
-            if (row.style.display !== "none") {
+            if (row.style.display !== 'none') {
               const firstCell = row.children[0];
               if (firstCell) {
                 firstCell.textContent = `${visibleCounter}.`;
@@ -2818,36 +2666,29 @@
         }
 
         handleSort(th, columnIndex) {
-          const type = th.getAttribute("data-type") || "string";
+          const type = th.getAttribute('data-type') || 'string';
           const nextDir = this.getNextDirection(columnIndex, type);
 
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
 
           this.currentSort = { column: columnIndex, direction: nextDir };
 
-          if (nextDir === "default") {
+          if (nextDir === 'default') {
             this.rows.sort((a, b) => {
               return (
-                parseInt(a.getAttribute("data-original-index")) -
-                parseInt(b.getAttribute("data-original-index"))
+                parseInt(a.getAttribute('data-original-index')) -
+                parseInt(b.getAttribute('data-original-index'))
               );
             });
           } else {
-            const icon = th.querySelector(".sort-icon");
+            const icon = th.querySelector('.sort-icon');
             if (icon) {
-              icon.textContent =
-                nextDir === "desc" || nextDir === "custom2" ? "▼" : "▲";
+              icon.textContent = nextDir === 'desc' || nextDir === 'custom2' ? '▼' : '▲';
             }
             th.classList.add(`sort-${nextDir}`);
             // aria-sort only accepts none/ascending/descending/other — the status
@@ -2855,36 +2696,23 @@
             // reverse) isn't alphabetical/numeric, so it maps to "other" rather
             // than a direction that would misdescribe it.
             const ariaSortValue =
-              nextDir === "asc"
-                ? "ascending"
-                : nextDir === "desc"
-                  ? "descending"
-                  : "other";
-            th.setAttribute("aria-sort", ariaSortValue);
+              nextDir === 'asc' ? 'ascending' : nextDir === 'desc' ? 'descending' : 'other';
+            th.setAttribute('aria-sort', ariaSortValue);
 
             // Find indices if they exist in this table for tie-breaking
             const headerArray = Array.from(this.headers);
-            const dateIdx = headerArray.findIndex(
-              (h) => h.getAttribute("data-type") === "date",
-            );
+            const dateIdx = headerArray.findIndex((h) => h.getAttribute('data-type') === 'date');
 
             this.rows.sort((rowA, rowB) => {
               const cellA = rowA.children[columnIndex];
               const cellB = rowB.children[columnIndex];
 
-              let valA = (
-                cellA.getAttribute("data-value") || cellA.textContent
-              ).trim();
-              let valB = (
-                cellB.getAttribute("data-value") || cellB.textContent
-              ).trim();
+              let valA = (cellA.getAttribute('data-value') || cellA.textContent).trim();
+              let valB = (cellB.getAttribute('data-value') || cellB.textContent).trim();
 
               // 1. Status Logic: Sort by Priority then Tie-break by Date
-              if (type === "status") {
-                const priorityMap =
-                  nextDir === "custom1"
-                    ? STATUS_PRIORITY_P1
-                    : STATUS_PRIORITY_P2;
+              if (type === 'status') {
+                const priorityMap = nextDir === 'custom1' ? STATUS_PRIORITY_P1 : STATUS_PRIORITY_P2;
                 const scoreA = priorityMap[valA.toUpperCase()] || 0;
                 const scoreB = priorityMap[valB.toUpperCase()] || 0;
 
@@ -2899,39 +2727,33 @@
                   dA = new Date(dateMatchA[0]).getTime();
                   dB = new Date(dateMatchB[0]).getTime();
                 } else if (dateIdx !== -1) {
-                  dA = new Date(
-                    rowA.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
-                  dB = new Date(
-                    rowB.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
+                  dA = new Date(rowA.children[dateIdx].getAttribute('data-value')).getTime();
+                  dB = new Date(rowB.children[dateIdx].getAttribute('data-value')).getTime();
                 }
 
-                return nextDir === "custom1" ? dB - dA : dA - dB;
+                return nextDir === 'custom1' ? dB - dA : dA - dB;
               }
 
               // 2. Date Logic: Strict Chronology
-              if (type === "date") {
+              if (type === 'date') {
                 const dA = new Date(valA).getTime();
                 const dB = new Date(valB).getTime();
-                let comp =
-                  isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
-                return nextDir === "desc" ? comp * -1 : comp;
+                let comp = isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
+                return nextDir === 'desc' ? comp * -1 : comp;
               }
 
               // 3. Number Logic: Handles N/A and Infinity
-              if (type === "number") {
+              if (type === 'number') {
                 let compA = this.getNumberComparableValue(valA, nextDir);
                 let compB = this.getNumberComparableValue(valB, nextDir);
                 let comp = compA - compB;
-                if (nextDir === "desc" && isFinite(compA) && isFinite(compB))
-                  comp *= -1;
+                if (nextDir === 'desc' && isFinite(compA) && isFinite(compB)) comp *= -1;
                 return comp;
               }
 
               // 4. String Logic
               let res = valA.toLowerCase().localeCompare(valB.toLowerCase());
-              return nextDir === "desc" ? res * -1 : res;
+              return nextDir === 'desc' ? res * -1 : res;
             });
           }
 
@@ -2944,70 +2766,60 @@
           let statusSearch = null;
           let textSearch = lowerQuery;
 
-          if (lowerQuery.startsWith("status:")) {
-            statusSearch = lowerQuery.replace("status:", "").trim();
+          if (lowerQuery.startsWith('status:')) {
+            statusSearch = lowerQuery.replace('status:', '').trim();
             textSearch = null;
           }
 
           const getColIdx = (t) =>
-            Array.from(this.headers).findIndex(
-              (th) => th.getAttribute("data-type") === t,
-            );
+            Array.from(this.headers).findIndex((th) => th.getAttribute('data-type') === t);
 
           this.rows.forEach((row) => {
             let show = false;
             if (statusSearch !== null) {
-              const idx = getColIdx("status");
+              const idx = getColIdx('status');
               if (idx !== -1) {
                 const val = (
-                  row.children[idx].getAttribute("data-value") ||
-                  row.children[idx].textContent
+                  row.children[idx].getAttribute('data-value') || row.children[idx].textContent
                 ).toLowerCase();
                 if (val.includes(statusSearch)) show = true;
               }
             } else if (textSearch) {
-              if (row.textContent.toLowerCase().includes(textSearch))
-                show = true;
+              if (row.textContent.toLowerCase().includes(textSearch)) show = true;
             } else {
               show = true;
             }
-            row.style.display = show ? "" : "none";
+            row.style.display = show ? '' : 'none';
           });
           this.updateRowNumbers();
         }
 
         resetAll() {
-          this.searchInput.value = "";
-          this.currentSort = { column: null, direction: "default" };
+          this.searchInput.value = '';
+          this.currentSort = { column: null, direction: 'default' };
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
           this.rows.sort(
             (a, b) =>
-              parseInt(a.getAttribute("data-original-index")) -
-              parseInt(b.getAttribute("data-original-index")),
+              parseInt(a.getAttribute('data-original-index')) -
+              parseInt(b.getAttribute('data-original-index'))
           );
           this.rows.forEach((row) => {
             this.tbody.appendChild(row);
-            row.style.display = "";
+            row.style.display = '';
           });
           this.updateRowNumbers();
         }
       }
 
       // Global Initialization
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll("details").forEach((details) => {
-          if (details.querySelector("table")) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('details').forEach((details) => {
+          if (details.querySelector('table')) {
             new ReportTableManager(details);
           }
         });
@@ -3018,56 +2830,47 @@
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === "DETAILS") {
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
             // Close all other details tags before opening the target one
-            document
-              .querySelectorAll("details")
-              .forEach((detail) => (detail.open = false));
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
             targetDetails.open = true;
             // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              const reduceMotion = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-              ).matches;
+              const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
               targetDetails.scrollIntoView({
-                behavior: reduceMotion ? "auto" : "smooth",
-                block: "start",
+                behavior: reduceMotion ? 'auto' : 'smooth',
+                block: 'start',
               });
             }, 100);
           }
         } else {
           // Open 'Merged PRs' by default if no hash is present.
-          const defaultDetails = document.getElementById("merged-prs");
+          const defaultDetails = document.getElementById('merged-prs');
           if (defaultDetails) defaultDetails.open = true;
         }
       }
-      window.addEventListener("DOMContentLoaded", openSectionFromHash);
-      window.addEventListener("hashchange", openSectionFromHash);
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      window.addEventListener('hashchange', openSectionFromHash);
 
       // Per-category "back to top" resets that category's own table
       // container back to its first row. Each table scrolls inside its
       // own max-h-[70vh] overflow-y-auto box, independent of the page —
       // scrolling the page to the <details> summary wouldn't move that
       // box back to row one, so this scrolls the container itself.
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".qr-cat-top");
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.qr-cat-top');
         if (!btn) return;
         const container = document.getElementById(btn.dataset.scrollTarget);
         if (!container) return;
-        const reduceMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         container.scrollTo({
           top: 0,
-          behavior: reduceMotion ? "auto" : "smooth",
+          behavior: reduceMotion ? 'auto' : 'smooth',
         });
       });
     </script>
     <footer
-      style="
-        border-top-color: var(--c-neutral-10);
-        color: var(--c-text-secondary-rgb);
-      "
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -3080,7 +2883,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on September 13, 2026.
+        >'s open source contributions, generated on September 14, 2026.
       </div>
 
       <div class="text-xs mt-1">
@@ -3107,31 +2910,23 @@
         </a>
       </div>
     </footer>
-    <button
-      type="button"
-      id="back-to-top"
-      class="back-to-top"
-      aria-label="Back to top"
-      hidden
-    >
+    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById("back-to-top");
+        var btn = document.getElementById('back-to-top');
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
-        btn.addEventListener("click", function () {
-          var reduceMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
+        btn.addEventListener('click', function () {
+          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: reduceMotion ? 'auto' : 'smooth',
           });
         });
       })();

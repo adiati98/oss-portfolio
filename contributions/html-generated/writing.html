@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
           function isDark() {
-            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
-            if (stored === "dark") return true;
-            if (stored === "light") return false;
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle("dark", isDark());
+          document.documentElement.classList.toggle('dark', isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener("change", function () {
-            document.documentElement.classList.toggle("dark", isDark());
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
           });
         } catch (e) {}
       })();
@@ -296,11 +296,8 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow:
-          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg:
-          0 2px 4px rgba(20, 20, 30, 0.04),
-          0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -341,10 +338,8 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg:
-          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       .wr-eyebrow {
         font-family: ui-monospace, monospace;
@@ -379,7 +374,7 @@
         max-width: 760px;
       }
       .wr-tl::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 6px;
         top: 8px;
@@ -396,7 +391,7 @@
         padding-bottom: 2px;
       }
       .wr-org::before {
-        content: "";
+        content: '';
         position: absolute;
         left: -24.5px;
         top: 9px;
@@ -531,7 +526,7 @@
         outline: 2px solid var(--t-brand);
         outline-offset: 2px;
       }
-      .wr-chip[aria-pressed="true"] {
+      .wr-chip[aria-pressed='true'] {
         color: var(--t-brand);
         background: var(--t-brand-wash);
         border-color: var(--t-brand-line);
@@ -557,7 +552,7 @@
         max-width: 660px;
       }
       .wr-rec-tl::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 6px;
         top: 6px;
@@ -571,7 +566,7 @@
         padding: 14px 0 10px;
       }
       .wr-rec-item::before {
-        content: "";
+        content: '';
         position: absolute;
         left: -24.5px;
         top: 23px;
@@ -697,13 +692,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target="_blank"]:not(.no-underline) {
+      a[target='_blank']:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target="_blank"]:not(.no-underline):hover {
+      a[target='_blank']:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -750,9 +745,7 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="./index.html"
@@ -826,10 +819,7 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span
-                  data-theme-icon-for="light"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -845,10 +835,7 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="dark"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -861,10 +848,7 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="system"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -906,9 +890,7 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -927,15 +909,11 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      />
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1068,10 +1046,7 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span
-                data-theme-icon-for="light"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1087,10 +1062,7 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span
-                data-theme-icon-for="dark"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1103,10 +1075,7 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span
-                data-theme-icon-for="system"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1148,9 +1117,7 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1173,9 +1140,7 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1207,95 +1172,79 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-              const menu = dropdown.querySelector(".theme-dropdown-menu");
-              const wasOpen = !menu.classList.contains("hidden");
-              menu.classList.add("hidden");
-              trigger.setAttribute("aria-expanded", "false");
+              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+              const menu = dropdown.querySelector('.theme-dropdown-menu');
+              const wasOpen = !menu.classList.contains('hidden');
+              menu.classList.add('hidden');
+              trigger.setAttribute('aria-expanded', 'false');
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
             closeAllDropdowns();
-            menu.classList.remove("hidden");
-            trigger.setAttribute("aria-expanded", "true");
-            const items = Array.from(
-              dropdown.querySelectorAll("[data-theme-choice]"),
-            );
-            const checked = items.find(
-              (item) => item.getAttribute("aria-checked") === "true",
-            );
+            menu.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === "system") {
-              localStorage.removeItem("theme");
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
             } else {
-              localStorage.setItem("theme", choice);
+              localStorage.setItem('theme', choice);
             }
             const isDark =
-              choice === "dark" ||
-              (choice === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches);
-            document.documentElement.classList.toggle("dark", isDark);
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem("theme") || "system";
+            const current = localStorage.getItem('theme') || 'system';
             dropdowns.forEach((dropdown) => {
-              dropdown
-                .querySelectorAll("[data-theme-icon-for]")
-                .forEach((icon) => {
-                  icon.classList.toggle(
-                    "hidden",
-                    icon.dataset.themeIconFor !== current,
-                  );
-                });
-              dropdown
-                .querySelectorAll("[data-theme-choice]")
-                .forEach((item) => {
-                  item.setAttribute(
-                    "aria-checked",
-                    String(item.dataset.themeChoice === current),
-                  );
-                });
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
 
-            trigger.addEventListener("click", (e) => {
+            trigger.addEventListener('click', (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains("hidden");
+              const isOpen = !menu.classList.contains('hidden');
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1303,46 +1252,44 @@
               }
             });
 
-            trigger.addEventListener("keydown", (e) => {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            trigger.addEventListener('keydown', (e) => {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener("keydown", (e) => {
-              const items = Array.from(
-                dropdown.querySelectorAll("[data-theme-choice]"),
-              );
+            menu.addEventListener('keydown', (e) => {
+              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === "ArrowDown") {
+              if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === "ArrowUp") {
+              } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === "Home") {
+              } else if (e.key === 'Home') {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === "End") {
+              } else if (e.key === 'End') {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === "Tab") {
+              } else if (e.key === 'Tab') {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
-              item.addEventListener("click", () => {
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener("click", () => closeAllDropdowns());
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
+          document.addEventListener('click', () => closeAllDropdowns());
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1405,7 +1352,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded="true"] {
+      .theme-dropdown-trigger[aria-expanded='true'] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1464,7 +1411,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1481,12 +1428,9 @@
         <div class="max-w-7xl mx-auto">
           <header class="mt-16 mb-14">
             <p class="wr-eyebrow">writing</p>
-            <h1 class="wr-h1 text-4xl sm:text-5xl mt-2 mb-4">
-              Articles on open source and GitHub
-            </h1>
+            <h1 class="wr-h1 text-4xl sm:text-5xl mt-2 mb-4">Articles on open source and GitHub</h1>
             <p class="wr-sub">
-              Guides and blog posts covering open source, its community, and the
-              GitHub ecosystem.
+              Guides and blog posts covering open source, its community, and the GitHub ecosystem.
             </p>
           </header>
 
@@ -1509,8 +1453,7 @@
                     href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >&quot;The Curated, Automated Open Source Portfolio: How
-                    It&#39;s Going&quot;</a
+                    >&quot;The Curated, Automated Open Source Portfolio: How It&#39;s Going&quot;</a
                   >.
                 </p>
               </article>
@@ -1525,17 +1468,14 @@
                     >2025 Hacktoberfest Writing Challenge Winners</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>DEV Community</b> · November 2025
-                </div>
+                <div class="wr-rec-org"><b>DEV Community</b> · November 2025</div>
                 <p class="wr-rec-desc">
                   Winner in the Open Source Reflections category for
                   <a
                     href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >&quot;Beyond Hacktoberfest: Building a True Open Source
-                    Journey&quot;</a
+                    >&quot;Beyond Hacktoberfest: Building a True Open Source Journey&quot;</a
                   >.
                 </p>
               </article>
@@ -1548,17 +1488,14 @@
                     >Top 7 Featured DEV Posts of the Week</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>DEV Community</b> · October 2025
-                </div>
+                <div class="wr-rec-org"><b>DEV Community</b> · October 2025</div>
                 <p class="wr-rec-desc">
                   Featured for
                   <a
                     href="https://dev.to/adiatiayu/how-i-built-a-curated-automated-open-source-portfolio-18o0"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >&quot;How I Built a Curated, Automated Open Source
-                    Portfolio&quot;</a
+                    >&quot;How I Built a Curated, Automated Open Source Portfolio&quot;</a
                   >.
                 </p>
               </article>
@@ -1571,12 +1508,9 @@
                     >Top Open Source Contributors 2023</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>freeCodeCamp</b> · November 2023
-                </div>
+                <div class="wr-rec-org"><b>freeCodeCamp</b> · November 2023</div>
                 <p class="wr-rec-desc">
-                  Listed among freeCodeCamp&#39;s top publication contributors
-                  of the year.
+                  Listed among freeCodeCamp&#39;s top publication contributors of the year.
                 </p>
               </article>
               <article class="wr-rec-item">
@@ -1588,17 +1522,15 @@
                     >Quincy Larson's Weekly Email — Sep 22, 2023</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>freeCodeCamp</b> · September 2023
-                </div>
+                <div class="wr-rec-org"><b>freeCodeCamp</b> · September 2023</div>
                 <p class="wr-rec-desc">
                   Recommended in the newsletter for
                   <a
                     href="https://www.freecodecamp.org/news/how-to-contribute-to-open-source/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >&quot;How to Contribute to Open Source Projects –
-                    Non-Technical Things You Should Know&quot;</a
+                    >&quot;How to Contribute to Open Source Projects – Non-Technical Things You
+                    Should Know&quot;</a
                   >.
                 </p>
               </article>
@@ -1631,17 +1563,14 @@
                     >Top 7 Featured DEV Posts of the Week</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>DEV Community</b> · September 2022
-                </div>
+                <div class="wr-rec-org"><b>DEV Community</b> · September 2022</div>
                 <p class="wr-rec-desc">
                   Featured for
                   <a
                     href="https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n"
                     target="_blank"
                     rel="noopener noreferrer"
-                    >&quot;Mini Portfolio: Bring Your GitHub Profile to the Next
-                    Level&quot;</a
+                    >&quot;Mini Portfolio: Bring Your GitHub Profile to the Next Level&quot;</a
                   >.
                 </p>
               </article>
@@ -1654,9 +1583,7 @@
                     >Top 7 Featured DEV Posts of the Week</a
                   >
                 </h3>
-                <div class="wr-rec-org">
-                  <b>DEV Community</b> · November 2021
-                </div>
+                <div class="wr-rec-org"><b>DEV Community</b> · November 2021</div>
                 <p class="wr-rec-desc">
                   Featured for
                   <a
@@ -1678,18 +1605,15 @@
                 </h3>
                 <div class="wr-rec-org"><b>Hashnode</b> · November 2021</div>
                 <p class="wr-rec-desc">
-                  Placed 2nd for the OSS Documentarian badge and was recognized
-                  among the OSS Mentor badge winners, as part of Hashnode&#39;s
-                  Open Source October.
+                  Placed 2nd for the OSS Documentarian badge and was recognized among the OSS Mentor
+                  badge winners, as part of Hashnode&#39;s Open Source October.
                 </p>
               </article>
             </div>
           </section>
 
           <section aria-labelledby="wr-org-h" class="mb-16">
-            <h2 id="wr-org-h" class="wr-sec-label">
-              Written for organizations
-            </h2>
+            <h2 id="wr-org-h" class="wr-sec-label">Written for organizations</h2>
             <div class="wr-tl">
               <div class="wr-org">
                 <div class="wr-org-h">
@@ -1703,16 +1627,14 @@
                         href="https://dev.to/adiatiayu/giving-non-code-contributions-the-recognition-they-deserve-2phj"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >Giving non-code contributions the recognition they
-                        deserve</a
+                        >Giving non-code contributions the recognition they deserve</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>October 15, 2025</span>
                       <span class="wr-tags"
                         ><span class="wr-tag">hacktoberfest</span
-                        ><span class="wr-tag">opensource</span
-                        ><span class="wr-tag">nocode</span
+                        ><span class="wr-tag">opensource</span><span class="wr-tag">nocode</span
                         ><span class="wr-tag">codenewbie</span></span
                       >
                     </div>
@@ -1748,8 +1670,8 @@
                         href="https://dev.to/virtualcoffee/hacktoberfest-2023-lets-make-positive-impacts-learn-grow-together-in-open-source-52a1"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >Hacktoberfest 2023: Let&#39;s Make Positive Impacts,
-                        Learn &amp; Grow Together in Open Source!</a
+                        >Hacktoberfest 2023: Let&#39;s Make Positive Impacts, Learn &amp; Grow
+                        Together in Open Source!</a
                       >
                     </h4>
                     <div class="wr-meta">
@@ -1780,9 +1702,7 @@
                     </h4>
                     <div class="wr-meta">
                       <span>August 14, 2024</span>
-                      <span class="wr-tags"
-                        ><span class="wr-tag">github</span></span
-                      >
+                      <span class="wr-tags"><span class="wr-tag">github</span></span>
                     </div>
                   </li>
                   <li class="wr-item" data-platform="freeCodeCamp">
@@ -1791,8 +1711,8 @@
                         href="https://www.freecodecamp.org/news/keep-branches-up-to-date-resolve-merge-conflicts/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >How to Keep Branches Up-to-Date and Resolve Merge
-                        Conflicts in GitHub and VS Code</a
+                        >How to Keep Branches Up-to-Date and Resolve Merge Conflicts in GitHub and
+                        VS Code</a
                       >
                     </h4>
                     <div class="wr-meta">
@@ -1809,8 +1729,8 @@
                         href="https://www.freecodecamp.org/news/git-and-github-workflow-for-open-source/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >How to Contribute to Open-Source Projects – Git &amp;
-                        GitHub Workflow for Beginners</a
+                        >How to Contribute to Open-Source Projects – Git &amp; GitHub Workflow for
+                        Beginners</a
                       >
                     </h4>
                     <div class="wr-meta">
@@ -1827,8 +1747,8 @@
                         href="https://www.freecodecamp.org/news/how-to-contribute-to-open-source/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >How to Contribute to Open Source Projects –
-                        Non-Technical Things You Should Know</a
+                        >How to Contribute to Open Source Projects – Non-Technical Things You Should
+                        Know</a
                       >
                     </h4>
                     <div class="wr-meta">
@@ -1853,15 +1773,13 @@
                         href="https://dev.to/opensauced/streamline-your-contributions-mastering-issue-forms-and-pr-templates-36j5"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >Streamline Your Contributions: Mastering Issue Forms
-                        and PR Templates</a
+                        >Streamline Your Contributions: Mastering Issue Forms and PR Templates</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>May 9, 2024</span>
                       <span class="wr-tags"
-                        ><span class="wr-tag">opensource</span
-                        ><span class="wr-tag">codenewbie</span
+                        ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                         ><span class="wr-tag">beginners</span
                         ><span class="wr-tag">tutorial</span></span
                       >
@@ -1873,15 +1791,14 @@
                         href="https://dev.to/opensauced/building-bridges-not-walls-the-importance-of-documentation-in-open-source-projects-oaj"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >Building Bridges, Not Walls: The Importance of
-                        Documentation in Open Source Projects</a
+                        >Building Bridges, Not Walls: The Importance of Documentation in Open Source
+                        Projects</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>April 30, 2024</span>
                       <span class="wr-tags"
-                        ><span class="wr-tag">opensource</span
-                        ><span class="wr-tag">codenewbie</span
+                        ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                         ><span class="wr-tag">beginners</span
                         ><span class="wr-tag">documentation</span></span
                       >
@@ -1893,15 +1810,14 @@
                         href="https://dev.to/opensauced/the-secret-recipe-to-getting-your-pull-requests-reviewed-and-merged-faster-1fag"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >The Secret Recipe to Getting Your Pull Requests
-                        Reviewed (and Merged) Faster</a
+                        >The Secret Recipe to Getting Your Pull Requests Reviewed (and Merged)
+                        Faster</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>April 23, 2024</span>
                       <span class="wr-tags"
-                        ><span class="wr-tag">opensource</span
-                        ><span class="wr-tag">codenewbie</span
+                        ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                         ><span class="wr-tag">beginners</span></span
                       >
                     </div>
@@ -1912,15 +1828,13 @@
                         href="https://dev.to/opensauced/the-missing-piece-why-your-project-needs-a-maintainer-onboarding-process-np0"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >The Missing Piece: Why Your Project Needs a Maintainer
-                        Onboarding Process</a
+                        >The Missing Piece: Why Your Project Needs a Maintainer Onboarding
+                        Process</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>April 18, 2024</span>
-                      <span class="wr-tags"
-                        ><span class="wr-tag">opensource</span></span
-                      >
+                      <span class="wr-tags"><span class="wr-tag">opensource</span></span>
                     </div>
                   </li>
                   <li class="wr-item" data-platform="Dev.to">
@@ -1929,15 +1843,13 @@
                         href="https://dev.to/opensauced/collaborate-conquer-grow-mastering-the-art-of-issue-management-for-open-source-projects-49gi"
                         target="_blank"
                         rel="noopener noreferrer"
-                        >Collaborate, Conquer, &amp; Grow: Mastering the Art of
-                        Issue Management for Open Source Projects</a
+                        >Collaborate, Conquer, &amp; Grow: Mastering the Art of Issue Management for
+                        Open Source Projects</a
                       >
                     </h4>
                     <div class="wr-meta">
                       <span>March 5, 2024</span>
-                      <span class="wr-tags"
-                        ><span class="wr-tag">opensource</span></span
-                      >
+                      <span class="wr-tags"><span class="wr-tag">opensource</span></span>
                     </div>
                   </li>
                 </ul>
@@ -1947,11 +1859,7 @@
 
           <section aria-labelledby="wr-personal-h">
             <div class="wr-personal-h-row">
-              <h2
-                id="wr-personal-h"
-                class="wr-sec-label"
-                style="margin-bottom: 0"
-              >
+              <h2 id="wr-personal-h" class="wr-sec-label" style="margin-bottom: 0">
                 Personal writing
               </h2>
               <span class="wr-org-n">36 articles</span>
@@ -1981,8 +1889,7 @@
                       href="https://dev.to/adiatiayu/from-helping-out-to-taking-ownership-the-art-of-sticking-around-55h1"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >From Helping Out to Taking Ownership: The Art of Sticking
-                      Around</a
+                      >From Helping Out to Taking Ownership: The Art of Sticking Around</a
                     >
                   </h3>
                   <div class="wr-meta">
@@ -1999,15 +1906,13 @@
                       href="https://dev.to/adiatiayu/the-curated-automated-open-source-portfolio-how-its-going-5f98"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >The Curated, Automated Open Source Portfolio: How It’s
-                      Going</a
+                      >The Curated, Automated Open Source Portfolio: How It’s Going</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>April 1, 2026</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">ai</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">ai</span
                       ><span class="wr-tag">vibecoding</span></span
                     >
                   </div>
@@ -2024,8 +1929,7 @@
                   <div class="wr-meta">
                     <span>December 10, 2025</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">discuss</span
-                      ><span class="wr-tag">opensource</span
+                      ><span class="wr-tag">discuss</span><span class="wr-tag">opensource</span
                       ><span class="wr-tag">community</span></span
                     >
                   </div>
@@ -2036,8 +1940,7 @@
                       href="https://dev.to/adiatiayu/beyond-hacktoberfest-building-a-true-open-source-journey-3pci"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Beyond Hacktoberfest: Building a True Open Source
-                      Journey</a
+                      >Beyond Hacktoberfest: Building a True Open Source Journey</a
                     >
                   </h3>
                   <div class="wr-meta">
@@ -2056,16 +1959,14 @@
                       href="https://dev.to/adiatiayu/my-first-video-tutorials-contribution-for-hacktoberfest-3blg"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >My First Video Tutorials Contribution for
-                      Hacktoberfest</a
+                      >My First Video Tutorials Contribution for Hacktoberfest</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>October 22, 2025</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">hacktoberfest</span
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">nocode</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">nocode</span
                       ><span class="wr-tag">codenewbie</span></span
                     >
                   </div>
@@ -2076,16 +1977,14 @@
                       href="https://dev.to/adiatiayu/hacktoberfest-making-it-enjoyable-for-contributors-and-maintainers-54gk"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Hacktoberfest: Making it Enjoyable for Contributors and
-                      Maintainers</a
+                      >Hacktoberfest: Making it Enjoyable for Contributors and Maintainers</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>October 13, 2025</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">hacktoberfest</span
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">devchallenge</span></span
                     >
                   </div>
@@ -2102,8 +2001,7 @@
                   <div class="wr-meta">
                     <span>October 6, 2025</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">vibecoding</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">vibecoding</span
                       ><span class="wr-tag">webdev</span
                       ><span class="wr-tag">codenewbie</span></span
                     >
@@ -2115,8 +2013,8 @@
                       href="https://dev.to/adiatiayu/open-source-is-for-everyone-first-experience-in-non-code-contribution-to-mautic-during-4oph"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Open Source is For Everyone: First Experience in Non-Code
-                      Contribution to Mautic during Hacktoberfest 2024</a
+                      >Open Source is For Everyone: First Experience in Non-Code Contribution to
+                      Mautic during Hacktoberfest 2024</a
                     >
                   </h3>
                   <div class="wr-meta">
@@ -2133,8 +2031,7 @@
                       href="https://dev.to/adiatiayu/hacktoberfest-2024-my-2nd-year-experience-as-a-maintainer-n7f"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Hacktoberfest 2024: My 2nd Year Experience as A
-                      Maintainer</a
+                      >Hacktoberfest 2024: My 2nd Year Experience as A Maintainer</a
                     >
                   </h3>
                   <div class="wr-meta">
@@ -2152,15 +2049,13 @@
                       href="https://dev.to/adiatiayu/from-contributor-to-maintainer-my-journey-in-open-source-1lif"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >From Contributor to Maintainer: My Journey in Open
-                      Source</a
+                      >From Contributor to Maintainer: My Journey in Open Source</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>May 21, 2024</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">watercooler</span></span
                     >
                   </div>
@@ -2177,8 +2072,7 @@
                   <div class="wr-meta">
                     <span>January 24, 2024</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">discuss</span
-                      ><span class="wr-tag">opensource</span
+                      ><span class="wr-tag">discuss</span><span class="wr-tag">opensource</span
                       ><span class="wr-tag">webdev</span></span
                     >
                   </div>
@@ -2196,8 +2090,7 @@
                     <span>December 29, 2023</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">devimpact2023</span
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">community</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">community</span
                       ><span class="wr-tag">devjournal</span></span
                     >
                   </div>
@@ -2214,10 +2107,8 @@
                   <div class="wr-meta">
                     <span>November 30, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">webdev</span
-                      ><span class="wr-tag">discuss</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">webdev</span><span class="wr-tag">discuss</span></span
                     >
                   </div>
                 </li>
@@ -2227,17 +2118,14 @@
                       href="https://dev.to/adiatiayu/how-to-resolve-merge-conflicts-using-the-merge-editor-feature-on-vs-code-pic"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >How to Resolve Merge Conflicts Using the Merge Editor
-                      Feature on VS Code</a
+                      >How to Resolve Merge Conflicts Using the Merge Editor Feature on VS Code</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>November 22, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">git</span
-                      ><span class="wr-tag">vscode</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">git</span
+                      ><span class="wr-tag">vscode</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2253,10 +2141,8 @@
                   <div class="wr-meta">
                     <span>November 21, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2321,15 +2207,13 @@
                       href="https://dev.to/adiatiayu/how-important-is-a-code-of-conduct-in-an-open-source-project-507j"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >How Important is a Code of Conduct in an Open-Source
-                      Project?</a
+                      >How Important is a Code of Conduct in an Open-Source Project?</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>September 26, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">community</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">community</span
                       ><span class="wr-tag">discuss</span
                       ><span class="wr-tag">watercooler</span></span
                     >
@@ -2347,10 +2231,8 @@
                   <div class="wr-meta">
                     <span>September 11, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2366,10 +2248,8 @@
                   <div class="wr-meta">
                     <span>August 30, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2383,12 +2263,10 @@
                     >
                   </h3>
                   <div class="wr-meta">
-                    <span>August 19, 2023</span>
+                    <span>August 18, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2404,10 +2282,8 @@
                   <div class="wr-meta">
                     <span>August 14, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2423,10 +2299,8 @@
                   <div class="wr-meta">
                     <span>August 7, 2023</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
-                      ><span class="wr-tag">webdev</span
-                      ><span class="wr-tag">beginners</span></span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">webdev</span><span class="wr-tag">beginners</span></span
                     >
                   </div>
                 </li>
@@ -2436,17 +2310,14 @@
                       href="https://dev.to/adiatiayu/mini-portfolio-bring-your-github-profile-to-the-next-level-5c8n"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Mini Portfolio: Bring Your GitHub Profile To The Next
-                      Level</a
+                      >Mini Portfolio: Bring Your GitHub Profile To The Next Level</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>September 12, 2022</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">github</span
-                      ><span class="wr-tag">tutorial</span
-                      ><span class="wr-tag">beginners</span
-                      ><span class="wr-tag">webdev</span></span
+                      ><span class="wr-tag">github</span><span class="wr-tag">tutorial</span
+                      ><span class="wr-tag">beginners</span><span class="wr-tag">webdev</span></span
                     >
                   </div>
                 </li>
@@ -2456,15 +2327,13 @@
                       href="https://dev.to/adiatiayu/how-to-use-github-for-project-collaboration-based-on-agile-method-kb7"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >How To Use GitHub For Project Collaboration — Based on
-                      Agile Method</a
+                      >How To Use GitHub For Project Collaboration — Based on Agile Method</a
                     >
                   </h3>
                   <div class="wr-meta">
-                    <span>March 5, 2022</span>
+                    <span>March 4, 2022</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">github</span
-                      ><span class="wr-tag">git</span
+                      ><span class="wr-tag">github</span><span class="wr-tag">git</span
                       ><span class="wr-tag">tutorial</span
                       ><span class="wr-tag">codenewbie</span></span
                     >
@@ -2476,15 +2345,14 @@
                       href="https://dev.to/adiatiayu/how-to-fetch-a-contribution-branch-to-test-it-locally-as-an-open-source-maintainer-hgf"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >How to fetch a contribution branch to test it locally as
-                      an open-source maintainer</a
+                      >How to fetch a contribution branch to test it locally as an open-source
+                      maintainer</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>February 24, 2022</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">git</span
-                      ><span class="wr-tag">github</span
+                      ><span class="wr-tag">git</span><span class="wr-tag">github</span
                       ><span class="wr-tag">opensource</span
                       ><span class="wr-tag">tutorial</span></span
                     >
@@ -2496,15 +2364,13 @@
                       href="https://dev.to/adiatiayu/git-how-to-pull-a-branch-from-the-upstream-to-the-local-repo-in-5-steps-1ili"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Git: How to fetch a branch from the upstream to the local
-                      repo in 5 steps</a
+                      >Git: How to fetch a branch from the upstream to the local repo in 5 steps</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>February 14, 2022</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">git</span
-                      ><span class="wr-tag">github</span
+                      ><span class="wr-tag">git</span><span class="wr-tag">github</span
                       ><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">tutorial</span></span
                     >
@@ -2523,8 +2389,7 @@
                     <span>November 2, 2021</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">hacktoberfest</span
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">codenewbie</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">watercooler</span></span
                     >
                   </div>
@@ -2542,8 +2407,7 @@
                     <span>October 29, 2021</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">hacktoberfest</span
-                      ><span class="wr-tag">github</span
+                      ><span class="wr-tag">hacktoberfest</span><span class="wr-tag">github</span
                       ><span class="wr-tag">codenewbie</span></span
                     >
                   </div>
@@ -2554,16 +2418,14 @@
                       href="https://dev.to/adiatiayu/first-week-of-the-hacktoberfest-8-top-questions-around-git-5g70"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >First Week of The Hacktoberfest: 8 Top Questions Around
-                      Git</a
+                      >First Week of The Hacktoberfest: 8 Top Questions Around Git</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>October 13, 2021</span>
                     <span class="wr-tags"
                       ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">hacktoberfest</span
-                      ><span class="wr-tag">github</span
+                      ><span class="wr-tag">hacktoberfest</span><span class="wr-tag">github</span
                       ><span class="wr-tag">codenewbie</span></span
                     >
                   </div>
@@ -2574,15 +2436,14 @@
                       href="https://dev.to/adiatiayu/how-to-make-changes-on-a-commit-in-a-pull-request-directly-on-github-s-website-30cd"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >How To Make Changes On A Commit In A Pull Request
-                      Directly On GitHub&#39;s Website</a
+                      >How To Make Changes On A Commit In A Pull Request Directly On GitHub&#39;s
+                      Website</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>September 27, 2021</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">tutorial</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">tutorial</span
                       ><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">webdev</span></span
                     >
@@ -2600,8 +2461,7 @@
                   <div class="wr-meta">
                     <span>September 20, 2021</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">webdev</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">webdev</span
                       ><span class="wr-tag">codenewbie</span
                       ><span class="wr-tag">watercooler</span></span
                     >
@@ -2613,15 +2473,13 @@
                       href="https://dev.to/adiatiayu/contributing-to-an-open-source-by-a-first-timer-part-2-20a0"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Contributing To An Open Source by A First-Timer (Part
-                      2)</a
+                      >Contributing To An Open Source by A First-Timer (Part 2)</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>November 21, 2020</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">git</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">git</span
                       ><span class="wr-tag">tutorial</span
                       ><span class="wr-tag">beginners</span></span
                     >
@@ -2633,15 +2491,13 @@
                       href="https://dev.to/adiatiayu/contributing-to-an-open-source-by-a-first-timer-part-1-2opa"
                       target="_blank"
                       rel="noopener noreferrer"
-                      >Contributing To An Open Source by A First-Timer (Part
-                      1)</a
+                      >Contributing To An Open Source by A First-Timer (Part 1)</a
                     >
                   </h3>
                   <div class="wr-meta">
                     <span>November 21, 2020</span>
                     <span class="wr-tags"
-                      ><span class="wr-tag">opensource</span
-                      ><span class="wr-tag">git</span
+                      ><span class="wr-tag">opensource</span><span class="wr-tag">git</span
                       ><span class="wr-tag">tutorial</span
                       ><span class="wr-tag">beginners</span></span
                     >
@@ -2655,31 +2511,26 @@
     </main>
     <script>
       (function () {
-        var buttons = document.querySelectorAll(".wr-chip");
-        var items = document.querySelectorAll(".wr-personal .wr-item");
+        var buttons = document.querySelectorAll('.wr-chip');
+        var items = document.querySelectorAll('.wr-personal .wr-item');
         if (!buttons.length || !items.length) return;
         buttons.forEach(function (btn) {
-          btn.addEventListener("click", function () {
+          btn.addEventListener('click', function () {
             buttons.forEach(function (b) {
-              b.setAttribute("aria-pressed", "false");
+              b.setAttribute('aria-pressed', 'false');
             });
-            btn.setAttribute("aria-pressed", "true");
-            var filter = btn.getAttribute("data-filter");
+            btn.setAttribute('aria-pressed', 'true');
+            var filter = btn.getAttribute('data-filter');
             items.forEach(function (item) {
-              var show =
-                filter === "all" ||
-                item.getAttribute("data-platform") === filter;
-              item.classList.toggle("wr-hidden", !show);
+              var show = filter === 'all' || item.getAttribute('data-platform') === filter;
+              item.classList.toggle('wr-hidden', !show);
             });
           });
         });
       })();
     </script>
     <footer
-      style="
-        border-top-color: var(--c-neutral-10);
-        color: var(--c-text-secondary-rgb);
-      "
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -2692,7 +2543,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on September 13, 2026.
+        >'s open source contributions, generated on September 14, 2026.
       </div>
 
       <div class="text-xs mt-1">
@@ -2719,31 +2570,23 @@
         </a>
       </div>
     </footer>
-    <button
-      type="button"
-      id="back-to-top"
-      class="back-to-top"
-      aria-label="Back to top"
-      hidden
-    >
+    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById("back-to-top");
+        var btn = document.getElementById('back-to-top');
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
-        btn.addEventListener("click", function () {
-          var reduceMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
+        btn.addEventListener('click', function () {
+          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: reduceMotion ? 'auto' : 'smooth',
           });
         });
       })();

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
           function isDark() {
-            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
-            if (stored === "dark") return true;
-            if (stored === "light") return false;
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle("dark", isDark());
+          document.documentElement.classList.toggle('dark', isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener("change", function () {
-            document.documentElement.classList.toggle("dark", isDark());
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
       :root {
         --c-primary-hex: #232963;
         --c-primary-rgb: rgb(35, 41, 99);
@@ -297,11 +297,8 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow:
-          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg:
-          0 2px 4px rgba(20, 20, 30, 0.04),
-          0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -342,10 +339,8 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg:
-          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -362,7 +357,7 @@
          button on every page built from this base CSS. */
         overflow-x: hidden;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -442,11 +437,7 @@
       .qr-impact-top {
         padding: 14px 18px;
         border-bottom: 1px solid var(--t-line);
-        background: linear-gradient(
-          120deg,
-          var(--t-brand-wash),
-          var(--t-card-2) 62%
-        );
+        background: linear-gradient(120deg, var(--t-brand-wash), var(--t-card-2) 62%);
       }
       .qr-impact-top h2 {
         font-size: 1.05rem;
@@ -505,11 +496,7 @@
         line-height: 1.35;
       }
       .qr-tile--hero {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--hero .n,
       .qr-tile--hero .c {
@@ -519,11 +506,7 @@
         opacity: 0.85;
       }
       a.qr-tile--hero:hover {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--good .n {
         color: var(--t-positive);
@@ -568,10 +551,7 @@
         top: 0;
         z-index: 10;
         background-color: var(--t-card);
-        background-image: linear-gradient(
-          var(--t-brand-wash),
-          var(--t-brand-wash)
-        );
+        background-image: linear-gradient(var(--t-brand-wash), var(--t-brand-wash));
         font-weight: 700;
         padding: 12px;
         text-align: left;
@@ -1058,13 +1038,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target="_blank"]:not(.no-underline) {
+      a[target='_blank']:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target="_blank"]:not(.no-underline):hover {
+      a[target='_blank']:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -1111,9 +1091,7 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="../index.html"
@@ -1187,10 +1165,7 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span
-                  data-theme-icon-for="light"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1206,10 +1181,7 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="dark"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1222,10 +1194,7 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="system"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1267,9 +1236,7 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1288,15 +1255,11 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      />
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1429,10 +1392,7 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span
-                data-theme-icon-for="light"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1448,10 +1408,7 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span
-                data-theme-icon-for="dark"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1464,10 +1421,7 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span
-                data-theme-icon-for="system"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1509,9 +1463,7 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1534,9 +1486,7 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1568,95 +1518,79 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-              const menu = dropdown.querySelector(".theme-dropdown-menu");
-              const wasOpen = !menu.classList.contains("hidden");
-              menu.classList.add("hidden");
-              trigger.setAttribute("aria-expanded", "false");
+              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+              const menu = dropdown.querySelector('.theme-dropdown-menu');
+              const wasOpen = !menu.classList.contains('hidden');
+              menu.classList.add('hidden');
+              trigger.setAttribute('aria-expanded', 'false');
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
             closeAllDropdowns();
-            menu.classList.remove("hidden");
-            trigger.setAttribute("aria-expanded", "true");
-            const items = Array.from(
-              dropdown.querySelectorAll("[data-theme-choice]"),
-            );
-            const checked = items.find(
-              (item) => item.getAttribute("aria-checked") === "true",
-            );
+            menu.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === "system") {
-              localStorage.removeItem("theme");
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
             } else {
-              localStorage.setItem("theme", choice);
+              localStorage.setItem('theme', choice);
             }
             const isDark =
-              choice === "dark" ||
-              (choice === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches);
-            document.documentElement.classList.toggle("dark", isDark);
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem("theme") || "system";
+            const current = localStorage.getItem('theme') || 'system';
             dropdowns.forEach((dropdown) => {
-              dropdown
-                .querySelectorAll("[data-theme-icon-for]")
-                .forEach((icon) => {
-                  icon.classList.toggle(
-                    "hidden",
-                    icon.dataset.themeIconFor !== current,
-                  );
-                });
-              dropdown
-                .querySelectorAll("[data-theme-choice]")
-                .forEach((item) => {
-                  item.setAttribute(
-                    "aria-checked",
-                    String(item.dataset.themeChoice === current),
-                  );
-                });
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
 
-            trigger.addEventListener("click", (e) => {
+            trigger.addEventListener('click', (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains("hidden");
+              const isOpen = !menu.classList.contains('hidden');
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1664,46 +1598,44 @@
               }
             });
 
-            trigger.addEventListener("keydown", (e) => {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            trigger.addEventListener('keydown', (e) => {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener("keydown", (e) => {
-              const items = Array.from(
-                dropdown.querySelectorAll("[data-theme-choice]"),
-              );
+            menu.addEventListener('keydown', (e) => {
+              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === "ArrowDown") {
+              if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === "ArrowUp") {
+              } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === "Home") {
+              } else if (e.key === 'Home') {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === "End") {
+              } else if (e.key === 'End') {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === "Tab") {
+              } else if (e.key === 'Tab') {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
-              item.addEventListener("click", () => {
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener("click", () => closeAllDropdowns());
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
+          document.addEventListener('click', () => closeAllDropdowns());
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1766,7 +1698,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded="true"] {
+      .theme-dropdown-trigger[aria-expanded='true'] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1825,7 +1757,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1844,10 +1776,7 @@
             style="border-bottom-color: var(--t-brand-line)"
             class="text-center mt-16 mb-12 pb-4 border-b-2"
           >
-            <h1
-              style="color: var(--t-brand)"
-              class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
-            >
+            <h1 style="color: var(--t-brand)" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
               Q3 2023
             </h1>
             <p class="text-lg qr-ink2 mt-2">Open Source Contributions Report</p>
@@ -1857,12 +1786,10 @@
             <div class="qr-brief">
               <p class="qr-brief-eyebrow">Quarter in brief — Q3 2023</p>
               <p class="qr-brief-sentence">
-                This quarter: reviewed 15 PRs for <b>Virtual-Coffee</b> and
-                shipped 24 changes across 13 repositories.
+                This quarter: reviewed 15 PRs for <b>Virtual-Coffee</b> and shipped 24 changes
+                across 13 repositories.
               </p>
-              <p class="qr-brief-sentence">
-                Also opened 27 issues along the way.
-              </p>
+              <p class="qr-brief-sentence">Also opened 27 issues along the way.</p>
               <div class="qr-worked-with">
                 <span class="qr-worked-with-label">Worked with</span>
                 <div class="qr-org-chips">
@@ -1920,9 +1847,7 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Collaboration</span>
-                <span class="qr-highlight-repo"
-                  >Virtual-Coffee/virtualcoffee.io</span
-                >
+                <span class="qr-highlight-repo">Virtual-Coffee/virtualcoffee.io</span>
                 <span class="qr-highlight-title"
                   >Add 301 redirects for content that has been relocated</span
                 >
@@ -1934,12 +1859,8 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Collaboration</span>
-                <span class="qr-highlight-repo"
-                  >Virtual-Coffee/vc-preptember</span
-                >
-                <span class="qr-highlight-title"
-                  >Add Ignyita to Preptember participants</span
-                >
+                <span class="qr-highlight-repo">Virtual-Coffee/vc-preptember</span>
+                <span class="qr-highlight-title">Add Ignyita to Preptember participants</span>
                 <span class="qr-highlight-meta">2024-03-27</span> </a
               ><a
                 href="https://github.com/open-sauced/app/issues/56"
@@ -1949,9 +1870,7 @@
               >
                 <span class="qr-highlight-type">Collaboration</span>
                 <span class="qr-highlight-repo">open-sauced/app</span>
-                <span class="qr-highlight-title"
-                  >[Front-End] Implement Dark Mode</span
-                >
+                <span class="qr-highlight-title">[Front-End] Implement Dark Mode</span>
                 <span class="qr-highlight-meta">2024-03-18</span>
               </a>
             </div>
@@ -1964,20 +1883,14 @@
             >
               Contribution Breakdown
             </h2>
-            <div
-              class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm"
-            >
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
               <a
                 href="#merged-prs"
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >24</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">24</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2001,12 +1914,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >27</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">27</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2031,12 +1940,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >15</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">15</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2060,12 +1965,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >0</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">0</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2092,12 +1993,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >7</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">7</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2183,10 +2080,7 @@
           <hr class="my-8" style="border-color: var(--t-line)" />
 
           <section class="space-y-6">
-            <details
-              id="merged-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="merged-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2209,9 +2103,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Merged PRs (24)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (24)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2261,11 +2153,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Merged</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">shesharpnl/knowledge-hub #10</span></td><td data-label="Title"><a href="https://github.com/shesharpnl/knowledge-hub/pull/10" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Contributing section in README (#10)">Update Contributing section in README</a></td><td data-value="2023-09-28T08:28:12Z" data-label="Created">2023-09-28</td><td data-value="2023-09-28T20:31:10Z" data-label="Merged">2023-09-28</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #27</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/27" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix links to OpenSauced docs and pizza-verse repos (#27)">Fix links to OpenSauced docs and pizza-verse repos</a></td><td data-value="2023-09-28T14:50:41Z" data-label="Created">2023-09-28</td><td data-value="2023-09-28T15:51:13Z" data-label="Merged">2023-09-28</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">shesharpnl/.github #1</span></td><td data-label="Title"><a href="https://github.com/shesharpnl/.github/pull/1" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Added &#96;.github&#96; folder (#1)">Added &#96;.github&#96; folder</a></td><td data-value="2023-09-28T10:00:43Z" data-label="Created">2023-09-28</td><td data-value="2023-09-28T10:07:42Z" data-label="Merged">2023-09-28</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #21</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/21" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Forem to the repositories list (#21)">Add Forem to the repositories list</a></td><td data-value="2023-09-25T13:08:40Z" data-label="Created">2023-09-25</td><td data-value="2023-09-25T17:33:48Z" data-label="Merged">2023-09-25</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">shesharpnl/knowledge-hub #9</span></td><td data-label="Title"><a href="https://github.com/shesharpnl/knowledge-hub/pull/9" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Contributing Guide (#9)">Add Contributing Guide</a></td><td data-value="2023-09-25T11:34:16Z" data-label="Created">2023-09-25</td><td data-value="2023-09-25T17:11:09Z" data-label="Merged">2023-09-25</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">shesharpnl/knowledge-hub #8</span></td><td data-label="Title"><a href="https://github.com/shesharpnl/knowledge-hub/pull/8" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Move Resources to Their Own Files (#8)">Move Resources to Their Own Files</a></td><td data-value="2023-09-25T09:59:09Z" data-label="Created">2023-09-25</td><td data-value="2023-09-25T10:00:16Z" data-label="Merged">2023-09-25</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #980</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/980" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add September 2023 newsletter (#980)">Add September 2023 newsletter</a></td><td data-value="2023-09-07T11:41:53Z" data-label="Created">2023-09-07</td><td data-value="2023-09-20T13:36:56Z" data-label="Merged">2023-09-20</td><td data-value="13" data-label="Review Period">13 days</td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #82</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/pull/82" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Update instructions in README (#82)">feat: Update instructions in README</a></td><td data-value="2023-09-06T19:09:45Z" data-label="Created">2023-09-06</td><td data-value="2023-09-19T17:24:45Z" data-label="Merged">2023-09-19</td><td data-value="13" data-label="Review Period">13 days</td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #15</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/15" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add Notes (#15)">docs: Add Notes</a></td><td data-value="2023-09-18T14:56:31Z" data-label="Created">2023-09-18</td><td data-value="2023-09-18T18:10:10Z" data-label="Merged">2023-09-18</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #5</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/5" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add BioDrop to the repositories list (#5)">Add BioDrop to the repositories list</a></td><td data-value="2023-09-08T11:26:35Z" data-label="Created">2023-09-08</td><td data-value="2023-09-08T17:15:56Z" data-label="Merged">2023-09-08</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #978</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/978" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add September 2023 Monthly Challenge (#978)">Add September 2023 Monthly Challenge</a></td><td data-value="2023-09-04T23:44:25Z" data-label="Created">2023-09-04</td><td data-value="2023-09-05T18:10:17Z" data-label="Merged">2023-09-05</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #1</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/1" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update repository (#1)">Update repository</a></td><td data-value="2023-09-04T20:08:47Z" data-label="Created">2023-09-04</td><td data-value="2023-09-04T20:09:14Z" data-label="Merged">2023-09-04</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #973</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/973" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix broken links and typos in monthly challenges, September, and October challenge pages (#973)">Fix broken links and typos in monthly challenges, September, and October challenge pages</a></td><td data-value="2023-08-28T19:17:38Z" data-label="Created">2023-08-28</td><td data-value="2023-08-29T19:52:24Z" data-label="Merged">2023-08-29</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #965</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/965" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update a Slack channel&#39;s name and Sunday&#39;s Accountabilibuddies leader (#965)">Update a Slack channel&#39;s name and Sunday&#39;s Accountabilibuddies leader</a></td><td data-value="2023-08-18T09:19:54Z" data-label="Created">2023-08-18</td><td data-value="2023-08-24T13:55:42Z" data-label="Merged">2023-08-24</td><td data-value="6" data-label="Review Period">6 days</td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #967</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/967" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add the Coffee Host role and remove the Coffee Coordinator role (#967)">Add the Coffee Host role and remove the Coffee Coordinator role</a></td><td data-value="2023-08-18T20:48:10Z" data-label="Created">2023-08-18</td><td data-value="2023-08-18T21:03:27Z" data-label="Merged">2023-08-18</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">open-sauced/100-days-of-oss-template #8</span></td><td data-label="Title"><a href="https://github.com/open-sauced/100-days-of-oss-template/pull/8" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add More Information to Use This Template in the README (#8)">Add More Information to Use This Template in the README</a></td><td data-value="2023-07-30T21:39:32Z" data-label="Created">2023-07-30</td><td data-value="2023-08-14T13:26:45Z" data-label="Merged">2023-08-14</td><td data-value="15" data-label="Review Period">15 days</td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #954</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/954" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add August 2023 newsletter (#954)">Add August 2023 newsletter</a></td><td data-value="2023-08-02T06:20:02Z" data-label="Created">2023-08-02</td><td data-value="2023-08-03T15:22:10Z" data-label="Merged">2023-08-03</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #947</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/947" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Links in the README.md and CONTRIBUTING.md (#947)">Update Links in the README.md and CONTRIBUTING.md</a></td><td data-value="2023-07-28T06:23:44Z" data-label="Created">2023-07-28</td><td data-value="2023-08-03T15:04:24Z" data-label="Merged">2023-08-03</td><td data-value="6" data-label="Review Period">6 days</td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #944</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/944" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Move Links from Titles to Content in Resources (#944)">Move Links from Titles to Content in Resources</a></td><td data-value="2023-07-27T09:14:25Z" data-label="Created">2023-07-27</td><td data-value="2023-08-03T15:03:17Z" data-label="Merged">2023-08-03</td><td data-value="7" data-label="Review Period">7 days</td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #942</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/942" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix wording on how to receive invite (#942)">Fix wording on how to receive invite</a></td><td data-value="2023-07-26T15:34:25Z" data-label="Created">2023-07-26</td><td data-value="2023-08-03T15:00:00Z" data-label="Merged">2023-08-03</td><td data-value="8" data-label="Review Period">8 days</td></tr><tr class="qr-row-a"><td>21.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #952</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/952" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update monthly challenge (#952)">Update monthly challenge</a></td><td data-value="2023-07-31T08:40:12Z" data-label="Created">2023-07-31</td><td data-value="2023-08-01T17:24:30Z" data-label="Merged">2023-08-01</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>22.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #895</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/895" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Reorganize Virtual Coffee Resources (#895)">Reorganize Virtual Coffee Resources</a></td><td data-value="2023-05-25T20:33:28Z" data-label="Created">2023-05-25</td><td data-value="2023-07-19T14:33:31Z" data-label="Merged">2023-07-19</td><td data-value="55" data-label="Review Period">55 days</td></tr><tr class="qr-row-a"><td>23.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #931</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/931" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add July 2023 newsletter (#931)">Add July 2023 newsletter</a></td><td data-value="2023-07-11T06:44:28Z" data-label="Created">2023-07-11</td><td data-value="2023-07-18T19:55:13Z" data-label="Merged">2023-07-18</td><td data-value="8" data-label="Review Period">8 days</td></tr><tr class="qr-row-b"><td>24.</td><td data-label="Project"><span class="qr-repo">the-collab-lab/website #76</span></td><td data-label="Title"><a href="https://github.com/the-collab-lab/website/pull/76" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="fix: typo of command to clone the repo with plain git command (#76)">fix: typo of command to clone the repo with plain git command</a></td><td data-value="2023-07-03T10:39:55Z" data-label="Created">2023-07-03</td><td data-value="2023-07-03T10:58:53Z" data-label="Merged">2023-07-03</td><td data-value="0" data-label="Review Period">0 days</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="merged-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="merged-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2294,9 +2182,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Issues (27)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Issues (27)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2346,19 +2232,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closed</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closing Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1764</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/1764" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Highlight Card Overflow On Small Screen (#1764)">Bug: Highlight Card Overflow On Small Screen</a></td><td data-value="2023-09-28T18:49:55Z" data-label="Created">2023-09-28</td><td data-value="2023-10-03T15:54:18Z" data-label="Closed">2023-10-03</td><td data-value="5" data-label="Closing Period">5 days</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #991</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/991" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Monthly Challenge — Oct 2023 (#991)">Update Monthly Challenge — Oct 2023</a></td><td data-value="2023-09-28T18:06:40Z" data-label="Created">2023-09-28</td><td data-value="2023-10-02T18:22:28Z" data-label="Closed">2023-10-02</td><td data-value="4" data-label="Closing Period">4 days</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">shesharpnl/knowledge-hub #7</span></td><td data-label="Title"><a href="https://github.com/shesharpnl/knowledge-hub/issues/7" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: Improve Documentation (#7)">feat: Improve Documentation</a></td><td data-value="2023-09-24T08:22:34Z" data-label="Created">2023-09-24</td><td data-value="2023-10-02T15:26:58Z" data-label="Closed">2023-10-02</td><td data-value="8" data-label="Closing Period">8 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #6</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/issues/6" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add Preptember repo walkthrough video (#6)">docs: Add Preptember repo walkthrough video</a></td><td data-value="2023-09-12T20:58:22Z" data-label="Created">2023-09-12</td><td data-value="2023-09-14T07:48:01Z" data-label="Closed">2023-09-14</td><td data-value="1" data-label="Closing Period">1 day</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #979</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/979" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add September 2023 newsletter to the website (#979)">Add September 2023 newsletter to the website</a></td><td data-value="2023-09-06T19:33:54Z" data-label="Created">2023-09-06</td><td data-value="2023-09-20T13:36:57Z" data-label="Closed">2023-09-20</td><td data-value="14" data-label="Closing Period">14 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #81</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/81" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Steps to edit the &#96;.all-contributorsrc&#96; file (#81)">Feature: Steps to edit the &#96;.all-contributorsrc&#96; file</a></td><td data-value="2023-08-31T08:30:08Z" data-label="Created">2023-08-31</td><td data-value="2023-09-19T17:24:47Z" data-label="Closed">2023-09-19</td><td data-value="19" data-label="Closing Period">19 days</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #969</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/969" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix broken links on the Monthly Challenges page (#969)">Fix broken links on the Monthly Challenges page</a></td><td data-value="2023-08-22T12:47:56Z" data-label="Created">2023-08-22</td><td data-value="2023-10-06T15:17:27Z" data-label="Closed">2023-10-06</td><td data-value="45" data-label="Closing Period">45 days</td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #964</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/964" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update the Coffee Coordinator section in Paths to Leadership &amp; Roles (#964)">Update the Coffee Coordinator section in Paths to Leadership &amp; Roles</a></td><td data-value="2023-08-16T20:47:54Z" data-label="Created">2023-08-16</td><td data-value="2023-08-18T21:03:28Z" data-label="Closed">2023-08-18</td><td data-value="2" data-label="Closing Period">2 days</td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #963</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/963" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Sunday&#39;s Accountabilibuddies leader (#963)">Update Sunday&#39;s Accountabilibuddies leader</a></td><td data-value="2023-08-16T20:47:12Z" data-label="Created">2023-08-16</td><td data-value="2023-08-24T13:55:44Z" data-label="Closed">2023-08-24</td><td data-value="8" data-label="Closing Period">8 days</td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #962</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/962" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update a Slack channel&#39;s name (#962)">Update a Slack channel&#39;s name</a></td><td data-value="2023-08-16T20:46:38Z" data-label="Created">2023-08-16</td><td data-value="2023-08-24T13:55:44Z" data-label="Closed">2023-08-24</td><td data-value="8" data-label="Closing Period">8 days</td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1530</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/1530" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Left sidebar on highlights page is cut off on big screen (#1530)">Bug: Left sidebar on highlights page is cut off on big screen</a></td><td data-value="2023-08-08T22:08:16Z" data-label="Created">2023-08-08</td><td data-value="2023-08-09T02:18:38Z" data-label="Closed">2023-08-09</td><td data-value="0" data-label="Closing Period">0 days</td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1529</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/1529" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Avatar is either not shown or is not the user (#1529)">Bug: Avatar is either not shown or is not the user</a></td><td data-value="2023-08-08T21:46:13Z" data-label="Created">2023-08-08</td><td data-value="2023-08-15T19:43:30Z" data-label="Closed">2023-08-15</td><td data-value="7" data-label="Closing Period">7 days</td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1528</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/1528" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Bug: Calendar cut off when adding highlight, moving up and down when editing highlight (#1528)">Bug: Calendar cut off when adding highlight, moving up and down when editing highlight</a></td><td data-value="2023-08-08T20:53:18Z" data-label="Created">2023-08-08</td><td data-value="2023-10-13T18:41:55Z" data-label="Closed">2023-10-13</td><td data-value="66" data-label="Closing Period">66 days</td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">open-sauced/community #21</span></td><td data-label="Title"><a href="https://github.com/open-sauced/community/issues/21" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Order the highlights based on the selected date (#21)">Feature: Order the highlights based on the selected date</a></td><td data-value="2023-08-08T18:50:47Z" data-label="Created">2023-08-08</td><td data-value="2023-08-14T22:34:20Z" data-label="Closed">2023-08-14</td><td data-value="6" data-label="Closing Period">6 days</td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #953</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/953" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add August 2023 newsletter to the website (#953)">Add August 2023 newsletter to the website</a></td><td data-value="2023-08-02T05:49:52Z" data-label="Created">2023-08-02</td><td data-value="2023-08-03T15:22:11Z" data-label="Closed">2023-08-03</td><td data-value="1" data-label="Closing Period">1 day</td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #951</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/951" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Monthly Challenge (#951)">Update Monthly Challenge</a></td><td data-value="2023-07-30T22:17:10Z" data-label="Created">2023-07-30</td><td data-value="2023-08-01T17:24:32Z" data-label="Closed">2023-08-01</td><td data-value="2" data-label="Closing Period">2 days</td></tr><tr class="qr-row-a"><td>17.</td><td data-label="Project"><span class="qr-repo">open-sauced/100-days-of-oss-template #7</span></td><td data-label="Title"><a href="https://github.com/open-sauced/100-days-of-oss-template/issues/7" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Clarification on How To Create Progress Journals (#7)">Feature: Clarification on How To Create Progress Journals</a></td><td data-value="2023-07-28T07:50:28Z" data-label="Created">2023-07-28</td><td data-value="2023-08-14T13:26:46Z" data-label="Closed">2023-08-14</td><td data-value="17" data-label="Closing Period">17 days</td></tr><tr class="qr-row-b"><td>18.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #946</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/946" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix Links in the README.md and CONTRIBUTING.md (#946)">Fix Links in the README.md and CONTRIBUTING.md</a></td><td data-value="2023-07-28T06:05:18Z" data-label="Created">2023-07-28</td><td data-value="2023-08-03T15:04:25Z" data-label="Closed">2023-08-03</td><td data-value="6" data-label="Closing Period">6 days</td></tr><tr class="qr-row-a"><td>19.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #943</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/943" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Move links from the titles to content in resources (#943)">Move links from the titles to content in resources</a></td><td data-value="2023-07-27T07:23:27Z" data-label="Created">2023-07-27</td><td data-value="2023-08-03T15:03:18Z" data-label="Closed">2023-08-03</td><td data-value="7" data-label="Closing Period">7 days</td></tr><tr class="qr-row-b"><td>20.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1441</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/1441" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Subscription Dashboard for Paid User (#1441)">Feature: Subscription Dashboard for Paid User</a></td><td data-value="2023-07-27T07:11:50Z" data-label="Created">2023-07-27</td><td data-value="null" data-label="Closed">N/A</td><td data-value="N/A" data-label="Closing Period"><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-positive-wash); color: var(--t-positive);">OPEN</span></td></tr><tr class="qr-row-a"><td>21.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #104</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/104" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve episode transcription Season 8 Episode 5 (#104)">Improve episode transcription Season 8 Episode 5</a></td><td data-value="2023-07-18T06:56:09Z" data-label="Created">2023-07-18</td><td data-value="2023-10-09T12:53:36Z" data-label="Closed">2023-10-09</td><td data-value="83" data-label="Closing Period">83 days</td></tr><tr class="qr-row-b"><td>22.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #103</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/103" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve previous edited episodes to follow new guidelines (#103)">Improve previous edited episodes to follow new guidelines</a></td><td data-value="2023-07-13T09:33:10Z" data-label="Created">2023-07-13</td><td data-value="null" data-label="Closed">N/A</td><td data-value="N/A" data-label="Closing Period"><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-positive-wash); color: var(--t-positive);">OPEN</span></td></tr><tr class="qr-row-a"><td>23.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #930</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/930" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add July 2023 newsletter to the website (#930)">Add July 2023 newsletter to the website</a></td><td data-value="2023-07-11T05:33:50Z" data-label="Created">2023-07-11</td><td data-value="2023-07-18T19:55:14Z" data-label="Closed">2023-07-18</td><td data-value="8" data-label="Closing Period">8 days</td></tr><tr class="qr-row-b"><td>24.</td><td data-label="Project"><span class="qr-repo">forem/forem #19689</span></td><td data-label="Title"><a href="https://github.com/forem/forem/issues/19689" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Cannot Sign In to CodeNewbie with Twitter (#19689)">Cannot Sign In to CodeNewbie with Twitter</a></td><td data-value="2023-07-05T17:57:57Z" data-label="Created">2023-07-05</td><td data-value="2025-12-18T00:22:58Z" data-label="Closed">2025-12-18</td><td data-value="896" data-label="Closing Period">896 days</td></tr><tr class="qr-row-a"><td>25.</td><td data-label="Project"><span class="qr-repo">AccessibleForAll/Support #499</span></td><td data-label="Title"><a href="https://github.com/AccessibleForAll/Support/issues/499" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Please invite me to the GitHub Community Organization (#499)">Please invite me to the GitHub Community Organization</a></td><td data-value="2023-07-05T09:06:56Z" data-label="Created">2023-07-05</td><td data-value="2023-07-05T09:07:10Z" data-label="Closed">2023-07-05</td><td data-value="0" data-label="Closing Period">0 days</td></tr><tr class="qr-row-b"><td>26.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/VC-Community-Docs #320</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/VC-Community-Docs/issues/320" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Leaders and Frequency sections in coffee-table-groups.md (#320)">Update Leaders and Frequency sections in coffee-table-groups.md</a></td><td data-value="2023-07-04T18:15:51Z" data-label="Created">2023-07-04</td><td data-value="2023-10-20T19:53:46Z" data-label="Closed">2023-10-20</td><td data-value="108" data-label="Closing Period">108 days</td></tr><tr class="qr-row-a"><td>27.</td><td data-label="Project"><span class="qr-repo">the-collab-lab/website #75</span></td><td data-label="Title"><a href="https://github.com/the-collab-lab/website/issues/75" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Mistake in repo clone command with plain Git command (#75)">Mistake in repo clone command with plain Git command</a></td><td data-value="2023-07-03T10:30:29Z" data-label="Created">2023-07-03</td><td data-value="2023-07-03T10:58:54Z" data-label="Closed">2023-07-03</td><td data-value="0" data-label="Closing Period">0 days</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="issues-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="issues-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="reviewed-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="reviewed-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2381,9 +2260,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Reviewed PRs (15)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (15)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2433,19 +2310,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Review</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #29</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/29" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add David to Preptember participants, David S on slack (#29)">Add David to Preptember participants, David S on slack</a></td><td data-value="2023-09-30T17:14:34Z" data-label="Created At">2023-09-30</td><td data-value="2023-09-30T17:34:31Z" data-label="First Review">2023-09-30</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-30<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #26</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/26" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Added My Profile (#26)">Added My Profile</a></td><td data-value="2023-09-27T19:49:30Z" data-label="Created At">2023-09-27</td><td data-value="2023-09-29T15:40:59Z" data-label="First Review">2023-09-29</td><td data-value="2" data-label="Review Period">2 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-29<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #24</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/24" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Added memory-game to repositories list (#24)">Added memory-game to repositories list</a></td><td data-value="2023-09-26T23:36:24Z" data-label="Created At">2023-09-26</td><td data-value="2023-09-27T17:30:52Z" data-label="First Review">2023-09-27</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-27<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #25</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/25" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Christina as a Preptember participant (#25)">Add Christina as a Preptember participant</a></td><td data-value="2023-09-27T03:56:48Z" data-label="Created At">2023-09-27</td><td data-value="2023-09-27T10:46:31Z" data-label="First Review">2023-09-27</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-27<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #17</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/17" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Adds Ross and Hacktoberfest HOWTO (#17)">Adds Ross and Hacktoberfest HOWTO</a></td><td data-value="2023-09-23T03:27:10Z" data-label="Created At">2023-09-23</td><td data-value="2023-09-27T10:40:56Z" data-label="First Review">2023-09-27</td><td data-value="4" data-label="Review Period">4 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-27<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #23</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/23" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Tammy M to Preptember participants (#23)">Add Tammy M to Preptember participants</a></td><td data-value="2023-09-25T22:16:37Z" data-label="Created At">2023-09-25</td><td data-value="2023-09-26T05:46:52Z" data-label="First Review">2023-09-26</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-26<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #20</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/20" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Added cris crawford (#20)">Added cris crawford</a></td><td data-value="2023-09-24T15:29:32Z" data-label="Created At">2023-09-24</td><td data-value="2023-09-25T08:28:59Z" data-label="First Review">2023-09-25</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-25<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #11</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/11" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add BekahHW to participants and repos to opt in (#11)">feat: add BekahHW to participants and repos to opt in</a></td><td data-value="2023-09-14T15:22:12Z" data-label="Created At">2023-09-14</td><td data-value="2023-09-20T17:56:12Z" data-label="First Review">2023-09-20</td><td data-value="6" data-label="Review Period">6 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-20<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #14</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/14" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Teri to Preptember participants (#14)">Add Teri to Preptember participants</a></td><td data-value="2023-09-17T20:59:50Z" data-label="Created At">2023-09-17</td><td data-value="2023-09-18T14:49:49Z" data-label="First Review">2023-09-18</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #12</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/12" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update repositories-list.md (#12)">Update repositories-list.md</a></td><td data-value="2023-09-15T18:13:21Z" data-label="Created At">2023-09-15</td><td data-value="2023-09-15T19:13:46Z" data-label="First Review">2023-09-15</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #10</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/10" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add David to Preptember participants (#10)">Add David to Preptember participants</a></td><td data-value="2023-09-14T13:40:40Z" data-label="Created At">2023-09-14</td><td data-value="2023-09-14T15:48:02Z" data-label="First Review">2023-09-14</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-14<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #9</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/9" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: Add Preptember repo walkthrough video (#9)">docs: Add Preptember repo walkthrough video</a></td><td data-value="2023-09-13T19:34:29Z" data-label="Created At">2023-09-13</td><td data-value="2023-09-14T07:47:44Z" data-label="First Review">2023-09-14</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-14<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #4</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/4" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="docs: adding fcc developer quiz site to repositories-list (#4)">docs: adding fcc developer quiz site to repositories-list</a></td><td data-value="2023-09-07T20:24:39Z" data-label="Created At">2023-09-07</td><td data-value="2023-09-08T11:11:35Z" data-label="First Review">2023-09-08</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-08<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #3</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/3" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Revised grammar for PR template (#3)">Revised grammar for PR template</a></td><td data-value="2023-09-06T19:08:56Z" data-label="Created At">2023-09-06</td><td data-value="2023-09-06T19:31:14Z" data-label="First Review">2023-09-06</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-06<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #2</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/2" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Dominic to Preptember participants (#2)">Add Dominic to Preptember participants</a></td><td data-value="2023-09-06T18:57:29Z" data-label="Created At">2023-09-06</td><td data-value="2023-09-06T19:14:09Z" data-label="First Review">2023-09-06</td><td data-value="0" data-label="Review Period">0 days</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-06<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="reviewed-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="reviewed-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="co-authored-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="co-authored-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2471,9 +2341,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Co-Authored PRs (0)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
                 </div>
               </summary>
               <div class="p-4 qr-ink2 qr-surface2 rounded-lg">
@@ -2481,10 +2349,7 @@
               </div>
             </details>
 
-            <details
-              id="collaborations"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="collaborations" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2526,9 +2391,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Collaborations (7)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (7)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2578,11 +2441,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Comment</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #13</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/13" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Ignyita to Preptember participants (#13)">Add Ignyita to Preptember participants</a></td><td data-value="2023-09-16T16:48:16Z" data-label="Created At">2023-09-16</td><td data-value="2023-09-18T17:44:29Z" data-label="First Comment">2023-09-18</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2024-03-27<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/vc-preptember #8</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/vc-preptember/pull/8" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Michael to Preptember participants (#8)">Add Michael to Preptember participants</a></td><td data-value="2023-09-13T00:53:14Z" data-label="Created At">2023-09-13</td><td data-value="2023-09-14T07:44:14Z" data-label="First Comment">2023-09-14</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2023-09-24<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #56</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/issues/56" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="[Front-End] Implement Dark Mode (#56)">[Front-End] Implement Dark Mode</a></td><td data-value="2022-07-12T23:56:17Z" data-label="Created At">2022-07-12</td><td data-value="2023-09-02T16:43:40Z" data-label="First Comment">2023-09-02</td><td data-value="OPEN" data-label="Last Update / Status"><span class="qr-status-cell">2024-03-18<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-positive-wash); color: var(--t-positive);">OPEN</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">OpenSource-Communities/guestbook #79</span></td><td data-label="Title"><a href="https://github.com/OpenSource-Communities/guestbook/issues/79" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Feature: Translate guestbook directions into other languages (#79)">Feature: Translate guestbook directions into other languages</a></td><td data-value="2023-08-18T21:44:04Z" data-label="Created At">2023-08-18</td><td data-value="2023-09-01T18:19:46Z" data-label="First Comment">2023-09-01</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2023-10-26<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">open-sauced/app #1147</span></td><td data-label="Title"><a href="https://github.com/open-sauced/app/pull/1147" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="feat: add dark mode (#1147)">feat: add dark mode</a></td><td data-value="2023-05-07T22:16:46Z" data-label="Created At">2023-05-07</td><td data-value="2023-08-28T14:26:10Z" data-label="First Comment">2023-08-28</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2023-08-28<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #945</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/945" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add 301 redirects for content that has been relocated (#945)">Add 301 redirects for content that has been relocated</a></td><td data-value="2023-07-27T18:10:06Z" data-label="Created At">2023-07-27</td><td data-value="2023-08-02T08:51:33Z" data-label="First Comment">2023-08-02</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2026-06-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #940</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/940" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update how to receive invite language (#940)">Update how to receive invite language</a></td><td data-value="2023-07-23T14:48:44Z" data-label="Created At">2023-07-23</td><td data-value="2023-07-25T18:40:03Z" data-label="First Comment">2023-07-25</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2023-08-03<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="collaborations-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="collaborations-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2596,9 +2455,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-left"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Previous</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Previous</span>
                 <span
                   class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2630,9 +2487,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-right"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Next</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Next</span>
                 <span
                   class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2675,7 +2530,7 @@
         OPEN: 3,
         MERGED: 2,
         CLOSED: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       // Custom Priority 2: Closed -> Merged -> Open (Historical view)
@@ -2683,50 +2538,45 @@
         CLOSED: 3,
         MERGED: 2,
         OPEN: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       class ReportTableManager {
         constructor(detailsElement) {
           this.detailsElement = detailsElement;
-          this.table = detailsElement.querySelector("table");
-          this.tbody = this.table.querySelector("tbody");
-          this.rows = Array.from(this.tbody.querySelectorAll("tr"));
-          this.searchInput = detailsElement.querySelector(".search-input");
-          this.resetBtn = detailsElement.querySelector(".reset-btn");
-          this.headers = detailsElement.querySelectorAll("th");
+          this.table = detailsElement.querySelector('table');
+          this.tbody = this.table.querySelector('tbody');
+          this.rows = Array.from(this.tbody.querySelectorAll('tr'));
+          this.searchInput = detailsElement.querySelector('.search-input');
+          this.resetBtn = detailsElement.querySelector('.reset-btn');
+          this.headers = detailsElement.querySelectorAll('th');
 
           // Store original order for reset
-          this.rows.forEach((row, index) =>
-            row.setAttribute("data-original-index", index),
-          );
+          this.rows.forEach((row, index) => row.setAttribute('data-original-index', index));
 
-          this.currentSort = { column: null, direction: "default" };
+          this.currentSort = { column: null, direction: 'default' };
 
           this.init();
         }
 
         init() {
           this.headers.forEach((th, index) => {
-            if (th.hasAttribute("data-type")) {
+            if (th.hasAttribute('data-type')) {
               // The <button> inside the <th> is the actual interactive control
               // (see quarterly-reports-html-generator.js) — native buttons are
               // keyboard-operable for free, so sort is reachable via Tab/Enter/
               // Space, not just a mouse click.
-              const btn = th.querySelector(".th-sort-btn");
-              if (btn)
-                btn.addEventListener("click", () => this.handleSort(th, index));
+              const btn = th.querySelector('.th-sort-btn');
+              if (btn) btn.addEventListener('click', () => this.handleSort(th, index));
             }
           });
 
           if (this.searchInput) {
-            this.searchInput.addEventListener("input", (e) =>
-              this.handleSearch(e.target.value),
-            );
+            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
           }
 
           if (this.resetBtn) {
-            this.resetBtn.addEventListener("click", () => this.resetAll());
+            this.resetBtn.addEventListener('click', () => this.resetAll());
           }
         }
 
@@ -2734,24 +2584,24 @@
           const { column, direction } = this.currentSort;
 
           if (column !== columnIndex) {
-            if (type === "date") return "desc";
-            if (type === "number") return "asc";
-            if (type === "status") return "custom1";
-            return "asc";
+            if (type === 'date') return 'desc';
+            if (type === 'number') return 'asc';
+            if (type === 'status') return 'custom1';
+            return 'asc';
           }
 
-          if (type === "status") {
-            if (direction === "custom1") return "custom2";
-            if (direction === "custom2") return "default";
-            return "custom1";
-          } else if (type === "date") {
-            if (direction === "desc") return "asc";
-            if (direction === "asc") return "default";
-            return "desc";
+          if (type === 'status') {
+            if (direction === 'custom1') return 'custom2';
+            if (direction === 'custom2') return 'default';
+            return 'custom1';
+          } else if (type === 'date') {
+            if (direction === 'desc') return 'asc';
+            if (direction === 'asc') return 'default';
+            return 'desc';
           } else {
-            if (direction === "asc") return "desc";
-            if (direction === "desc") return "default";
-            return "asc";
+            if (direction === 'asc') return 'desc';
+            if (direction === 'desc') return 'default';
+            return 'asc';
           }
         }
 
@@ -2759,15 +2609,13 @@
           const numericVal = parseFloat(val);
           const isNumeric = !isNaN(numericVal) && isFinite(numericVal);
           if (isNumeric) return numericVal;
-          return direction === "asc"
-            ? Number.NEGATIVE_INFINITY
-            : Number.POSITIVE_INFINITY;
+          return direction === 'asc' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         }
 
         updateRowNumbers() {
           let visibleCounter = 1;
           this.rows.forEach((row) => {
-            if (row.style.display !== "none") {
+            if (row.style.display !== 'none') {
               const firstCell = row.children[0];
               if (firstCell) {
                 firstCell.textContent = `${visibleCounter}.`;
@@ -2778,36 +2626,29 @@
         }
 
         handleSort(th, columnIndex) {
-          const type = th.getAttribute("data-type") || "string";
+          const type = th.getAttribute('data-type') || 'string';
           const nextDir = this.getNextDirection(columnIndex, type);
 
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
 
           this.currentSort = { column: columnIndex, direction: nextDir };
 
-          if (nextDir === "default") {
+          if (nextDir === 'default') {
             this.rows.sort((a, b) => {
               return (
-                parseInt(a.getAttribute("data-original-index")) -
-                parseInt(b.getAttribute("data-original-index"))
+                parseInt(a.getAttribute('data-original-index')) -
+                parseInt(b.getAttribute('data-original-index'))
               );
             });
           } else {
-            const icon = th.querySelector(".sort-icon");
+            const icon = th.querySelector('.sort-icon');
             if (icon) {
-              icon.textContent =
-                nextDir === "desc" || nextDir === "custom2" ? "▼" : "▲";
+              icon.textContent = nextDir === 'desc' || nextDir === 'custom2' ? '▼' : '▲';
             }
             th.classList.add(`sort-${nextDir}`);
             // aria-sort only accepts none/ascending/descending/other — the status
@@ -2815,36 +2656,23 @@
             // reverse) isn't alphabetical/numeric, so it maps to "other" rather
             // than a direction that would misdescribe it.
             const ariaSortValue =
-              nextDir === "asc"
-                ? "ascending"
-                : nextDir === "desc"
-                  ? "descending"
-                  : "other";
-            th.setAttribute("aria-sort", ariaSortValue);
+              nextDir === 'asc' ? 'ascending' : nextDir === 'desc' ? 'descending' : 'other';
+            th.setAttribute('aria-sort', ariaSortValue);
 
             // Find indices if they exist in this table for tie-breaking
             const headerArray = Array.from(this.headers);
-            const dateIdx = headerArray.findIndex(
-              (h) => h.getAttribute("data-type") === "date",
-            );
+            const dateIdx = headerArray.findIndex((h) => h.getAttribute('data-type') === 'date');
 
             this.rows.sort((rowA, rowB) => {
               const cellA = rowA.children[columnIndex];
               const cellB = rowB.children[columnIndex];
 
-              let valA = (
-                cellA.getAttribute("data-value") || cellA.textContent
-              ).trim();
-              let valB = (
-                cellB.getAttribute("data-value") || cellB.textContent
-              ).trim();
+              let valA = (cellA.getAttribute('data-value') || cellA.textContent).trim();
+              let valB = (cellB.getAttribute('data-value') || cellB.textContent).trim();
 
               // 1. Status Logic: Sort by Priority then Tie-break by Date
-              if (type === "status") {
-                const priorityMap =
-                  nextDir === "custom1"
-                    ? STATUS_PRIORITY_P1
-                    : STATUS_PRIORITY_P2;
+              if (type === 'status') {
+                const priorityMap = nextDir === 'custom1' ? STATUS_PRIORITY_P1 : STATUS_PRIORITY_P2;
                 const scoreA = priorityMap[valA.toUpperCase()] || 0;
                 const scoreB = priorityMap[valB.toUpperCase()] || 0;
 
@@ -2859,39 +2687,33 @@
                   dA = new Date(dateMatchA[0]).getTime();
                   dB = new Date(dateMatchB[0]).getTime();
                 } else if (dateIdx !== -1) {
-                  dA = new Date(
-                    rowA.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
-                  dB = new Date(
-                    rowB.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
+                  dA = new Date(rowA.children[dateIdx].getAttribute('data-value')).getTime();
+                  dB = new Date(rowB.children[dateIdx].getAttribute('data-value')).getTime();
                 }
 
-                return nextDir === "custom1" ? dB - dA : dA - dB;
+                return nextDir === 'custom1' ? dB - dA : dA - dB;
               }
 
               // 2. Date Logic: Strict Chronology
-              if (type === "date") {
+              if (type === 'date') {
                 const dA = new Date(valA).getTime();
                 const dB = new Date(valB).getTime();
-                let comp =
-                  isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
-                return nextDir === "desc" ? comp * -1 : comp;
+                let comp = isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
+                return nextDir === 'desc' ? comp * -1 : comp;
               }
 
               // 3. Number Logic: Handles N/A and Infinity
-              if (type === "number") {
+              if (type === 'number') {
                 let compA = this.getNumberComparableValue(valA, nextDir);
                 let compB = this.getNumberComparableValue(valB, nextDir);
                 let comp = compA - compB;
-                if (nextDir === "desc" && isFinite(compA) && isFinite(compB))
-                  comp *= -1;
+                if (nextDir === 'desc' && isFinite(compA) && isFinite(compB)) comp *= -1;
                 return comp;
               }
 
               // 4. String Logic
               let res = valA.toLowerCase().localeCompare(valB.toLowerCase());
-              return nextDir === "desc" ? res * -1 : res;
+              return nextDir === 'desc' ? res * -1 : res;
             });
           }
 
@@ -2904,70 +2726,60 @@
           let statusSearch = null;
           let textSearch = lowerQuery;
 
-          if (lowerQuery.startsWith("status:")) {
-            statusSearch = lowerQuery.replace("status:", "").trim();
+          if (lowerQuery.startsWith('status:')) {
+            statusSearch = lowerQuery.replace('status:', '').trim();
             textSearch = null;
           }
 
           const getColIdx = (t) =>
-            Array.from(this.headers).findIndex(
-              (th) => th.getAttribute("data-type") === t,
-            );
+            Array.from(this.headers).findIndex((th) => th.getAttribute('data-type') === t);
 
           this.rows.forEach((row) => {
             let show = false;
             if (statusSearch !== null) {
-              const idx = getColIdx("status");
+              const idx = getColIdx('status');
               if (idx !== -1) {
                 const val = (
-                  row.children[idx].getAttribute("data-value") ||
-                  row.children[idx].textContent
+                  row.children[idx].getAttribute('data-value') || row.children[idx].textContent
                 ).toLowerCase();
                 if (val.includes(statusSearch)) show = true;
               }
             } else if (textSearch) {
-              if (row.textContent.toLowerCase().includes(textSearch))
-                show = true;
+              if (row.textContent.toLowerCase().includes(textSearch)) show = true;
             } else {
               show = true;
             }
-            row.style.display = show ? "" : "none";
+            row.style.display = show ? '' : 'none';
           });
           this.updateRowNumbers();
         }
 
         resetAll() {
-          this.searchInput.value = "";
-          this.currentSort = { column: null, direction: "default" };
+          this.searchInput.value = '';
+          this.currentSort = { column: null, direction: 'default' };
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
           this.rows.sort(
             (a, b) =>
-              parseInt(a.getAttribute("data-original-index")) -
-              parseInt(b.getAttribute("data-original-index")),
+              parseInt(a.getAttribute('data-original-index')) -
+              parseInt(b.getAttribute('data-original-index'))
           );
           this.rows.forEach((row) => {
             this.tbody.appendChild(row);
-            row.style.display = "";
+            row.style.display = '';
           });
           this.updateRowNumbers();
         }
       }
 
       // Global Initialization
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll("details").forEach((details) => {
-          if (details.querySelector("table")) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('details').forEach((details) => {
+          if (details.querySelector('table')) {
             new ReportTableManager(details);
           }
         });
@@ -2978,56 +2790,47 @@
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === "DETAILS") {
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
             // Close all other details tags before opening the target one
-            document
-              .querySelectorAll("details")
-              .forEach((detail) => (detail.open = false));
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
             targetDetails.open = true;
             // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              const reduceMotion = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-              ).matches;
+              const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
               targetDetails.scrollIntoView({
-                behavior: reduceMotion ? "auto" : "smooth",
-                block: "start",
+                behavior: reduceMotion ? 'auto' : 'smooth',
+                block: 'start',
               });
             }, 100);
           }
         } else {
           // Open 'Merged PRs' by default if no hash is present.
-          const defaultDetails = document.getElementById("merged-prs");
+          const defaultDetails = document.getElementById('merged-prs');
           if (defaultDetails) defaultDetails.open = true;
         }
       }
-      window.addEventListener("DOMContentLoaded", openSectionFromHash);
-      window.addEventListener("hashchange", openSectionFromHash);
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      window.addEventListener('hashchange', openSectionFromHash);
 
       // Per-category "back to top" resets that category's own table
       // container back to its first row. Each table scrolls inside its
       // own max-h-[70vh] overflow-y-auto box, independent of the page —
       // scrolling the page to the <details> summary wouldn't move that
       // box back to row one, so this scrolls the container itself.
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".qr-cat-top");
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.qr-cat-top');
         if (!btn) return;
         const container = document.getElementById(btn.dataset.scrollTarget);
         if (!container) return;
-        const reduceMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         container.scrollTo({
           top: 0,
-          behavior: reduceMotion ? "auto" : "smooth",
+          behavior: reduceMotion ? 'auto' : 'smooth',
         });
       });
     </script>
     <footer
-      style="
-        border-top-color: var(--c-neutral-10);
-        color: var(--c-text-secondary-rgb);
-      "
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -3040,7 +2843,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on September 13, 2026.
+        >'s open source contributions, generated on September 14, 2026.
       </div>
 
       <div class="text-xs mt-1">
@@ -3067,31 +2870,23 @@
         </a>
       </div>
     </footer>
-    <button
-      type="button"
-      id="back-to-top"
-      class="back-to-top"
-      aria-label="Back to top"
-      hidden
-    >
+    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById("back-to-top");
+        var btn = document.getElementById('back-to-top');
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
-        btn.addEventListener("click", function () {
-          var reduceMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
+        btn.addEventListener('click', function () {
+          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: reduceMotion ? 'auto' : 'smooth',
           });
         });
       })();

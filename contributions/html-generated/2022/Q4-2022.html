@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
@@ -12,22 +12,22 @@
     <script>
       (function () {
         try {
-          var mq = window.matchMedia("(prefers-color-scheme: dark)");
+          var mq = window.matchMedia('(prefers-color-scheme: dark)');
 
           function isDark() {
-            var stored = localStorage.getItem("theme"); // 'light' | 'dark' | null ('system')
-            if (stored === "dark") return true;
-            if (stored === "light") return false;
+            var stored = localStorage.getItem('theme'); // 'light' | 'dark' | null ('system')
+            if (stored === 'dark') return true;
+            if (stored === 'light') return false;
             return mq.matches;
           }
 
-          document.documentElement.classList.toggle("dark", isDark());
+          document.documentElement.classList.toggle('dark', isDark());
 
           // Re-reads localStorage on every change instead of caching it, so a
           // theme choice made via the navbar toggle (after this script ran)
           // is respected rather than overridden by a stale snapshot.
-          mq.addEventListener("change", function () {
-            document.documentElement.classList.toggle("dark", isDark());
+          mq.addEventListener('change', function () {
+            document.documentElement.classList.toggle('dark', isDark());
           });
         } catch (e) {}
       })();
@@ -37,7 +37,7 @@
       @custom-variant dark (&:where(.dark, .dark *));
     </style>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
       :root {
         --c-primary-hex: #232963;
         --c-primary-rgb: rgb(35, 41, 99);
@@ -297,11 +297,8 @@
         --t-neutral-wash: #e8e9eb;
         --t-neutral-line: #cbccd2;
         --t-neutral-strong: #424450;
-        --t-shadow:
-          0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
-        --t-shadow-lg:
-          0 2px 4px rgba(20, 20, 30, 0.04),
-          0 22px 60px -24px rgba(35, 41, 99, 0.22);
+        --t-shadow: 0 1px 2px rgba(20, 20, 30, 0.05), 0 4px 16px rgba(20, 20, 30, 0.05);
+        --t-shadow-lg: 0 2px 4px rgba(20, 20, 30, 0.04), 0 22px 60px -24px rgba(35, 41, 99, 0.22);
       }
       html.dark {
         --t-surface: #11121d;
@@ -342,10 +339,8 @@
         --t-neutral-wash: #1f2131;
         --t-neutral-line: #3d3f4d;
         --t-neutral-strong: #85899c;
-        --t-shadow:
-          0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
-        --t-shadow-lg:
-          0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
+        --t-shadow: 0 1px 2px rgba(0, 0, 0, 0.35), 0 4px 18px rgba(0, 0, 0, 0.3);
+        --t-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.4), 0 22px 60px -22px rgba(0, 0, 0, 0.6);
       }
       html,
       body {
@@ -362,7 +357,7 @@
          button on every page built from this base CSS. */
         overflow-x: hidden;
         position: relative;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
         min-height: 10vh;
         display: flex;
         flex-direction: column;
@@ -442,11 +437,7 @@
       .qr-impact-top {
         padding: 14px 18px;
         border-bottom: 1px solid var(--t-line);
-        background: linear-gradient(
-          120deg,
-          var(--t-brand-wash),
-          var(--t-card-2) 62%
-        );
+        background: linear-gradient(120deg, var(--t-brand-wash), var(--t-card-2) 62%);
       }
       .qr-impact-top h2 {
         font-size: 1.05rem;
@@ -505,11 +496,7 @@
         line-height: 1.35;
       }
       .qr-tile--hero {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--hero .n,
       .qr-tile--hero .c {
@@ -519,11 +506,7 @@
         opacity: 0.85;
       }
       a.qr-tile--hero:hover {
-        background: linear-gradient(
-          150deg,
-          var(--t-brand-strong),
-          var(--t-brand)
-        );
+        background: linear-gradient(150deg, var(--t-brand-strong), var(--t-brand));
       }
       .qr-tile--good .n {
         color: var(--t-positive);
@@ -568,10 +551,7 @@
         top: 0;
         z-index: 10;
         background-color: var(--t-card);
-        background-image: linear-gradient(
-          var(--t-brand-wash),
-          var(--t-brand-wash)
-        );
+        background-image: linear-gradient(var(--t-brand-wash), var(--t-brand-wash));
         font-weight: 700;
         padding: 12px;
         text-align: left;
@@ -1058,13 +1038,13 @@
      needs no separate "is accent configured" branch. .no-underline opts a
      link back out — for a card/tile where the whole multi-line block is the
      link, underlining it would draw a line under every line inside. */
-      a[target="_blank"]:not(.no-underline) {
+      a[target='_blank']:not(.no-underline) {
         text-decoration: underline;
         text-decoration-color: var(--t-accent-line);
         text-decoration-thickness: 2px;
         text-underline-offset: 3px;
       }
-      a[target="_blank"]:not(.no-underline):hover {
+      a[target='_blank']:not(.no-underline):hover {
         text-decoration-color: var(--t-accent);
       }
       .back-to-top {
@@ -1111,9 +1091,7 @@
       style="background-color: var(--c-primary-rgb); color: var(--t-on-nav)"
       class="fixed top-0 left-0 right-0 z-50 shadow-lg"
     >
-      <div
-        class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8"
-      >
+      <div class="mx-auto max-w-7xl h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
         <div class="flex items-center space-x-4">
           <a
             href="../index.html"
@@ -1187,10 +1165,7 @@
                 aria-expanded="false"
                 aria-label="Change theme"
               >
-                <span
-                  data-theme-icon-for="light"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1206,10 +1181,7 @@
                       d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                     />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="dark"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1222,10 +1194,7 @@
                   >
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                   </svg> </span
-                ><span
-                  data-theme-icon-for="system"
-                  class="theme-dropdown-trigger-icon hidden"
-                >
+                ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                   <svg
                     fill="none"
                     stroke="currentColor"
@@ -1267,9 +1236,7 @@
                     </svg>
                   </span>
                   <span>Light</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1288,15 +1255,11 @@
                       xmlns="http://www.w3.org/2000/svg"
                       aria-hidden="true"
                     >
-                      <path
-                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
-                      />
+                      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                     </svg>
                   </span>
                   <span>Dark</span>
-                  <span class="theme-dropdown-check" aria-hidden="true"
-                    >✓</span
-                  ></button
+                  <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
                 ><button
                   type="button"
                   role="menuitemradio"
@@ -1429,10 +1392,7 @@
               aria-expanded="false"
               aria-label="Change theme"
             >
-              <span
-                data-theme-icon-for="light"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              <span data-theme-icon-for="light" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1448,10 +1408,7 @@
                     d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
                   />
                 </svg> </span
-              ><span
-                data-theme-icon-for="dark"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="dark" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1464,10 +1421,7 @@
                 >
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg> </span
-              ><span
-                data-theme-icon-for="system"
-                class="theme-dropdown-trigger-icon hidden"
-              >
+              ><span data-theme-icon-for="system" class="theme-dropdown-trigger-icon hidden">
                 <svg
                   fill="none"
                   stroke="currentColor"
@@ -1509,9 +1463,7 @@
                   </svg>
                 </span>
                 <span>Light</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1534,9 +1486,7 @@
                   </svg>
                 </span>
                 <span>Dark</span>
-                <span class="theme-dropdown-check" aria-hidden="true"
-                  >✓</span
-                ></button
+                <span class="theme-dropdown-check" aria-hidden="true">✓</span></button
               ><button
                 type="button"
                 role="menuitemradio"
@@ -1568,95 +1518,79 @@
       </div>
 
       <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const button = document.getElementById("menu-button");
-          const menu = document.getElementById("mobile-menu");
-          const openIcon = document.getElementById("menu-open-icon");
-          const closeIcon = document.getElementById("menu-close-icon");
+        document.addEventListener('DOMContentLoaded', () => {
+          const button = document.getElementById('menu-button');
+          const menu = document.getElementById('mobile-menu');
+          const openIcon = document.getElementById('menu-open-icon');
+          const closeIcon = document.getElementById('menu-close-icon');
 
           if (button && menu) {
-            button.addEventListener("click", () => {
-              const isExpanded =
-                button.getAttribute("aria-expanded") === "true";
-              button.setAttribute("aria-expanded", String(!isExpanded));
-              menu.classList.toggle("hidden");
-              openIcon.classList.toggle("hidden", !isExpanded);
-              closeIcon.classList.toggle("hidden", isExpanded);
+            button.addEventListener('click', () => {
+              const isExpanded = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', String(!isExpanded));
+              menu.classList.toggle('hidden');
+              openIcon.classList.toggle('hidden', !isExpanded);
+              closeIcon.classList.toggle('hidden', isExpanded);
             });
           }
 
-          const dropdowns = document.querySelectorAll("[data-theme-dropdown]");
+          const dropdowns = document.querySelectorAll('[data-theme-dropdown]');
 
           function closeAllDropdowns(opts) {
             const returnFocus = Boolean(opts && opts.returnFocus);
             dropdowns.forEach((dropdown) => {
-              const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-              const menu = dropdown.querySelector(".theme-dropdown-menu");
-              const wasOpen = !menu.classList.contains("hidden");
-              menu.classList.add("hidden");
-              trigger.setAttribute("aria-expanded", "false");
+              const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+              const menu = dropdown.querySelector('.theme-dropdown-menu');
+              const wasOpen = !menu.classList.contains('hidden');
+              menu.classList.add('hidden');
+              trigger.setAttribute('aria-expanded', 'false');
               if (wasOpen && returnFocus) trigger.focus();
             });
           }
 
           function openDropdown(dropdown) {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
             closeAllDropdowns();
-            menu.classList.remove("hidden");
-            trigger.setAttribute("aria-expanded", "true");
-            const items = Array.from(
-              dropdown.querySelectorAll("[data-theme-choice]"),
-            );
-            const checked = items.find(
-              (item) => item.getAttribute("aria-checked") === "true",
-            );
+            menu.classList.remove('hidden');
+            trigger.setAttribute('aria-expanded', 'true');
+            const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
+            const checked = items.find((item) => item.getAttribute('aria-checked') === 'true');
             (checked || items[0]).focus();
           }
 
           function setTheme(choice) {
-            if (choice === "system") {
-              localStorage.removeItem("theme");
+            if (choice === 'system') {
+              localStorage.removeItem('theme');
             } else {
-              localStorage.setItem("theme", choice);
+              localStorage.setItem('theme', choice);
             }
             const isDark =
-              choice === "dark" ||
-              (choice === "system" &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches);
-            document.documentElement.classList.toggle("dark", isDark);
+              choice === 'dark' ||
+              (choice === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            document.documentElement.classList.toggle('dark', isDark);
             reflectActiveChoice();
           }
 
           function reflectActiveChoice() {
-            const current = localStorage.getItem("theme") || "system";
+            const current = localStorage.getItem('theme') || 'system';
             dropdowns.forEach((dropdown) => {
-              dropdown
-                .querySelectorAll("[data-theme-icon-for]")
-                .forEach((icon) => {
-                  icon.classList.toggle(
-                    "hidden",
-                    icon.dataset.themeIconFor !== current,
-                  );
-                });
-              dropdown
-                .querySelectorAll("[data-theme-choice]")
-                .forEach((item) => {
-                  item.setAttribute(
-                    "aria-checked",
-                    String(item.dataset.themeChoice === current),
-                  );
-                });
+              dropdown.querySelectorAll('[data-theme-icon-for]').forEach((icon) => {
+                icon.classList.toggle('hidden', icon.dataset.themeIconFor !== current);
+              });
+              dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+                item.setAttribute('aria-checked', String(item.dataset.themeChoice === current));
+              });
             });
           }
 
           dropdowns.forEach((dropdown) => {
-            const trigger = dropdown.querySelector(".theme-dropdown-trigger");
-            const menu = dropdown.querySelector(".theme-dropdown-menu");
+            const trigger = dropdown.querySelector('.theme-dropdown-trigger');
+            const menu = dropdown.querySelector('.theme-dropdown-menu');
 
-            trigger.addEventListener("click", (e) => {
+            trigger.addEventListener('click', (e) => {
               e.stopPropagation();
-              const isOpen = !menu.classList.contains("hidden");
+              const isOpen = !menu.classList.contains('hidden');
               if (isOpen) {
                 closeAllDropdowns();
               } else {
@@ -1664,46 +1598,44 @@
               }
             });
 
-            trigger.addEventListener("keydown", (e) => {
-              if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+            trigger.addEventListener('keydown', (e) => {
+              if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
                 e.preventDefault();
                 openDropdown(dropdown);
               }
             });
 
-            menu.addEventListener("keydown", (e) => {
-              const items = Array.from(
-                dropdown.querySelectorAll("[data-theme-choice]"),
-              );
+            menu.addEventListener('keydown', (e) => {
+              const items = Array.from(dropdown.querySelectorAll('[data-theme-choice]'));
               const currentIndex = items.indexOf(document.activeElement);
-              if (e.key === "ArrowDown") {
+              if (e.key === 'ArrowDown') {
                 e.preventDefault();
                 items[(currentIndex + 1) % items.length].focus();
-              } else if (e.key === "ArrowUp") {
+              } else if (e.key === 'ArrowUp') {
                 e.preventDefault();
                 items[(currentIndex - 1 + items.length) % items.length].focus();
-              } else if (e.key === "Home") {
+              } else if (e.key === 'Home') {
                 e.preventDefault();
                 items[0].focus();
-              } else if (e.key === "End") {
+              } else if (e.key === 'End') {
                 e.preventDefault();
                 items[items.length - 1].focus();
-              } else if (e.key === "Tab") {
+              } else if (e.key === 'Tab') {
                 closeAllDropdowns();
               }
             });
 
-            dropdown.querySelectorAll("[data-theme-choice]").forEach((item) => {
-              item.addEventListener("click", () => {
+            dropdown.querySelectorAll('[data-theme-choice]').forEach((item) => {
+              item.addEventListener('click', () => {
                 setTheme(item.dataset.themeChoice);
                 closeAllDropdowns({ returnFocus: true });
               });
             });
           });
 
-          document.addEventListener("click", () => closeAllDropdowns());
-          document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeAllDropdowns({ returnFocus: true });
+          document.addEventListener('click', () => closeAllDropdowns());
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeAllDropdowns({ returnFocus: true });
           });
 
           reflectActiveChoice();
@@ -1766,7 +1698,7 @@
           opacity 0.15s ease-in-out;
       }
       .theme-dropdown-trigger:hover,
-      .theme-dropdown-trigger[aria-expanded="true"] {
+      .theme-dropdown-trigger[aria-expanded='true'] {
         opacity: 1;
       }
       .theme-dropdown-trigger-icon svg {
@@ -1825,7 +1757,7 @@
         color: var(--c-primary-text);
         font-weight: 700;
       }
-      .theme-dropdown-item[aria-checked="true"] .theme-dropdown-check {
+      .theme-dropdown-item[aria-checked='true'] .theme-dropdown-check {
         opacity: 1;
       }
 
@@ -1844,10 +1776,7 @@
             style="border-bottom-color: var(--t-brand-line)"
             class="text-center mt-16 mb-12 pb-4 border-b-2"
           >
-            <h1
-              style="color: var(--t-brand)"
-              class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8"
-            >
+            <h1 style="color: var(--t-brand)" class="text-4xl sm:text-5xl font-extrabold mb-2 pt-8">
               Q4 2022
             </h1>
             <p class="text-lg qr-ink2 mt-2">Open Source Contributions Report</p>
@@ -1857,12 +1786,10 @@
             <div class="qr-brief">
               <p class="qr-brief-eyebrow">Quarter in brief — Q4 2022</p>
               <p class="qr-brief-sentence">
-                This quarter: reviewed 1 PR for <b>Virtual-Coffee</b> and
-                shipped 16 changes across 3 repositories.
+                This quarter: reviewed 1 PR for <b>Virtual-Coffee</b> and shipped 16 changes across
+                3 repositories.
               </p>
-              <p class="qr-brief-sentence">
-                Also opened 7 issues along the way.
-              </p>
+              <p class="qr-brief-sentence">Also opened 7 issues along the way.</p>
               <div class="qr-worked-with">
                 <span class="qr-worked-with-label">Worked with</span>
                 <div class="qr-org-chips">
@@ -1890,12 +1817,8 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Collaboration</span>
-                <span class="qr-highlight-repo"
-                  >Virtual-Coffee/virtualcoffee.io</span
-                >
-                <span class="qr-highlight-title"
-                  >Add Code of Conduct link to the footer</span
-                >
+                <span class="qr-highlight-repo">Virtual-Coffee/virtualcoffee.io</span>
+                <span class="qr-highlight-title">Add Code of Conduct link to the footer</span>
                 <span class="qr-highlight-meta">2026-06-15</span> </a
               ><a
                 href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/86"
@@ -1904,9 +1827,7 @@
                 class="qr-highlight-card no-underline"
               >
                 <span class="qr-highlight-type">Issue</span>
-                <span class="qr-highlight-repo"
-                  >Virtual-Coffee/podcast-transcripts</span
-                >
+                <span class="qr-highlight-repo">Virtual-Coffee/podcast-transcripts</span>
                 <span class="qr-highlight-title"
                   >Improve episode transcription Season 6 Episode 8</span
                 >
@@ -1919,9 +1840,7 @@
               >
                 <span class="qr-highlight-type">Collaboration</span>
                 <span class="qr-highlight-repo">mgreiler/se-unlocked</span>
-                <span class="qr-highlight-title"
-                  >Improve transcript 65 Harshit Chitalia</span
-                >
+                <span class="qr-highlight-title">Improve transcript 65 Harshit Chitalia</span>
                 <span class="qr-highlight-meta">2022-10-15</span>
               </a>
             </div>
@@ -1934,20 +1853,14 @@
             >
               Contribution Breakdown
             </h2>
-            <div
-              class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm"
-            >
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 text-sm">
               <a
                 href="#merged-prs"
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >16</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">16</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -1971,12 +1884,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >7</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">7</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2001,12 +1910,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >1</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">1</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2030,12 +1935,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >0</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">0</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2062,12 +1963,8 @@
                 class="nav-contribution-button qr-nav-card flex flex-col items-center p-3 border rounded-xl shadow-sm hover:shadow-lg transition text-center"
                 style="color: var(--t-brand)"
               >
-                <span class="text-2xl font-bold" style="color: var(--t-brand)"
-                  >4</span
-                >
-                <div
-                  class="flex items-center justify-center gap-1.5 qr-ink2 mt-1"
-                >
+                <span class="text-2xl font-bold" style="color: var(--t-brand)">4</span>
+                <div class="flex items-center justify-center gap-1.5 qr-ink2 mt-1">
                   <span class="breakdown-icon-wrapper opacity-70">
                     <svg
                       class="w-6 h-6"
@@ -2153,10 +2050,7 @@
           <hr class="my-8" style="border-color: var(--t-line)" />
 
           <section class="space-y-6">
-            <details
-              id="merged-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="merged-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2179,9 +2073,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Merged PRs (16)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Merged PRs (16)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2231,11 +2123,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Merged</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #763</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/763" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update events page with recorded events section (#763)">Update events page with recorded events section</a></td><td data-value="2022-12-07T14:51:07Z" data-label="Created">2022-12-07</td><td data-value="2022-12-15T14:54:48Z" data-label="Merged">2022-12-15</td><td data-value="8" data-label="Review Period">8 days</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #776</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/776" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add December 2022 newsletter to the website (#776)">Add December 2022 newsletter to the website</a></td><td data-value="2022-12-15T11:19:08Z" data-label="Created">2022-12-15</td><td data-value="2022-12-15T14:25:55Z" data-label="Merged">2022-12-15</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #745</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/745" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add November 2022 newsletter to the website (#745)">Add November 2022 newsletter to the website</a></td><td data-value="2022-11-06T07:03:42Z" data-label="Created">2022-11-06</td><td data-value="2022-11-09T21:28:02Z" data-label="Merged">2022-11-09</td><td data-value="4" data-label="Review Period">4 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #728</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/728" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Convert &#96;newsletters.js&#96; to TypeScript (#728)">Convert &#96;newsletters.js&#96; to TypeScript</a></td><td data-value="2022-10-21T12:25:59Z" data-label="Created">2022-10-21</td><td data-value="2022-10-21T13:00:15Z" data-label="Merged">2022-10-21</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #708</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/708" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix links on Table of Content in CONTRIBUTING.md (#708)">Fix links on Table of Content in CONTRIBUTING.md</a></td><td data-value="2022-10-14T23:53:23Z" data-label="Created">2022-10-14</td><td data-value="2022-10-17T13:28:27Z" data-label="Merged">2022-10-17</td><td data-value="3" data-label="Review Period">3 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">mgreiler/se-unlocked #156</span></td><td data-label="Title"><a href="https://github.com/mgreiler/se-unlocked/pull/156" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve transcript 65 Harshit Chitalia (#156)">Improve transcript 65 Harshit Chitalia</a></td><td data-value="2022-10-14T21:59:11Z" data-label="Created">2022-10-14</td><td data-value="2022-10-15T14:11:39Z" data-label="Merged">2022-10-15</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #702</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/702" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update CONTRIBUTING and README files (#702)">Update CONTRIBUTING and README files</a></td><td data-value="2022-10-13T09:54:54Z" data-label="Created">2022-10-13</td><td data-value="2022-10-14T14:01:21Z" data-label="Merged">2022-10-14</td><td data-value="1" data-label="Review Period">1 day</td></tr><tr class="qr-row-b"><td>8.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #81</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/81" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Podcast Docs (#81)">Update Podcast Docs</a></td><td data-value="2022-10-10T12:58:37Z" data-label="Created">2022-10-10</td><td data-value="2022-10-10T15:55:36Z" data-label="Merged">2022-10-10</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>9.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #79</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/79" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve episode transcription Season 5 Special Kirk Day (5_999.srt) (#79)">Improve episode transcription Season 5 Special Kirk Day (5_999.srt)</a></td><td data-value="2022-10-10T12:32:27Z" data-label="Created">2022-10-10</td><td data-value="2022-10-10T12:54:31Z" data-label="Merged">2022-10-10</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>10.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #668</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/668" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Code of Conduct link to the footer (#668)">Add Code of Conduct link to the footer</a></td><td data-value="2022-10-05T07:47:15Z" data-label="Created">2022-10-05</td><td data-value="2022-10-05T16:57:50Z" data-label="Merged">2022-10-05</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-a"><td>11.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #657</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/657" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add October 2022 newsletter to website (#657)">Add October 2022 newsletter to website</a></td><td data-value="2022-10-04T09:48:53Z" data-label="Created">2022-10-04</td><td data-value="2022-10-04T19:52:26Z" data-label="Merged">2022-10-04</td><td data-value="0" data-label="Review Period">0 days</td></tr><tr class="qr-row-b"><td>12.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #36</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/36" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve Transcription Season 5 Episode 6 (#36)">Improve Transcription Season 5 Episode 6</a></td><td data-value="2022-09-21T20:46:33Z" data-label="Created">2022-09-21</td><td data-value="2022-10-04T16:27:48Z" data-label="Merged">2022-10-04</td><td data-value="13" data-label="Review Period">13 days</td></tr><tr class="qr-row-a"><td>13.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #34</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/34" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve Transcription Season 6 Episode 4 (#34)">Improve Transcription Season 6 Episode 4</a></td><td data-value="2022-09-19T14:20:19Z" data-label="Created">2022-09-19</td><td data-value="2022-10-04T16:25:26Z" data-label="Merged">2022-10-04</td><td data-value="15" data-label="Review Period">15 days</td></tr><tr class="qr-row-b"><td>14.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #33</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/33" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve Transcription Season 6 Episode 5 (#33)">Improve Transcription Season 6 Episode 5</a></td><td data-value="2022-09-18T19:21:19Z" data-label="Created">2022-09-18</td><td data-value="2022-10-04T16:24:15Z" data-label="Merged">2022-10-04</td><td data-value="16" data-label="Review Period">16 days</td></tr><tr class="qr-row-a"><td>15.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #38</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/38" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve Transcription Season 6 Episode 6 (#38)">Improve Transcription Season 6 Episode 6</a></td><td data-value="2022-09-26T12:54:53Z" data-label="Created">2022-09-26</td><td data-value="2022-10-04T16:22:32Z" data-label="Merged">2022-10-04</td><td data-value="8" data-label="Review Period">8 days</td></tr><tr class="qr-row-b"><td>16.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #658</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/pull/658" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Hacktoberfest 2022 badge to profile (#658)">Add Hacktoberfest 2022 badge to profile</a></td><td data-value="2022-10-04T11:06:56Z" data-label="Created">2022-10-04</td><td data-value="2022-10-04T12:53:18Z" data-label="Merged">2022-10-04</td><td data-value="0" data-label="Review Period">0 days</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="merged-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="merged-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2264,9 +2152,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Issues (7)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Issues (7)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2316,19 +2202,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closed</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Closing Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #86</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/86" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve episode transcription Season 6 Episode 8 (#86)">Improve episode transcription Season 6 Episode 8</a></td><td data-value="2022-12-28T15:58:16Z" data-label="Created">2022-12-28</td><td data-value="2023-01-03T21:11:10Z" data-label="Closed">2023-01-03</td><td data-value="6" data-label="Closing Period">6 days</td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #775</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/775" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add December 2022 newsletter to the website (#775)">Add December 2022 newsletter to the website</a></td><td data-value="2022-12-14T18:50:26Z" data-label="Created">2022-12-14</td><td data-value="2022-12-15T14:25:56Z" data-label="Closed">2022-12-15</td><td data-value="1" data-label="Closing Period">1 day</td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #742</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/742" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add November 2022 newsletter to the website (#742)">Add November 2022 newsletter to the website</a></td><td data-value="2022-11-05T07:13:57Z" data-label="Created">2022-11-05</td><td data-value="2022-11-16T09:36:11Z" data-label="Closed">2022-11-16</td><td data-value="11" data-label="Closing Period">11 days</td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #707</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/707" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Fix links on the Table of Contents in CONTRIBUTING.md (#707)">Fix links on the Table of Contents in CONTRIBUTING.md</a></td><td data-value="2022-10-14T22:44:16Z" data-label="Created">2022-10-14</td><td data-value="2022-10-17T13:28:28Z" data-label="Closed">2022-10-17</td><td data-value="3" data-label="Closing Period">3 days</td></tr><tr class="qr-row-a"><td>5.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #699</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/699" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add creating a new branch for contribution (#699)">Add creating a new branch for contribution</a></td><td data-value="2022-10-12T10:52:43Z" data-label="Created">2022-10-12</td><td data-value="2022-10-14T14:01:22Z" data-label="Closed">2022-10-14</td><td data-value="2" data-label="Closing Period">2 days</td></tr><tr class="qr-row-b"><td>6.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #80</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/issues/80" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Update Docs (#80)">Update Docs</a></td><td data-value="2022-10-10T12:55:22Z" data-label="Created">2022-10-10</td><td data-value="2022-10-10T15:55:37Z" data-label="Closed">2022-10-10</td><td data-value="0" data-label="Closing Period">0 days</td></tr><tr class="qr-row-a"><td>7.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #644</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/644" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add October 2022 newsletter to the website (#644)">Add October 2022 newsletter to the website</a></td><td data-value="2022-10-03T15:10:29Z" data-label="Created">2022-10-03</td><td data-value="2022-10-04T19:52:27Z" data-label="Closed">2022-10-04</td><td data-value="1" data-label="Closing Period">1 day</td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="issues-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="issues-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="reviewed-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="reviewed-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2351,9 +2230,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Reviewed PRs (1)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Reviewed PRs (1)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2403,19 +2280,12 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Review</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="number" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Review Period</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/podcast-transcripts #78</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/podcast-transcripts/pull/78" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="update transcript for 4_2 (#78)">update transcript for 4_2</a></td><td data-value="2022-10-10T00:01:34Z" data-label="Created At">2022-10-10</td><td data-value="2022-10-10T14:54:08Z" data-label="First Review">2022-10-10</td><td data-value="1" data-label="Review Period">1 day</td><td data-value="MERGED" data-label="Last Update / Status"><span class="qr-status-cell">2022-10-12<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-merged-wash); color: var(--t-merged);">MERGED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="reviewed-prs-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="reviewed-prs-scroll">
                 ↑ Back to top
               </button>
             </details>
 
-            <details
-              id="co-authored-prs"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="co-authored-prs" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2441,9 +2311,7 @@
                       />
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Co-Authored PRs (0)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Co-Authored PRs (0)</span>
                 </div>
               </summary>
               <div class="p-4 qr-ink2 qr-surface2 rounded-lg">
@@ -2451,10 +2319,7 @@
               </div>
             </details>
 
-            <details
-              id="collaborations"
-              class="qr-details rounded-xl p-4 shadow-sm"
-            >
+            <details id="collaborations" class="qr-details rounded-xl p-4 shadow-sm">
               <summary
                 style="color: var(--t-brand)"
                 class="text-xl font-bold cursor-pointer outline-none"
@@ -2496,9 +2361,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="text-xl font-bold whitespace-nowrap"
-                    >Collaborations (4)</span
-                  >
+                  <span class="text-xl font-bold whitespace-nowrap">Collaborations (4)</span>
                 </div>
               </summary>
               <div class="flex flex-wrap gap-2 items-center mb-4 mt-2 px-1">
@@ -2548,11 +2411,7 @@
                 <!-- prettier-ignore -->
                 <table class="report-table min-w-full"><thead><tr><th scope="col" class="py-3 px-4" style="color:var(--t-brand)">No.</th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Project</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="string" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Title</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Created At</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="date" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">First Comment</span><span class="sort-icon" aria-hidden="true">↕</span></button></th><th data-type="status" aria-sort="none" scope="col" class="py-3 px-4" style="color:var(--t-brand)"><button type="button" class="th-sort-btn" title="Click to sort"><span class="th-content">Last Update / Status</span><span class="sort-icon" aria-hidden="true">↕</span></button></th></tr></thead><tbody><tr class="qr-row-a"><td>1.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #752</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/752" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add section to events page about our youtube page (#752)">Add section to events page about our youtube page</a></td><td data-value="2022-11-28T20:55:06Z" data-label="Created At">2022-11-28</td><td data-value="2022-11-29T17:51:20Z" data-label="First Comment">2022-11-29</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2026-06-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>2.</td><td data-label="Project"><span class="qr-repo">mgreiler/se-unlocked #146</span></td><td data-label="Title"><a href="https://github.com/mgreiler/se-unlocked/issues/146" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Improve transcript 65 Harshit Chitalia (#146)">Improve transcript 65 Harshit Chitalia</a></td><td data-value="2022-10-03T17:02:07Z" data-label="Created At">2022-10-03</td><td data-value="2022-10-04T11:38:57Z" data-label="First Comment">2022-10-04</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2022-10-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-a"><td>3.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #643</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/643" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Give yourself the Hacktoberfest2022 badge! (#643)">Give yourself the Hacktoberfest2022 badge!</a></td><td data-value="2022-10-03T14:20:32Z" data-label="Created At">2022-10-03</td><td data-value="2022-10-04T09:57:18Z" data-label="First Comment">2022-10-04</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2026-06-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr><tr class="qr-row-b"><td>4.</td><td data-label="Project"><span class="qr-repo">Virtual-Coffee/virtualcoffee.io #653</span></td><td data-label="Title"><a href="https://github.com/Virtual-Coffee/virtualcoffee.io/issues/653" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Add Code of Conduct link to the footer (#653)">Add Code of Conduct link to the footer</a></td><td data-value="2022-10-03T19:48:32Z" data-label="Created At">2022-10-03</td><td data-value="2022-10-04T09:50:12Z" data-label="First Comment">2022-10-04</td><td data-value="CLOSED" data-label="Last Update / Status"><span class="qr-status-cell">2026-06-15<br><span class="inline-block px-2 py-0.5 text-xs rounded-full font-semibold" style="background-color: var(--t-critical-wash); color: var(--t-critical);">CLOSED</span></span></td></tr></tbody></table>
               </div>
-              <button
-                type="button"
-                class="qr-cat-top"
-                data-scroll-target="collaborations-scroll"
-              >
+              <button type="button" class="qr-cat-top" data-scroll-target="collaborations-scroll">
                 ↑ Back to top
               </button>
             </details>
@@ -2566,9 +2425,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-left"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Previous</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Previous</span>
                 <span
                   class="flex items-center space-x-1 font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2600,9 +2457,7 @@
                 class="flex-1 min-w-0 sm:flex-none sm:w-52 h-20 p-2 sm:p-4 flex flex-col justify-center rounded-lg shadow-md transition duration-200 border qr-nav-card nav-report-button text-right"
                 style="color: var(--t-brand)"
               >
-                <span class="text-xs font-medium" style="color: var(--t-ink-3)"
-                  >Next</span
-                >
+                <span class="text-xs font-medium" style="color: var(--t-ink-3)">Next</span>
                 <span
                   class="flex items-center space-x-1 justify-end font-bold text-sm sm:text-lg break-words whitespace-normal"
                   style="color: var(--t-brand)"
@@ -2645,7 +2500,7 @@
         OPEN: 3,
         MERGED: 2,
         CLOSED: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       // Custom Priority 2: Closed -> Merged -> Open (Historical view)
@@ -2653,50 +2508,45 @@
         CLOSED: 3,
         MERGED: 2,
         OPEN: 1,
-        "N/A": 0,
+        'N/A': 0,
       };
 
       class ReportTableManager {
         constructor(detailsElement) {
           this.detailsElement = detailsElement;
-          this.table = detailsElement.querySelector("table");
-          this.tbody = this.table.querySelector("tbody");
-          this.rows = Array.from(this.tbody.querySelectorAll("tr"));
-          this.searchInput = detailsElement.querySelector(".search-input");
-          this.resetBtn = detailsElement.querySelector(".reset-btn");
-          this.headers = detailsElement.querySelectorAll("th");
+          this.table = detailsElement.querySelector('table');
+          this.tbody = this.table.querySelector('tbody');
+          this.rows = Array.from(this.tbody.querySelectorAll('tr'));
+          this.searchInput = detailsElement.querySelector('.search-input');
+          this.resetBtn = detailsElement.querySelector('.reset-btn');
+          this.headers = detailsElement.querySelectorAll('th');
 
           // Store original order for reset
-          this.rows.forEach((row, index) =>
-            row.setAttribute("data-original-index", index),
-          );
+          this.rows.forEach((row, index) => row.setAttribute('data-original-index', index));
 
-          this.currentSort = { column: null, direction: "default" };
+          this.currentSort = { column: null, direction: 'default' };
 
           this.init();
         }
 
         init() {
           this.headers.forEach((th, index) => {
-            if (th.hasAttribute("data-type")) {
+            if (th.hasAttribute('data-type')) {
               // The <button> inside the <th> is the actual interactive control
               // (see quarterly-reports-html-generator.js) — native buttons are
               // keyboard-operable for free, so sort is reachable via Tab/Enter/
               // Space, not just a mouse click.
-              const btn = th.querySelector(".th-sort-btn");
-              if (btn)
-                btn.addEventListener("click", () => this.handleSort(th, index));
+              const btn = th.querySelector('.th-sort-btn');
+              if (btn) btn.addEventListener('click', () => this.handleSort(th, index));
             }
           });
 
           if (this.searchInput) {
-            this.searchInput.addEventListener("input", (e) =>
-              this.handleSearch(e.target.value),
-            );
+            this.searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
           }
 
           if (this.resetBtn) {
-            this.resetBtn.addEventListener("click", () => this.resetAll());
+            this.resetBtn.addEventListener('click', () => this.resetAll());
           }
         }
 
@@ -2704,24 +2554,24 @@
           const { column, direction } = this.currentSort;
 
           if (column !== columnIndex) {
-            if (type === "date") return "desc";
-            if (type === "number") return "asc";
-            if (type === "status") return "custom1";
-            return "asc";
+            if (type === 'date') return 'desc';
+            if (type === 'number') return 'asc';
+            if (type === 'status') return 'custom1';
+            return 'asc';
           }
 
-          if (type === "status") {
-            if (direction === "custom1") return "custom2";
-            if (direction === "custom2") return "default";
-            return "custom1";
-          } else if (type === "date") {
-            if (direction === "desc") return "asc";
-            if (direction === "asc") return "default";
-            return "desc";
+          if (type === 'status') {
+            if (direction === 'custom1') return 'custom2';
+            if (direction === 'custom2') return 'default';
+            return 'custom1';
+          } else if (type === 'date') {
+            if (direction === 'desc') return 'asc';
+            if (direction === 'asc') return 'default';
+            return 'desc';
           } else {
-            if (direction === "asc") return "desc";
-            if (direction === "desc") return "default";
-            return "asc";
+            if (direction === 'asc') return 'desc';
+            if (direction === 'desc') return 'default';
+            return 'asc';
           }
         }
 
@@ -2729,15 +2579,13 @@
           const numericVal = parseFloat(val);
           const isNumeric = !isNaN(numericVal) && isFinite(numericVal);
           if (isNumeric) return numericVal;
-          return direction === "asc"
-            ? Number.NEGATIVE_INFINITY
-            : Number.POSITIVE_INFINITY;
+          return direction === 'asc' ? Number.NEGATIVE_INFINITY : Number.POSITIVE_INFINITY;
         }
 
         updateRowNumbers() {
           let visibleCounter = 1;
           this.rows.forEach((row) => {
-            if (row.style.display !== "none") {
+            if (row.style.display !== 'none') {
               const firstCell = row.children[0];
               if (firstCell) {
                 firstCell.textContent = `${visibleCounter}.`;
@@ -2748,36 +2596,29 @@
         }
 
         handleSort(th, columnIndex) {
-          const type = th.getAttribute("data-type") || "string";
+          const type = th.getAttribute('data-type') || 'string';
           const nextDir = this.getNextDirection(columnIndex, type);
 
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
 
           this.currentSort = { column: columnIndex, direction: nextDir };
 
-          if (nextDir === "default") {
+          if (nextDir === 'default') {
             this.rows.sort((a, b) => {
               return (
-                parseInt(a.getAttribute("data-original-index")) -
-                parseInt(b.getAttribute("data-original-index"))
+                parseInt(a.getAttribute('data-original-index')) -
+                parseInt(b.getAttribute('data-original-index'))
               );
             });
           } else {
-            const icon = th.querySelector(".sort-icon");
+            const icon = th.querySelector('.sort-icon');
             if (icon) {
-              icon.textContent =
-                nextDir === "desc" || nextDir === "custom2" ? "▼" : "▲";
+              icon.textContent = nextDir === 'desc' || nextDir === 'custom2' ? '▼' : '▲';
             }
             th.classList.add(`sort-${nextDir}`);
             // aria-sort only accepts none/ascending/descending/other — the status
@@ -2785,36 +2626,23 @@
             // reverse) isn't alphabetical/numeric, so it maps to "other" rather
             // than a direction that would misdescribe it.
             const ariaSortValue =
-              nextDir === "asc"
-                ? "ascending"
-                : nextDir === "desc"
-                  ? "descending"
-                  : "other";
-            th.setAttribute("aria-sort", ariaSortValue);
+              nextDir === 'asc' ? 'ascending' : nextDir === 'desc' ? 'descending' : 'other';
+            th.setAttribute('aria-sort', ariaSortValue);
 
             // Find indices if they exist in this table for tie-breaking
             const headerArray = Array.from(this.headers);
-            const dateIdx = headerArray.findIndex(
-              (h) => h.getAttribute("data-type") === "date",
-            );
+            const dateIdx = headerArray.findIndex((h) => h.getAttribute('data-type') === 'date');
 
             this.rows.sort((rowA, rowB) => {
               const cellA = rowA.children[columnIndex];
               const cellB = rowB.children[columnIndex];
 
-              let valA = (
-                cellA.getAttribute("data-value") || cellA.textContent
-              ).trim();
-              let valB = (
-                cellB.getAttribute("data-value") || cellB.textContent
-              ).trim();
+              let valA = (cellA.getAttribute('data-value') || cellA.textContent).trim();
+              let valB = (cellB.getAttribute('data-value') || cellB.textContent).trim();
 
               // 1. Status Logic: Sort by Priority then Tie-break by Date
-              if (type === "status") {
-                const priorityMap =
-                  nextDir === "custom1"
-                    ? STATUS_PRIORITY_P1
-                    : STATUS_PRIORITY_P2;
+              if (type === 'status') {
+                const priorityMap = nextDir === 'custom1' ? STATUS_PRIORITY_P1 : STATUS_PRIORITY_P2;
                 const scoreA = priorityMap[valA.toUpperCase()] || 0;
                 const scoreB = priorityMap[valB.toUpperCase()] || 0;
 
@@ -2829,39 +2657,33 @@
                   dA = new Date(dateMatchA[0]).getTime();
                   dB = new Date(dateMatchB[0]).getTime();
                 } else if (dateIdx !== -1) {
-                  dA = new Date(
-                    rowA.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
-                  dB = new Date(
-                    rowB.children[dateIdx].getAttribute("data-value"),
-                  ).getTime();
+                  dA = new Date(rowA.children[dateIdx].getAttribute('data-value')).getTime();
+                  dB = new Date(rowB.children[dateIdx].getAttribute('data-value')).getTime();
                 }
 
-                return nextDir === "custom1" ? dB - dA : dA - dB;
+                return nextDir === 'custom1' ? dB - dA : dA - dB;
               }
 
               // 2. Date Logic: Strict Chronology
-              if (type === "date") {
+              if (type === 'date') {
                 const dA = new Date(valA).getTime();
                 const dB = new Date(valB).getTime();
-                let comp =
-                  isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
-                return nextDir === "desc" ? comp * -1 : comp;
+                let comp = isNaN(dA) || isNaN(dB) ? valA.localeCompare(valB) : dA - dB;
+                return nextDir === 'desc' ? comp * -1 : comp;
               }
 
               // 3. Number Logic: Handles N/A and Infinity
-              if (type === "number") {
+              if (type === 'number') {
                 let compA = this.getNumberComparableValue(valA, nextDir);
                 let compB = this.getNumberComparableValue(valB, nextDir);
                 let comp = compA - compB;
-                if (nextDir === "desc" && isFinite(compA) && isFinite(compB))
-                  comp *= -1;
+                if (nextDir === 'desc' && isFinite(compA) && isFinite(compB)) comp *= -1;
                 return comp;
               }
 
               // 4. String Logic
               let res = valA.toLowerCase().localeCompare(valB.toLowerCase());
-              return nextDir === "desc" ? res * -1 : res;
+              return nextDir === 'desc' ? res * -1 : res;
             });
           }
 
@@ -2874,70 +2696,60 @@
           let statusSearch = null;
           let textSearch = lowerQuery;
 
-          if (lowerQuery.startsWith("status:")) {
-            statusSearch = lowerQuery.replace("status:", "").trim();
+          if (lowerQuery.startsWith('status:')) {
+            statusSearch = lowerQuery.replace('status:', '').trim();
             textSearch = null;
           }
 
           const getColIdx = (t) =>
-            Array.from(this.headers).findIndex(
-              (th) => th.getAttribute("data-type") === t,
-            );
+            Array.from(this.headers).findIndex((th) => th.getAttribute('data-type') === t);
 
           this.rows.forEach((row) => {
             let show = false;
             if (statusSearch !== null) {
-              const idx = getColIdx("status");
+              const idx = getColIdx('status');
               if (idx !== -1) {
                 const val = (
-                  row.children[idx].getAttribute("data-value") ||
-                  row.children[idx].textContent
+                  row.children[idx].getAttribute('data-value') || row.children[idx].textContent
                 ).toLowerCase();
                 if (val.includes(statusSearch)) show = true;
               }
             } else if (textSearch) {
-              if (row.textContent.toLowerCase().includes(textSearch))
-                show = true;
+              if (row.textContent.toLowerCase().includes(textSearch)) show = true;
             } else {
               show = true;
             }
-            row.style.display = show ? "" : "none";
+            row.style.display = show ? '' : 'none';
           });
           this.updateRowNumbers();
         }
 
         resetAll() {
-          this.searchInput.value = "";
-          this.currentSort = { column: null, direction: "default" };
+          this.searchInput.value = '';
+          this.currentSort = { column: null, direction: 'default' };
           this.headers.forEach((h) => {
-            h.classList.remove(
-              "sort-asc",
-              "sort-desc",
-              "sort-custom1",
-              "sort-custom2",
-            );
-            if (h.hasAttribute("data-type"))
-              h.setAttribute("aria-sort", "none");
-            const icon = h.querySelector(".sort-icon");
-            if (icon) icon.textContent = "↕";
+            h.classList.remove('sort-asc', 'sort-desc', 'sort-custom1', 'sort-custom2');
+            if (h.hasAttribute('data-type')) h.setAttribute('aria-sort', 'none');
+            const icon = h.querySelector('.sort-icon');
+            if (icon) icon.textContent = '↕';
           });
           this.rows.sort(
             (a, b) =>
-              parseInt(a.getAttribute("data-original-index")) -
-              parseInt(b.getAttribute("data-original-index")),
+              parseInt(a.getAttribute('data-original-index')) -
+              parseInt(b.getAttribute('data-original-index'))
           );
           this.rows.forEach((row) => {
             this.tbody.appendChild(row);
-            row.style.display = "";
+            row.style.display = '';
           });
           this.updateRowNumbers();
         }
       }
 
       // Global Initialization
-      document.addEventListener("DOMContentLoaded", () => {
-        document.querySelectorAll("details").forEach((details) => {
-          if (details.querySelector("table")) {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('details').forEach((details) => {
+          if (details.querySelector('table')) {
             new ReportTableManager(details);
           }
         });
@@ -2948,56 +2760,47 @@
         const hash = window.location.hash;
         if (hash) {
           const targetDetails = document.querySelector(hash);
-          if (targetDetails && targetDetails.tagName === "DETAILS") {
+          if (targetDetails && targetDetails.tagName === 'DETAILS') {
             // Close all other details tags before opening the target one
-            document
-              .querySelectorAll("details")
-              .forEach((detail) => (detail.open = false));
+            document.querySelectorAll('details').forEach((detail) => (detail.open = false));
             targetDetails.open = true;
             // Scroll to the opened section with a slight delay
             setTimeout(() => {
-              const reduceMotion = window.matchMedia(
-                "(prefers-reduced-motion: reduce)",
-              ).matches;
+              const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
               targetDetails.scrollIntoView({
-                behavior: reduceMotion ? "auto" : "smooth",
-                block: "start",
+                behavior: reduceMotion ? 'auto' : 'smooth',
+                block: 'start',
               });
             }, 100);
           }
         } else {
           // Open 'Merged PRs' by default if no hash is present.
-          const defaultDetails = document.getElementById("merged-prs");
+          const defaultDetails = document.getElementById('merged-prs');
           if (defaultDetails) defaultDetails.open = true;
         }
       }
-      window.addEventListener("DOMContentLoaded", openSectionFromHash);
-      window.addEventListener("hashchange", openSectionFromHash);
+      window.addEventListener('DOMContentLoaded', openSectionFromHash);
+      window.addEventListener('hashchange', openSectionFromHash);
 
       // Per-category "back to top" resets that category's own table
       // container back to its first row. Each table scrolls inside its
       // own max-h-[70vh] overflow-y-auto box, independent of the page —
       // scrolling the page to the <details> summary wouldn't move that
       // box back to row one, so this scrolls the container itself.
-      document.addEventListener("click", (e) => {
-        const btn = e.target.closest(".qr-cat-top");
+      document.addEventListener('click', (e) => {
+        const btn = e.target.closest('.qr-cat-top');
         if (!btn) return;
         const container = document.getElementById(btn.dataset.scrollTarget);
         if (!container) return;
-        const reduceMotion = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
-        ).matches;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         container.scrollTo({
           top: 0,
-          behavior: reduceMotion ? "auto" : "smooth",
+          behavior: reduceMotion ? 'auto' : 'smooth',
         });
       });
     </script>
     <footer
-      style="
-        border-top-color: var(--c-neutral-10);
-        color: var(--c-text-secondary-rgb);
-      "
+      style="border-top-color: var(--c-neutral-10); color: var(--c-text-secondary-rgb)"
       class="mt-16 py-8 border-t text-center text-sm"
     >
       <div class="mb-1">
@@ -3010,7 +2813,7 @@
           class="hover:opacity-80 font-semibold transition duration-150"
         >
           adiati98 </a
-        >'s open source contributions, generated on September 13, 2026.
+        >'s open source contributions, generated on September 14, 2026.
       </div>
 
       <div class="text-xs mt-1">
@@ -3037,31 +2840,23 @@
         </a>
       </div>
     </footer>
-    <button
-      type="button"
-      id="back-to-top"
-      class="back-to-top"
-      aria-label="Back to top"
-      hidden
-    >
+    <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top" hidden>
       <span aria-hidden="true">↑</span>
     </button>
     <script>
       (function () {
-        var btn = document.getElementById("back-to-top");
+        var btn = document.getElementById('back-to-top');
         if (!btn) return;
         function onScroll() {
           btn.hidden = window.scrollY < window.innerHeight * 1.5;
         }
-        window.addEventListener("scroll", onScroll, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();
-        btn.addEventListener("click", function () {
-          var reduceMotion = window.matchMedia(
-            "(prefers-reduced-motion: reduce)",
-          ).matches;
+        btn.addEventListener('click', function () {
+          var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
           window.scrollTo({
             top: 0,
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: reduceMotion ? 'auto' : 'smooth',
           });
         });
       })();
