@@ -25,7 +25,10 @@ Articles by **adiati98**, covering insights and tutorials regarding the Open Sou
 
 ## 🏢 Written for organizations
 
-### Mautic — 1 article
+### Mautic — 2 articles
+
+- **[How Mautic pairs Promptless with human review to catch up on docs](https://dev.to/adiatiayu/how-mautic-pairs-promptless-with-human-review-to-catch-up-on-docs-12j4)**
+  September 15, 2026
 
 - **[Giving non-code contributions the recognition they deserve](https://dev.to/adiatiayu/giving-non-code-contributions-the-recognition-they-deserve-2phj)**
   October 15, 2025
