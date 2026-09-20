@@ -559,6 +559,274 @@
     "body": "[Open this suggestion in Promptless to view citations and reasoning process](https://app.gopromptless.ai/suggestions/23042c19-daa6-4802-a83f-b29e6b7d0440)\n\nDocuments the new `POST /emails/ID/example/send` endpoint added in mautic/mautic#16308, the API equivalent of the Email builder's \"Send example\" proof action. Covers request body (`recipients`, `contactId`, `tokens`, `noSubjectPrefix`), permissions, the `{ success, sent, errors }` response, and how it differs from the existing send-to-contact and send-to-segment endpoints. Also adds cross-reference anchors to those two sections.\n\n**Trigger Events**\n- [mautic/mautic PR #16308: Send Email Example Api](https://github.com/mautic/mautic/pull/16308)\n\n---\n\n_Tip: Sort by Shortest Review in the [Dashboard](https://app.gopromptless.ai) to find quick wins ⚡_"
   },
   {
+    "title": "Document Field Groups REST API and FIELD_GROUP_LIST_ON_GENERATE event",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/531",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Co-authoring",
+    "createdAt": "2026-06-15T21:45:29Z",
+    "updatedAt": "2026-09-19T11:29:11Z",
+    "number": 531,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["pending-pr-merge", "needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": "CHANGES_REQUESTED",
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-09-19T11:29:11.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-06-15T21:45:30Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-06-15T21:45:31Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-06-15T21:45:32Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-06-15T21:45:32Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-06-15T21:45:33Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "CHANGES_REQUESTED",
+        "submittedAt": "2026-06-23T09:13:03Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "CHANGES_REQUESTED",
+        "submittedAt": "2026-06-24T10:51:39Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "CHANGES_REQUESTED",
+        "submittedAt": "2026-06-24T11:20:20Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:30Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:31Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:32Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:33Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:33Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:03:43Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:04:43Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:05:23Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:05:45Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:06:09Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:06:37Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:07:06Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:07:47Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:08:28Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-23T09:11:27Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-23T09:33:59Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T10:35:23Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T10:43:59Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T10:48:56Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T10:49:54Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-24T10:59:34Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T11:17:58Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-24T11:18:52Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-24T11:23:18Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-09-19T11:20:40Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-19T11:21:58Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-19T11:29:11Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:29Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:30Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-06-15T21:45:30Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.3",
+    "milestone": "7.3",
+    "linkedCodePrState": "open",
+    "body": "[Open this suggestion in Promptless to view citations and reasoning process](https://app.gopromptless.ai/suggestions/2f3ff7c5-5ea1-4bfc-b602-fedf77fbb41c)\n\nAdds developer docs for the Custom Field Groups feature merged into core LeadBundle in mautic/mautic#16265: a new REST API reference page for the /field-groups CRUD endpoints, and a new section in the Contacts plugin-extensions page covering the FIELD_GROUP_LIST_ON_GENERATE event and FieldGroupListEvent. Targets the 7.2 branch (mautic/mautic 7.x).\n\n**Trigger Events**\n- [mautic/mautic PR #16265: Add Field Groups to the core](https://github.com/mautic/mautic/pull/16265)\n\n---\n\n_Tip: Configure how Promptless handles changelogs in [Agent Settings](https://app.gopromptless.ai/configure/settings) 📋_"
+  },
+  {
     "title": "Document form style-only Theme import requirements",
     "url": "https://github.com/mautic/developer-documentation-new/pull/527",
     "repo": "mautic/developer-documentation-new",
@@ -1506,6 +1774,277 @@
     "milestone": null,
     "linkedCodePrState": null,
     "body": "## Description\r\n\r\nThis PR adds docs about literally every information found in backend about how UTM tags work in all features.\r\nCovers more than 14 features.\r\nA lot of info that there's nowhere in the internet available, since investigation was done in backend to get a full picture. \r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nClearly describe what changes you have made in this PR, where our maintainers or reviewers should look at, and how to test the changes.\r\n\r\nIf the request is not complete but you want feedback or have quetions, you can select the \"Draft Pull Request\" option from the dropdown menu when creating the PR, then ask your questions or write your feedback in the comment.\r\n\r\n-->\r\n\r\n## Linked issue\r\n\r\n<!-- PLEASE WRITE ABOVE THIS COMMENT. -->\r\n\r\n<!--\r\n\r\nIf your PR is related to a current issue, please link to that issue number. Type the keyword \"Closes\" followed by a hashtag (#) symbol and the issue number that you can find right after the issue title. Don't add anything else, such as period, comma, etc, to this. For example:\r\n\r\n❌ Closes: #123.\r\n\r\n✅ Closes #123\r\n\r\nDoing so will automatically close the issue when one of our maintainers merges your PR.\r\n\r\n-->\r\n\r\n## Screenshots or screen recordings\r\n\r\n<!-- \r\n\r\nProvide screenshots or screen recordings before and after the changes, if it's a UI changes. You can simply drag and drop your files above this comment.\r\n\r\n-->\r\n\r\n<img width=\"1238\" height=\"459\" alt=\"image\" src=\"https://github.com/user-attachments/assets/54bb82b7-0fab-4fc5-9872-b50f03369b2b\" />\r\n"
+  },
+  {
+    "title": "docs: Document PostgreSQL database support for Mautic 7.x",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/310",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Co-authoring",
+    "createdAt": "2026-03-24T12:21:33Z",
+    "updatedAt": "2026-09-19T11:42:14Z",
+    "number": 310,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["pending-pr-merge", "needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": "CHANGES_REQUESTED",
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-09-19T11:42:14.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-03-24T12:21:34Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-03-24T12:21:35Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-03-24T12:21:35Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "CHANGES_REQUESTED",
+        "submittedAt": "2026-06-01T13:51:42Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "CHANGES_REQUESTED",
+        "submittedAt": "2026-06-05T07:44:04Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:03:06Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-01T13:04:21Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:07:48Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-01T13:10:15Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:22:10Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-01T13:23:37Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:44:35Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:45:04Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:45:17Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:45:55Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:46:25Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:47:35Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:47:51Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:48:52Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:49:15Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:51:08Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-01T13:51:32Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-01T13:54:45Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-05T07:40:53Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-05T07:43:11Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-05T07:46:41Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-05T07:59:48Z",
+        "isBot": false,
+        "mentions": ["wieslawgolec"]
+      },
+      {
+        "login": "wieslawgolec",
+        "createdAt": "2026-06-08T07:29:40Z",
+        "isBot": false,
+        "mentions": ["wieslawgolec", "adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-06-08T07:33:51Z",
+        "isBot": false,
+        "mentions": ["wieslawgolec"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-06-08T09:50:55Z",
+        "isBot": false,
+        "mentions": ["wieslawgolec"]
+      },
+      {
+        "login": "wieslawgolec",
+        "createdAt": "2026-06-09T08:32:08Z",
+        "isBot": false,
+        "mentions": ["wieslawgolec", "adiati98"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-09-19T11:25:04Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-19T11:25:28Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-19T11:37:47Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-09-19T11:42:14Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "adiati98",
+        "createdAt": "2026-06-05T07:51:31Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "adiati98",
+        "createdAt": "2026-06-05T07:51:32Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "adiati98",
+        "createdAt": "2026-06-05T07:51:32Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.3",
+    "milestone": "7.3",
+    "linkedCodePrState": "open",
+    "body": "[Open this suggestion in Promptless to view citations and reasoning process](https://app.gopromptless.ai/suggestions/cb9d8a7e-fffe-4185-a670-157aa1701b0a)\n\nDocuments the reintroduction of PostgreSQL database support in Mautic 7.x (mautic/mautic#15926).\n\n## Changes\n\n**Development setup** (`docs/development-environment/setup.rst`):\n- Added PostgreSQL configuration example alongside MySQL\n- Includes driver, port, and extension requirements\n\n**Database compatibility** (`docs/plugins/database.rst`):\n- New \"Database compatibility\" section with comprehensive guidance\n- Documents supported databases table (MySQL 8.0+, MariaDB 10.6+, PostgreSQL 16+)\n- Case-insensitive string matching helpers (`getILikeExpression`, `getLowerLikeExpression`)\n- Column/alias quoting requirements for `camelCase` identifiers\n- GROUP BY strictness differences between platforms\n- Platform detection methods and best practices\n\n**Testing** (`docs/testing/e2e_test_suite.rst`):\n- Added \"Testing on multiple databases\" section\n- Documents tested database versions (PostgreSQL 16/18, MariaDB 10.11/11.4, MySQL 8.4/9.4)\n- PostgreSQL test environment configuration\n- Database-specific test considerations\n\n## Why this matters for developers\n\n- Developers can now choose PostgreSQL as their database platform\n- Clear guidance on writing database-agnostic queries prevents runtime errors\n- Helper methods in `CommonRepository` abstract platform differences\n- Testing guidance helps ensure Plugins work across all databases\n\n**Source:** [PR #15926](https://github.com/mautic/mautic/pull/15926) - Reintroducing PostgreSQL Database Support in Mautic 7.x"
   },
   {
     "title": "docs: Clarify that value 0 is valid when setting contact fields via API",
