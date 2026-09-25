@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-09-24T06:00:15.679Z",
+  "fetchedAt": "2026-09-25T06:01:19.816Z",
   "data": {
     "mautic/developer-documentation-new#684": {
       "docsUpdatedAt": "2026-09-22T12:32:17Z",
@@ -89,124 +89,8 @@
       ],
       "readyForReviewAt": "2026-09-22T12:32:16Z"
     },
-    "mautic/developer-documentation-new#683": {
-      "docsUpdatedAt": "2026-09-18T19:12:00Z",
-      "codeUpdatedAt": "2026-09-18T18:42:17Z",
-      "rawDocsReviews": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-17T19:38:32Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-17T19:38:36Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-17T19:38:39Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-17T19:38:41Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-17T19:38:44Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "adiati98" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-18T18:43:51Z",
-          "body": "@promptless-for-oss please address the Vale warnings."
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-18T19:12:00Z",
-          "body": "LGTM"
-        }
-      ],
-      "rawDocsComments": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-17T19:46:09Z",
-          "body": "I noticed that some CI checks failed for this PR. I'm investigating whether the failures are caused by this suggestion. If they're unrelated or pre-existing, I'll leave this suggestion unchanged and create a separate suggestion if a standalone docs fix is needed."
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-18T18:44:48Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/developer-documentation-new/pull/683#pullrequestreview-5251361099)\n\n<!-- promptless-comment-body:v1:7ae28aad-9a0e-453d-8ad8-f0f387462bf2 -->\n\nThanks — on it. We're reviewing the Vale warnings on this PR and will push fixes to this branch, then follow up here once it's clean.\n\n<!-- promptless-comment:v1:7ae28aad-9a0e-453d-8ad8-f0f387462bf2 -->"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-18T18:56:07Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/developer-documentation-new/pull/683#pullrequestreview-5251361099)\n\n<!-- promptless-comment-body:v1:26666e74-97ff-4b8e-9815-505d5e0d7b06 -->\n\nThanks for the review — we've addressed the Vale warnings and pushed the fix. All five were `Mautic.FeatureList` false positives: the rule was flagging lowercase feature words (`campaigns`, `channels`, `emails`, `forms`, `points`) that appear inside `:doc:` cross-reference *paths*. Those path segments have to stay lowercase to match the real target filenames, so capitalizing them would break the links — the correct fix is to exempt just those reference lines, which we did by extending each line's already-adjacent `.. vale off` block to cover it (matching this page's existing convention). No documentation wording changed. Vale now reports 0 errors, 0 warnings, and 0 suggestions on the changed files under the project's own config, so the CI Vale check should pass on the new commit.\n\n<!-- promptless-comment:v1:26666e74-97ff-4b8e-9815-505d5e0d7b06 -->"
-        }
-      ],
-      "rawCodeComments": [
-        {
-          "user": { "login": "TomasVotruba" },
-          "created_at": "2026-09-17T18:54:09Z",
-          "body": "Ready :+1: "
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-17T19:40:45Z",
-          "body": "### Promptless documentation updates\n\n- [Add Mautic 8 Plugin upgrade guide for event class type declarations](https://app.gopromptless.ai/suggestions/1a283ea3-5b00-4ec3-970b-aeaa3cd5cef4) adds a new `docs/plugins/update_m7_to_m8.rst` page documenting the plugin backward-compatibility impact of the native PHP type declarations added here (narrowed signatures that can raise a `TypeError`). [Docs PR](https://github.com/mautic/developer-documentation-new/pull/683)"
-        },
-        {
-          "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-18T07:50:25Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17438) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17438&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17438&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=17438&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17438&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17438&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17438)\n\n"
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:42:17Z",
-          "body": "Hi @TomasVotruba,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/developer-documentation-new/pull/683"
-        }
-      ],
-      "rawCodeReviews": [
-        {
-          "user": { "login": "escopecz" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-18T09:57:50Z",
-          "body": "I see no issue here 👍 "
-        }
-      ],
-      "rawReviewRequests": [
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-18T09:58:12Z",
-          "requested_reviewer": null,
-          "requested_team": { "slug": "education-team-leaders" }
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-18T09:58:13Z",
-          "requested_reviewer": { "login": "adiati98" },
-          "requested_team": null
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-18T09:58:13Z",
-          "requested_reviewer": { "login": "favour-chibueze" },
-          "requested_team": null
-        }
-      ],
-      "readyForReviewAt": "2026-09-18T09:58:11Z"
-    },
     "mautic/developer-documentation-new#682": {
-      "docsUpdatedAt": "2026-09-22T22:43:40Z",
+      "docsUpdatedAt": "2026-09-24T17:46:33Z",
       "codeUpdatedAt": "2026-09-23T07:34:55Z",
       "rawDocsReviews": [
         {
@@ -480,7 +364,7 @@
       "readyForReviewAt": "2026-09-22T22:43:39Z"
     },
     "mautic/developer-documentation-new#681": {
-      "docsUpdatedAt": "2026-09-17T16:30:10Z",
+      "docsUpdatedAt": "2026-09-24T17:45:36Z",
       "codeUpdatedAt": "2026-09-17T19:38:05Z",
       "rawDocsReviews": [
         {
@@ -524,7 +408,7 @@
       "readyForReviewAt": null
     },
     "mautic/developer-documentation-new#678": {
-      "docsUpdatedAt": "2026-09-23T07:24:07Z",
+      "docsUpdatedAt": "2026-09-24T17:45:49Z",
       "codeUpdatedAt": "2026-09-23T07:16:12Z",
       "rawDocsReviews": [
         {
@@ -826,124 +710,6 @@
         }
       ],
       "readyForReviewAt": null
-    },
-    "mautic/developer-documentation-new#668": {
-      "docsUpdatedAt": "2026-09-18T19:09:21Z",
-      "codeUpdatedAt": "2026-09-18T18:45:01Z",
-      "rawDocsReviews": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:16Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:18Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:20Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:22Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:24Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:26Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T11:41:29Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-13T20:38:21Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-18T19:09:21Z",
-          "body": "LGTM"
-        }
-      ],
-      "rawDocsComments": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-13T20:55:10Z",
-          "body": "I noticed that some CI checks failed for this PR. I'm investigating whether the failures are caused by this suggestion. If they're unrelated or pre-existing, I'll leave this suggestion unchanged and create a separate suggestion if a standalone docs fix is needed."
-        }
-      ],
-      "rawCodeComments": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-13T11:42:57Z",
-          "body": "### Promptless documentation updates\n\n- [Document Mautic 8 FormModel parameter-type changes for Plugin authors](https://app.gopromptless.ai/suggestions/e213e64e-147b-4c33-9db3-c72f268551b6) adds a Plugins MVC note covering the new `object`/`array` parameter types on base `FormModel` and `AbstractCommonModel` methods and the override-compatibility rule for Plugin Models. [Docs PR](https://github.com/mautic/developer-documentation-new/pull/668)"
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "created_at": "2026-09-13T20:18:57Z",
-          "body": "Ready for review :+1: "
-        },
-        {
-          "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-13T20:24:50Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17365) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [23 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17365&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17365&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=17365&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17365&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17365&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17365)\n\n"
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:45:01Z",
-          "body": "Hi @TomasVotruba,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/developer-documentation-new/pull/668"
-        }
-      ],
-      "rawCodeReviews": [
-        {
-          "user": { "login": "escopecz" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-14T10:17:03Z",
-          "body": "I see nothing wrong here 👍 "
-        }
-      ],
-      "rawReviewRequests": [
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-14T10:17:19Z",
-          "requested_reviewer": null,
-          "requested_team": { "slug": "education-team-leaders" }
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-14T10:17:19Z",
-          "requested_reviewer": { "login": "adiati98" },
-          "requested_team": null
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-14T10:17:20Z",
-          "requested_reviewer": { "login": "favour-chibueze" },
-          "requested_team": null
-        }
-      ],
-      "readyForReviewAt": "2026-09-14T10:17:19Z"
     },
     "mautic/developer-documentation-new#667": {
       "docsUpdatedAt": "2026-09-22T13:13:12Z",
@@ -1822,199 +1588,6 @@
         }
       ],
       "readyForReviewAt": "2026-09-04T09:38:30Z"
-    },
-    "mautic/developer-documentation-new#660": {
-      "docsUpdatedAt": "2026-09-18T19:48:50Z",
-      "codeUpdatedAt": "2026-09-18T19:09:38Z",
-      "rawDocsReviews": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:46Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:47Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:48Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:49Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:50Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:51Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:52Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:53Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:54Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T09:22:55Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T09:03:48Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T09:03:50Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T09:03:50Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "adiati98" },
-          "state": "CHANGES_REQUESTED",
-          "submitted_at": "2026-09-07T13:05:29Z",
-          "body": "@promptless-for-oss please address the suggestions."
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-18T19:48:50Z",
-          "body": "LGTM"
-        }
-      ],
-      "rawDocsComments": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-07T13:06:42Z",
-          "body": "Thanks @adiati98 — on it. We'll apply your style fixes (hyphens instead of parentheses and em dashes, `#.` for the ordered list, and active voice) and push an update to this PR shortly."
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-07T13:29:25Z",
-          "body": "Thanks for the review, @adiati98! I've addressed all the requested changes in `docs/plugin_extensions/emails.rst` and swept the rest of the diff for the same issues so nothing's left to re-flag:\n\n- **Hyphen instead of parentheses**: replaced the parenthetical asides in the \"Rendering custom tokens\" sentence and in the three \"Undefined constant\" notes with spaced hyphens.\n- **Hyphen instead of em dash**: the em dash in the send/display note is now a hyphen.\n- **`#.` instead of numbers**: the monitored-inbox ordered list now uses `#.` on all three items.\n- **Active instead of passive voice**: rewrote items 2 and 3 of that list - \"Mautic dispatches this event during the execution of the `mautic:email:fetch` command. Use it to inject search criteria for the desired messages.\" and \"This event parses the messages that the command fetched.\"\n\nCode blocks, class names, constants, and the `Error: Undefined constant` string are unchanged, and Vale passes with no new violations."
-        }
-      ],
-      "rawCodeComments": [
-        {
-          "user": { "login": "TomasVotruba" },
-          "created_at": "2026-09-02T08:43:26Z",
-          "body": "Ready to review :+1: "
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-02T09:24:08Z",
-          "body": "### Promptless documentation updates\n\n- [Document Mautic 8.0 class-name dispatch for Email bundle events](https://app.gopromptless.ai/suggestions/76467228-df36-4dab-8b62-d8d5f5bab1a5) updates the Email plugin-extension guide so subscribers key `getSubscribedEvents()` on the event class (`EmailOnBuildEvent::class`, `EmailSendEvent::class`, `EmailDisplayEvent::class`, `EmailOnTogglePublishEvent::class`, and `MonitoredEmailEvent::class`) instead of the removed `EmailEvents` string constants, and adds backward-compatibility notes. [Docs PR](https://github.com/mautic/developer-documentation-new/pull/660)"
-        },
-        {
-          "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-03T19:52:02Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17225) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17225&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17225&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=17225&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17225&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17225&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17225)\n\n"
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "created_at": "2026-09-03T20:22:24Z",
-          "body": "Just rebased"
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:39:51Z",
-          "body": "Hi @TomasVotruba,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/developer-documentation-new/pull/660"
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "created_at": "2026-09-18T19:09:38Z",
-          "body": "I'm on it :+1: "
-        }
-      ],
-      "rawCodeReviews": [
-        {
-          "user": { "login": "escopecz" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-02T10:26:15Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "escopecz" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T07:15:48Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T07:38:44Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "TomasVotruba" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-04T07:39:28Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "escopecz" },
-          "state": "APPROVED",
-          "submitted_at": "2026-09-04T08:36:43Z",
-          "body": "Ok, not a big deal. Plugins using this event will need an update either way 👍 "
-        }
-      ],
-      "rawReviewRequests": [
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:38:44Z",
-          "requested_reviewer": null,
-          "requested_team": { "slug": "education-team-leaders" }
-        },
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:38:44Z",
-          "requested_reviewer": { "login": "adiati98" },
-          "requested_team": null
-        },
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-18T18:38:44Z",
-          "requested_reviewer": { "login": "favour-chibueze" },
-          "requested_team": null
-        }
-      ],
-      "readyForReviewAt": "2026-09-18T18:38:43Z"
     },
     "mautic/developer-documentation-new#658": {
       "docsUpdatedAt": "2026-09-10T05:00:55Z",
@@ -4422,7 +3995,7 @@
       "readyForReviewAt": "2026-09-02T18:05:16Z"
     },
     "mautic/developer-documentation-new#630": {
-      "docsUpdatedAt": "2026-09-10T10:21:37Z",
+      "docsUpdatedAt": "2026-09-24T17:14:26Z",
       "codeUpdatedAt": "2026-09-04T06:59:14Z",
       "rawDocsReviews": [
         {
@@ -4508,6 +4081,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-09-10T10:21:37Z",
           "body": "In reply to [this discussion](https://github.com/mautic/developer-documentation-new/pull/630#issuecomment-5616982093)\n\nDone, @adiati98 — PR #630 is now based on `8.0`. The retarget was conflict-free (`8.0` and `7.2` currently point at the same commit, so the diff is unchanged) and it reports mergeable. Vale passes on `docs/plugins/mvc.rst` with no new findings. Ready for review on `8.0`.\n\n<!-- promptless-comment:v1:a7b0e932-c16d-493c-9146-bfc04bf4a0d1 -->"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T17:14:26Z",
+          "body": "I noticed that some CI checks failed for this PR. I'm investigating whether the failures are caused by this suggestion. If they're unrelated or pre-existing, I'll leave this suggestion unchanged and create a separate suggestion if a standalone docs fix is needed."
         }
       ],
       "rawCodeComments": [
@@ -5842,7 +5420,7 @@
       "readyForReviewAt": null
     },
     "mautic/developer-documentation-new#616": {
-      "docsUpdatedAt": "2026-09-23T06:51:53Z",
+      "docsUpdatedAt": "2026-09-24T17:45:17Z",
       "codeUpdatedAt": "2026-09-04T06:59:28Z",
       "rawDocsReviews": [
         {
@@ -9035,7 +8613,7 @@
     },
     "mautic/developer-documentation-new#310": {
       "docsUpdatedAt": "2026-09-19T11:42:14Z",
-      "codeUpdatedAt": "2026-09-23T14:46:59Z",
+      "codeUpdatedAt": "2026-09-24T13:19:50Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -9268,8 +8846,8 @@
         },
         {
           "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-23T14:46:59Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [32 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [4.6% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926)\n\n"
+          "created_at": "2026-09-24T13:19:50Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [35 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [4.6% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926)\n\n"
         }
       ],
       "rawCodeReviews": [
@@ -10391,10 +9969,33 @@
       "readyForReviewAt": null
     },
     "mautic/user-documentation#973": {
-      "docsUpdatedAt": "2026-09-15T11:30:09Z",
+      "docsUpdatedAt": "2026-09-24T12:23:36Z",
       "codeUpdatedAt": null,
-      "rawDocsReviews": [],
-      "rawDocsComments": [],
+      "rawDocsReviews": [
+        {
+          "user": { "login": "RCheesley" },
+          "state": "APPROVED",
+          "submitted_at": "2026-09-24T12:11:00Z",
+          "body": ""
+        }
+      ],
+      "rawDocsComments": [
+        {
+          "user": { "login": "RCheesley" },
+          "created_at": "2026-09-24T12:11:32Z",
+          "body": "Not sure if this one needs a back/forward port."
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:12:11Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/973#issuecomment-5813817231)\n\n<!-- promptless-comment-body:v1:c220d200-53e2-4d4a-bc81-943f16c5621b -->\n\nGood question — Promptless is checking which maintained version branches carry this same aivie.ch link and would hit the same linkcheck failure. It will reply here with whether a back/forward port is needed and open the ports where it is.\n\n<!-- promptless-comment:v1:c220d200-53e2-4d4a-bc81-943f16c5621b -->"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:23:36Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/973#issuecomment-5813817231)\n\n<!-- promptless-comment-body:v1:27997cf2-27ad-4ae9-9ee2-8bcfe441ac31 -->\n\nYes - it needs both a back-port and a forward-port. The aivie.ch link and the linkcheck configuration are identical on every maintained branch, and the 'Check links' job runs on all of them, so the same HTTP 415 WAF rejection happens on 8.0, 7.2, 7.1, 7.0, 6.0, and 5.2 as well as 7.3. Promptless opened one PR per branch to add https://aivie.ch to linkcheck_ignore, so together with this 7.3 PR every maintained branch is covered.\n\n8.0: https://github.com/mautic/user-documentation/pull/1000\n7.2: https://github.com/mautic/user-documentation/pull/1002\n7.1: https://github.com/mautic/user-documentation/pull/1003\n7.0: https://github.com/mautic/user-documentation/pull/1004\n6.0: https://github.com/mautic/user-documentation/pull/1005\n5.2: https://github.com/mautic/user-documentation/pull/1001\n\n<!-- promptless-comment:v1:27997cf2-27ad-4ae9-9ee2-8bcfe441ac31 -->"
+        }
+      ],
       "rawCodeComments": [],
       "rawCodeReviews": [],
       "rawReviewRequests": [
@@ -10420,10 +10021,26 @@
       "readyForReviewAt": null
     },
     "mautic/user-documentation#972": {
-      "docsUpdatedAt": "2026-09-15T10:44:23Z",
+      "docsUpdatedAt": "2026-09-24T12:20:48Z",
       "codeUpdatedAt": null,
       "rawDocsReviews": [],
-      "rawDocsComments": [],
+      "rawDocsComments": [
+        {
+          "user": { "login": "RCheesley" },
+          "created_at": "2026-09-24T12:10:33Z",
+          "body": "@promptless-for-oss wouldn't it be better to update the link to the final destination, which seems to be https://developers.hubspot.com/docs/api-reference/legacy/crm/objects/companies/guide? Is there a reason why we should not do that which I am unaware of?"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:11:27Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/972#issuecomment-5813804143)\n\n<!-- promptless-comment-body:v1:1e35fe44-556f-4466-a491-6fb24f9e076e -->\n\nThanks for raising this — it's a fair question. Promptless is verifying where this HubSpot link should point, including whether the destination you suggested is stable, and will reply here with what it finds and any change to the fix.\n\n<!-- promptless-comment:v1:1e35fe44-556f-4466-a491-6fb24f9e076e -->"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:20:48Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/972#issuecomment-5813804143)\n\n<!-- promptless-comment-body:v1:acdffd36-2eb5-4279-b7d3-44f0498dd7e3 -->\n\nYou're right, and there's no reason not to do it - I've updated PR #972 to point the docs link at its live final destination (https://developers.hubspot.com/docs/api-reference/legacy/crm/objects/companies/guide) and removed the temporary linkcheck-ignore entry. I verified that the old legacydocs.hubspot.com URL redirects (301, then 301, then 308) and lands exactly there, and that the final page returns HTTP 200 directly with no onward redirect in about 0.1s, so it won't re-trigger the link-checker timeout. This fixes the root cause instead of masking it, and since it was the repo's only legacydocs reference, dropping the ignore lets the checker keep watching the link for future rot.\n\nDocs PR: https://github.com/mautic/user-documentation/pull/972\n\n<!-- promptless-comment:v1:acdffd36-2eb5-4279-b7d3-44f0498dd7e3 -->"
+        }
+      ],
       "rawCodeComments": [],
       "rawCodeReviews": [],
       "rawReviewRequests": [
@@ -10442,108 +10059,6 @@
         {
           "actor": { "login": "promptless-for-oss" },
           "created_at": "2026-09-15T10:44:23Z",
-          "requested_reviewer": { "login": "favour-chibueze" },
-          "requested_team": null
-        }
-      ],
-      "readyForReviewAt": null
-    },
-    "mautic/user-documentation#971": {
-      "docsUpdatedAt": "2026-09-16T17:10:09Z",
-      "codeUpdatedAt": "2026-09-15T10:26:32Z",
-      "rawDocsReviews": [],
-      "rawDocsComments": [],
-      "rawCodeComments": [
-        {
-          "user": { "login": "andersonjeccel" },
-          "created_at": "2026-08-10T09:48:38Z",
-          "body": "@adiux would you mind reviewing this?"
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "created_at": "2026-08-12T09:49:21Z",
-          "body": "@adiux Updated, could you take another look?"
-        },
-        {
-          "user": { "login": "adiux" },
-          "created_at": "2026-08-12T10:06:28Z",
-          "body": "@andersonjeccel it is approved from my side, but there are some issues with the tests"
-        },
-        {
-          "user": { "login": "escopecz" },
-          "created_at": "2026-08-31T15:50:21Z",
-          "body": "@andersonjeccel please check the conflict"
-        },
-        {
-          "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-11T14:14:26Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16849) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16849&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16849&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16849&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16849&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16849&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16849)\n\n"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-11T14:51:49Z",
-          "body": "### Promptless documentation updates\n\n- [Document clearing Contact owner in bulk (No owner) and the Quick Add Save & New button](https://app.gopromptless.ai/suggestions/6c44bc50-5c90-4b29-8a88-b317f0ef2856) documents that the bulk **Change Owner** action can now clear the owner via a **No owner** choice, and adds the new Quick Add **Save & New** button, in `docs/contacts/manage_contacts.rst`. [Docs PR](https://github.com/mautic/user-documentation/pull/872)"
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:26:32Z",
-          "body": "Hi @andersonjeccel,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/user-documentation/pull/872"
-        }
-      ],
-      "rawCodeReviews": [
-        {
-          "user": { "login": "adiux" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-11T18:21:18Z",
-          "body": "Looks good to me. Added two small suggestions, but the code is fine without it."
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-08-12T09:49:16Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-08-12T09:49:18Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "hluchas" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-14T12:29:54Z",
-          "body": "I see no problem here. Woks as expected.\nTY!"
-        },
-        {
-          "user": { "login": "PatrickJenkner" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-14T13:19:18Z",
-          "body": "Worked as described 👍 "
-        },
-        {
-          "user": { "login": "shinde-rahul" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-28T10:01:13Z",
-          "body": "Looks good to me. The tests cover the change well."
-        }
-      ],
-      "rawReviewRequests": [
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:41:23Z",
-          "requested_reviewer": null,
-          "requested_team": { "slug": "education-team-leaders" }
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:41:24Z",
-          "requested_reviewer": { "login": "adiati98" },
-          "requested_team": null
-        },
-        {
-          "actor": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:41:24Z",
           "requested_reviewer": { "login": "favour-chibueze" },
           "requested_team": null
         }
@@ -10771,7 +10286,7 @@
     },
     "mautic/user-documentation#967": {
       "docsUpdatedAt": "2026-09-15T10:52:21Z",
-      "codeUpdatedAt": "2026-09-10T14:22:46Z",
+      "codeUpdatedAt": "2026-09-24T15:19:46Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -10829,8 +10344,8 @@
         },
         {
           "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-10T14:22:45Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17303) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [14 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17303&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17303&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=17303&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17303&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17303&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17303)\n\n"
+          "created_at": "2026-09-24T15:19:45Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17303) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17303&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=17303&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=17303&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17303&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=17303&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=17303)\n\n"
         }
       ],
       "rawCodeReviews": [],
@@ -11201,7 +10716,7 @@
       "readyForReviewAt": null
     },
     "mautic/user-documentation#915": {
-      "docsUpdatedAt": "2026-09-11T07:32:40Z",
+      "docsUpdatedAt": "2026-09-24T12:20:38Z",
       "codeUpdatedAt": "2026-09-01T06:46:35Z",
       "rawDocsReviews": [
         {
@@ -11245,6 +10760,12 @@
           "state": "COMMENTED",
           "submitted_at": "2026-09-04T13:25:20Z",
           "body": ""
+        },
+        {
+          "user": { "login": "RCheesley" },
+          "state": "APPROVED",
+          "submitted_at": "2026-09-24T12:04:48Z",
+          "body": "LGTM!"
         }
       ],
       "rawDocsComments": [
@@ -11262,6 +10783,21 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-09-04T13:26:41Z",
           "body": "@adiati98 good question — the two steps aren't duplicates, so I reworded them for clarity rather than merging them. The first step picks the entity **type** (the kind of thing you're adding — Email, Form, Campaign, and so on), which only appears when you can edit more than one type. The second step then picks the **specific entity** of that type to add to the Project.\n\nThe steps now read:\n\n> If you can edit more than one entity type, choose the entity type you want to add, such as Email, Form, or Campaign.\n> Select the specific entity of that type to add to the Project.\n\nPushed to this PR in place. Vale passes clean."
+        },
+        {
+          "user": { "login": "RCheesley" },
+          "created_at": "2026-09-24T12:05:27Z",
+          "body": "@promptless-for-oss please cherry pick for the 7.3 and 8.0 branches."
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:08:40Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/915#issuecomment-5813734570)\n\n<!-- promptless-comment-body:v1:23be8ab3-d903-4ddc-b791-ff855c48b1ff -->\n\nThanks — understood: you'd like the Projects single-entity shortcut docs from this PR cherry-picked to the 7.3 and 8.0 branches. Promptless is preparing a separate documentation update for each branch and will share them here when they're ready to review.\n\n<!-- promptless-comment:v1:23be8ab3-d903-4ddc-b791-ff855c48b1ff -->"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:20:38Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/915#issuecomment-5813734570)\n\n<!-- promptless-comment-body:v1:a9ba9384-c3c4-415f-b295-83ae52fe7d28 -->\n\nDone - I've cherry-picked the #915 change onto both branches as separate PRs, so a delay on one won't block the other. The Projects content was identical to the 7.2 base on each branch, so the wording matches the merged #915 change exactly, with the same five supporting citations and a clean Vale run on both.\n\nDocs PR (7.3): https://github.com/mautic/user-documentation/pull/999\nDocs PR (8.0): https://github.com/mautic/user-documentation/pull/998\n\n<!-- promptless-comment:v1:a9ba9384-c3c4-415f-b295-83ae52fe7d28 -->"
         }
       ],
       "rawCodeComments": [
@@ -11340,7 +10876,7 @@
       "readyForReviewAt": "2026-09-01T18:34:55Z"
     },
     "mautic/user-documentation#914": {
-      "docsUpdatedAt": "2026-09-19T05:16:58Z",
+      "docsUpdatedAt": "2026-09-24T12:03:55Z",
       "codeUpdatedAt": "2026-08-05T09:39:02Z",
       "rawDocsReviews": [],
       "rawDocsComments": [
@@ -12497,164 +12033,6 @@
       "rawReviewRequests": [],
       "readyForReviewAt": null
     },
-    "mautic/user-documentation#872": {
-      "docsUpdatedAt": "2026-09-16T17:03:44Z",
-      "codeUpdatedAt": "2026-09-15T10:26:32Z",
-      "rawDocsReviews": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-11T14:45:49Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-11T14:45:52Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-11T14:45:54Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-09-11T14:45:56Z",
-          "body": ""
-        }
-      ],
-      "rawDocsComments": [
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-11T14:46:40Z",
-          "body": "I noticed that some CI checks failed for this PR. I'm investigating whether the failures are caused by this suggestion. If they're unrelated or pre-existing, I'll leave this suggestion unchanged and create a separate suggestion if a standalone docs fix is needed."
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:27:43Z",
-          "body": "@promptless-for-oss please rebase this PR to 7.3 branch and cherry-pick to 8.0 branch."
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:29:47Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/872#issuecomment-5678651322)\n\n<!-- promptless-comment-body:v1:fb23f747-da06-43fe-ad12-5c8ea644f85d -->\n\nOn it — I'll rebase this PR onto the 7.3 branch and cherry-pick the change to 8.0, then report back here once both are in place.\n\n<!-- promptless-comment:v1:fb23f747-da06-43fe-ad12-5c8ea644f85d -->"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:32:50Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/872#issuecomment-5678651322)\n\n<!-- promptless-comment-body:v1:b66766eb-52d0-4c88-befb-612c3ce43f58 -->\n\nQuick update: the source change landed on 7.x, which maps to the 7.3 docs branch, so I'm rebasing this PR onto 7.3 (it was previously targeting 7.2) and will open a separate PR cherry-picking the same change onto 8.0. The change applies cleanly. I'll confirm here once both are up.\n\n<!-- promptless-comment:v1:b66766eb-52d0-4c88-befb-612c3ce43f58 -->"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:38:55Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/872#issuecomment-5678651322)\n\n<!-- promptless-comment-body:v1:893cf927-dd97-42f2-897b-afd4e240cda7 -->\n\nUpdate: this PR (#872) is now retargeted to the 7.3 branch and shows as mergeable. The 8.0 cherry-pick is prepared and its branch is pushed, but opening the 8.0 PR hit a transient issue — I'm completing that now and will post the 8.0 PR link here shortly.\n\n<!-- promptless-comment:v1:893cf927-dd97-42f2-897b-afd4e240cda7 -->"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-15T10:42:31Z",
-          "body": "In reply to [this discussion](https://github.com/mautic/user-documentation/pull/872#issuecomment-5678651322)\n\n<!-- promptless-comment-body:v1:e15c6f57-4f55-4822-9a8a-22676dc57e3b -->\n\nDone — both are in place:\n\n- This PR (#872) is now rebased onto the **7.3** branch and shows as mergeable.\n- The **8.0** cherry-pick is up as a separate PR: https://github.com/mautic/user-documentation/pull/971 (identical content, applied cleanly).\n\nBoth are ready for your review.\n\n<!-- promptless-comment:v1:e15c6f57-4f55-4822-9a8a-22676dc57e3b -->"
-        }
-      ],
-      "rawCodeComments": [
-        {
-          "user": { "login": "andersonjeccel" },
-          "created_at": "2026-08-10T09:48:38Z",
-          "body": "@adiux would you mind reviewing this?"
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "created_at": "2026-08-12T09:49:21Z",
-          "body": "@adiux Updated, could you take another look?"
-        },
-        {
-          "user": { "login": "adiux" },
-          "created_at": "2026-08-12T10:06:28Z",
-          "body": "@andersonjeccel it is approved from my side, but there are some issues with the tests"
-        },
-        {
-          "user": { "login": "escopecz" },
-          "created_at": "2026-08-31T15:50:21Z",
-          "body": "@andersonjeccel please check the conflict"
-        },
-        {
-          "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-11T14:14:26Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16849) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16849&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16849&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16849&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16849&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16849&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16849)\n\n"
-        },
-        {
-          "user": { "login": "promptless-for-oss" },
-          "created_at": "2026-09-11T14:51:49Z",
-          "body": "### Promptless documentation updates\n\n- [Document clearing Contact owner in bulk (No owner) and the Quick Add Save & New button](https://app.gopromptless.ai/suggestions/6c44bc50-5c90-4b29-8a88-b317f0ef2856) documents that the bulk **Change Owner** action can now clear the owner via a **No owner** choice, and adds the new Quick Add **Save & New** button, in `docs/contacts/manage_contacts.rst`. [Docs PR](https://github.com/mautic/user-documentation/pull/872)"
-        },
-        {
-          "user": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:26:32Z",
-          "body": "Hi @andersonjeccel,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/user-documentation/pull/872"
-        }
-      ],
-      "rawCodeReviews": [
-        {
-          "user": { "login": "adiux" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-11T18:21:18Z",
-          "body": "Looks good to me. Added two small suggestions, but the code is fine without it."
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-08-12T09:49:16Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "andersonjeccel" },
-          "state": "COMMENTED",
-          "submitted_at": "2026-08-12T09:49:18Z",
-          "body": ""
-        },
-        {
-          "user": { "login": "hluchas" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-14T12:29:54Z",
-          "body": "I see no problem here. Woks as expected.\nTY!"
-        },
-        {
-          "user": { "login": "PatrickJenkner" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-14T13:19:18Z",
-          "body": "Worked as described 👍 "
-        },
-        {
-          "user": { "login": "shinde-rahul" },
-          "state": "APPROVED",
-          "submitted_at": "2026-08-28T10:01:13Z",
-          "body": "Looks good to me. The tests cover the change well."
-        }
-      ],
-      "rawReviewRequests": [
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:24:44Z",
-          "requested_reviewer": null,
-          "requested_team": { "slug": "education-team-leaders" }
-        },
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:24:44Z",
-          "requested_reviewer": { "login": "adiati98" },
-          "requested_team": null
-        },
-        {
-          "actor": { "login": "adiati98" },
-          "created_at": "2026-09-15T10:24:44Z",
-          "requested_reviewer": { "login": "favour-chibueze" },
-          "requested_team": null
-        }
-      ],
-      "readyForReviewAt": "2026-09-15T10:24:43Z"
-    },
     "mautic/user-documentation#870": {
       "docsUpdatedAt": "2026-09-15T11:15:34Z",
       "codeUpdatedAt": "2026-08-28T10:29:39Z",
@@ -13689,7 +13067,7 @@
       "readyForReviewAt": null
     },
     "mautic/user-documentation#712": {
-      "docsUpdatedAt": "2026-09-22T08:00:56Z",
+      "docsUpdatedAt": "2026-09-24T12:08:40Z",
       "codeUpdatedAt": null,
       "rawDocsReviews": [
         {
@@ -13965,6 +13343,11 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-09-22T08:00:56Z",
           "body": "Thanks @adiati98 — both cherry-picks are done. I've opened two draft PRs porting #712's UTM tags changes:\n\n- **7.3:** mautic/user-documentation#996\n- **8.0:** mautic/user-documentation#997\n\nThe full restructure applied cleanly to both branches via 3-way merge (13 files, +586/−94, no conflicts) — the new eight-page `docs/utm_tags/` section, the index toctree caption, the repointed Focus Items and Dynamic Web Content links, removal of the old `docs/channels/utm_tags.rst`, and the `CPC`/`DWC` Vale vocabulary additions. Both mirror #712's current head verbatim, and Vale is clean on all ported lines.\n\nTwo things I deliberately carried over verbatim from #712 rather than normalizing, in case you'd like a follow-up on both branches:\n\n- Both retain #712's `.. TODO` placeholder for the 'UTM tags recorded' timeline screenshot on the Forms page. Once #712 resolves that screenshot, the same follow-up would apply to 7.3/8.0.\n- The example URLs keep #712's `utm_medium=Email` and `landing-Page` casing (inside code blocks, so not Vale-flagged). The earlier 7.2 backport lowercased these for consistency; I left them matching #712's current head, so let me know if you'd like them lowercased here too.\n"
+        },
+        {
+          "user": { "login": "RCheesley" },
+          "created_at": "2026-09-24T12:08:40Z",
+          "body": "I think that these PRs are good to go now but will leave it for Ayu to push the button!"
         }
       ],
       "rawCodeComments": [],
@@ -14023,7 +13406,7 @@
     },
     "mautic/user-documentation#697": {
       "docsUpdatedAt": "2026-09-15T11:07:50Z",
-      "codeUpdatedAt": "2026-09-23T14:46:59Z",
+      "codeUpdatedAt": "2026-09-24T13:19:50Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -14229,8 +13612,8 @@
         },
         {
           "user": { "login": "sonarqubecloud[bot]" },
-          "created_at": "2026-09-23T14:46:59Z",
-          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [32 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [4.6% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926)\n\n"
+          "created_at": "2026-09-24T13:19:50Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [35 New issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=15926&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=15926&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [4.6% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=15926&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=15926)\n\n"
         }
       ],
       "rawCodeReviews": [
@@ -14721,9 +14104,16 @@
       "readyForReviewAt": "2026-09-22T12:48:21Z"
     },
     "mautic/user-documentation#992": {
-      "docsUpdatedAt": "2026-09-21T10:41:37Z",
+      "docsUpdatedAt": "2026-09-24T12:12:24Z",
       "codeUpdatedAt": "2026-09-21T10:59:28Z",
-      "rawDocsReviews": [],
+      "rawDocsReviews": [
+        {
+          "user": { "login": "RCheesley" },
+          "state": "APPROVED",
+          "submitted_at": "2026-09-24T12:12:24Z",
+          "body": ""
+        }
+      ],
       "rawDocsComments": [],
       "rawCodeComments": [
         {
@@ -15558,8 +14948,8 @@
       "readyForReviewAt": null
     },
     "mautic/developer-documentation-new#689": {
-      "docsUpdatedAt": "2026-09-23T15:09:37Z",
-      "codeUpdatedAt": "2026-09-23T19:52:38Z",
+      "docsUpdatedAt": "2026-09-24T09:04:19Z",
+      "codeUpdatedAt": "2026-09-24T08:50:56Z",
       "rawDocsReviews": [
         {
           "user": { "login": "promptless-for-oss" },
@@ -15597,6 +14987,16 @@
           "user": { "login": "promptless-for-oss" },
           "created_at": "2026-09-23T15:06:21Z",
           "body": "I noticed that some CI checks failed for this PR. I'm investigating whether the failures are caused by this suggestion. If they're unrelated or pre-existing, I'll leave this suggestion unchanged and create a separate suggestion if a standalone docs fix is needed."
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T09:04:10Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/developer-documentation-new/pull/689#issuecomment-5797320157)\n\n<!-- promptless-comment-body:v1:d5bb3431-941c-44a2-a2b4-121ef4040946 -->\n\nCI investigation complete: the failing check on this PR is a pre-existing, repo-wide condition, not caused by this suggestion.\n\nThe red check is the Sphinx `checklinks` (linkcheck) target, which reports roughly 280 warnings across files this PR doesn't touch — undefined labels and redirected links in `campaigns.rst`, `contacts.rst`, `config.rst`, and others. The HTML build passes, and Vale and the `prose` check pass on the one changed file.\n\nThis change adds a single intentional warning: a cross-reference to the shared `Mautic 8 class-name event dispatch` label, which the CoreBundle conversion in docs PR #633 defines. That reference resolves once #633 lands on `8.0`, so we recommend landing #633 before or together with this PR. We're leaving this suggestion unchanged, as planned.\n\n<!-- promptless-comment:v1:d5bb3431-941c-44a2-a2b4-121ef4040946 -->"
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T09:04:18Z",
+          "body": "In reply to [this discussion](https://github.com/mautic/developer-documentation-new/pull/689#issuecomment-5797320157)\n\n<!-- promptless-comment-body:v1:f6caaf2a-a74e-4d30-848d-41d088fbd471 -->\n\nPromptless resolved this discussion.\n\n<!-- promptless-comment:v1:f6caaf2a-a74e-4d30-848d-41d088fbd471 -->"
         }
       ],
       "rawCodeComments": [
@@ -15626,8 +15026,430 @@
           "body": "Ready :+1: "
         }
       ],
+      "rawCodeReviews": [
+        {
+          "user": { "login": "escopecz" },
+          "state": "APPROVED",
+          "submitted_at": "2026-09-24T08:45:19Z",
+          "body": "Nicely done 👍 "
+        }
+      ],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T08:45:46Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T08:45:46Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T08:45:46Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": "2026-09-24T08:45:45Z"
+    },
+    "mautic/user-documentation#1005": {
+      "docsUpdatedAt": "2026-09-24T12:18:26Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
       "rawCodeReviews": [],
-      "rawReviewRequests": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:26Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:26Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:26Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#1004": {
+      "docsUpdatedAt": "2026-09-24T12:18:20Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
+      "rawCodeReviews": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:19Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:20Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:20Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#1003": {
+      "docsUpdatedAt": "2026-09-24T12:18:14Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
+      "rawCodeReviews": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:14Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:14Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:14Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#1002": {
+      "docsUpdatedAt": "2026-09-24T12:18:09Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
+      "rawCodeReviews": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:08Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:09Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:18:09Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#1001": {
+      "docsUpdatedAt": "2026-09-24T12:17:35Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
+      "rawCodeReviews": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:17:35Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:17:35Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:17:35Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#1000": {
+      "docsUpdatedAt": "2026-09-24T12:16:13Z",
+      "codeUpdatedAt": null,
+      "rawDocsReviews": [],
+      "rawDocsComments": [],
+      "rawCodeComments": [],
+      "rawCodeReviews": [],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:16:12Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:16:13Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:16:13Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#999": {
+      "docsUpdatedAt": "2026-09-24T12:16:06Z",
+      "codeUpdatedAt": "2026-09-01T06:46:35Z",
+      "rawDocsReviews": [
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:15:35Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:15:41Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:15:53Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:16:06Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:16:11Z",
+          "body": ""
+        }
+      ],
+      "rawDocsComments": [],
+      "rawCodeComments": [
+        {
+          "user": { "login": "escopecz" },
+          "created_at": "2026-08-04T09:48:32Z",
+          "body": "What if users want to add another entity type to the project that have only one entity type?"
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "created_at": "2026-08-08T02:52:25Z",
+          "body": "> What if users want to add another entity type to the project that have only one entity type?\n\n@escopecz Imagine I have permissions only to play with Assets. \n\n1. I click to Add entity but Assets is my only option.\n2. Currently i have the extra click to pick Assets card (entity type)\n3. Now I select an asset from the list of existing ones\n\nafter PR Assets will already be shown\n\n1. Click to add entity\n2. Select asset directly because that's the only entity you have permissions to play with "
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "created_at": "2026-08-13T09:58:28Z",
+          "body": "@escopecz Updated the permissions coverage and description, could you check again?"
+        },
+        {
+          "user": { "login": "sonarqubecloud[bot]" },
+          "created_at": "2026-08-25T08:37:52Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16927) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16927&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16927&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16927&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16927&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16927&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16927)\n\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-09-01T06:46:35Z",
+          "body": "Hi @andersonjeccel,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/user-documentation/pull/915"
+        }
+      ],
+      "rawCodeReviews": [
+        {
+          "user": { "login": "kuzmany" },
+          "state": "APPROVED",
+          "submitted_at": "2026-08-07T10:05:26Z",
+          "body": "Everything looks good to me 👍"
+        },
+        {
+          "user": { "login": "escopecz" },
+          "state": "CHANGES_REQUESTED",
+          "submitted_at": "2026-08-12T09:58:39Z",
+          "body": "@andersonjeccel I didn't understand from the PR description and title that this PR is about permissions. Can you update it so it's clear?"
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-08-13T09:58:26Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "escopecz" },
+          "state": "APPROVED",
+          "submitted_at": "2026-08-25T09:03:24Z",
+          "body": "Works well \n\n<img width=\"703\" height=\"382\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/17ed7b0e-f9af-46ab-a603-79a1cf84a2ad\" />"
+        }
+      ],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:15:02Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:15:03Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:15:03Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
+      "readyForReviewAt": null
+    },
+    "mautic/user-documentation#998": {
+      "docsUpdatedAt": "2026-09-24T12:14:15Z",
+      "codeUpdatedAt": "2026-09-01T06:46:35Z",
+      "rawDocsReviews": [
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:13:39Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:13:43Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:13:57Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:14:01Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "promptless-for-oss" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-09-24T12:14:14Z",
+          "body": ""
+        }
+      ],
+      "rawDocsComments": [],
+      "rawCodeComments": [
+        {
+          "user": { "login": "escopecz" },
+          "created_at": "2026-08-04T09:48:32Z",
+          "body": "What if users want to add another entity type to the project that have only one entity type?"
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "created_at": "2026-08-08T02:52:25Z",
+          "body": "> What if users want to add another entity type to the project that have only one entity type?\n\n@escopecz Imagine I have permissions only to play with Assets. \n\n1. I click to Add entity but Assets is my only option.\n2. Currently i have the extra click to pick Assets card (entity type)\n3. Now I select an asset from the list of existing ones\n\nafter PR Assets will already be shown\n\n1. Click to add entity\n2. Select asset directly because that's the only entity you have permissions to play with "
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "created_at": "2026-08-13T09:58:28Z",
+          "body": "@escopecz Updated the permissions coverage and description, could you check again?"
+        },
+        {
+          "user": { "login": "sonarqubecloud[bot]" },
+          "created_at": "2026-08-25T08:37:52Z",
+          "body": "## [![Quality Gate Passed](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/checks/QualityGateBadge/qg-passed-20px.png 'Quality Gate Passed')](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16927) **Quality Gate passed**  \nIssues  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [1 New issue](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16927&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/accepted-16px.png '') [0 Accepted issues](https://sonarcloud.io/project/issues?id=mautic_mautic&pullRequest=16927&issueStatuses=ACCEPTED)\n\nMeasures  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0 Security Hotspots](https://sonarcloud.io/project/security_hotspots?id=mautic_mautic&pullRequest=16927&issueStatuses=OPEN,CONFIRMED&sinceLeakPeriod=true)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Coverage on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16927&metric=new_coverage&view=list)  \n![](https://sonarsource.github.io/sonarcloud-github-static-resources/v2/common/passed-16px.png '') [0.0% Duplication on New Code](https://sonarcloud.io/component_measures?id=mautic_mautic&pullRequest=16927&metric=new_duplicated_lines_density&view=list)  \n  \n<!-- sqra-placement-anchor -->\n[See analysis details on SonarQube Cloud](https://sonarcloud.io/dashboard?id=mautic_mautic&pullRequest=16927)\n\n"
+        },
+        {
+          "user": { "login": "adiati98" },
+          "created_at": "2026-09-01T06:46:35Z",
+          "body": "Hi @andersonjeccel,\r\n\r\nPromptless created a PR based on the changes in this PR. Can you please review the contents and see if they're align with your changes? TIA! ✨ \r\n\r\nhttps://github.com/mautic/user-documentation/pull/915"
+        }
+      ],
+      "rawCodeReviews": [
+        {
+          "user": { "login": "kuzmany" },
+          "state": "APPROVED",
+          "submitted_at": "2026-08-07T10:05:26Z",
+          "body": "Everything looks good to me 👍"
+        },
+        {
+          "user": { "login": "escopecz" },
+          "state": "CHANGES_REQUESTED",
+          "submitted_at": "2026-08-12T09:58:39Z",
+          "body": "@andersonjeccel I didn't understand from the PR description and title that this PR is about permissions. Can you update it so it's clear?"
+        },
+        {
+          "user": { "login": "andersonjeccel" },
+          "state": "COMMENTED",
+          "submitted_at": "2026-08-13T09:58:26Z",
+          "body": ""
+        },
+        {
+          "user": { "login": "escopecz" },
+          "state": "APPROVED",
+          "submitted_at": "2026-08-25T09:03:24Z",
+          "body": "Works well \n\n<img width=\"703\" height=\"382\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/17ed7b0e-f9af-46ab-a603-79a1cf84a2ad\" />"
+        }
+      ],
+      "rawReviewRequests": [
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:12:06Z",
+          "requested_reviewer": null,
+          "requested_team": { "slug": "education-team-leaders" }
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:12:07Z",
+          "requested_reviewer": { "login": "adiati98" },
+          "requested_team": null
+        },
+        {
+          "actor": { "login": "promptless-for-oss" },
+          "created_at": "2026-09-24T12:12:07Z",
+          "requested_reviewer": { "login": "favour-chibueze" },
+          "requested_team": null
+        }
+      ],
       "readyForReviewAt": null
     }
   }
