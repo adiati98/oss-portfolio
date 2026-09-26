@@ -72,7 +72,10 @@ Articles by **adiati98**, covering insights and tutorials regarding the Open Sou
 - **[Collaborate, Conquer, & Grow: Mastering the Art of Issue Management for Open Source Projects](https://dev.to/opensauced/collaborate-conquer-grow-mastering-the-art-of-issue-management-for-open-source-projects-49gi)**
   March 5, 2024
 
-## ✍️ Personal writing — 36 articles
+## ✍️ Personal writing — 37 articles
+
+- **[Keeping up with docs reviews: Building a tracker for Mautic's documentation PRs](https://dev.to/adiatiayu/keeping-up-with-docs-reviews-building-a-tracker-for-mautics-documentation-prs-10lm)**
+  September 25, 2026
 
 - **[Wanted: Beginners-Friendly Open Source Projects](https://dev.to/adiatiayu/wanted-beginners-friendly-open-source-projects-59k9)**
   July 16, 2026
