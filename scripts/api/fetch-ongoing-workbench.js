@@ -13,6 +13,7 @@ const {
   keepAliveAgent,
 } = require('../utils/http-helpers');
 const { isCommitByUser } = require('../utils/commit-helpers');
+const { rememberPrText } = require('../services/backport-detection');
 
 /**
  * SHARED AXIOS CONFIGURATION
@@ -303,6 +304,9 @@ const formatTask = async (pr, status, activityCache, failedFetchCache) => {
   const repo = repoParts[repoParts.length - 1];
 
   const activity = await getCachedActivity(owner, repo, pr, activityCache, failedFetchCache);
+  // The search/issues item carries the title and body, and the PR detail call
+  // above already read the branch — everything backport detection needs.
+  rememberPrText(pr, { baseBranch: activity.baseRef ?? null });
 
   return {
     title: pr.title,

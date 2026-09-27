@@ -29,6 +29,7 @@ const {
 const { createFooterHtml } = require('../../components/footer');
 const { getThemeInitScript, getThemeStyleVariant } = require('../../components/theme-init');
 const { escapeHtml } = require('../../utils/escape-html');
+const { backportParentLabel } = require('../../utils/contribution-formatters');
 
 const LANES = [
   {
@@ -284,6 +285,8 @@ function statusSignatureFor(record) {
     // A hold appearing or clearing (the merge unblocking) moves the row
     // between lanes, so it belongs here too.
     holdTexts(record).join('|'),
+    // A backport's parent merging is what tells you to merge the backport.
+    record.backport && record.backport.parentMerged,
   ]);
 }
 
@@ -301,6 +304,7 @@ function searchBlobFor(record, repoLabel) {
     record.ball,
     record.nextStep,
     record.milestoneMissing ? 'add milestone' : null,
+    record.backport ? `backport of ${backportParentLabel(record.backport.of, record.repo)}` : null,
     ...holdTexts(record),
   ]
     .filter(Boolean)
@@ -350,6 +354,15 @@ function renderRow(record) {
   }
   if (record.botPing && record.botPing.of) {
     nextBits.push(`<span style="color:var(--t-ink-3)">Promptless pinged <b>${escapeHtml(record.botPing.of)}</b></span>`);
+  }
+  if (record.backport && record.backport.of) {
+    // Which PR this one was copied from, and whether that one has merged. On
+    // Mautic docs rows the next step already acts on it; elsewhere this note is
+    // the only sign of it (the lane is left alone).
+    const { of, branch, parentMerged } = record.backport;
+    const state = parentMerged ? 'merged' : 'not merged';
+    const branchNote = branch ? ` · ${escapeHtml(branch)}` : '';
+    nextBits.push(`<span style="color:var(--t-ink-3)">↩ backport of <a href="${escapeHtml(of)}" target="_blank" rel="noopener noreferrer">${escapeHtml(backportParentLabel(of, record.repo))}</a> (${state})${branchNote}</span>`);
   }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
     const ref = record.linkedCodePr.ref;

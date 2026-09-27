@@ -50,6 +50,12 @@ const { createRedirectStubs } = require('../generators/html/redirect-stub-genera
 const { createGlossaryHtml } = require('../generators/html/glossary-html-generator');
 const { loadMergedWorkbench } = require('../services/workbench-merge');
 const { writeWorkbenchData } = require('../services/workbench-data');
+const {
+  runBackportDetection,
+  applyBackportFields,
+  pruneForFullSync,
+} = require('../services/backport-detection');
+const { checkTrackerRules } = require('../utils/tracker-rules-watch');
 const skillsData = require('../../contents/skills');
 const recognitionsData = require('../../contents/recognitions');
 // Milestone sources — keys must match MILESTONE_SOURCES in
@@ -457,6 +463,30 @@ async function main() {
 
     console.log('Merged and categorized all contributions based on latest status.');
 
+    // --- Backports: which PRs are copies of an earlier PR on another branch ---
+    // Uses the Mautic docs PR tracker's rules (copied in utils/backport-rules.js)
+    // for every repo. The change alert only reads the tracker's public file and
+    // warns when its backport logic moved on. Neither step can fail the build:
+    // on an error, entries keep whatever backport fields they already had.
+    let backports = new Map();
+    await checkTrackerRules();
+    try {
+      // A full sync judges every PR again and re-fetches everything that can
+      // change — but keeps merged PRs' facts, whose answer can't change. That
+      // is why the workflow does not delete data/backport-cache.json.
+      if (isFullResync) await pruneForFullSync();
+      const openItems = [...ongoingPRs, ...ongoingCoAuthoredPRs, ...ongoingTasks];
+      const contributionEntries = Object.values(finalContributions).flat();
+      const detected = await runBackportDetection({
+        entries: [...contributionEntries, ...openItems],
+        openUrls: openItems.map((item) => item.url),
+      });
+      applyBackportFields(finalContributions, detected);
+      backports = detected.backports;
+    } catch (e) {
+      console.error(`Backport detection failed, keeping previous results: ${e.message}`);
+    }
+
     await fs.writeFile(dataFile, JSON.stringify(finalContributions, null, 2), 'utf8');
     console.log('Updated contributions data saved to file.');
 
@@ -495,7 +525,7 @@ async function main() {
     // The merged workbench model feeds both the Home impact band and the
     // Workbench board, so it's loaded once here, before either renders.
     console.log('Merging local records with the docs-PR tracker...');
-    const workbenchModel = await loadMergedWorkbench();
+    const workbenchModel = await loadMergedWorkbench({ backports });
     if (workbenchModel.feed.degraded) {
       console.warn(`Workbench tracker feed degraded: ${workbenchModel.feed.reason}`);
     }
