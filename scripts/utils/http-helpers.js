@@ -91,26 +91,119 @@ function attachRateLimitLogger(axiosInstance) {
 // minutes on something that will 403 again no matter how long we wait.
 const UNCONFIRMED_403_RETRIES = 1;
 
-/**
- * A 403 with a `retry-after` header, or with `x-ratelimit-remaining: 0`, is
- * GitHub telling us to slow down — worth waiting out. A 403 with neither
- * signal present isn't a rate limit at all; it's a permission problem.
- */
-function classify403(err) {
-  const headers = err.response?.headers || {};
-  const retryAfter = Number(headers['retry-after']);
-  const remaining = Number(headers['x-ratelimit-remaining']);
-  const hasRetryAfter = Number.isFinite(retryAfter) && retryAfter > 0;
-  const isQuotaExhausted = Number.isFinite(remaining) && remaining === 0;
-  return {
-    isConfirmedRateLimit: hasRetryAfter || isQuotaExhausted,
-    retryAfterMs: hasRetryAfter ? retryAfter * 1000 : null,
-  };
+// ---------------------------------------------------------------------------
+// Rate-limit waits
+//
+// GitHub says how long a block lasts, in one of two headers:
+//   - `retry-after`: wait this many seconds
+//   - `x-ratelimit-remaining: 0` + `x-ratelimit-reset`: wait until this time
+//     (seconds since 1970). This is sent for the hourly quota AND for the
+//     short "too many requests at once" (secondary) limit.
+// When neither is present, GitHub's guidance is to wait at least one minute.
+// Retrying earlier than that only fails again — and GitHub warns that
+// requests sent while blocked can keep the block going longer.
+//
+// A block applies to the whole token, not to one request. So the first
+// request that learns "blocked until X" records it in `blockedUntil`, and
+// every other request in the run waits for the same time instead of trying
+// (and failing) on its own.
+// ---------------------------------------------------------------------------
+
+// The longest single wait we accept. A block announced to last longer than
+// this gives up at once, so the workflow's own retry takes over, instead of
+// the job sitting idle for up to an hour.
+const MAX_RATE_LIMIT_WAIT_MS = 15 * 60 * 1000;
+
+// The most one request may wait in total across all its retries. Without
+// this, six retries of up to 15 minutes each could hold the job for 90.
+const MAX_TOTAL_RATE_LIMIT_WAIT_MS = 20 * 60 * 1000;
+
+// GitHub's minimum wait when a block comes with no time.
+const MIN_UNTIMED_WAIT_MS = 60 * 1000;
+
+let blockedUntil = 0;
+
+const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** For the fixture run only: clears the shared block time. */
+function resetRateLimitStateForTests() {
+  blockedUntil = 0;
+}
+
+function errorMessageOf(err) {
+  const data = err.response?.data;
+  return String((data && typeof data === 'object' ? data.message : data) || err.message || '');
 }
 
 /**
- * Runs `fn` (an async function performing one axios call) with backoff retry
- * on a confirmed 403 rate limit and on transient 502/503/504 server errors.
+ * Reads a 403/429 answer. Returns:
+ *   isRateLimit  whether GitHub is telling us to slow down (as opposed to a
+ *                permission problem on one repo)
+ *   waitUntil    the time (ms) GitHub says the block ends, or null if it
+ *                gave no time
+ *   reason       which signal was used, for the log
+ *
+ * A 403 with none of these signals and no rate-limit wording isn't a rate
+ * limit at all; it's a permission problem (e.g. an org enforcing SSO).
+ */
+function classify403(err, now = Date.now()) {
+  const headers = err.response?.headers || {};
+  const retryAfter = Number(headers['retry-after']);
+  const remaining = Number(headers['x-ratelimit-remaining']);
+  const reset = Number(headers['x-ratelimit-reset']);
+  const message = errorMessageOf(err);
+  // The search API has its own small per-minute quota. Running out of it
+  // says nothing about other requests, so it is not shared with them.
+  const searchOnly = String(headers['x-ratelimit-resource'] || '').toLowerCase() === 'search';
+
+  if (Number.isFinite(retryAfter) && retryAfter > 0) {
+    return {
+      isRateLimit: true,
+      waitUntil: now + retryAfter * 1000,
+      reason: 'retry-after',
+      message,
+      searchOnly,
+    };
+  }
+  if (Number.isFinite(remaining) && remaining === 0) {
+    const waitUntil = Number.isFinite(reset) && reset > 0 ? reset * 1000 + 1000 : null;
+    return { isRateLimit: true, waitUntil, reason: 'quota at 0, reset time', message, searchOnly };
+  }
+  if (/secondary rate limit|abuse detection|rate limit exceeded/i.test(message)) {
+    return {
+      isRateLimit: true,
+      waitUntil: null,
+      reason: 'rate-limit message, no time given',
+      message,
+      searchOnly,
+    };
+  }
+  return { isRateLimit: false, waitUntil: null, reason: null, message, searchOnly };
+}
+
+function formatClock(ms) {
+  return new Date(ms).toISOString().slice(11, 19) + ' UTC';
+}
+
+/** Waits out a block another request already found, if there is one. */
+async function waitForSharedBlock(sleep, label) {
+  const ms = blockedUntil - Date.now();
+  if (ms <= 0) return;
+  console.log(
+    `[rate-limit] ${label || 'request'} waits ${Math.round(ms / 1000)}s for the block to end (${formatClock(blockedUntil)})...`
+  );
+  await sleep(ms);
+}
+
+/**
+ * Runs `fn` (an async function performing one axios call) with retry on a
+ * rate limit (403/429) and on transient 502/503/504 server errors.
+ *
+ * On a rate limit it waits until the time GitHub gives (see the "Rate-limit
+ * waits" note above), shares that time with every other request in the run,
+ * and gives up at once if the block lasts longer than MAX_RATE_LIMIT_WAIT_MS.
+ * With no time given it waits at least a minute.
+ *
  * A 403 that carries no rate-limit signal gets one quick retry (to rule out
  * a fluke) and is then thrown with `isPermanent403` set, so callers can
  * record it and stop re-attempting it on future runs instead of burning the
@@ -121,10 +214,12 @@ function classify403(err) {
  * — a query isn't scoped to one repo's permissions, so a 403 there is always
  * a rate limit (GitHub's search abuse-detection doesn't reliably send
  * retry-after/remaining headers), never a permission problem to remember.
+ *
+ * `sleep` is only replaced in the fixture run, so it doesn't really wait.
  */
 async function withRateLimitRetry(
   fn,
-  { retries = MAX_RATE_LIMIT_RETRIES, label = '', assumeRateLimit = false } = {}
+  { retries = MAX_RATE_LIMIT_RETRIES, label = '', assumeRateLimit = false, sleep = realSleep } = {}
 ) {
   let attempt = 0;
   let quickAttempt = 0;
@@ -133,23 +228,45 @@ async function withRateLimitRetry(
   // causes, so a run that already spent its rate-limit retries this call
   // shouldn't die on the first unrelated socket reset (and vice versa).
   let networkAttempt = 0;
+  let totalRateLimitWait = 0;
   while (true) {
+    await waitForSharedBlock(sleep, label);
     try {
       return await fn();
     } catch (err) {
       const status = err.response?.status;
 
-      if (status === 403) {
-        const { isConfirmedRateLimit, retryAfterMs } = classify403(err);
+      if (status === 403 || status === 429) {
+        const now = Date.now();
+        const { isRateLimit, waitUntil, reason, message, searchOnly } = classify403(err, now);
 
-        if (assumeRateLimit || isConfirmedRateLimit) {
+        // 429 is always "too many requests"; search endpoints never mean a
+        // permission problem (see the note above).
+        if (assumeRateLimit || isRateLimit || status === 429) {
           if (attempt >= retries) throw err;
           attempt++;
-          const delay = retryAfterMs ?? Math.min(60000, 2000 * 2 ** (attempt - 1));
+          let until = waitUntil;
+          if (until === null) {
+            // No time given: at least a minute, a little jitter so parallel
+            // requests don't all come back in the same instant.
+            until = now + MIN_UNTIMED_WAIT_MS + Math.floor(Math.random() * 2000);
+          }
+          const delay = Math.max(0, until - now);
+          if (
+            delay > MAX_RATE_LIMIT_WAIT_MS ||
+            totalRateLimitWait + delay > MAX_TOTAL_RATE_LIMIT_WAIT_MS
+          ) {
+            console.log(
+              `[rate-limit] ${label || 'request'} is blocked until ${formatClock(until)} (${Math.round(delay / 60000)} min, ${reason}) — longer than this run will wait, giving up.`
+            );
+            throw err;
+          }
+          totalRateLimitWait += delay;
+          if (!searchOnly) blockedUntil = Math.max(blockedUntil, until);
           console.log(
-            `[retry] rate-limit (403) on ${label || 'request'} (attempt ${attempt}/${retries}), backing off ${Math.round(delay / 1000)}s...`
+            `[retry] rate-limit (${status}) on ${label || 'request'} (attempt ${attempt}/${retries}), waiting ${Math.round(delay / 1000)}s until ${formatClock(until)} — ${reason}${message ? `: "${message.slice(0, 120)}"` : ''}`
           );
-          await new Promise((resolve) => setTimeout(resolve, delay));
+          await sleep(delay);
           continue;
         }
 
@@ -161,7 +278,7 @@ async function withRateLimitRetry(
         console.log(
           `[retry] 403 on ${label || 'request'} with no rate-limit signal — quick retry ${quickAttempt}/${UNCONFIRMED_403_RETRIES}...`
         );
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await sleep(2000);
         continue;
       }
 
@@ -172,7 +289,7 @@ async function withRateLimitRetry(
         console.log(
           `[retry] server error (${status}) on ${label || 'request'} (attempt ${attempt}/${retries}), backing off ${Math.round(delay / 1000)}s...`
         );
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await sleep(delay);
         continue;
       }
 
@@ -192,7 +309,7 @@ async function withRateLimitRetry(
         console.log(
           `[retry] network error (${err.code || err.message}) on ${label || 'request'} (attempt ${networkAttempt}/${retries}), backing off ${Math.round(delay / 1000)}s...`
         );
-        await new Promise((resolve) => setTimeout(resolve, delay));
+        await sleep(delay);
         continue;
       }
 
@@ -221,8 +338,11 @@ async function mapWithConcurrency(items, concurrency, iteratee) {
 
 module.exports = {
   MAX_RATE_LIMIT_RETRIES,
+  MAX_RATE_LIMIT_WAIT_MS,
   attachRateLimitLogger,
+  classify403,
   withRateLimitRetry,
+  resetRateLimitStateForTests,
   mapWithConcurrency,
   keepAliveAgent,
 };
