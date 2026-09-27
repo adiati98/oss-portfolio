@@ -93,10 +93,24 @@ function getCollaborationStatusContent(item) {
   return `${lastUpdateDate}<br><strong>${status}</strong>`;
 }
 
+/**
+ * How to name a backport's parent PR: "#842" when it is in the same repo as
+ * the backport, "user-documentation #842" when it is in another repo. The
+ * owner is left out on purpose, so the text never has GitHub's
+ * "owner/repo#number" link shape.
+ */
+function backportParentLabel(parentUrl, ownRepo) {
+  const m = String(parentUrl || '').match(/github\.com\/([^/]+)\/([^/]+)\/pull\/(\d+)/);
+  if (!m) return '';
+  const sameRepo = `${m[1]}/${m[2]}`.toLowerCase() === String(ownRepo || '').toLowerCase();
+  return sameRepo ? `#${m[3]}` : `${m[2]} #${m[3]}`;
+}
+
 module.exports = {
   formatDate,
   calculatePeriodInDays,
   getIssueOrPrNumber,
+  backportParentLabel,
   getPrStatusContent,
   getCollaborationStatusContent,
 };

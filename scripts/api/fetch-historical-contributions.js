@@ -9,6 +9,7 @@ const {
   keepAliveAgent,
 } = require('../utils/http-helpers');
 const { isCommitByUser } = require('../utils/commit-helpers');
+const { rememberPrText } = require('../services/backport-detection');
 
 /**
  * Fetches the year the user joined GitHub to set the baseline for discovery.
@@ -137,6 +138,9 @@ async function fetchContributions(
         { label: `search p${page}`, assumeRateLimit: true }
       );
       results.push(...response.data.items);
+      // Search results already carry each PR's title and body — hand them to
+      // backport detection now, instead of fetching them again later.
+      response.data.items.forEach((item) => rememberPrText(item));
 
       const linkHeader = response.headers.link;
       if (linkHeader && linkHeader.includes('rel="next"')) {

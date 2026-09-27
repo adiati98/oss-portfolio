@@ -3251,6 +3251,107 @@ run(
   console.log('  ok  UTC1 · month/quarter boundaries are UTC, not runner-local');
 }
 
+// ---------------------------------------------------------------------------
+// Backports (see services/backport-detection.js). In the Mautic docs repos a
+// backport follows its parent, like the upstream tracker; elsewhere it only
+// gains the `backport` field. A record that is not a backport has no field.
+// ---------------------------------------------------------------------------
+{
+  const DOCS = 'mautic/user-documentation';
+  const url1000 = `https://github.com/${DOCS}/pull/1000`;
+  const backportRow = (overrides = {}) =>
+    local({
+      repo: DOCS,
+      number: 1000,
+      url: url1000,
+      title: 'docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (8.0)',
+      status: 'Request review',
+      author: 'promptless-for-oss',
+      lastActor: 'promptless-for-oss',
+      milestone: null,
+      mergeableState: 'clean',
+      requestedReviewers: [ME],
+      comments: [],
+      reviews: [],
+      reviewRequests: [],
+      ...overrides,
+    });
+  const parentInfo = (parentMerged) =>
+    new Map([
+      [url1000, { backportOf: `https://github.com/${DOCS}/pull/973`, parentNumber: 973, branch: '8.0', parentMerged }],
+    ]);
+
+  run(
+    'BP1 · Mautic docs backport, parent merged → ready, merge it, no milestone ask',
+    { tasks: [backportRow()], backports: parentInfo(true) },
+    ({ records }) => {
+      const r = records[0];
+      assert.equal(r.lane, 'ready');
+      assert.equal(r.nextStep, 'Parent #973 merged — merge this backport');
+      assert.equal(r.milestoneMissing, false);
+      assert.deepEqual(r.backport, {
+        of: `https://github.com/${DOCS}/pull/973`,
+        number: 973,
+        branch: '8.0',
+        parentMerged: true,
+      });
+    }
+  );
+
+  run(
+    'BP2 · Mautic docs backport, parent still open → waiting on the parent',
+    { tasks: [backportRow()], backports: parentInfo(false) },
+    ({ records }) => {
+      const r = records[0];
+      assert.equal(r.lane, 'waiting');
+      assert.equal(r.nextStep, 'Waiting for parent #973 to merge');
+      assert.equal(r.milestoneMissing, false);
+    }
+  );
+
+  run(
+    "BP3 · without the backport info the same row keeps today's reading",
+    { tasks: [backportRow()] },
+    ({ records }) => {
+      const r = records[0];
+      assert.equal(r.lane, 'action');
+      assert.equal(r.milestoneMissing, true);
+      assert.equal('backport' in r, false, 'no backport field on a non-backport');
+    }
+  );
+
+  run(
+    'BP4 · a direct @-mention of you still wins over "wait for the parent"',
+    {
+      tasks: [backportRow({ comments: [{ login: 'reviewerC', createdAt: daysAgo(1), mentions: [ME] }] })],
+      backports: parentInfo(false),
+    },
+    ({ records }) => {
+      assert.equal(records[0].lane, 'action');
+      assert.match(records[0].nextStep, /Mentioned by reviewerC/);
+    }
+  );
+
+  const otherUrl = 'https://github.com/x/y/pull/7';
+  const otherRow = () => local({ repo: 'x/y', number: 7, url: otherUrl, lastActor: 'someone', author: 'someone' });
+  const plain = mergeWorkbench({ tasks: [otherRow()], feed: { data: {} }, username: ME, now: NOW }).records[0];
+  run(
+    'BP5 · a backport in another repo keeps its lane and only gains the field',
+    {
+      tasks: [otherRow()],
+      backports: new Map([
+        [otherUrl, { backportOf: 'https://github.com/x/y/pull/5', parentNumber: 5, branch: '2.x', parentMerged: true }],
+      ]),
+    },
+    ({ records }) => {
+      const r = records[0];
+      assert.equal(r.lane, plain.lane);
+      assert.equal(r.nextStep, plain.nextStep);
+      assert.equal(r.backport.number, 5);
+    }
+  );
+}
+
 if (process.exitCode) {
   console.error('\nfixture run FAILED');
 } else {

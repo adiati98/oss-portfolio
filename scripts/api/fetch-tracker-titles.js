@@ -25,6 +25,7 @@ const path = require('path');
 const axios = require('axios');
 const { BASE_URL } = require('../config/config');
 const { extractLinkedCodePr } = require('../utils/github-helpers');
+const { rememberPrText } = require('../services/backport-detection');
 const {
   attachRateLimitLogger,
   withRateLimitRetry,
@@ -84,6 +85,8 @@ async function fetchTrackerTitleInfo(keys, { cacheFile = CACHE_FILE, timeoutMs =
         () => axiosInstance.get(`/repos/${repo}/pulls/${number}`),
         { label: `tracker-title ${key}` }
       );
+      // The same PR detail answers backport detection's questions too.
+      rememberPrText(res.data);
       const entry = {
         title: res.data.title || null,
         linkedCodePr: extractLinkedCodePr(res.data.body, repo),

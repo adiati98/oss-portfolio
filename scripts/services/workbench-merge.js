@@ -18,6 +18,9 @@
  *                 a blocked merge state). Empty on action rows. The wording
  *                 comes from config, never a renderer.
  *   - linkedCodePr / upstream signals from the tracker cache
+ *   - backport    only on a PR that is a backport (a copy of an earlier PR
+ *                 onto another branch): { of, number, branch, parentMerged }.
+ *                 See services/backport-detection.js.
  *   - idleDays    how long a row has sat untouched; shown on the pill and
  *                 drives the 30d stalled fold. "Escalate" is reserved for the
  *                 upstream tracker's own timeline (code PR merged, author
@@ -46,6 +49,9 @@ const { GITHUB_USERNAME } = require('../config/config');
 const { isAllowedBotLogin, isBotLogin } = require('../utils/bot-helpers');
 const { extractLinkedCodePr } = require('../utils/github-helpers');
 const { fetchTrackerTitleInfo } = require('../api/fetch-tracker-titles');
+const { isTrackerRepo } = require('../utils/backport-rules');
+const { backportParentLabel } = require('../utils/contribution-formatters');
+const { runBackportDetection } = require('./backport-detection');
 
 const TRACKER_RAW_URL =
   'https://raw.githubusercontent.com/adiati98/mautic-docs-prs-tracker/main/data/pr-cache.json';
@@ -1015,6 +1021,36 @@ function laneFor(record, me, botPingSignal, signals) {
     };
   }
 
+  // Rule 2b — a backport in the Mautic docs repos follows its PARENT, the way
+  // the upstream tracker handles it: its content was reviewed on the parent,
+  // so it has no review chain of its own. Parent still open → wait for it.
+  // Parent merged → merge this one. Two exceptions fall through to the normal
+  // reading: a closed-unmerged linked code PR (a fact about THIS PR, which the
+  // tracker also lets win), and a direct @-mention of you — the tracker shows
+  // that as a separate chip, but a row here has one next step, and being
+  // asked by name must not be hidden behind "wait for the parent".
+  // Other repos only get the backport label; their lane is unchanged.
+  if (
+    record.backport &&
+    isTrackerRepo(record.repo) &&
+    record.linkedCodePrState !== 'closed' &&
+    !signals.mention
+  ) {
+    const parentRef = backportParentLabel(record.backport.of, record.repo);
+    if (record.backport.parentMerged) {
+      return {
+        lane: 'ready',
+        ball: 'Approved',
+        nextStep: `Parent ${parentRef} merged — merge this backport`,
+      };
+    }
+    return {
+      lane: 'waiting',
+      ball: 'Waiting',
+      nextStep: `Waiting for parent ${parentRef} to merge`,
+    };
+  }
+
   if (approval) {
     if (approval.dismissed) {
       // The approval was dismissed after an update — the work is essentially
@@ -1372,6 +1408,23 @@ function waitingOnReviewStep(signals) {
 // ---------------------------------------------------------------------------
 
 /**
+ * The record's `backport` field, or null. A backport never owes a milestone of
+ * its own — the parent holds it (the tracker's rule too) — so the missing-
+ * milestone signal is switched off here, before the lane is worked out.
+ */
+function backportFor(url, backports, signals) {
+  const info = url && backports && typeof backports.get === 'function' ? backports.get(url) : null;
+  if (!info) return null;
+  signals.milestoneMissing = false;
+  return {
+    of: info.backportOf,
+    number: info.parentNumber,
+    branch: info.branch || null,
+    parentMerged: info.parentMerged === true,
+  };
+}
+
+/**
  * @param {object} input
  * @param {Array} input.tasks       ongoing-tasks.json  (reviews)
  * @param {Array} input.issues      ongoing-issues.json
@@ -1389,6 +1442,10 @@ function waitingOnReviewStep(signals) {
  *                                 fetchTeamRoster. Never required — an absent
  *                                 or empty roster treats every approval as
  *                                 decisive, exactly as before the rule existed.
+ * @param {Map}    [input.backports] PR URL → { backportOf, parentNumber,
+ *                                 branch, parentMerged } from
+ *                                 runBackportDetection. Never required — a
+ *                                 missing entry means "not a backport".
  * @returns {{ records: Array, feed: object }}
  */
 function mergeWorkbench({
@@ -1401,6 +1458,7 @@ function mergeWorkbench({
   now,
   titles = {},
   roster = {},
+  backports = new Map(),
 }) {
   const me = String(username || GITHUB_USERNAME || '').toLowerCase();
   const nowDate = now || new Date();
@@ -1462,6 +1520,7 @@ function mergeWorkbench({
     const reviewRequest = deriveReviewRequest(signals.activity, me);
     const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
     const botPingSignal = deriveBotPing(signals.activity, local, me);
+    const backport = backportFor(local.url, backports, signals);
 
     const record = {
       key,
@@ -1504,6 +1563,8 @@ function mergeWorkbench({
       updatedAt: local.updatedAt || null,
       linkedPr:
         local.relationship === 'assigned issue' && key ? issuePrLinks.get(key) || null : null,
+      // Only present on a backport, so every other record stays as it was.
+      ...(backport ? { backport } : {}),
     };
 
     Object.assign(record, deriveLane(record, me, botPingSignal, signals));
@@ -1526,12 +1587,14 @@ function mergeWorkbench({
     const reviewedNote = deriveReviewedNote(signals.activity, approval, me);
     const effectiveDate = latestDate(upstream.docsUpdatedAt, upstream.codeUpdatedAt);
     const idleDays = effectiveDate ? Math.max(0, daysBetween(effectiveDate, nowDate)) : 0;
+    const trackerUrl = `https://github.com/${repo}/pull/${number}`;
+    const backport = backportFor(trackerUrl, backports, signals);
 
     const record = {
       key,
       source: 'tracker',
       title: titleInfo?.title || null,
-      url: `https://github.com/${repo}/pull/${number}`,
+      url: trackerUrl,
       repo,
       number: Number.isNaN(Number(number)) ? null : Number(number),
       relationship: 'reviewing',
@@ -1573,6 +1636,7 @@ function mergeWorkbench({
       // on the matched path, so both paths must mean the same thing by it.
       updatedAt: upstream.docsUpdatedAt || null,
       linkedPr: null,
+      ...(backport ? { backport } : {}),
     };
 
     Object.assign(record, deriveLane(record, me, null, signals));
@@ -1715,8 +1779,18 @@ async function readJsonOr(fallback, file) {
   }
 }
 
-/** Loads local records + tracker feed and returns the full merged model. */
-async function loadMergedWorkbench({ dataDir = 'data', fetchOptions, rosterOptions } = {}) {
+/**
+ * Loads local records + tracker feed and returns the full merged model.
+ * `backports` is the result main.js already worked out for the local records;
+ * tracker-only rows are checked here, after the title fetch has seen their
+ * text.
+ */
+async function loadMergedWorkbench({
+  dataDir = 'data',
+  fetchOptions,
+  rosterOptions,
+  backports = new Map(),
+} = {}) {
   const [tasks, issues, prs, coauthored, contributions] = await Promise.all([
     readJsonOr([], path.join(dataDir, 'ongoing-tasks.json')),
     readJsonOr([], path.join(dataDir, 'ongoing-issues.json')),
@@ -1738,6 +1812,25 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions, rosterOptio
   const trackerOnlyKeys = Object.keys(feed.data || {}).filter((key) => !localKeys.has(key));
   const titles = await fetchTrackerTitleInfo(trackerOnlyKeys);
 
+  // Tracker-only rows are open docs PRs; their text came in with the title
+  // fetch just above. Fail-soft like everything else in this loader.
+  let allBackports = backports;
+  if (trackerOnlyKeys.length) {
+    try {
+      const trackerOnlyEntries = trackerOnlyKeys.map((key) => {
+        const [repo, number] = key.split('#');
+        return { url: `https://github.com/${repo}/pull/${number}`, title: titles[key]?.title || '' };
+      });
+      const { backports: extra } = await runBackportDetection({
+        entries: trackerOnlyEntries,
+        openUrls: trackerOnlyEntries.map((e) => e.url),
+      });
+      allBackports = new Map([...backports, ...extra]);
+    } catch (err) {
+      console.warn(`Backport check for tracker-only rows failed: ${err.message}`);
+    }
+  }
+
   const { records, feed: feedMeta } = mergeWorkbench({
     tasks,
     issues,
@@ -1746,6 +1839,7 @@ async function loadMergedWorkbench({ dataDir = 'data', fetchOptions, rosterOptio
     feed,
     titles,
     roster,
+    backports: allBackports,
   });
   const impact = computeImpact(records, contributions);
   return { records, impact, feed: feedMeta };

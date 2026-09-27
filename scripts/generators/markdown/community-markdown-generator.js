@@ -4,6 +4,7 @@ const { BASE_DIR } = require('../../config/config');
 const { LANES, sortNewestFirst } = require('../html/workbench-html-generator');
 const { THEME } = require('../../config/constants');
 const { mdEscapeCell, mdEscapeLinkText } = require('./md-escape');
+const { backportParentLabel } = require('../../utils/contribution-formatters');
 const {
   buildMilestones,
   selectShown,
@@ -239,6 +240,12 @@ function nextCell(record) {
   }
   if (record.botPing && record.botPing.of) {
     bits.push(`Promptless pinged **${mdEscapeCell(record.botPing.of)}**`);
+  }
+  if (record.backport && record.backport.of) {
+    const { of, branch, parentMerged } = record.backport;
+    const state = parentMerged ? 'merged' : 'not merged';
+    const branchNote = branch ? ` · ${mdEscapeCell(branch)}` : '';
+    bits.push(`↩ backport of [${backportParentLabel(of, record.repo)}](${of}) (${state})${branchNote}`);
   }
   if (record.linkedCodePr && record.linkedCodePr.ref) {
     const ref = record.linkedCodePr.ref;

@@ -5,6 +5,7 @@ const {
   formatDate,
   calculatePeriodInDays,
   getIssueOrPrNumber,
+  backportParentLabel,
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
@@ -212,8 +213,14 @@ ${index + 1}. [**${item[0]}**](${repoUrl}) (${item[1]} contributions)`;
           tableContent += `    <tr>\n`;
           tableContent += `      <td>${counter++}.</td>\n`;
           tableContent += `      <td>${item.repo}${numberSuffix}</td>\n`;
-          // Add a hyperlink to the title
-          tableContent += `      <td><a href='${item.url}'>${item.title}</a></td>\n`;
+          // Add a hyperlink to the title, plus a note naming the parent PR on a
+          // backport (one row per PR either way, so the numbering still
+          // matches the quarter's total).
+          const parentLabel = item.backportOf ? backportParentLabel(item.backportOf, item.repo) : '';
+          const backportNote = parentLabel
+            ? `<br><sub>↩ Backport of <a href='${item.backportOf}'>${parentLabel}</a>${item.branch ? ` · ${item.branch}` : ''}</sub>`
+            : '';
+          tableContent += `      <td><a href='${item.url}'>${item.title}</a>${backportNote}</td>\n`;
 
           // Logic for Merged PRs table structure
           if (section === 'pullRequests') {

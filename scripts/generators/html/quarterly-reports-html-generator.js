@@ -7,6 +7,7 @@ const {
   formatDate,
   calculatePeriodInDays,
   getIssueOrPrNumber,
+  backportParentLabel,
   getPrStatusContent,
   getCollaborationStatusContent,
 } = require('../../utils/contribution-formatters');
@@ -82,6 +83,7 @@ const QUARTERLY_EXTRA_CSS = `
   .qr-link{color:var(--t-brand)}
   .qr-link:hover{color:var(--t-brand-strong)}
   .qr-link:focus-visible{outline:2px solid var(--t-brand);outline-offset:2px}
+  .qr-backport{display:block;margin-top:2px;font-family:ui-monospace,monospace;font-size:.72rem;color:var(--t-ink-3)}
   .qr-repo{font-family:ui-monospace,monospace;font-size:.75rem;color:var(--t-ink-2);background:var(--t-card-2);border:1px solid var(--t-line);border-radius:5px;padding:2px 7px}
   .qr-status-cell{display:inline-block}
 
@@ -877,7 +879,16 @@ ${navHtmlForReports}
 
           // Title column (String type, contains hyperlink). Sort falls back to textContent.
           const refSuffix = issueOrPrNumber ? ` (#${issueOrPrNumber})` : '';
-          tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="${sanitizeAttribute(item.title || '')}${refSuffix}">${safeTitle}</a></td>`;
+          // A backport keeps its own numbered row (so the row count still
+          // matches the quarter's total) and only gains a note naming the PR
+          // it was copied from — see services/backport-detection.js.
+          let backportNote = '';
+          const parentLabel = item.backportOf ? backportParentLabel(item.backportOf, item.repo) : '';
+          if (parentLabel) {
+            const branchNote = item.branch ? ` · ${sanitizeAttribute(item.branch)}` : '';
+            backportNote = `<span class="qr-backport">↩ Backport of <a href="${sanitizeAttribute(item.backportOf)}" target="_blank" rel="noopener noreferrer" class="qr-link">${sanitizeAttribute(parentLabel)}</a>${branchNote}</span>`;
+          }
+          tableContent += `<td data-label="Title"><a href="${sanitizeAttribute(item.url)}" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="${sanitizeAttribute(item.title || '')}${refSuffix}">${safeTitle}</a>${backportNote}</td>`;
 
           // Handle the remaining columns based on the contribution type.
           if (section === 'pullRequests') {
