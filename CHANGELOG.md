@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0] - 2026-09-28
+
+### Added
+
+- **Backports are now recognized and linked to their original pull request**: A backport pull request now shows which pull request it was copied from. On the Workbench, a Mautic docs backport follows its original — it's ready to merge once the original merges, and it no longer asks for its own milestone.
+
+### Fixed
+
+- **Full updates could fail or take too long when GitHub temporarily limited requests**: The update now waits it out and continues automatically, instead of giving up partway through.
+- **Full updates run faster**: It no longer re-checks pull requests that were already merged and haven't changed.
+
 ## [4.3.1] - 2026-08-20
 
 ### Fixed
