@@ -54,6 +54,33 @@ const keepAliveAgent = new https.Agent({ keepAlive: true, maxSockets: 6 });
 
 let rateLimitLogged = false;
 
+// The latest hourly-quota numbers GitHub reported (core API only — the search
+// API has its own small per-minute quota). Read with quotaSummary() so the
+// run can log how much of the hour's quota each step used.
+let lastQuota = null;
+
+function recordQuota(headers) {
+  const remaining = Number(headers?.['x-ratelimit-remaining']);
+  if (!Number.isFinite(remaining)) return;
+  const resource = String(headers['x-ratelimit-resource'] || 'core').toLowerCase();
+  if (resource !== 'core') return;
+  lastQuota = {
+    remaining,
+    limit: Number(headers['x-ratelimit-limit']) || null,
+    reset: Number(headers['x-ratelimit-reset']) || null,
+  };
+}
+
+/**
+ * "4012/5000 left, resets 18:38:53 UTC", or null before the first answer.
+ * Used for the quota lines in the log (see main.js and the historical crawl).
+ */
+function quotaSummary() {
+  if (!lastQuota) return null;
+  const reset = lastQuota.reset ? `, resets ${formatClock(lastQuota.reset * 1000)}` : '';
+  return `${lastQuota.remaining}/${lastQuota.limit ?? '?'} left${reset}`;
+}
+
 /**
  * Logs x-ratelimit-remaining/limit from a GitHub API response exactly once
  * per process, so a run can confirm empirically whether slowdowns are
@@ -78,6 +105,7 @@ function logRateLimitOnce(response) {
 function attachRateLimitLogger(axiosInstance) {
   axiosInstance.interceptors.response.use((response) => {
     logRateLimitOnce(response);
+    recordQuota(response?.headers);
     return response;
   });
   return axiosInstance;
@@ -109,14 +137,23 @@ const UNCONFIRMED_403_RETRIES = 1;
 // (and failing) on its own.
 // ---------------------------------------------------------------------------
 
-// The longest single wait we accept. A block announced to last longer than
-// this gives up at once, so the workflow's own retry takes over, instead of
-// the job sitting idle for up to an hour.
+// The longest single wait we accept for a short block (the "too many
+// requests at once" kind). A block announced to last longer than this gives
+// up at once, so the workflow's own retry takes over.
 const MAX_RATE_LIMIT_WAIT_MS = 15 * 60 * 1000;
 
+// The HOURLY quota is different: once it runs out, it always comes back
+// within an hour (x-ratelimit-reset). A full sync uses close to the whole
+// quota, so running out near the end is expected now and then — waiting for
+// the reset finishes the run, while giving up only fails it and makes the
+// workflow's retries fail too (they start 30 seconds later, still blocked).
+const MAX_QUOTA_RESET_WAIT_MS = 61 * 60 * 1000;
+
 // The most one request may wait in total across all its retries. Without
-// this, six retries of up to 15 minutes each could hold the job for 90.
+// this, six retries of up to 15 minutes each could hold the job for 90. The
+// hourly-quota wait gets more room, since one wait can be close to an hour.
 const MAX_TOTAL_RATE_LIMIT_WAIT_MS = 20 * 60 * 1000;
+const MAX_TOTAL_WITH_QUOTA_WAIT_MS = 80 * 60 * 1000;
 
 // GitHub's minimum wait when a block comes with no time.
 const MIN_UNTIMED_WAIT_MS = 60 * 1000;
@@ -125,9 +162,10 @@ let blockedUntil = 0;
 
 const realSleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** For the fixture run only: clears the shared block time. */
+/** For the fixture run only: clears the shared block time and quota. */
 function resetRateLimitStateForTests() {
   blockedUntil = 0;
+  lastQuota = null;
 }
 
 function errorMessageOf(err) {
@@ -166,8 +204,17 @@ function classify403(err, now = Date.now()) {
     };
   }
   if (Number.isFinite(remaining) && remaining === 0) {
-    const waitUntil = Number.isFinite(reset) && reset > 0 ? reset * 1000 + 1000 : null;
-    return { isRateLimit: true, waitUntil, reason: 'quota at 0, reset time', message, searchOnly };
+    const hasReset = Number.isFinite(reset) && reset > 0;
+    return {
+      isRateLimit: true,
+      waitUntil: hasReset ? reset * 1000 + 1000 : null,
+      reason: 'quota at 0, reset time',
+      message,
+      searchOnly,
+      // The hourly quota (not search, and with a reset time) always comes
+      // back within an hour — see MAX_QUOTA_RESET_WAIT_MS.
+      hourlyQuota: hasReset && !searchOnly,
+    };
   }
   if (/secondary rate limit|abuse detection|rate limit exceeded/i.test(message)) {
     return {
@@ -201,8 +248,10 @@ async function waitForSharedBlock(sleep, label) {
  *
  * On a rate limit it waits until the time GitHub gives (see the "Rate-limit
  * waits" note above), shares that time with every other request in the run,
- * and gives up at once if the block lasts longer than MAX_RATE_LIMIT_WAIT_MS.
- * With no time given it waits at least a minute.
+ * and gives up at once if a short block lasts longer than
+ * MAX_RATE_LIMIT_WAIT_MS. When the hourly quota runs out it waits for the
+ * reset, up to MAX_QUOTA_RESET_WAIT_MS. With no time given it waits at least
+ * a minute.
  *
  * A 403 that carries no rate-limit signal gets one quick retry (to rule out
  * a fluke) and is then thrown with `isPermanent403` set, so callers can
@@ -238,7 +287,10 @@ async function withRateLimitRetry(
 
       if (status === 403 || status === 429) {
         const now = Date.now();
-        const { isRateLimit, waitUntil, reason, message, searchOnly } = classify403(err, now);
+        const { isRateLimit, waitUntil, reason, message, searchOnly, hourlyQuota } = classify403(
+          err,
+          now
+        );
 
         // 429 is always "too many requests"; search endpoints never mean a
         // permission problem (see the note above).
@@ -252,10 +304,11 @@ async function withRateLimitRetry(
             until = now + MIN_UNTIMED_WAIT_MS + Math.floor(Math.random() * 2000);
           }
           const delay = Math.max(0, until - now);
-          if (
-            delay > MAX_RATE_LIMIT_WAIT_MS ||
-            totalRateLimitWait + delay > MAX_TOTAL_RATE_LIMIT_WAIT_MS
-          ) {
+          const maxWait = hourlyQuota ? MAX_QUOTA_RESET_WAIT_MS : MAX_RATE_LIMIT_WAIT_MS;
+          const maxTotal = hourlyQuota
+            ? MAX_TOTAL_WITH_QUOTA_WAIT_MS
+            : MAX_TOTAL_RATE_LIMIT_WAIT_MS;
+          if (delay > maxWait || totalRateLimitWait + delay > maxTotal) {
             console.log(
               `[rate-limit] ${label || 'request'} is blocked until ${formatClock(until)} (${Math.round(delay / 60000)} min, ${reason}) — longer than this run will wait, giving up.`
             );
@@ -339,7 +392,10 @@ async function mapWithConcurrency(items, concurrency, iteratee) {
 module.exports = {
   MAX_RATE_LIMIT_RETRIES,
   MAX_RATE_LIMIT_WAIT_MS,
+  MAX_QUOTA_RESET_WAIT_MS,
   attachRateLimitLogger,
+  quotaSummary,
+  recordQuota,
   classify403,
   withRateLimitRetry,
   resetRateLimitStateForTests,

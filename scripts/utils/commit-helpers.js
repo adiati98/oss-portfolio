@@ -84,4 +84,30 @@ function isCommitByUser(commit, username, { prCreatedAt = null, excludeWebFlow =
   }
 }
 
-module.exports = { isCommitByUser };
+/**
+ * Version of the matching rules in isCommitByUser. data/commit-cache.json
+ * stores each PR's RESULT of these rules, not the raw commits, so the monthly
+ * full sync only keeps a cached result made with the current version (see
+ * pruneCommitCacheForFullSync in main.js). Bump this whenever a rule above
+ * changes, so every PR's commits are checked again on the next full sync.
+ */
+const COMMIT_RULES_VERSION = 1;
+
+/**
+ * Whether a cached commit result can be trusted without asking GitHub again:
+ * the PR was merged (its commits can't change anymore), the lookup worked
+ * (not a failed or 403 one), and it was made with the current matching
+ * rules. Everything else — open PRs, closed-but-not-merged PRs, failed
+ * lookups, results from older rules — is checked again.
+ */
+function isSettledCommitResult(entry) {
+  return Boolean(
+    entry &&
+      typeof entry === 'object' &&
+      entry.merged === true &&
+      !entry.fetchFailed &&
+      entry.rulesVersion === COMMIT_RULES_VERSION
+  );
+}
+
+module.exports = { isCommitByUser, isSettledCommitResult, COMMIT_RULES_VERSION };
