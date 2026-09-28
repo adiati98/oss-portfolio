@@ -502,7 +502,23 @@ async function main() {
     // warns when its backport logic moved on. Neither step can fail the build:
     // on an error, entries keep whatever backport fields they already had.
     let backports = new Map();
-    await checkTrackerRules();
+    const trackerRulesCheck = await checkTrackerRules();
+    // A separate workflow (tracker-rules-alert.yml) reads this file after the
+    // sync finishes and fails on purpose if the tracker's rules moved on —
+    // kept in its own workflow so that failure never blocks the site's
+    // GitHub Pages deploy, which only watches this one's own pass/fail.
+    try {
+      await fs.writeFile(
+        path.join(dataDir, 'tracker-rules-status.json'),
+        JSON.stringify(
+          { ...trackerRulesCheck, checkedAt: new Date().toISOString() },
+          null,
+          2
+        ) + '\n'
+      );
+    } catch (e) {
+      console.log(`Could not write tracker-rules-status.json: ${e.message}`);
+    }
     try {
       // A full sync judges every PR again and re-fetches everything that can
       // change — but keeps merged PRs' facts, whose answer can't change. That

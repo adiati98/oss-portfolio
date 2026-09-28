@@ -1,0 +1,52 @@
+name: Tracker Backport Rules Alert
+
+# The Update Contributions workflow already checks, on every run, whether
+# the mautic-docs-prs-tracker's backport rules moved on since our copy in
+# scripts/utils/backport-rules.js was made — see tracker-rules-watch.js.
+# It saves the result to data/tracker-rules-status.json and keeps running
+# either way, so a rule change never stops the site's data from updating.
+#
+# This workflow just reads that file after a sync finishes, and fails on
+# purpose when the rules changed. That failure is isolated to THIS
+# workflow, so it never affects Update Contributions' own pass/fail — and
+# in turn never affects deploy-gh-pages.yml, which only watches Update
+# Contributions' status. A failed GitHub Actions run normally sends an
+# email if that's enabled under Settings > Notifications > Actions.
+
+on:
+  workflow_run:
+    workflows: ['Update Contributions']
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  check:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          # Named by branch, not by the workflow_run's own SHA, so this
+          # always reads the file the sync just committed to main.
+          ref: main
+
+      - name: Fail if the tracker's backport rules changed
+        run: |
+          node -e "
+            const fs = require('fs');
+            const file = 'data/tracker-rules-status.json';
+            if (!fs.existsSync(file)) {
+              console.log('No tracker-rules-status.json found yet; nothing to check.');
+              process.exit(0);
+            }
+            const status = JSON.parse(fs.readFileSync(file, 'utf8'));
+            console.log('Tracker backport rules status: ' + status.status);
+            if (status.status === 'changed') {
+              const parts = [];
+              if (status.changed && status.changed.length) parts.push('changed: ' + status.changed.join(', '));
+              if (status.missing && status.missing.length) parts.push('not found: ' + status.missing.join(', '));
+              console.log('::error title=Tracker backport rules changed::' + parts.join('; ') + '. Update scripts/utils/backport-rules.js to follow it, then scripts/utils/backport-additions.js and the baseline in scripts/utils/tracker-rules-watch.js.');
+              process.exit(1);
+            }
+          "
