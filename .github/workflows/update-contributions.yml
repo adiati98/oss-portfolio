@@ -67,7 +67,9 @@ jobs:
             # Search results are fully consistent). Deleting it removed the
             # one thing that made a transient Search miss recoverable.
             export FULL_RESYNC=true
-            rm -f data/commit-cache.json
+            # data/commit-cache.json is NOT deleted: main.js keeps only the
+            # results for merged PRs (whose commits can't change) and checks
+            # everything else again — see pruneCommitCacheForFullSync.
             rm -f data/pr-cache.json
             rm -f data/failed-fetch.json
             rm -f data/all-articles.json

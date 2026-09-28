@@ -12,7 +12,8 @@ const { spawnSync } = require('child_process');
  * that makes a transient Search miss recoverable instead of silent data loss.
  */
 const cacheFiles = [
-  'commit-cache.json',
+  // commit-cache.json is kept: main.js keeps only merged-PR results on a
+  // full sync and checks the rest again (see pruneCommitCacheForFullSync).
   'pr-cache.json',
   'failed-fetch.json',
   'workbench-activity-cache.json',

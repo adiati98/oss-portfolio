@@ -7,8 +7,13 @@ const {
   attachRateLimitLogger,
   withRateLimitRetry,
   keepAliveAgent,
+  quotaSummary,
 } = require('../utils/http-helpers');
-const { isCommitByUser } = require('../utils/commit-helpers');
+const {
+  isCommitByUser,
+  isSettledCommitResult,
+  COMMIT_RULES_VERSION,
+} = require('../utils/commit-helpers');
 const { rememberPrText } = require('../services/backport-detection');
 
 /**
@@ -223,6 +228,12 @@ async function fetchContributions(
 
   /**
    * Fetches the date of the user's first commit on a given PR.
+   *
+   * A cached result is reused when the PR hasn't changed since (same
+   * updated_at) — or, for a MERGED PR, always: a merged PR's commits can't
+   * change anymore, so asking GitHub again gives the same answer. Such a
+   * result is only reused if it was made with the current matching rules
+   * (COMMIT_RULES_VERSION) and the lookup itself worked.
    */
   async function getFirstCommitDetails(
     owner,
@@ -234,7 +245,8 @@ async function fetchContributions(
     logState,
     year,
     title,
-    prCreatedAt = null
+    prCreatedAt = null,
+    prMerged = false
   ) {
     const prUrlKey = `/repos/${owner}/${repo}/pulls/${prNumber}`;
     const prUrl = `https://github.com/${owner}/${repo}/pull/${prNumber}`;
@@ -254,6 +266,7 @@ async function fetchContributions(
       ) {
         return cached;
       }
+      if (isSettledCommitResult(cached)) return cached;
     }
 
     let result = null;
@@ -288,9 +301,17 @@ async function fetchContributions(
           firstCommitDate: userCommits[0].commit.author.date,
           commitCount: userCommits.length,
           prUpdatedAt,
+          merged: Boolean(prMerged),
+          rulesVersion: COMMIT_RULES_VERSION,
         };
       } else {
-        result = { firstCommitDate: null, commitCount: 0, prUpdatedAt };
+        result = {
+          firstCommitDate: null,
+          commitCount: 0,
+          prUpdatedAt,
+          merged: Boolean(prMerged),
+          rulesVersion: COMMIT_RULES_VERSION,
+        };
       }
     } catch (err) {
       // A confirmed permanent 403 is worth remembering so we don't retry it
@@ -308,7 +329,9 @@ async function fetchContributions(
   }
 
   for (let year = startYear; year <= currentYear; year++) {
-    console.log(`Fetching contributions for year: ${year}...`);
+    // The hourly quota left so far, so the log shows how much each year uses.
+    const quota = quotaSummary();
+    console.log(`Fetching contributions for year: ${year}...${quota ? ` (quota: ${quota})` : ''}`);
 
     const yearStart = `${year}-01-01T00:00:00Z`;
     const yearEnd = `${year + 1}-01-01T00:00:00Z`;
@@ -465,7 +488,8 @@ async function fetchContributions(
           logState,
           year,
           pr.title,
-          pr.created_at
+          pr.created_at,
+          Boolean(mergedAt)
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {
@@ -587,7 +611,8 @@ async function fetchContributions(
           logState,
           year,
           item.title,
-          item.created_at
+          item.created_at,
+          Boolean(mergedAt)
         );
 
         if (commitDetails && commitDetails.firstCommitDate) {

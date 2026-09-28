@@ -9,6 +9,9 @@ const {
   classify403,
   resetRateLimitStateForTests,
   MAX_RATE_LIMIT_WAIT_MS,
+  MAX_QUOTA_RESET_WAIT_MS,
+  quotaSummary,
+  recordQuota,
 } = require('./http-helpers');
 
 // A fake clock: sleeping just moves it forward.
@@ -98,14 +101,38 @@ async function run(name, body) {
     assert.deepEqual(waits, [10000]);
   });
 
-  await run('R5 · a block longer than the limit gives up at once, without waiting', async () => {
-    const reset = Math.floor((clock + MAX_RATE_LIMIT_WAIT_MS + 5 * 60000) / 1000);
+  await run('R5 · a short block longer than 15 min gives up at once, without waiting', async () => {
+    const seconds = MAX_RATE_LIMIT_WAIT_MS / 1000 + 5 * 60;
+    const fn = failThen([httpError(403, { 'retry-after': String(seconds) })]);
+    await assert.rejects(() => withRateLimitRetry(fn, { sleep }));
+    assert.deepEqual(waits, []);
+    assert.equal(fn.calls(), 1);
+  });
+
+  await run(
+    'R12 · the hourly quota at 0 for 28 min (the real case): waits for the reset',
+    async () => {
+      const reset = Math.floor(clock / 1000) + 28 * 60;
+      const fn = failThen([
+        httpError(
+          403,
+          { 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': String(reset) },
+          'API rate limit exceeded for user ID 1.'
+        ),
+      ]);
+      assert.equal(await withRateLimitRetry(fn, { label: 'reviews#577', sleep }), 'ok');
+      assert.equal(waits.length, 1);
+      assert.ok(waits[0] >= 28 * 60000 && waits[0] <= 28 * 60000 + 2000, `waited ${waits[0]}ms`);
+    }
+  );
+
+  await run('R13 · an hourly-quota reset more than an hour away still gives up', async () => {
+    const reset = Math.floor((clock + MAX_QUOTA_RESET_WAIT_MS + 5 * 60000) / 1000);
     const fn = failThen([
       httpError(403, { 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': String(reset) }),
     ]);
     await assert.rejects(() => withRateLimitRetry(fn, { sleep }));
     assert.deepEqual(waits, []);
-    assert.equal(fn.calls(), 1);
   });
 
   await run(
@@ -154,20 +181,35 @@ async function run(name, body) {
     assert.equal(waits.length, 1, 'the other request did not wait');
   });
 
-  await run('R11 · one request stops after 20 minutes of waiting in total', async () => {
-    const block = () =>
-      httpError(403, {
-        'x-ratelimit-remaining': '0',
-        'x-ratelimit-reset': String(Math.floor(clock / 1000) + 14 * 60),
-      });
-    let calls = 0;
-    const fn = async () => {
-      calls++;
-      throw block();
-    };
-    await assert.rejects(() => withRateLimitRetry(fn, { sleep }));
-    assert.equal(waits.length, 1, 'waited once (14 min); a second 14-min wait would pass 20 min');
-    assert.equal(calls, 2);
+  await run(
+    'R11 · one request stops after 20 minutes of short-block waiting in total',
+    async () => {
+      const block = () => httpError(403, { 'retry-after': String(14 * 60) });
+      let calls = 0;
+      const fn = async () => {
+        calls++;
+        throw block();
+      };
+      await assert.rejects(() => withRateLimitRetry(fn, { sleep }));
+      assert.equal(waits.length, 1, 'waited once (14 min); a second 14-min wait would pass 20 min');
+      assert.equal(calls, 2);
+    }
+  );
+
+  await run('R14 · quotaSummary reports the latest hourly quota, ignoring search', () => {
+    assert.equal(quotaSummary(), null);
+    recordQuota({
+      'x-ratelimit-remaining': '4012',
+      'x-ratelimit-limit': '5000',
+      'x-ratelimit-reset': String(Date.UTC(2026, 8, 27, 18, 38, 53) / 1000),
+      'x-ratelimit-resource': 'core',
+    });
+    recordQuota({
+      'x-ratelimit-remaining': '29',
+      'x-ratelimit-limit': '30',
+      'x-ratelimit-resource': 'search',
+    });
+    assert.equal(quotaSummary(), '4012/5000 left, resets 18:38:53 UTC');
   });
 
   await run('R9 · classify403 reads the reset time', () => {

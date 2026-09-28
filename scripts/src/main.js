@@ -56,6 +56,36 @@ const {
   pruneForFullSync,
 } = require('../services/backport-detection');
 const { checkTrackerRules } = require('../utils/tracker-rules-watch');
+const { quotaSummary } = require('../utils/http-helpers');
+const { isSettledCommitResult } = require('../utils/commit-helpers');
+
+/**
+ * For the monthly full sync: keeps only the cached commit results that can't
+ * be out of date — merged PRs, looked up successfully, with the current
+ * matching rules (see isSettledCommitResult) — and drops the rest, so those
+ * are fetched fresh. A merged PR's commits never change, so asking GitHub
+ * again would only use about a quarter of the hour's quota for the same
+ * answers. Changes the map in place.
+ */
+function pruneCommitCacheForFullSync(commitCache) {
+  let kept = 0;
+  for (const [key, entry] of commitCache) {
+    if (isSettledCommitResult(entry)) kept++;
+    else commitCache.delete(key);
+  }
+  console.log(
+    `Commit cache for full sync: kept ${kept} merged-PR results, the rest is checked again.`
+  );
+}
+
+/**
+ * Logs how much of the hour's GitHub API quota is left after a step. A full
+ * sync uses close to the whole quota, so these lines show where it goes.
+ */
+function logQuota(step) {
+  const quota = quotaSummary();
+  if (quota) console.log(`[quota] after ${step}: ${quota}`);
+}
 const skillsData = require('../../contents/skills');
 const recognitionsData = require('../../contents/recognitions');
 // Milestone sources — keys must match MILESTONE_SOURCES in
@@ -234,6 +264,7 @@ async function main() {
     console.log(
       `Saved ${ongoingTasks.length} ongoing tasks to ${ongoingTasksFile} (after exclusions and workbench deduplication).`
     );
+    logQuota('the workbench fetch');
 
     // --- Fetch Articles ---
     console.log('Fetching Open Source Software articles from external platforms...');
@@ -306,6 +337,7 @@ async function main() {
       prCache = new Set();
       console.log('Clearing persistent PR cache for a full fetch.');
     }
+    if (isFullResync) pruneCommitCacheForFullSync(mergedCommitCache);
 
     const { contributions: newContributions, rejectedCoAuthorUrls: historicalRejectedUrls } =
       await fetchContributions(fetchStartYear, prCache, mergedCommitCache, failedFetchCache);
@@ -462,6 +494,7 @@ async function main() {
     }
 
     console.log('Merged and categorized all contributions based on latest status.');
+    logQuota('the contributions crawl');
 
     // --- Backports: which PRs are copies of an earlier PR on another branch ---
     // Uses the Mautic docs PR tracker's rules (copied in utils/backport-rules.js)
@@ -486,6 +519,7 @@ async function main() {
     } catch (e) {
       console.error(`Backport detection failed, keeping previous results: ${e.message}`);
     }
+    logQuota('the backport check');
 
     await fs.writeFile(dataFile, JSON.stringify(finalContributions, null, 2), 'utf8');
     console.log('Updated contributions data saved to file.');
@@ -568,6 +602,7 @@ async function main() {
     await createJourneyMarkdown(leadershipData, skillsData, milestoneContent);
     await createWorkbenchMarkdown(workbenchModel);
 
+    logQuota('the whole run');
     console.log('Contributions update completed successfully.');
   } catch (e) {
     hasFailed = true;
