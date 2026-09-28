@@ -55,15 +55,12 @@ const {
 } = require('../utils/http-helpers');
 const {
   TRACKER_RULES_COMMIT,
+  DEPENDABOT_LOGIN,
   findBackportParent,
-  isTitleMatchAllowed,
+  resolveManualDependencyBackport,
   backportTitleSuffixBranch,
 } = require('../utils/backport-rules');
-const {
-  ADDITIONS_VERSION,
-  findFirstReferenceParent,
-  findAdditionalParent,
-} = require('../utils/backport-additions');
+const { ADDITIONS_VERSION, findAdditionalParent } = require('../utils/backport-additions');
 
 // Stored with every verdict. A change to either the copied tracker rules or
 // oss-portfolio's own additions makes the next run judge every PR again.
@@ -245,9 +242,12 @@ function makePullLookup(cache, stats, http = buildAxiosInstance()) {
  * One PR's verdict: { backportOf, parentNumber, branch, rule } or
  * { backportOf: null } when it is not a backport. Throws when a lookup failed.
  *
- * Order: oss-portfolio's "first #N" fix, then the tracker's copied rules, then
- * oss-portfolio's other additions (see utils/backport-additions.js). `rule`
- * records which one found the parent, so a wrong link can be traced.
+ * Order, following the tracker's own per-PR flow: first, whether this is a
+ * hand-made copy of a dependency-bump PR (resolveManualDependencyBackport);
+ * then the tracker's general rule (findBackportParent); then oss-portfolio's
+ * remaining additions, for cases the tracker still misses (see
+ * utils/backport-additions.js). `rule` records which one found the parent, so
+ * a wrong link can be traced.
  */
 async function checkOne(text, pool, getPull) {
   const { repo, number } = text;
@@ -258,10 +258,20 @@ async function checkOne(text, pool, getPull) {
     const self = await getPull(repo, number);
     return (base = self ? self.baseBranch : null);
   };
-  const common = { repo, number, title: text.title, body: text.body, getBase: baseBranch, getPull };
+  const isDependabotPR = text.author === DEPENDABOT_LOGIN;
 
-  const first = await findFirstReferenceParent(common);
-  if (first) return verdictFor(first, 'first-ref', baseBranch, text.title);
+  const { isManualDependencyBackport, parent: manualDependencyBackportParent } =
+    await resolveManualDependencyBackport({
+      repo,
+      number,
+      title: text.title,
+      body: text.body,
+      baseBranch: await baseBranch(),
+      getPull,
+    });
+  if (manualDependencyBackportParent) {
+    return verdictFor(manualDependencyBackportParent, 'tracker-dependency-backport', baseBranch, text.title);
+  }
 
   const parent = await findBackportParent({
     repo,
@@ -270,27 +280,14 @@ async function checkOne(text, pool, getPull) {
     body: text.body,
     baseBranch,
     createdAt: text.createdAt,
-    allowTitleMatch: () =>
-      isTitleMatchAllowed({
-        repo,
-        number,
-        title: text.title,
-        body: text.body,
-        author: text.author,
-        baseBranch,
-        getPull,
-      }),
+    allowTitleMatch: !isDependabotPR && !isManualDependencyBackport,
+    allowPortAloneWord: !isDependabotPR && !isManualDependencyBackport,
     pool,
     getPull,
   });
-  if (parent) return verdictFor({ ...parent, repo }, 'tracker', baseBranch, text.title);
+  if (parent) return verdictFor(parent, 'tracker', baseBranch, text.title);
 
-  const extra = await findAdditionalParent({
-    ...common,
-    author: text.author,
-    createdAt: text.createdAt,
-    pool,
-  });
+  const extra = await findAdditionalParent({ repo, number, title: text.title, body: text.body, getPull });
   if (extra) return verdictFor(extra, `addition-${extra.rule}`, baseBranch, text.title);
   return { backportOf: null };
 }

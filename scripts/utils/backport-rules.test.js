@@ -9,6 +9,7 @@ const {
   backportTitleSuffixBranch,
   findBackportParent,
   isTitleMatchAllowed,
+  resolveManualDependencyBackport,
 } = require('./backport-rules');
 const {
   extractDeclaration,
@@ -17,6 +18,10 @@ const {
 } = require('./tracker-rules-watch');
 
 const REPO = 'mautic/user-documentation';
+const DEV = 'mautic/developer-documentation-new';
+
+/** The parent number from extractBackportParentNumber's { number, repo }, or null. */
+const num = (r) => (r ? r.number : null);
 
 async function run(name, fn) {
   try {
@@ -45,18 +50,18 @@ function fakePulls(table) {
 
   await run('R1 · "cherry-pick #927" in the title (real #937)', () => {
     const text = 'docs: cherry-pick #927 Point Actions nav path and label update (7.1)';
-    assert.equal(extractBackportParentNumber(text, REPO), 927);
+    assert.equal(num(extractBackportParentNumber(text, REPO)), 927);
   });
 
   await run('R2 · "back/forward port … (PR #973)" in the body (real #1000)', () => {
     const body = 'This is a back/forward port of the same fix opened for 7.3 (PR #973).';
-    assert.equal(extractBackportParentNumber(body, REPO), 973);
+    assert.equal(num(extractBackportParentNumber(body, REPO)), 973);
   });
 
   await run('R3 · other wordings: backported, forward port, back and forward port', () => {
-    assert.equal(extractBackportParentNumber('Backported from #913', REPO), 913);
-    assert.equal(extractBackportParentNumber('A forward port of #12 to 8.0', REPO), 12);
-    assert.equal(extractBackportParentNumber('The back and forward port of #44', REPO), 44);
+    assert.equal(num(extractBackportParentNumber('Backported from #913', REPO)), 913);
+    assert.equal(num(extractBackportParentNumber('A forward port of #12 to 8.0', REPO)), 12);
+    assert.equal(num(extractBackportParentNumber('The back and forward port of #44', REPO)), 44);
   });
 
   await run('R4 · a cross-repo number (mautic/mautic#16849) is not a parent', () => {
@@ -71,11 +76,31 @@ function fakePulls(table) {
 
   await run('R6 · a full link to a PR in the same repo counts', () => {
     const body = `Backport of https://github.com/${REPO}/pull/880 to 6.0`;
-    assert.equal(extractBackportParentNumber(body, REPO), 880);
+    assert.equal(num(extractBackportParentNumber(body, REPO)), 880);
   });
 
   await run('R7 · a plain mention with no backport wording is not a parent', () => {
     assert.equal(extractBackportParentNumber('Follow-up to #500, fixes a typo.', REPO), null);
+  });
+
+  await run('R8 · the FIRST "#N" wins, not the last one within reach (real #785)', () => {
+    const body =
+      '7.2 backport of the segment read-date clarification (PR #754 / mautic#16224), ' +
+      'brought into 7.x via merge PR #16327.';
+    assert.equal(num(extractBackportParentNumber(body, REPO)), 754);
+  });
+
+  await run('R9 · "port" alone only counts when includePortAlone is true', () => {
+    const body = 'Ports the Roles overview documentation from PR #815 to the 7.2 branch.';
+    assert.equal(num(extractBackportParentNumber(body, REPO, true)), 815);
+    assert.equal(extractBackportParentNumber(body, REPO, false), null);
+  });
+
+  await run("R10 · a link to the sister docs repo is read as that repo's PR", () => {
+    const body = `This PR cherry-picks https://github.com/${REPO}/pull/842 to fix the table overflow.`;
+    const found = extractBackportParentNumber(body, DEV);
+    assert.equal(found.number, 842);
+    assert.equal(found.repo, REPO);
   });
 
   // --- Title suffix -----------------------------------------------------------
@@ -240,6 +265,82 @@ function fakePulls(table) {
     });
     assert.equal(parent, null);
     assert.equal(asked, false);
+  });
+
+  await run('F8 · a "— branch X" title trusts the first bare "#N" in the body (real dev #499)', async () => {
+    const { getPull } = fakePulls({ 481: { baseBranch: '7.0' } });
+    const parent = await findBackportParent({
+      repo: DEV,
+      number: 499,
+      title: 'docs: Add Tags API endpoint documentation - branch 7.1',
+      body:
+        '## Description\n\nThis PR adds Tags API endpoint documentation based on #481.\n\n' +
+        '<!-- Type "Closes" followed by a hashtag (#) symbol -->',
+      baseBranch: '7.1',
+      createdAt: '2026-05-26T00:00:00Z',
+      getPull,
+    });
+    assert.equal(parent.number, 481);
+    assert.equal(parent.branch, '7.0');
+  });
+
+  await run(
+    'F9 · a same-repo bare "#N" that fails still blocks the sister-repo URL (real dev #596, KNOWN GAP)',
+    async () => {
+      // The title's bare "#842" matches the tracker's word pattern first and
+      // wins outright — even though DEV#842 doesn't exist and the body's URL
+      // clearly names the real parent in the sister repo. The tracker's own
+      // extractBackportParentNumber never falls back to the URL check once
+      // the word pattern has matched, so this real case still needs
+      // oss-portfolio's own addition (see backport-additions.js, rule 5).
+      const getPull = async (repo, number) => {
+        if (repo === REPO && number === 842) return { baseBranch: '7.2', merged: true };
+        return null;
+      };
+      const parent = await findBackportParent({
+        repo: DEV,
+        number: 596,
+        title: 'Cherry pick PR #842 to fix table overflow from user docs to branch 7.2',
+        body: `This PR cherry-picks https://github.com/${REPO}/pull/842 to fix the table overflow.`,
+        baseBranch: '7.2',
+        createdAt: '2026-06-10T00:00:00Z',
+        getPull,
+      });
+      assert.equal(parent, null);
+    }
+  );
+
+  // --- resolveManualDependencyBackport ---------------------------------------
+
+  await run(
+    'D1 · a hand-made copy of a dependabot PR is recorded (real dev #607 → #603)',
+    async () => {
+      const { getPull } = fakePulls({ 603: { baseBranch: '7.1', author: 'dependabot[bot]' } });
+      const { isManualDependencyBackport, parent } = await resolveManualDependencyBackport({
+        repo: DEV,
+        number: 607,
+        title: 'chore(deps): bump rstcheck from 6.2.5 to 6.3.0 in /docs" — branch 7.2',
+        body: `This PR bumps rstcheck from 6.2.5 to 6.3.0 in /docs, following https://github.com/${DEV}/pull/603.`,
+        baseBranch: '7.2',
+        getPull,
+      });
+      assert.equal(isManualDependencyBackport, true);
+      assert.equal(parent.number, 603);
+    }
+  );
+
+  await run('D2 · a referenced PR that is NOT dependabot is not a manual dependency backport', async () => {
+    const { getPull } = fakePulls({ 603: { baseBranch: '7.1', author: 'someone' } });
+    const { isManualDependencyBackport, parent } = await resolveManualDependencyBackport({
+      repo: DEV,
+      number: 607,
+      title: 'docs: mention PR #603',
+      body: 'See #603 for context.',
+      baseBranch: '7.2',
+      getPull,
+    });
+    assert.equal(isManualDependencyBackport, false);
+    assert.equal(parent, null);
   });
 
   // --- Change alert ---------------------------------------------------------
