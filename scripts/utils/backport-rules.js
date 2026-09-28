@@ -5,11 +5,12 @@
  * branch, e.g. the reviewed 7.3 docs PR copied onto 8.0. These rules decide
  * which earlier PR ("the parent") a PR was copied from.
  *
- * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit a1ef8af5
- * (its PR #42). The tracker is the source of truth for these rules, and it is
- * used by a team, so it is never changed from here. Only its public file is
- * read. The patterns and functions below are copied as closely as possible —
- * edit them only to follow a change in the tracker, never on their own.
+ * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit 92436323
+ * ("Fix: backport and cherry-pick detection edge cases"). The tracker is the
+ * source of truth for these rules, and it is used by a team, so it is never
+ * changed from here. Only its public file is read. The patterns and
+ * functions below are copied as closely as possible — edit them only to
+ * follow a change in the tracker, never on their own.
  *
  * tracker-rules-watch.js compares this copy against the tracker's current
  * tracker.js on every run and prints a warning when the tracker's backport
@@ -24,15 +25,16 @@
  *     contributions data and the workbench), so it costs no API calls.
  *   - The tracker can also check a parent against the branch its linked code
  *     PR names. oss-portfolio has no code-PR data for that, so it always uses
- *     the tracker's other mode: the parent must be a real PR in the same repo,
- *     on a different branch.
+ *     the tracker's other mode: the parent must be a real PR, on a different
+ *     branch than this one (same repo), or simply a real PR (a parent found
+ *     in the sister docs repo).
  */
 
 /**
  * The tracker commit these rules were copied from. Stored with every cached
  * verdict, so changing it makes the next run check every PR again.
  */
-const TRACKER_RULES_COMMIT = 'a1ef8af5';
+const TRACKER_RULES_COMMIT = '92436323';
 
 /** The repos the tracker covers (its REPOS.docs). */
 const TRACKER_REPOS = ['mautic/developer-documentation-new', 'mautic/user-documentation'];
@@ -48,6 +50,12 @@ function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+/** The other repo the tracker watches, or null. */
+function sisterDocsRepo(repo) {
+  const lower = String(repo || '').toLowerCase();
+  return TRACKER_REPOS.find((r) => r !== lower) ?? null;
+}
+
 // A maintainer hand-porting a dependency bump names the PR after the original
 // bump's title with a "— branch X.Y" suffix, e.g. "chore(deps): bump rstcheck
 // from 6.2.5 to 6.3.0 in /docs — branch 7.0" against base branch "7.0".
@@ -58,7 +66,10 @@ function isDependencyBumpBackportTitle(title, baseBranch) {
 }
 
 // Fallback for a hand-made bump backport whose title doesn't follow the
-// "— branch X.Y" convention: the first same-repo PR it names.
+// "— branch X.Y" convention above — it may still name its parent PR in the
+// body ("following https://github.com/<repo>/pull/<N>"), or use backport
+// language like "cherry-pick #<N>" / "following #<N>". Only the first
+// same-repo reference is read.
 function extractReferencedPRNumber(sourceRepo, text) {
   if (!text) return null;
   const repoEscaped = escapeRegExp(sourceRepo);
@@ -71,14 +82,44 @@ function extractReferencedPRNumber(sourceRepo, text) {
   return null;
 }
 
-// "… (8.0 backport)", "… (backport 8.0)", "… (8.0)", "… [8.0]" — the trailing
-// marker that tells two otherwise identical PRs apart. Captures the branch.
+/**
+ * Whether or not the title already follows the "— branch X.Y" convention, the
+ * body may still name the bump PR this one was copied from. Confirming (one
+ * extra lookup) that the named PR was really authored by dependabot both
+ * catches titles that don't follow the convention and records that PR as
+ * this one's original — which the title-only match never gives us.
+ */
+async function resolveManualDependencyBackport({ repo, number, title, body, baseBranch, getPull }) {
+  let isManualDependencyBackport = isDependencyBumpBackportTitle(title || '', baseBranch);
+  let parent = null;
+  const referencedNumber = extractReferencedPRNumber(repo, `${title}\n${body || ''}`);
+  if (referencedNumber && referencedNumber !== number) {
+    const referencedPR = await getPull(repo, referencedNumber);
+    if (referencedPR && referencedPR.author === DEPENDABOT_LOGIN) {
+      isManualDependencyBackport = true;
+      parent = {
+        number: referencedNumber,
+        repo,
+        branch: referencedPR.baseBranch,
+        merged: referencedPR.merged === true,
+        mergedAt: referencedPR.mergedAt || null,
+      };
+    }
+  }
+  return { isManualDependencyBackport, parent };
+}
+
+// "… (8.0 backport)", "… (backport 8.0)", "… (8.0)", "… [8.0]", "… (8.0
+// port)" — the trailing marker that tells two otherwise identical PRs apart.
+// A second alternative covers the unbracketed form hand-made dependency-bump
+// copies use instead ("… — branch 8.0", "… - branch 8.0"). Captures the
+// branch name.
 const BACKPORT_TITLE_SUFFIX_PATTERN =
-  /[\s—-]*[([](?:backport\s+)?([\w.]+)(?:\s+backport)?[)\]]\s*$/i;
+  /[\s—-]*[([](?:backport\s+)?([\w.]+)(?:\s+(?:backport|port))?[)\]]\s*$|[\s—-]+branch\s+([\w.]+)\s*$/i;
 
 function backportTitleSuffixBranch(title) {
   const m = (title || '').match(BACKPORT_TITLE_SUFFIX_PATTERN);
-  return m ? m[1] : null;
+  return m ? (m[1] ?? m[2]) : null;
 }
 
 // The title with that marker removed, whitespace collapsed, lowercased — so a
@@ -92,32 +133,64 @@ function normalizeTitleForBackportMatch(title) {
 }
 
 // Backport wording followed by a bare same-repo "#123" within the same
-// sentence (at most 150 characters later). A "#" glued to a word or a "/"
+// sentence (at most 150 characters later, lazily — the match stops at the
+// FIRST "#" it can reach, not the last). A "#" glued to a word or a "/"
 // (like "mautic/mautic#123") is another repo's number, so it is skipped. A
 // sentence ends at a "." followed by whitespace and a capital letter, so the
-// dots inside "7.1" don't end it.
+// dots inside "7.1" don't end it. "port" alone ("Ports the Roles overview
+// documentation from PR #815") is only included when includePortAlone is
+// true — a bare "port" is common enough in unrelated prose that it is only
+// trusted where the caller has other reason to believe this is deliberate
+// backport wording.
 const SENTENCE_BREAK = String.raw`\.\s+[A-Z]`;
-const BACKPORT_REFERENCE_WORD_PATTERN = new RegExp(
-  String.raw`\b(?:back(?:[\s/-]+(?:and[\s/-]+)?forward)?[\s/-]?port(?:ed|s|ing)?|forward[\s/-]?port(?:ed|s|ing)?|cherry[-\s]?pick(?:ed|s|ing)?)\b(?:(?!${SENTENCE_BREAK}|\n).){0,150}(?<![\w/])#(\d+)`,
-  'i'
-);
+function backportReferenceWordPattern(includePortAlone) {
+  const portAlone = includePortAlone ? '|port(?:ed|s|ing)?' : '';
+  return new RegExp(
+    String.raw`\b(?:back(?:[\s/-]+(?:and[\s/-]+)?forward)?[\s/-]?port(?:ed|s|ing)?|forward[\s/-]?port(?:ed|s|ing)?|cherry[-\s]?pick(?:ed|s|ing)?${portAlone})\b(?:(?!${SENTENCE_BREAK}|\n).){0,150}?(?<![\w/])#(\d+)`,
+    'i'
+  );
+}
 
-// Same wording, pointing at a full link to a PR in this same repo.
-function backportReferenceUrlPattern(sourceRepo) {
-  const repoEscaped = escapeRegExp(sourceRepo);
+// Same backport wording, but pointing at a full GitHub URL instead of a bare
+// "#123" — only matched when the URL's repo is the given repo, so a link to
+// the *code* PR right next to the same wording is never mistaken for the
+// docs backport's parent.
+function backportReferenceUrlPattern(repo) {
+  const repoEscaped = escapeRegExp(repo);
   return new RegExp(
     String.raw`\b(?:backport(?:ed|s|ing)?|cherry[-\s]?pick(?:ed|s|ing)?)\b(?:(?!${SENTENCE_BREAK}|\n).){0,150}?github\.com/${repoEscaped}/pull/(\d+)`,
     'i'
   );
 }
 
-function extractBackportParentNumber(text, sourceRepo) {
+/**
+ * Returns { number, repo } for the parent this text names, or null. repo is
+ * sourceRepo unless the reference is a full URL into the sister docs repo, in
+ * which case it's that repo instead — a backport can be copied from either
+ * docs repo into the other.
+ */
+function extractBackportParentNumber(text, sourceRepo, includePortAlone = true) {
   if (!text) return null;
-  let m = text.match(BACKPORT_REFERENCE_WORD_PATTERN);
-  if (m) return Number(m[1]);
+  let m = text.match(backportReferenceWordPattern(includePortAlone));
+  if (m) return { number: Number(m[1]), repo: sourceRepo };
   m = text.match(backportReferenceUrlPattern(sourceRepo));
-  if (m) return Number(m[1]);
+  if (m) return { number: Number(m[1]), repo: sourceRepo };
+  const sister = sisterDocsRepo(sourceRepo);
+  if (sister) {
+    m = text.match(backportReferenceUrlPattern(sister));
+    if (m) return { number: Number(m[1]), repo: sister };
+  }
   return null;
+}
+
+// A bare "#NNN" not glued to a repo qualifier — used only where a title's own
+// "— branch X" suffix already establishes this PR as a deliberate copy for
+// branch X, so the first PR number the body mentions can be trusted even
+// without recognized backport wording next to it (e.g. "based on #481").
+function extractFirstBareReference(text) {
+  if (!text) return null;
+  const m = String(text || '').match(/(?<![\w/])#(\d+)/);
+  return m ? Number(m[1]) : null;
 }
 
 /** Accepts a plain value or a (possibly async) function, and calls it at most once. */
@@ -156,13 +229,19 @@ async function isTitleMatchAllowed({ repo, number, title, body, author, baseBran
  * Finds the PR this one was copied from, or null. Follows the tracker's
  * findBackportParent for a PR with no linked code PR (expectedBranch null):
  *
- *   1. An explicit reference in the title/body wins outright.
+ *   1. An explicit reference in the title/body wins outright — including one
+ *      naming a PR in the sister docs repo.
+ *   1b. A title ending in "— branch X" where X is this PR's own branch
+ *       already says this copy was made on purpose for that branch, which is
+ *       enough to trust the first same-repo PR number the body mentions even
+ *       without recognized backport wording next to it.
  *   2. Otherwise, a PR with the same title (branch suffix ignored), opened
  *      EARLIER than this one. Titles under 12 characters are too generic, and
  *      dependency bumps never match by title. The earliest match wins.
  *
- * Either way the parent is confirmed before it counts: it must be a real PR in
- * the same repo, on a different branch than this one.
+ * Every candidate is confirmed before it counts: it must be a real PR, and
+ * (same repo) on a different branch than this one — a sister-repo parent only
+ * has to be a real PR, since there's no shared branch to compare.
  *
  * `baseBranch` and `allowTitleMatch` may be functions, so the caller only pays
  * for looking them up when a candidate actually exists. `pool` is the list of
@@ -179,31 +258,52 @@ async function findBackportParent({
   baseBranch,
   createdAt,
   allowTitleMatch = true,
+  allowPortAloneWord = true,
   pool = [],
   getPull,
 }) {
   const getBase = lazy(baseBranch);
 
   const confirm = async (candidate) => {
-    if (!candidate || candidate === number) return null;
-    const mine = await getBase();
-    if (!mine) return null;
-    const parent = await getPull(repo, candidate);
-    if (!parent || !parent.baseBranch || parent.baseBranch === mine) return null;
+    if (!candidate) return null;
+    const candidateRepo = typeof candidate === 'object' ? candidate.repo : repo;
+    const candidateNumber = typeof candidate === 'object' ? candidate.number : candidate;
+    const sameRepo = String(candidateRepo).toLowerCase() === String(repo).toLowerCase();
+    if (!candidateNumber || (sameRepo && candidateNumber === number)) return null;
+    const parent = await getPull(candidateRepo, candidateNumber);
+    if (!parent || !parent.baseBranch) return null;
+    if (sameRepo) {
+      const mine = await getBase();
+      if (!mine || parent.baseBranch === mine) return null;
+    }
     return {
-      number: candidate,
+      number: candidateNumber,
+      repo: candidateRepo,
       branch: parent.baseBranch,
       merged: parent.merged === true,
       mergedAt: parent.mergedAt || null,
     };
   };
 
-  const referenced = extractBackportParentNumber(`${title}\n${body || ''}`, repo);
+  // Signal 1 — an explicit reference wins outright.
+  const referenced = extractBackportParentNumber(`${title}\n${body || ''}`, repo, allowPortAloneWord);
   const byReference = await confirm(referenced);
   if (byReference) return byReference;
 
+  // Signal 1b — a title ending in "— branch X" naming this PR's own branch.
+  // Checked before touching getBase() at all, so a title with no such suffix
+  // never costs a lookup.
+  const allowedForTitle =
+    typeof allowTitleMatch === 'function' ? await allowTitleMatch() : allowTitleMatch;
+  const suffixBranch = backportTitleSuffixBranch(title);
+  if (allowedForTitle && suffixBranch !== null && suffixBranch === (await getBase())) {
+    const byBareReference = await confirm(extractFirstBareReference(body));
+    if (byBareReference) return byBareReference;
+  }
+
+  // Signal 2 — the earliest older PR with the same title, branch suffix aside.
   const normalized = normalizeTitleForBackportMatch(title);
-  if (!normalized || normalized.length < 12 || !createdAt) return null;
+  if (!allowedForTitle || !normalized || normalized.length < 12 || !createdAt) return null;
 
   const mineTime = new Date(createdAt).getTime();
   const candidates = pool
@@ -216,10 +316,6 @@ async function findBackportParent({
         normalizeTitleForBackportMatch(item.title) === normalized
     )
     .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
-  if (!candidates.length) return null;
-
-  const allowed = typeof allowTitleMatch === 'function' ? await allowTitleMatch() : allowTitleMatch;
-  if (!allowed) return null;
 
   for (const item of candidates) {
     const confirmed = await confirm(item.number);
@@ -233,8 +329,10 @@ module.exports = {
   TRACKER_REPOS,
   DEPENDABOT_LOGIN,
   isTrackerRepo,
+  escapeRegExp,
   isDependencyBumpBackportTitle,
   extractReferencedPRNumber,
+  resolveManualDependencyBackport,
   backportTitleSuffixBranch,
   normalizeTitleForBackportMatch,
   extractBackportParentNumber,

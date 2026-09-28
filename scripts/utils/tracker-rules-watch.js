@@ -38,13 +38,15 @@ const WATCHED_DECLARATIONS = [
   'DEPENDENCY_BACKPORT_TITLE_PATTERN',
   'isDependencyBumpBackportTitle',
   'extractReferencedPRNumber',
+  'resolveManualDependencyBackport',
   'BACKPORT_TITLE_SUFFIX_PATTERN',
   'backportTitleSuffixBranch',
   'normalizeTitleForBackportMatch',
   'SENTENCE_BREAK',
-  'BACKPORT_REFERENCE_WORD_PATTERN',
+  'backportReferenceWordPattern',
   'backportReferenceUrlPattern',
   'extractBackportParentNumber',
+  'extractFirstBareReference',
   'findBackportParent',
 ];
 
@@ -54,7 +56,7 @@ const HANDLING_LINE_PATTERN =
 const HANDLING_KEY = 'backport handling (lines inside main)';
 
 /** The tracker commit the baseline was taken from, and its hashes. */
-const BASELINE_COMMIT = 'a1ef8af5';
+const BASELINE_COMMIT = '92436323';
 const BASELINE = {
   REPOS: '54908696c137',
   DEPENDABOT_LOGIN: '8f5672884498',
@@ -62,15 +64,17 @@ const BASELINE = {
   DEPENDENCY_BACKPORT_TITLE_PATTERN: '11aa4ef837c2',
   isDependencyBumpBackportTitle: '0dc4f0257542',
   extractReferencedPRNumber: 'a8ecae3b1db1',
-  BACKPORT_TITLE_SUFFIX_PATTERN: '8c40c88f87d3',
-  backportTitleSuffixBranch: '5f67bad3da64',
+  resolveManualDependencyBackport: '39f8c29be421',
+  BACKPORT_TITLE_SUFFIX_PATTERN: 'bc44bbbfacb5',
+  backportTitleSuffixBranch: '3f289b9cebf1',
   normalizeTitleForBackportMatch: 'dd7ee16c6a6c',
   SENTENCE_BREAK: '302de8ad1f34',
-  BACKPORT_REFERENCE_WORD_PATTERN: '563c839a8765',
-  backportReferenceUrlPattern: 'ca343a2ee3b2',
-  extractBackportParentNumber: 'e567ed30af4d',
-  findBackportParent: 'e7bd40e681b0',
-  'backport handling (lines inside main)': 'd342c8bc5e31',
+  backportReferenceWordPattern: 'c9b28a8414d9',
+  backportReferenceUrlPattern: 'c4fc07f1a8dc',
+  extractBackportParentNumber: '3efca5536afa',
+  extractFirstBareReference: 'fdf7573b5c27',
+  findBackportParent: '5eb7216f3c51',
+  'backport handling (lines inside main)': '3c9bfba576d8',
 };
 
 /** Trims each line, and drops blank and comment-only lines. */
