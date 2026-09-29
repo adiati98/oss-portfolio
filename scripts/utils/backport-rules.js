@@ -28,6 +28,9 @@
  *     the tracker's other mode: the parent must be a real PR, on a different
  *     branch than this one (same repo), or simply a real PR (a parent found
  *     in the sister docs repo).
+ *   - extractFirstBareReference strips HTML comments first (see its own
+ *     comment) — a real PR's body matched a PR template's own placeholder
+ *     example number instead of its real, URL-only parent reference.
  */
 
 /**
@@ -187,9 +190,20 @@ function extractBackportParentNumber(text, sourceRepo, includePortAlone = true) 
 // "— branch X" suffix already establishes this PR as a deliberate copy for
 // branch X, so the first PR number the body mentions can be trusted even
 // without recognized backport wording next to it (e.g. "based on #481").
+//
+// DELIBERATE DEVIATION FROM THE TRACKER: HTML comments are stripped first.
+// GitHub's default PR template puts an example like "Closes #123" inside an
+// HTML comment (invisible on GitHub, meant only as a hint for contributors).
+// With no wording requirement at all, this is the one signal a template's
+// own placeholder number can slip into by pure luck — a real PR did exactly
+// this, matching a real (unrelated) PR number from the template text instead
+// of the real parent named later in the body. Every other signal requires
+// backport wording right next to the number, which a template's own
+// boilerplate does not happen to contain.
 function extractFirstBareReference(text) {
   if (!text) return null;
-  const m = String(text || '').match(/(?<![\w/])#(\d+)/);
+  const withoutComments = String(text).replace(/<!--[\s\S]*?-->/g, ' ');
+  const m = withoutComments.match(/(?<![\w/])#(\d+)/);
   return m ? Number(m[1]) : null;
 }
 

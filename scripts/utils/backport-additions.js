@@ -41,10 +41,14 @@
 const { TRACKER_REPOS, escapeRegExp } = require('./backport-rules');
 
 /**
- * Bump this whenever the rule below changes. It is stored with every cached
- * verdict (next to the tracker commit), so the next run judges every PR again.
+ * Bump this whenever the rule below changes, OR when backport-rules.js's own
+ * "what differs from the tracker, on purpose" deviations change (there is no
+ * separate version number for those) — either way, oss-portfolio's rules
+ * moved on from a pure tracker copy, and cached verdicts need a fresh look.
+ * It is stored with every cached verdict (next to the tracker commit), so
+ * the next run judges every PR again.
  */
-const ADDITIONS_VERSION = 'additions-2';
+const ADDITIONS_VERSION = 'additions-3';
 
 // The same sentence limit and backport words as the tracker.
 const SENTENCE_BREAK = String.raw`\.\s+[A-Z]`;

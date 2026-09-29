@@ -284,6 +284,31 @@ function fakePulls(table) {
     assert.equal(parent.branch, '7.0');
   });
 
+  // The real body (GitHub's standard PR template), including the "Closes
+  // #123" example wrapped in an HTML comment — invisible on GitHub, but a
+  // real trap for any bare-"#N" pattern that doesn't skip comments.
+  const DEV_596_BODY = [
+    '## Description',
+    '',
+    'This PR cherry-picks https://github.com/mautic/user-documentation/pull/842 from user docs into the 7.2 branch.',
+    '',
+    '<!-- PLEASE WRITE ABOVE THIS COMMENT. -->',
+    '',
+    '## Linked issue',
+    '',
+    'N/A',
+    '',
+    '<!--',
+    '',
+    'Type the keyword "Closes" followed by a hashtag (#) symbol and the issue number. For example:',
+    '',
+    '❌ Closes: #123.',
+    '',
+    '✅ Closes #123',
+    '',
+    '-->',
+  ].join('\n');
+
   await run(
     'F9 · a same-repo bare "#N" that fails still blocks the sister-repo URL (real dev #596, KNOWN GAP)',
     async () => {
@@ -301,7 +326,35 @@ function fakePulls(table) {
         repo: DEV,
         number: 596,
         title: 'Cherry pick PR #842 to fix table overflow from user docs to branch 7.2',
-        body: `This PR cherry-picks https://github.com/${REPO}/pull/842 to fix the table overflow.`,
+        body: DEV_596_BODY,
+        baseBranch: '7.2',
+        createdAt: '2026-06-10T00:00:00Z',
+        getPull,
+      });
+      assert.equal(parent, null);
+    }
+  );
+
+  await run(
+    'F10 · a "Closes #123" template example inside an HTML comment is never trusted (real dev #596)',
+    async () => {
+      // Without stripping the comment first, the title's "to branch 7.2"
+      // suffix (see F9) makes signal 1b trust the FIRST bare "#N" in the
+      // body — which, with no comment-stripping, is the template's own
+      // placeholder "#123", not the real "#842" reference (only ever named
+      // via a URL). PR #123 happens to be a real PR in this repo, so the
+      // wrong number would otherwise pass confirmation and win outright.
+      const getPull = async (repo, number) => {
+        if (repo === DEV && number === 123) {
+          return { baseBranch: 'main', author: 'dependabot[bot]', merged: false };
+        }
+        return null;
+      };
+      const parent = await findBackportParent({
+        repo: DEV,
+        number: 596,
+        title: 'Cherry pick PR #842 to fix table overflow from user docs to branch 7.2',
+        body: DEV_596_BODY,
         baseBranch: '7.2',
         createdAt: '2026-06-10T00:00:00Z',
         getPull,
