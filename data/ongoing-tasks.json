@@ -10805,12 +10805,174 @@
     "linkedCodePrState": null
   },
   {
+    "title": "Sentry: filter browser noise, upgrade SDK to v11 with an explicit privacy baseline",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1601",
+    "repo": "Virtual-Coffee/virtualcoffee.io",
+    "status": "Request review",
+    "createdAt": "2026-09-28T20:28:34Z",
+    "updatedAt": "2026-09-28T20:43:58Z",
+    "number": 1601,
+    "user": {
+      "login": "JoeKarow",
+      "id": 58997957,
+      "node_id": "MDQ6VXNlcjU4OTk3OTU3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58997957?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/JoeKarow",
+      "html_url": "https://github.com/JoeKarow",
+      "followers_url": "https://api.github.com/users/JoeKarow/followers",
+      "following_url": "https://api.github.com/users/JoeKarow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/JoeKarow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/JoeKarow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/JoeKarow/subscriptions",
+      "organizations_url": "https://api.github.com/users/JoeKarow/orgs",
+      "repos_url": "https://api.github.com/users/JoeKarow/repos",
+      "events_url": "https://api.github.com/users/JoeKarow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/JoeKarow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["greptile-review"],
+    "lastActor": "JoeKarow",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-09-28T20:39:28.000Z",
+    "author": "JoeKarow",
+    "reviews": [
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:36:33Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:39:28Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "netlify[bot]",
+        "createdAt": "2026-09-28T20:28:42Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "github-actions[bot]",
+        "createdAt": "2026-09-28T20:29:11Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T20:36:20Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T20:36:31Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-28T20:39:28Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Maintainers",
+        "actor": "JoeKarow",
+        "createdAt": "2026-09-28T20:28:35Z"
+      },
+      {
+        "requestedReviewer": "Super Contributors",
+        "actor": "JoeKarow",
+        "createdAt": "2026-09-28T20:28:35Z"
+      }
+    ],
+    "requestedReviewers": [],
+    "mergeableState": "blocked",
+    "baseRef": "main",
+    "milestone": null,
+    "linkedCodePrState": null
+  },
+  {
+    "title": "docs: Document Field Groups REST API and FIELD_GROUP_LIST_ON_GENERATE event",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/700",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Request review",
+    "createdAt": "2026-09-28T18:42:03Z",
+    "updatedAt": "2026-09-28T19:29:57Z",
+    "number": 700,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["pending-pr-merge", "needs-backport"],
+    "isLastActorBot": false,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-06-24T11:22:22.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [],
+    "comments": [],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-09-28T18:42:04Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-09-28T18:42:05Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-09-28T18:42:05Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.3",
+    "milestone": "7.3",
+    "linkedCodePrState": "open"
+  },
+  {
     "title": "Update dependencies (non-major)",
     "url": "https://github.com/Virtual-Coffee/hacktoberfest/pull/94",
     "repo": "Virtual-Coffee/hacktoberfest",
     "status": "Request review",
     "createdAt": "2026-09-28T05:10:59Z",
-    "updatedAt": "2026-09-28T17:36:34Z",
+    "updatedAt": "2026-09-29T05:55:18Z",
     "number": 94,
     "user": {
       "login": "renovate[bot]",
@@ -11373,378 +11535,6 @@
     "requestedReviewers": ["BekahHW", "adiati98"],
     "mergeableState": "blocked",
     "baseRef": "main",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (6.0)",
-    "url": "https://github.com/mautic/user-documentation/pull/1005",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:18:25Z",
-    "updatedAt": "2026-09-24T12:18:26Z",
-    "number": 1005,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:17:22.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:26Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:26Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:26Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "6.0",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (7.0)",
-    "url": "https://github.com/mautic/user-documentation/pull/1004",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:18:18Z",
-    "updatedAt": "2026-09-24T12:18:20Z",
-    "number": 1004,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:17:20.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:19Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:20Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:20Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.0",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (7.1)",
-    "url": "https://github.com/mautic/user-documentation/pull/1003",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:18:13Z",
-    "updatedAt": "2026-09-24T12:18:14Z",
-    "number": 1003,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:17:18.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:14Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:14Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:14Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.1",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (7.2)",
-    "url": "https://github.com/mautic/user-documentation/pull/1002",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:18:07Z",
-    "updatedAt": "2026-09-24T12:18:09Z",
-    "number": 1002,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:17:16.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:08Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:09Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:18:09Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.2",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (5.2)",
-    "url": "https://github.com/mautic/user-documentation/pull/1001",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:17:34Z",
-    "updatedAt": "2026-09-24T12:17:35Z",
-    "number": 1001,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:17:24.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:17:35Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:17:35Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:17:35Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "5.2",
-    "milestone": null,
-    "linkedCodePrState": null
-  },
-  {
-    "title": "docs: Fix linkcheck failure on aivie.ch (WAF rejects the checker) (8.0)",
-    "url": "https://github.com/mautic/user-documentation/pull/1000",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-09-24T12:16:08Z",
-    "updatedAt": "2026-09-24T12:16:13Z",
-    "number": 1000,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-24T12:16:00.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:16:12Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:16:13Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-09-24T12:16:13Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "8.0",
     "milestone": null,
     "linkedCodePrState": null
   },
@@ -13006,7 +12796,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-09-17T04:11:09Z",
-    "updatedAt": "2026-09-28T18:04:55Z",
+    "updatedAt": "2026-09-28T23:11:42Z",
     "number": 1584,
     "user": {
       "login": "JoeKarow",
@@ -13540,13 +13330,382 @@
     "linkedCodePrState": null
   },
   {
-    "title": "feat(volunteers): add the Volunteer roster, Invite Allowances and /invites",
-    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1576",
+    "title": "feat(events): move events from Craft CMS to Google Calendar",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1579",
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
-    "createdAt": "2026-09-12T17:48:33Z",
-    "updatedAt": "2026-09-28T18:03:21Z",
-    "number": 1576,
+    "createdAt": "2026-09-13T04:29:24Z",
+    "updatedAt": "2026-09-28T23:13:28Z",
+    "number": 1579,
+    "user": {
+      "login": "JoeKarow",
+      "id": 58997957,
+      "node_id": "MDQ6VXNlcjU4OTk3OTU3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58997957?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/JoeKarow",
+      "html_url": "https://github.com/JoeKarow",
+      "followers_url": "https://api.github.com/users/JoeKarow/followers",
+      "following_url": "https://api.github.com/users/JoeKarow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/JoeKarow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/JoeKarow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/JoeKarow/subscriptions",
+      "organizations_url": "https://api.github.com/users/JoeKarow/orgs",
+      "repos_url": "https://api.github.com/users/JoeKarow/repos",
+      "events_url": "https://api.github.com/users/JoeKarow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/JoeKarow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["greptile-review"],
+    "lastActor": "JoeKarow",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-09-28T20:25:23.000Z",
+    "author": "JoeKarow",
+    "reviews": [
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T05:43:43Z"
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T05:50:58Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T06:43:04Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T06:53:44Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:09:38Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:09:40Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:09:56Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:10:01Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:20:44Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:20:45Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:20:47Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:20:48Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:20:50Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:21:01Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:21:02Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:21:04Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:21:10Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T07:21:12Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:44:52Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:59:07Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:59:11Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:59:15Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:59:32Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:59:38Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T19:33:47Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:25:20Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:25:22Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:25:23Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:09:55Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:10:01Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T07:20:44Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T07:20:45Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T07:20:47Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T07:20:48Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T07:20:50Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:21:01Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:21:02Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:21:04Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:21:10Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T07:21:12Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:44:50Z",
+        "isBot": true,
+        "mentions": ["src"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:44:51Z",
+        "isBot": true,
+        "mentions": ["src", "JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:44:51Z",
+        "isBot": true,
+        "mentions": ["example", "src", "JoeKarow"]
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:59:07Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:59:11Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:59:15Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:59:32Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:59:38Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-18T03:58:32Z",
+        "isBot": false,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-18T03:58:37Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-18T21:25:25Z",
+        "isBot": false,
+        "mentions": ["greptileai"]
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-18T21:30:19Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T19:33:46Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T19:33:46Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T19:33:46Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-28T20:25:20Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-28T20:25:21Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-28T20:25:23Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [],
+    "requestedReviewers": [],
+    "mergeableState": "blocked",
+    "baseRef": "membership/email",
+    "milestone": null,
+    "linkedCodePrState": null
+  },
+  {
+    "title": "feat(email): React Email templates, Gmail as a service account, and captured delivery outside production",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1578",
+    "repo": "Virtual-Coffee/virtualcoffee.io",
+    "status": "Request review",
+    "createdAt": "2026-09-13T00:49:40Z",
+    "updatedAt": "2026-09-28T23:13:02Z",
+    "number": 1578,
     "user": {
       "login": "JoeKarow",
       "id": 58997957,
@@ -13575,29 +13734,260 @@
     "hasFormalReview": true,
     "reviewState": null,
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-18T18:29:06.000Z",
+    "lastSubstantiveDate": "2026-09-28T19:00:59.000Z",
     "author": "JoeKarow",
     "reviews": [
       {
-        "login": "coderabbitai[bot]",
+        "login": "github-advanced-security[bot]",
         "state": "COMMENTED",
-        "submittedAt": "2026-09-17T21:14:20Z"
+        "submittedAt": "2026-09-13T00:50:52Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-13T01:35:48Z"
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-14T21:53:29Z"
       },
       {
         "login": "coderabbitai[bot]",
         "state": "COMMENTED",
-        "submittedAt": "2026-09-17T21:14:22Z"
+        "submittedAt": "2026-09-15T22:34:32Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:10:44Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-16T01:10:49Z"
       },
       {
         "login": "coderabbitai[bot]",
         "state": "COMMENTED",
-        "submittedAt": "2026-09-17T21:14:22Z"
+        "submittedAt": "2026-09-16T01:11:18Z"
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-17T04:12:44Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-17T21:14:37Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-18T21:29:31Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-18T21:32:11Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T18:46:56Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T19:00:01Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T19:00:59Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-13T00:49:48Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "netlify[bot]",
+        "createdAt": "2026-09-13T00:50:46Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "createdAt": "2026-09-13T00:50:52Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "github-actions[bot]",
+        "createdAt": "2026-09-13T00:51:45Z",
+        "isBot": true,
+        "mentions": ["2x"]
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-13T01:35:48Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "createdAt": "2026-09-14T21:53:28Z",
+        "isBot": true,
+        "mentions": []
       },
       {
         "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-09-17T21:14:55Z"
+        "createdAt": "2026-09-15T22:34:31Z",
+        "isBot": true,
+        "mentions": ["src", "JoeKarow"]
       },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:10:44Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:10:49Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-16T01:11:04Z",
+        "isBot": false,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:11:18Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T01:34:39Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-09-16T14:43:43Z",
+        "isBot": true,
+        "mentions": ["JoeKarow"]
+      },
+      {
+        "login": "github-advanced-security[bot]",
+        "createdAt": "2026-09-17T04:12:44Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-17T21:14:37Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-18T21:25:23Z",
+        "isBot": false,
+        "mentions": ["greptileai"]
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-18T21:29:22Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-18T21:29:29Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-18T21:32:11Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T18:46:54Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "JoeKarow",
+        "createdAt": "2026-09-28T19:00:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-09-28T19:00:59Z",
+        "isBot": true,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [],
+    "requestedReviewers": [],
+    "mergeableState": "blocked",
+    "baseRef": "membership/volunteers-invites",
+    "milestone": null,
+    "linkedCodePrState": null
+  },
+  {
+    "title": "feat(volunteers): add the Volunteer roster, Invite Allowances and /invites",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1576",
+    "repo": "Virtual-Coffee/virtualcoffee.io",
+    "status": "Request review",
+    "createdAt": "2026-09-12T17:48:33Z",
+    "updatedAt": "2026-09-28T23:12:29Z",
+    "number": 1576,
+    "user": {
+      "login": "JoeKarow",
+      "id": 58997957,
+      "node_id": "MDQ6VXNlcjU4OTk3OTU3",
+      "avatar_url": "https://avatars.githubusercontent.com/u/58997957?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/JoeKarow",
+      "html_url": "https://github.com/JoeKarow",
+      "followers_url": "https://api.github.com/users/JoeKarow/followers",
+      "following_url": "https://api.github.com/users/JoeKarow/following{/other_user}",
+      "gists_url": "https://api.github.com/users/JoeKarow/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/JoeKarow/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/JoeKarow/subscriptions",
+      "organizations_url": "https://api.github.com/users/JoeKarow/orgs",
+      "repos_url": "https://api.github.com/users/JoeKarow/repos",
+      "events_url": "https://api.github.com/users/JoeKarow/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/JoeKarow/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["greptile-review"],
+    "lastActor": "JoeKarow",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-09-28T20:50:03.000Z",
+    "author": "JoeKarow",
+    "reviews": [
       {
         "login": "JoeKarow",
         "state": "COMMENTED",
@@ -13727,6 +14117,26 @@
         "login": "greptile-apps[bot]",
         "state": "COMMENTED",
         "submittedAt": "2026-09-18T18:29:06Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T19:13:09Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:25:18Z"
+      },
+      {
+        "login": "greptile-apps[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:44:11Z"
+      },
+      {
+        "login": "JoeKarow",
+        "state": "COMMENTED",
+        "submittedAt": "2026-09-28T20:50:03Z"
       }
     ],
     "comments": [
@@ -13935,7 +14345,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-09-12T17:48:29Z",
-    "updatedAt": "2026-09-28T18:03:47Z",
+    "updatedAt": "2026-09-28T23:12:13Z",
     "number": 1575,
     "user": {
       "login": "JoeKarow",
@@ -14325,7 +14735,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-09-12T17:48:24Z",
-    "updatedAt": "2026-09-28T18:01:58Z",
+    "updatedAt": "2026-09-28T23:11:54Z",
     "number": 1574,
     "user": {
       "login": "JoeKarow",
@@ -14715,7 +15125,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-09-12T17:48:19Z",
-    "updatedAt": "2026-09-28T18:01:05Z",
+    "updatedAt": "2026-09-28T23:11:27Z",
     "number": 1573,
     "user": {
       "login": "JoeKarow",
