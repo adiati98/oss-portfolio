@@ -9,30 +9,30 @@ Organized by year and quarter, these reports track contributions made by **[adia
 
 ## 📊 All-Time Impact Summary
 
-### 🚀 Total Contributions: **3115**
+### 🚀 Total Contributions: **3133**
 
 | Context                    | Detail                                                |
 | :------------------------- | :---------------------------------------------------- |
 | 🏗️ **Unique Repositories** | **52** projects across **21** organizations           |
 | 📅 **Active Since**        | **2019** (8 years tracked)                            |
-| 🤝 **Helped Ship**         | **1203** reviewed or co-authored contributions merged |
-| ✍️ **Articles Written**    | **50** published articles                             |
+| 🤝 **Helped Ship**         | **1213** reviewed or co-authored contributions merged |
+| ✍️ **Articles Written**    | **4** published articles                              |
 
 ### 🧩 Contribution Distribution
 
 | Category         | Progress                         | Count    | Percentage |
 | :--------------- | :------------------------------- | :------- | :--------- |
-| Merged PRs       | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 583      | 18.8%      |
-| Issues           | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 657      | 21.2%      |
-| **Reviewed PRs** | `■■■■■■■■■■□□□□□□□□□□□□□□□□□□□□` | **1074** | **34.6%**  |
+| Merged PRs       | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 583      | 18.7%      |
+| Issues           | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 658      | 21.1%      |
+| **Reviewed PRs** | `■■■■■■■■■■□□□□□□□□□□□□□□□□□□□□` | **1086** | **34.8%**  |
 | Co-authored PRs  | `■■■□□□□□□□□□□□□□□□□□□□□□□□□□□□` | 296      | 9.5%       |
-| Collaborations   | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 492      | 15.9%      |
+| Collaborations   | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 497      | 15.9%      |
 
 ### 🎯 Primary Focus Projects
 
 1. [**OpenSource-Communities/guestbook**](https://github.com/OpenSource-Communities/guestbook) (703 contributions)
-2. [**mautic/user-documentation**](https://github.com/mautic/user-documentation) (578 contributions)
-3. [**mautic/developer-documentation-new**](https://github.com/mautic/developer-documentation-new) (445 contributions)
+2. [**mautic/user-documentation**](https://github.com/mautic/user-documentation) (579 contributions)
+3. [**mautic/developer-documentation-new**](https://github.com/mautic/developer-documentation-new) (455 contributions)
 
 ### 🎭 Collaboration Profile: Community Mentor
 
@@ -44,7 +44,7 @@ An expert advocate for code quality and peer development. Code review and techni
 
 Beyond code contributions, this portfolio also reflects active roles in community leadership and technical content creation around open source.
 
-- ✍️ **Writing:** [**View full articles list (50)**](./writing.md)
+- ✍️ **Writing:** [**View full articles list (4)**](./writing.md)
 - 🏆 **Journey:** [**View milestones, roles & impact**](./journey.md)
 - 🛠️ **Active Workbench:** [**View live tasks, organized by what happens next**](./workbench.md)
 
@@ -104,4 +104,4 @@ Beyond code contributions, this portfolio also reflects active roles in communit
 
 ---
 
-_Report last generated on: 10/8/2026, 7:11:03 AM_
+_Report last generated on: 10/9/2026, 7:18:15 AM_
