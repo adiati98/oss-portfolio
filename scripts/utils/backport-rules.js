@@ -5,12 +5,14 @@
  * branch, e.g. the reviewed 7.3 docs PR copied onto 8.0. These rules decide
  * which earlier PR ("the parent") a PR was copied from.
  *
- * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit 92436323
- * ("Fix: backport and cherry-pick detection edge cases"). The tracker is the
- * source of truth for these rules, and it is used by a team, so it is never
- * changed from here. Only its public file is read. The patterns and
- * functions below are copied as closely as possible — edit them only to
- * follow a change in the tracker, never on their own.
+ * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit 3c5b6357
+ * ("fix: Don't link a code PR out of a standalone Promptless docs task"),
+ * which moved on from commit 92436323 ("Fix: backport and cherry-pick
+ * detection edge cases"). The tracker is the source of truth for these
+ * rules, and it is used by a team, so it is never changed from here. Only
+ * its public file is read. The patterns and functions below are copied as
+ * closely as possible — edit them only to follow a change in the tracker,
+ * never on their own.
  *
  * tracker-rules-watch.js compares this copy against the tracker's current
  * tracker.js on every run and prints a warning when the tracker's backport
@@ -31,18 +33,26 @@
  *   - extractFirstBareReference strips HTML comments first (see its own
  *     comment) — a real PR's body matched a PR template's own placeholder
  *     example number instead of its real, URL-only parent reference.
+ *
+ * isStandaloneDocsTask (added with commit 3c5b6357) relies on
+ * mentionsOtherRepoPR, a scoped-down copy of the tracker's own
+ * tryExtractAppPR: the tracker uses that function to find the *code* PR a
+ * docs PR accompanies, which oss-portfolio does not track (see above), so
+ * only the "does this text name a PR in some other mautic/* repo" part is
+ * copied here.
  */
 
 /**
  * The tracker commit these rules were copied from. Stored with every cached
  * verdict, so changing it makes the next run check every PR again.
  */
-const TRACKER_RULES_COMMIT = '92436323';
+const TRACKER_RULES_COMMIT = '3c5b6357';
 
 /** The repos the tracker covers (its REPOS.docs). */
 const TRACKER_REPOS = ['mautic/developer-documentation-new', 'mautic/user-documentation'];
 
 const DEPENDABOT_LOGIN = 'dependabot[bot]';
+const PROMPTLESS = 'promptless-for-oss';
 
 function isTrackerRepo(repo) {
   const lower = String(repo || '').toLowerCase();
@@ -207,6 +217,59 @@ function extractFirstBareReference(text) {
   return m ? Number(m[1]) : null;
 }
 
+// Promptless ends every body it generates with a "**Trigger Events**" list —
+// the things that made it open this PR. Each entry is one markdown link, and
+// the link target says what kind of trigger it was: a code PR, a docs-repo
+// PR, or a human's request made directly in Promptless (a "task"). Returned
+// as plain text so it can be scanned the same way as the body. The list is
+// bounded at the next heading, because Promptless and CodeRabbit both append
+// sections after it.
+const TRIGGER_EVENTS_HEADING = '**Trigger Events**';
+function triggerEventsSection(description) {
+  if (!description) return null;
+  const start = description.indexOf(TRIGGER_EVENTS_HEADING);
+  if (start === -1) return null;
+  const body = description.slice(start + TRIGGER_EVENTS_HEADING.length);
+  const nextHeading = body.search(/^(?:#{1,6} |\*\*[^*\n]+\*\*\s*$)/m);
+  return nextHeading === -1 ? body : body.slice(0, nextHeading);
+}
+
+// A Promptless *task* trigger: the Education Team opened Promptless and
+// asked for a piece of documentation work directly, instead of Promptless
+// reacting to something on GitHub. Matched by the /tasks/ path.
+const PROMPTLESS_TASK_TRIGGER_PATTERN = /app\.gopromptless\.ai\/tasks\//i;
+
+/** Whether `text` names a PR in some mautic/* repo other than `sourceRepo`. */
+function mentionsOtherRepoPR(text, sourceRepo) {
+  const explicitRepoPattern =
+    /https?:\/\/github\.com\/mautic\/([a-z0-9-]+)\/pull\/(\d+)|mautic\/([a-z0-9-]+)`?\s*(?:PR\s*)?#(\d+)/gi;
+  for (const match of text.matchAll(explicitRepoPattern)) {
+    const repo = `mautic/${match[1] ?? match[3]}`;
+    if (repo !== sourceRepo) return true;
+  }
+  if (/mautic\s+PR\s*#(\d+)/i.test(text)) return true;
+  if (/\[PR\s*#(\d+)\]/i.test(text)) return true;
+  return false;
+}
+
+/**
+ * True when a Promptless PR is one the Education Team asked for directly and
+ * no code change is behind it — what the tracker calls a standalone docs
+ * task. Both halves have to hold, and they come from the Trigger Events
+ * list: at least one trigger is a Promptless task (a human's request), and
+ * no trigger names a PR outside the docs repo. A standalone task's prose can
+ * otherwise look exactly like a backport — sibling audit PRs across
+ * branches share the same title and cite other PRs for context — so this
+ * stops it from being matched as one.
+ */
+function isStandaloneDocsTask({ docsAuthor, description, sourceRepo }) {
+  if (docsAuthor !== PROMPTLESS) return false;
+  const section = triggerEventsSection(description);
+  if (section === null) return false;
+  if (!PROMPTLESS_TASK_TRIGGER_PATTERN.test(section)) return false;
+  return !mentionsOtherRepoPR(section, sourceRepo);
+}
+
 /** Accepts a plain value or a (possibly async) function, and calls it at most once. */
 function lazy(valueOrFn) {
   let done = false;
@@ -342,6 +405,7 @@ module.exports = {
   TRACKER_RULES_COMMIT,
   TRACKER_REPOS,
   DEPENDABOT_LOGIN,
+  PROMPTLESS,
   isTrackerRepo,
   escapeRegExp,
   isDependencyBumpBackportTitle,
@@ -352,4 +416,6 @@ module.exports = {
   extractBackportParentNumber,
   isTitleMatchAllowed,
   findBackportParent,
+  triggerEventsSection,
+  isStandaloneDocsTask,
 };

@@ -59,6 +59,7 @@ const {
   findBackportParent,
   resolveManualDependencyBackport,
   backportTitleSuffixBranch,
+  isStandaloneDocsTask,
 } = require('../utils/backport-rules');
 const { ADDITIONS_VERSION, findAdditionalParent } = require('../utils/backport-additions');
 
@@ -244,10 +245,12 @@ function makePullLookup(cache, stats, http = buildAxiosInstance()) {
  *
  * Order, following the tracker's own per-PR flow: first, whether this is a
  * hand-made copy of a dependency-bump PR (resolveManualDependencyBackport);
- * then the tracker's general rule (findBackportParent); then oss-portfolio's
- * remaining additions, for cases the tracker still misses (see
- * utils/backport-additions.js). `rule` records which one found the parent, so
- * a wrong link can be traced.
+ * then the tracker's general rule (findBackportParent) — skipped for a
+ * standalone Promptless docs task (isStandaloneDocsTask), which can share a
+ * sibling audit PR's title and PR mentions across branches without actually
+ * being a copy of it; then oss-portfolio's remaining additions, for cases
+ * the tracker still misses (see utils/backport-additions.js). `rule` records
+ * which one found the parent, so a wrong link can be traced.
  */
 async function checkOne(text, pool, getPull) {
   const { repo, number } = text;
@@ -273,18 +276,26 @@ async function checkOne(text, pool, getPull) {
     return verdictFor(manualDependencyBackportParent, 'tracker-dependency-backport', baseBranch, text.title);
   }
 
-  const parent = await findBackportParent({
-    repo,
-    number,
-    title: text.title,
-    body: text.body,
-    baseBranch,
-    createdAt: text.createdAt,
-    allowTitleMatch: !isDependabotPR && !isManualDependencyBackport,
-    allowPortAloneWord: !isDependabotPR && !isManualDependencyBackport,
-    pool,
-    getPull,
+  const standaloneDocsTask = isStandaloneDocsTask({
+    docsAuthor: text.author,
+    description: text.body,
+    sourceRepo: repo,
   });
+
+  const parent = standaloneDocsTask
+    ? null
+    : await findBackportParent({
+        repo,
+        number,
+        title: text.title,
+        body: text.body,
+        baseBranch,
+        createdAt: text.createdAt,
+        allowTitleMatch: !isDependabotPR && !isManualDependencyBackport,
+        allowPortAloneWord: !isDependabotPR && !isManualDependencyBackport,
+        pool,
+        getPull,
+      });
   if (parent) return verdictFor(parent, 'tracker', baseBranch, text.title);
 
   const extra = await findAdditionalParent({ repo, number, title: text.title, body: text.body, getPull });

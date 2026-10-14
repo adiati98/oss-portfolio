@@ -56,7 +56,7 @@ const HANDLING_LINE_PATTERN =
 const HANDLING_KEY = 'backport handling (lines inside main)';
 
 /** The tracker commit the baseline was taken from, and its hashes. */
-const BASELINE_COMMIT = '92436323';
+const BASELINE_COMMIT = '3c5b6357';
 const BASELINE = {
   REPOS: '54908696c137',
   DEPENDABOT_LOGIN: '8f5672884498',
@@ -74,7 +74,7 @@ const BASELINE = {
   extractBackportParentNumber: '3efca5536afa',
   extractFirstBareReference: 'fdf7573b5c27',
   findBackportParent: '5eb7216f3c51',
-  'backport handling (lines inside main)': '3c9bfba576d8',
+  'backport handling (lines inside main)': 'a73476b03f5e',
 };
 
 /** Trims each line, and drops blank and comment-only lines. */

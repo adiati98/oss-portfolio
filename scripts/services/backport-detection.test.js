@@ -6,7 +6,7 @@ const assert = require('assert');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { makePullLookup, pruneForFullSync } = require('./backport-detection');
+const { makePullLookup, pruneForFullSync, checkOne } = require('./backport-detection');
 
 async function run(name, fn) {
   try {
@@ -109,6 +109,34 @@ const pr = (base, state, merged) => ({ base: { ref: base }, user: { login: 'a' }
     const after = JSON.parse(fs.readFileSync(file, 'utf8'));
     assert.deepEqual(after.verdicts, {});
     assert.deepEqual(Object.keys(after.pulls), ['o/r#1']);
+  });
+
+  await run('S1 · a standalone Promptless docs task never gets a parent by title', async () => {
+    const repo = 'mautic/user-documentation';
+    const title = 'docs: Audit the whole docs for the 8.0 release';
+    const body = [
+      'Audit of the 8.0 docs.',
+      '',
+      '**Trigger Events**',
+      '- [New Task: audit](https://app.gopromptless.ai/tasks/abc-123)',
+    ].join('\n');
+    const pool = [{ repo, number: 1040, title, createdAt: '2026-01-01T00:00:00Z' }];
+    const table = { 1040: { baseBranch: '7.2', author: 'promptless-for-oss', merged: false } };
+    const getPull = async (r, n) => (table[n] ? table[n] : null);
+    const text = {
+      repo,
+      number: 1046,
+      title,
+      body,
+      createdAt: '2026-02-01T00:00:00Z',
+      baseBranch: '8.0',
+    };
+
+    const asTask = await checkOne({ ...text, author: 'promptless-for-oss' }, pool, getPull);
+    assert.equal(asTask.backportOf, null);
+
+    const asPerson = await checkOne({ ...text, author: 'someone' }, pool, getPull);
+    assert.equal(asPerson.backportOf, `https://github.com/${repo}/pull/1040`);
   });
 
   if (process.exitCode) {

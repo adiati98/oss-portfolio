@@ -25,6 +25,10 @@
  * They were removed from this file. See backport-rules.test.js for the real
  * PRs that prove each one now passes through the tracker's own rules alone.
  *
+ * The tracker's commit 3c5b6357 (standalone Promptless docs tasks) does not
+ * cover the rule below, so it stays. A PR with a sister-repo trigger is
+ * never a standalone docs task, so this rule still runs for it.
+ *
  * STILL NEEDED — a link to a PR in the SISTER docs repo (e.g. a cherry-pick
  * from user-documentation referenced inside developer-documentation-new).
  * The tracker's own extractBackportParentNumber can find this too (it checks
