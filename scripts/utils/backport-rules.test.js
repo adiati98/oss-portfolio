@@ -10,6 +10,8 @@ const {
   findBackportParent,
   isTitleMatchAllowed,
   resolveManualDependencyBackport,
+  isStandaloneDocsTask,
+  PROMPTLESS,
 } = require('./backport-rules');
 const {
   extractDeclaration,
@@ -394,6 +396,80 @@ function fakePulls(table) {
     });
     assert.equal(isManualDependencyBackport, false);
     assert.equal(parent, null);
+  });
+
+  // --- Standalone Promptless docs task ---------------------------------------
+
+  const taskBody = [
+    'Audits the whole 8.0 docs.',
+    '',
+    'Not changed (listed for human review): labels renamed by mautic/mautic#17678.',
+    '',
+    '**Trigger Events**',
+    '- [New Task: Please audit the whole 8.0 docs](https://app.gopromptless.ai/tasks/abc-123)',
+    '',
+    '## Summary by CodeRabbit',
+    '- mautic/mautic#99999 mentioned after the list',
+  ].join('\n');
+
+  await run('S1 · a Promptless task with no code-PR trigger is a standalone docs task', () => {
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: PROMPTLESS, description: taskBody, sourceRepo: REPO }),
+      true
+    );
+  });
+
+  await run('S2 · only Promptless PRs count, and a Trigger Events list is required', () => {
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: 'someone', description: taskBody, sourceRepo: REPO }),
+      false
+    );
+    assert.equal(
+      isStandaloneDocsTask({
+        docsAuthor: PROMPTLESS,
+        description: 'No trigger list here.',
+        sourceRepo: REPO,
+      }),
+      false
+    );
+  });
+
+  await run('S3 · a trigger naming a code PR or sister-repo PR is not standalone', () => {
+    const withCode = taskBody.replace(
+      '(https://app.gopromptless.ai/tasks/abc-123)',
+      '(https://app.gopromptless.ai/tasks/abc-123)\n- [mautic/mautic: x](https://github.com/mautic/mautic/pull/17697)'
+    );
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: PROMPTLESS, description: withCode, sourceRepo: REPO }),
+      false
+    );
+    const withSister = taskBody.replace(
+      '(https://app.gopromptless.ai/tasks/abc-123)',
+      `(https://app.gopromptless.ai/tasks/abc-123)\n- [y](https://github.com/${DEV}/pull/5)`
+    );
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: PROMPTLESS, description: withSister, sourceRepo: REPO }),
+      false
+    );
+  });
+
+  await run('S4 · a same-repo trigger PR alone does not stop it being standalone', () => {
+    const withOwn = taskBody.replace(
+      '(https://app.gopromptless.ai/tasks/abc-123)',
+      `(https://app.gopromptless.ai/tasks/abc-123)\n- [z](https://github.com/${REPO}/pull/991)`
+    );
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: PROMPTLESS, description: withOwn, sourceRepo: REPO }),
+      true
+    );
+  });
+
+  await run('S5 · a Promptless PR reacting to GitHub (no task link) is not standalone', () => {
+    const noTask = taskBody.replace('app.gopromptless.ai/tasks/abc-123', 'example.com/x');
+    assert.equal(
+      isStandaloneDocsTask({ docsAuthor: PROMPTLESS, description: noTask, sourceRepo: REPO }),
+      false
+    );
   });
 
   // --- Change alert ---------------------------------------------------------
