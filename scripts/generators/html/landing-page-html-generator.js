@@ -139,7 +139,7 @@ const LANDING_CSS = `
 `;
 
 /**
- * The other four pages, in the order the blueprint's index row lists them.
+ * The other four pages, in the same order as the navbar.
  * Only real generated URLs — never a redirect stub.
  */
 const PAGE_INDEX = [
@@ -149,9 +149,9 @@ const PAGE_INDEX = [
     blurb: 'Milestones, expertise, and the roles behind them.',
   },
   {
-    href: 'workbench.html',
-    label: 'Workbench',
-    blurb: 'Live maintainer activity, organized by what happens next.',
+    href: 'reports.html',
+    label: 'Reports',
+    blurb: 'The audit trail — every contribution, quarter by quarter.',
   },
   {
     href: 'writing.html',
@@ -159,9 +159,9 @@ const PAGE_INDEX = [
     blurb: 'Long-form guides and community essays.',
   },
   {
-    href: 'reports.html',
-    label: 'Reports',
-    blurb: 'The audit trail — every contribution, quarter by quarter.',
+    href: 'workbench.html',
+    label: 'Workbench',
+    blurb: 'Live maintainer activity, organized by what happens next.',
   },
   {
     href: 'glossary.html',
