@@ -57,12 +57,12 @@ function createNavHtml(relativePath = './') {
           <div class="hidden min-[1025px]:flex items-center space-x-3">
             <a href="${base}journey.html" style="background-color: ${COLORS.primary[10]};"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Journey</a>
-            <a href="${base}workbench.html" style="background-color: ${COLORS.primary[10]};"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Workbench</a>
-            <a href="${base}writing.html" style="background-color: ${COLORS.primary[10]};"
-              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Writing</a>
             <a href="${base}reports.html" style="background-color: ${COLORS.primary[10]};"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Reports</a>
+            <a href="${base}writing.html" style="background-color: ${COLORS.primary[10]};"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Writing</a>
+            <a href="${base}workbench.html" style="background-color: ${COLORS.primary[10]};"
+              class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Workbench</a>
             <a href="${base}glossary.html" style="background-color: ${COLORS.primary[10]};"
               class="nav-link nav-desktop-link text-sm font-semibold p-2 rounded-md">Glossary</a>
 
@@ -87,9 +87,9 @@ function createNavHtml(relativePath = './') {
       <div id="mobile-menu" style="background-color: ${COLORS.nav.bgDark};" class="hidden min-[1025px]:hidden absolute top-16 left-0 right-0 shadow-lg p-4">
         <div class="flex flex-col space-y-2">
           <a href="${base}journey.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Journey</a>
-          <a href="${base}workbench.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Workbench</a>
+          <a href="${base}reports.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Reports</a>
           <a href="${base}writing.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Writing</a>
-          <a href="${base}reports.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Quarterly Reports</a>
+          <a href="${base}workbench.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Workbench</a>
           <a href="${base}glossary.html" class="nav-link nav-mobile-link block px-3 py-2 text-base font-medium rounded-md">Glossary</a>
         </div>
         
