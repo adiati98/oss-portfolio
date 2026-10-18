@@ -9,14 +9,14 @@ Organized by year and quarter, these reports track contributions made by **[adia
 
 ## 📊 All-Time Impact Summary
 
-### 🚀 Total Contributions: **3211**
+### 🚀 Total Contributions: **3215**
 
 | Context                    | Detail                                                |
 | :------------------------- | :---------------------------------------------------- |
 | 🏗️ **Unique Repositories** | **52** projects across **21** organizations           |
 | 📅 **Active Since**        | **2019** (8 years tracked)                            |
 | 🤝 **Helped Ship**         | **1246** reviewed or co-authored contributions merged |
-| ✍️ **Articles Written**    | **4** published articles                              |
+| ✍️ **Articles Written**    | **50** published articles                             |
 
 ### 🧩 Contribution Distribution
 
@@ -25,8 +25,8 @@ Organized by year and quarter, these reports track contributions made by **[adia
 | Merged PRs       | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 594      | 18.6%      |
 | Issues           | `■■■■■■□□□□□□□□□□□□□□□□□□□□□□□□` | 659      | 20.6%      |
 | **Reviewed PRs** | `■■■■■■■■■■■□□□□□□□□□□□□□□□□□□□` | **1136** | **35.5%**  |
-| Co-authored PRs  | `■■■□□□□□□□□□□□□□□□□□□□□□□□□□□□` | 296      | 9.3%       |
-| Collaborations   | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 513      | 16.0%      |
+| Co-authored PRs  | `■■■□□□□□□□□□□□□□□□□□□□□□□□□□□□` | 296      | 9.2%       |
+| Collaborations   | `■■■■■□□□□□□□□□□□□□□□□□□□□□□□□□` | 517      | 16.1%      |
 
 ### 🎯 Primary Focus Projects
 
@@ -44,7 +44,7 @@ An expert advocate for code quality and peer development. Code review and techni
 
 Beyond code contributions, this portfolio also reflects active roles in community leadership and technical content creation around open source.
 
-- ✍️ **Writing:** [**View full articles list (4)**](./writing.md)
+- ✍️ **Writing:** [**View full articles list (50)**](./writing.md)
 - 🏆 **Journey:** [**View milestones, roles & impact**](./journey.md)
 - 🛠️ **Active Workbench:** [**View live tasks, organized by what happens next**](./workbench.md)
 
@@ -104,4 +104,4 @@ Beyond code contributions, this portfolio also reflects active roles in communit
 
 ---
 
-_Report last generated on: 10/17/2026, 5:28:32 AM_
+_Report last generated on: 10/18/2026, 5:37:13 AM_
