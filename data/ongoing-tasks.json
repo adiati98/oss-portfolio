@@ -1,11 +1,232 @@
 [
   {
+    "title": "docs: Document the Record aggregate analytics tracking setting (7.3)",
+    "url": "https://github.com/mautic/user-documentation/pull/1080",
+    "repo": "mautic/user-documentation",
+    "status": "Review in progress",
+    "createdAt": "2026-10-27T08:16:35Z",
+    "updatedAt": "2026-10-30T14:32:23Z",
+    "number": 1080,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:32:23.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T08:16:48Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T08:16:54Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T08:17:01Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T00:18:11Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T00:18:16Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T00:18:29Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T00:18:35Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T00:19:08Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:21:27Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:21:52Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:21:57Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:32:18Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-27T08:16:44Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T08:16:48Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T08:16:54Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T08:17:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:18:11Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:18:16Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:18:29Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:18:35Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-30T00:19:08Z",
+        "isBot": true,
+        "mentions": ["docs"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T14:21:27Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T14:21:52Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:21:57Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T14:23:16Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:23:34Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:32:18Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:32:23Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:14:36Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:14:38Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-30T00:14:39Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "Mautic 7.3",
+    "linkedCodePrState": "merged"
+  },
+  {
     "title": "docs: add @OspreyDown as a contributor",
     "url": "https://github.com/OpenSource-Communities/guestbook/pull/1042",
     "repo": "OpenSource-Communities/guestbook",
     "status": "Review in progress",
     "createdAt": "2026-10-27T03:44:40Z",
-    "updatedAt": "2026-10-27T09:41:37Z",
+    "updatedAt": "2026-10-31T05:33:31Z",
     "number": 1042,
     "user": {
       "login": "OspreyDown",
@@ -30,12 +251,12 @@
     },
     "isDraft": false,
     "labels": [],
-    "lastActor": "adiati98",
+    "lastActor": "OspreyDown",
     "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": "CHANGES_REQUESTED",
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-27T09:40:26.000Z",
+    "lastSubstantiveDate": "2026-10-31T05:33:31.000Z",
     "author": "OspreyDown",
     "reviews": [
       {
@@ -78,6 +299,12 @@
         "createdAt": "2026-10-27T09:37:22Z",
         "isBot": false,
         "mentions": []
+      },
+      {
+        "login": "OspreyDown",
+        "createdAt": "2026-10-31T05:33:31Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
       }
     ],
     "reviewRequests": [
@@ -93,10 +320,494 @@
       }
     ],
     "requestedReviewers": ["BekahHW"],
-    "mergeableState": "dirty",
+    "mergeableState": "blocked",
     "baseRef": "main",
     "milestone": null,
     "linkedCodePrState": null
+  },
+  {
+    "title": "docs: Document Theme sandbox filter, method, and property restrictions (7.3)",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/857",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Review in progress",
+    "createdAt": "2026-10-26T14:08:05Z",
+    "updatedAt": "2026-10-30T14:09:55Z",
+    "number": 857,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:09:55.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:08:19Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:08:23Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:08:27Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:08:30Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:08:34Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T11:53:56Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T11:54:01Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T11:54:12Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T11:54:48Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:04:49Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:09:06Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:09:12Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-26T14:08:14Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:08:19Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:08:23Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:08:27Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:08:30Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:08:34Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:53:56Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:54:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:54:12Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-27T11:54:47Z",
+        "isBot": true,
+        "mentions": ["docs"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:05:29Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:09:06Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:09:13Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:09:55Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:08Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:08Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:08Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "7.3",
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "docs: Document CORS Valid Domains requirement for Form return URLs (7.3)",
+    "url": "https://github.com/mautic/user-documentation/pull/1078",
+    "repo": "mautic/user-documentation",
+    "status": "Review in progress",
+    "createdAt": "2026-10-26T14:05:37Z",
+    "updatedAt": "2026-10-30T14:12:42Z",
+    "number": 1078,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:09:28.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:05:51Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:05:54Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:06:00Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:06:05Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T14:06:09Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-27T11:55:24Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:06:15Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:08:58Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-26T14:05:45Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:05:51Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:05:54Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:06:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:06:05Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T14:06:09Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-27T11:55:23Z",
+        "isBot": true,
+        "mentions": ["docs"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:06:34Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:08:58Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:09:28Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:10Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:11Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-27T11:50:11Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "Mautic 7.3",
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "docs: Document Support Mautic menu item and support_mautic_enabled option (5.2)",
+    "url": "https://github.com/mautic/user-documentation/pull/1075",
+    "repo": "mautic/user-documentation",
+    "status": "Review in progress",
+    "createdAt": "2026-10-26T06:26:28Z",
+    "updatedAt": "2026-10-30T14:00:41Z",
+    "number": 1075,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:00:41.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:57:28Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:58:19Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:00:41Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-26T06:26:35Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T06:27:54Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T13:57:28Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:58:19Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:00:41Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-26T07:20:22Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-26T07:20:22Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-26T07:20:22Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "5.2",
+    "milestone": "5.2",
+    "linkedCodePrState": "merged"
   },
   {
     "title": "docs: Document the File Manager Role permission",
@@ -488,7 +1199,7 @@
     "repo": "mautic/user-documentation",
     "status": "Review in progress",
     "createdAt": "2026-10-14T20:44:23Z",
-    "updatedAt": "2026-10-16T06:40:45Z",
+    "updatedAt": "2026-10-30T12:27:17Z",
     "number": 1056,
     "user": {
       "login": "promptless-for-oss",
@@ -1017,6 +1728,534 @@
     "baseRef": "8.0",
     "milestone": null,
     "linkedCodePrState": null
+  },
+  {
+    "title": "docs: Document per-page configuration saving for Plugin config subscribers (7.3)",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/787",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Review in progress",
+    "createdAt": "2026-10-13T06:21:03Z",
+    "updatedAt": "2026-10-30T14:19:19Z",
+    "number": 787,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:19:19.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-13T06:21:18Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-13T06:21:26Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-14T14:46:50Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:15:06Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:18:09Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:18:26Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-13T06:21:13Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-13T06:21:18Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-13T06:21:26Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:15:47Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:18:09Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:18:27Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:19:19Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:33Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:34Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:34Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "7.3",
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "docs: Explain that each Configuration section saves as its own page (7.3)",
+    "url": "https://github.com/mautic/user-documentation/pull/1053",
+    "repo": "mautic/user-documentation",
+    "status": "Review in progress",
+    "createdAt": "2026-10-13T06:20:57Z",
+    "updatedAt": "2026-10-30T14:21:45Z",
+    "number": 1053,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T14:21:37.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-13T06:21:41Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-13T06:21:46Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-13T06:21:51Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-14T14:39:53Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-14T14:39:59Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-14T14:43:21Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:16:44Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:20:09Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:20:17Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:20:26Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:20:33Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-13T06:21:07Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-13T06:21:42Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-13T06:21:46Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-13T06:21:51Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:39:54Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:39:59Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-14T14:43:20Z",
+        "isBot": true,
+        "mentions": ["docs"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:17:04Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:20:09Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:20:17Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:20:26Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:20:34Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:21:37Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:36Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:36Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-14T14:33:36Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "Mautic 7.3",
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "docs: Document Marketplace type filter and richer package details",
+    "url": "https://github.com/mautic/user-documentation/pull/1049",
+    "repo": "mautic/user-documentation",
+    "status": "Review in progress",
+    "createdAt": "2026-10-12T12:12:34Z",
+    "updatedAt": "2026-10-30T12:40:44Z",
+    "number": 1049,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T12:40:44.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:12:52Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:13:00Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:13:26Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:13:38Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:14:02Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:14:12Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:14:18Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:14:34Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-12T12:14:50Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:37:23Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-12T12:12:44Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:12:53Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:13:00Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:13:27Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:13:27Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:13:38Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:14:02Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:14:12Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:14:18Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:14:34Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-12T12:14:50Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:38:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:40:44Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-21T12:10:36Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-21T12:10:36Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-10-21T12:10:36Z"
+      }
+    ],
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": "Mautic 7.3",
+    "linkedCodePrState": "merged"
   },
   {
     "title": "docs: Fix Plugins docs for Mautic 8: config.php services removal, Twig templating, CI matrix, cache",
@@ -6818,7 +8057,7 @@
     "repo": "mautic/user-documentation",
     "status": "Review in progress",
     "createdAt": "2026-09-17T19:47:45Z",
-    "updatedAt": "2026-10-12T10:47:20Z",
+    "updatedAt": "2026-10-30T17:21:14Z",
     "number": 986,
     "user": {
       "login": "promptless-for-oss",
@@ -6843,12 +8082,12 @@
     },
     "isDraft": false,
     "labels": ["needs-backport"],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": "CHANGES_REQUESTED",
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-12T10:47:20.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "andersonjeccel",
+    "lastSubstantiveDate": "2026-10-30T17:21:14.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -6890,6 +8129,16 @@
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-09-19T05:09:13Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T13:10:03Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T16:09:39Z"
       }
     ],
     "comments": [
@@ -6958,6 +8207,18 @@
         "createdAt": "2026-10-12T10:47:20Z",
         "isBot": true,
         "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T16:20:04Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T17:21:14Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -6977,8 +8238,8 @@
         "createdAt": "2026-10-12T10:47:08Z"
       }
     ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "unknown",
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
     "baseRef": "7.3",
     "milestone": "Mautic 7.3",
     "linkedCodePrState": "merged"
@@ -7109,7 +8370,7 @@
     "repo": "mautic/user-documentation",
     "status": "Review in progress",
     "createdAt": "2026-09-17T18:38:57Z",
-    "updatedAt": "2026-09-18T18:59:08Z",
+    "updatedAt": "2026-10-30T13:04:28Z",
     "number": 983,
     "user": {
       "login": "promptless-for-oss",
@@ -7139,7 +8400,7 @@
     "hasFormalReview": true,
     "reviewState": null,
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-09-18T18:59:08.000Z",
+    "lastSubstantiveDate": "2026-10-30T13:04:27.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -7151,6 +8412,41 @@
         "login": "adiati98",
         "state": "COMMENTED",
         "submittedAt": "2026-09-18T18:50:28Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:24:06Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:24:57Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:28:11Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:00:46Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:01:35Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:03:56Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:04:27Z"
       }
     ],
     "comments": [
@@ -7169,6 +8465,54 @@
       {
         "login": "promptless-for-oss",
         "createdAt": "2026-09-18T18:59:08Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T12:24:07Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:24:57Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-30T12:26:09Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:28:11Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T13:00:46Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:01:35Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:03:56Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:04:27Z",
         "isBot": false,
         "mentions": []
       }
@@ -8088,7 +9432,7 @@
     "repo": "mautic/user-documentation",
     "status": "Review in progress",
     "createdAt": "2026-09-08T23:03:04Z",
-    "updatedAt": "2026-10-19T16:10:19Z",
+    "updatedAt": "2026-10-30T12:24:16Z",
     "number": 967,
     "user": {
       "login": "promptless-for-oss",
@@ -8113,12 +9457,12 @@
     },
     "isDraft": false,
     "labels": ["needs-backport"],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": null,
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-19T16:09:57.000Z",
+    "lastSubstantiveDate": "2026-10-30T12:24:16.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -8185,6 +9529,36 @@
         "login": "coderabbitai[bot]",
         "state": "COMMENTED",
         "submittedAt": "2026-10-19T16:09:57Z"
+      },
+      {
+        "login": "adiati98",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:19:31Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:20:15Z"
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:20:22Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:21:41Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:23:00Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T12:24:16Z"
       }
     ],
     "comments": [
@@ -8283,6 +9657,42 @@
         "createdAt": "2026-10-19T16:09:50Z",
         "isBot": true,
         "mentions": ["docs"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T12:19:31Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:20:15Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-30T12:20:22Z",
+        "isBot": true,
+        "mentions": ["coderabbitai"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:21:40Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:23:01Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:24:16Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -8303,7 +9713,7 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "7.2",
     "milestone": "Mautic 7.2",
     "linkedCodePrState": "merged"
@@ -11525,6 +12935,77 @@
     "linkedCodePrState": null
   },
   {
+    "title": "feat: Add @shahria5 as a contributor",
+    "url": "https://github.com/OpenSource-Communities/guestbook/pull/1047",
+    "repo": "OpenSource-Communities/guestbook",
+    "status": "Request review",
+    "createdAt": "2026-10-30T18:36:55Z",
+    "updatedAt": "2026-10-30T18:37:37Z",
+    "number": 1047,
+    "user": {
+      "login": "shahria5",
+      "id": 218356412,
+      "node_id": "U_kgDODQPavA",
+      "avatar_url": "https://avatars.githubusercontent.com/u/218356412?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/shahria5",
+      "html_url": "https://github.com/shahria5",
+      "followers_url": "https://api.github.com/users/shahria5/followers",
+      "following_url": "https://api.github.com/users/shahria5/following{/other_user}",
+      "gists_url": "https://api.github.com/users/shahria5/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/shahria5/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/shahria5/subscriptions",
+      "organizations_url": "https://api.github.com/users/shahria5/orgs",
+      "repos_url": "https://api.github.com/users/shahria5/repos",
+      "events_url": "https://api.github.com/users/shahria5/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/shahria5/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": [],
+    "lastActor": "github-actions[bot]",
+    "isLastActorBot": true,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-30T18:37:37.000Z",
+    "author": "shahria5",
+    "reviews": [
+      {
+        "login": "github-actions[bot]",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T18:37:37Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "github-actions[bot]",
+        "createdAt": "2026-10-30T18:37:03Z",
+        "isBot": true,
+        "mentions": ["shahria5"]
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "BekahHW",
+        "actor": "shahria5",
+        "createdAt": "2026-10-30T18:36:57Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "shahria5",
+        "createdAt": "2026-10-30T18:36:58Z"
+      }
+    ],
+    "requestedReviewers": ["BekahHW", "adiati98"],
+    "mergeableState": "blocked",
+    "baseRef": "main",
+    "milestone": null,
+    "linkedCodePrState": null
+  },
+  {
     "title": "chore(deps): bump sphinxcontrib-phpdomain from 0.15.2 to 0.15.3 in /docs",
     "url": "https://github.com/mautic/developer-documentation-new/pull/884",
     "repo": "mautic/developer-documentation-new",
@@ -11899,7 +13380,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-27T12:24:32Z",
-    "updatedAt": "2026-10-27T12:26:02Z",
+    "updatedAt": "2026-10-30T14:19:09Z",
     "number": 1082,
     "user": {
       "login": "promptless-for-oss",
@@ -11923,7 +13404,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -12047,475 +13528,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Document the Record aggregate analytics tracking setting (7.3)",
-    "url": "https://github.com/mautic/user-documentation/pull/1080",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-10-27T08:16:35Z",
-    "updatedAt": "2026-10-30T00:19:37Z",
-    "number": 1080,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-30T00:19:08.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T08:16:48Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T08:16:54Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T08:17:01Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-30T00:18:11Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-30T00:18:16Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-30T00:18:29Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-30T00:18:35Z"
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-30T00:19:08Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-27T08:16:44Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T08:16:48Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T08:16:54Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T08:17:01Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:18:11Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:18:16Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:18:29Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:18:35Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-30T00:19:08Z",
-        "isBot": true,
-        "mentions": ["docs"]
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:14:36Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:14:38Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-30T00:14:39Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Document Theme sandbox filter, method, and property restrictions (7.3)",
-    "url": "https://github.com/mautic/developer-documentation-new/pull/857",
-    "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
-    "createdAt": "2026-10-26T14:08:05Z",
-    "updatedAt": "2026-10-27T11:55:25Z",
-    "number": 857,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-27T11:54:48.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:08:19Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:08:23Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:08:27Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:08:30Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:08:34Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T11:53:56Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T11:54:01Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T11:54:12Z"
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T11:54:48Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-26T14:08:14Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:08:19Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:08:23Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:08:27Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:08:30Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:08:34Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:53:56Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:54:01Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:54:12Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-27T11:54:47Z",
-        "isBot": true,
-        "mentions": ["docs"]
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:08Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:08Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:08Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Document CORS Valid Domains requirement for Form return URLs (7.3)",
-    "url": "https://github.com/mautic/user-documentation/pull/1078",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-10-26T14:05:37Z",
-    "updatedAt": "2026-10-27T11:55:28Z",
-    "number": 1078,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-27T11:55:24.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:05:51Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:05:54Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:06:00Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:06:05Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-26T14:06:09Z"
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-27T11:55:24Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-26T14:05:45Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:05:51Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:05:54Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:06:01Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:06:05Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T14:06:09Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-27T11:55:23Z",
-        "isBot": true,
-        "mentions": ["docs"]
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:10Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:11Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-27T11:50:11Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "Mautic 7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -12524,7 +13539,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-26T14:01:23Z",
-    "updatedAt": "2026-10-27T11:50:21Z",
+    "updatedAt": "2026-10-30T14:08:22Z",
     "number": 1076,
     "user": {
       "login": "promptless-for-oss",
@@ -12548,7 +13563,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -12617,9 +13632,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "Mautic 7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -12628,7 +13643,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-10-26T08:43:38Z",
-    "updatedAt": "2026-10-29T22:53:11Z",
+    "updatedAt": "2026-10-30T22:20:07Z",
     "number": 1687,
     "user": {
       "login": "renovate[bot]",
@@ -12703,9 +13718,9 @@
     "title": "docs: Document Theme sandbox method and property restrictions (7.2)",
     "url": "https://github.com/mautic/developer-documentation-new/pull/856",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-26T08:23:34Z",
-    "updatedAt": "2026-10-26T08:40:09Z",
+    "updatedAt": "2026-10-30T14:09:35Z",
     "number": 856,
     "user": {
       "login": "promptless-for-oss",
@@ -12729,13 +13744,13 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
     "hasFormalReview": true,
     "reviewState": null,
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-26T08:40:05.000Z",
+    "lastSubstantiveDate": "2026-10-30T14:04:40.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -12767,6 +13782,11 @@
         "login": "coderabbitai[bot]",
         "state": "COMMENTED",
         "submittedAt": "2026-10-26T08:40:05Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T14:03:56Z"
       }
     ],
     "comments": [
@@ -12817,6 +13837,30 @@
         "createdAt": "2026-10-26T08:40:04Z",
         "isBot": true,
         "mentions": ["docs"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T14:01:39Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:02:20Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:03:56Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T14:04:40Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -12837,9 +13881,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "7.2",
-    "milestone": null,
+    "milestone": "7.2",
     "linkedCodePrState": "merged"
   },
   {
@@ -12848,7 +13892,7 @@
     "repo": "mautic/developer-documentation-new",
     "status": "Request review",
     "createdAt": "2026-10-26T08:15:59Z",
-    "updatedAt": "2026-10-26T08:35:26Z",
+    "updatedAt": "2026-10-30T14:00:23Z",
     "number": 855,
     "user": {
       "login": "promptless-for-oss",
@@ -12872,7 +13916,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -12976,7 +14020,7 @@
     "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "6.0",
-    "milestone": null,
+    "milestone": "6.0",
     "linkedCodePrState": "merged"
   },
   {
@@ -13117,88 +14161,12 @@
     "linkedCodePrState": "merged"
   },
   {
-    "title": "docs: Document Support Mautic menu item and support_mautic_enabled option (5.2)",
-    "url": "https://github.com/mautic/user-documentation/pull/1075",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-10-26T06:26:28Z",
-    "updatedAt": "2026-10-26T07:20:27Z",
-    "number": 1075,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "promptless-for-oss",
-    "isLastActorBot": false,
-    "hasFormalReview": false,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-26T06:27:54.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-26T06:26:35Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-26T06:27:54Z",
-        "isBot": false,
-        "mentions": []
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-26T07:20:22Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-26T07:20:22Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-26T07:20:22Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "5.2",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
     "title": "docs: Document Support Mautic menu item and support_mautic_enabled option (6.0)",
     "url": "https://github.com/mautic/user-documentation/pull/1074",
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-26T06:20:50Z",
-    "updatedAt": "2026-10-26T07:20:49Z",
+    "updatedAt": "2026-10-30T13:59:05Z",
     "number": 1074,
     "user": {
       "login": "promptless-for-oss",
@@ -13222,7 +14190,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "coderabbitai[bot]",
     "isLastActorBot": true,
     "hasFormalReview": false,
@@ -13257,9 +14225,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "6.0",
-    "milestone": null,
+    "milestone": "Mautic 6.0",
     "linkedCodePrState": "merged"
   },
   {
@@ -13268,7 +14236,7 @@
     "repo": "Virtual-Coffee/virtualcoffee.io",
     "status": "Request review",
     "createdAt": "2026-10-26T05:41:57Z",
-    "updatedAt": "2026-10-30T04:44:54Z",
+    "updatedAt": "2026-10-31T01:54:21Z",
     "number": 1686,
     "user": {
       "login": "renovate[bot]",
@@ -13422,7 +14390,7 @@
     "repo": "Virtual-Coffee/hacktoberfest",
     "status": "Request review",
     "createdAt": "2026-10-26T05:06:43Z",
-    "updatedAt": "2026-10-29T23:41:09Z",
+    "updatedAt": "2026-10-30T19:02:22Z",
     "number": 126,
     "user": {
       "login": "renovate[bot]",
@@ -13488,7 +14456,7 @@
     "repo": "Virtual-Coffee/hacktoberfest",
     "status": "Request review",
     "createdAt": "2026-10-26T05:06:19Z",
-    "updatedAt": "2026-10-30T01:43:26Z",
+    "updatedAt": "2026-10-31T05:44:25Z",
     "number": 125,
     "user": {
       "login": "renovate[bot]",
@@ -13829,7 +14797,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-20T15:53:12Z",
-    "updatedAt": "2026-10-26T07:24:00Z",
+    "updatedAt": "2026-10-30T12:40:17Z",
     "number": 1067,
     "user": {
       "login": "promptless-for-oss",
@@ -13853,7 +14821,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -13933,9 +14901,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "6.0",
-    "milestone": null,
+    "milestone": "Mautic 6.0",
     "linkedCodePrState": "merged"
   },
   {
@@ -13944,7 +14912,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-20T15:48:59Z",
-    "updatedAt": "2026-10-26T07:22:26Z",
+    "updatedAt": "2026-10-30T12:38:57Z",
     "number": 1066,
     "user": {
       "login": "promptless-for-oss",
@@ -13968,7 +14936,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -14048,18 +15016,18 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "5.2",
-    "milestone": null,
+    "milestone": "5.2",
     "linkedCodePrState": "merged"
   },
   {
     "title": "docs: Match permission class override examples to Mautic 8 AbstractPermissions signatures (8.0)",
     "url": "https://github.com/mautic/developer-documentation-new/pull/850",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-20T09:51:05Z",
-    "updatedAt": "2026-10-23T15:10:10Z",
+    "updatedAt": "2026-10-30T15:10:12Z",
     "number": 850,
     "user": {
       "login": "promptless-for-oss",
@@ -14084,12 +15052,12 @@
     },
     "isDraft": false,
     "labels": [],
-    "lastActor": "promptless-for-oss",
+    "lastActor": "TomasVotruba",
     "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-20T09:51:20.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "TomasVotruba",
+    "lastSubstantiveDate": "2026-10-30T15:10:12.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -14101,6 +15069,11 @@
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-10-20T09:51:20Z"
+      },
+      {
+        "login": "TomasVotruba",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T15:10:12Z"
       }
     ],
     "comments": [
@@ -14141,7 +15114,7 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "8.0",
     "milestone": null,
     "linkedCodePrState": "merged"
@@ -14417,9 +15390,9 @@
     "title": "docs: Use Bootstrap 5 form-label class in Form type example",
     "url": "https://github.com/mautic/developer-documentation-new/pull/848",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-20T08:42:09Z",
-    "updatedAt": "2026-10-20T08:43:54Z",
+    "updatedAt": "2026-10-30T13:13:08Z",
     "number": 848,
     "user": {
       "login": "promptless-for-oss",
@@ -14443,19 +15416,24 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
-    "lastActor": "promptless-for-oss",
+    "labels": ["needs-backport"],
+    "lastActor": "andersonjeccel",
     "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-20T08:42:44.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "andersonjeccel",
+    "lastSubstantiveDate": "2026-10-30T13:13:08.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-10-20T08:42:44Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T13:13:08Z"
       }
     ],
     "comments": [
@@ -14490,9 +15468,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -14592,9 +15570,9 @@
     "title": "docs: Document the Checkbox component Twig template",
     "url": "https://github.com/mautic/developer-documentation-new/pull/842",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-14T19:42:30Z",
-    "updatedAt": "2026-10-21T12:20:32Z",
+    "updatedAt": "2026-10-30T13:23:05Z",
     "number": 842,
     "user": {
       "login": "promptless-for-oss",
@@ -14618,13 +15596,13 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
+    "labels": ["needs-backport"],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-21T12:18:11.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "andersonjeccel",
+    "lastSubstantiveDate": "2026-10-30T13:23:05.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -14736,6 +15714,16 @@
         "login": "coderabbitai[bot]",
         "state": "COMMENTED",
         "submittedAt": "2026-10-21T12:18:11Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T13:22:09Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:23:05Z"
       }
     ],
     "comments": [
@@ -14888,6 +15876,36 @@
         "createdAt": "2026-10-21T12:18:09Z",
         "isBot": true,
         "mentions": ["docs"]
+      },
+      {
+        "login": "adiati98",
+        "createdAt": "2026-10-30T12:32:54Z",
+        "isBot": false,
+        "mentions": ["promptless-for-oss"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:33:37Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T12:35:42Z",
+        "isBot": false,
+        "mentions": ["adiati98"]
+      },
+      {
+        "login": "andersonjeccel",
+        "createdAt": "2026-10-30T13:21:48Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:23:05Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -14910,7 +15928,7 @@
     "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -20768,7 +21786,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-13T08:14:28Z",
-    "updatedAt": "2026-10-13T13:48:30Z",
+    "updatedAt": "2026-10-30T14:13:22Z",
     "number": 1054,
     "user": {
       "login": "promptless-for-oss",
@@ -20792,7 +21810,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -20889,244 +21907,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Document per-page configuration saving for Plugin config subscribers (7.3)",
-    "url": "https://github.com/mautic/developer-documentation-new/pull/787",
-    "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
-    "createdAt": "2026-10-13T06:21:03Z",
-    "updatedAt": "2026-10-14T14:48:55Z",
-    "number": 787,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-14T14:46:50.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-13T06:21:18Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-13T06:21:26Z"
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-14T14:46:50Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-13T06:21:13Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-13T06:21:18Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-13T06:21:26Z",
-        "isBot": false,
-        "mentions": []
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:33Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:34Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:34Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": null,
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Explain that each Configuration section saves as its own page (7.3)",
-    "url": "https://github.com/mautic/user-documentation/pull/1053",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-10-13T06:20:57Z",
-    "updatedAt": "2026-10-14T14:45:56Z",
-    "number": 1053,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "coderabbitai[bot]",
-    "isLastActorBot": true,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-14T14:43:21.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-13T06:21:41Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-13T06:21:46Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-13T06:21:51Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-14T14:39:53Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-14T14:39:59Z"
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-14T14:43:21Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-13T06:21:07Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-13T06:21:42Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-13T06:21:46Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-13T06:21:51Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:39:54Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:39:59Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-14T14:43:20Z",
-        "isBot": true,
-        "mentions": ["docs"]
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:36Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:36Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-14T14:33:36Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "Mautic 7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -21445,9 +22228,9 @@
     "title": "docs: Document Bootstrap 5.3.8 upgrade and Bootstrap 3 compatibility layer",
     "url": "https://github.com/mautic/developer-documentation-new/pull/784",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-12T19:31:29Z",
-    "updatedAt": "2026-10-14T08:54:21Z",
+    "updatedAt": "2026-10-30T13:23:42Z",
     "number": 784,
     "user": {
       "login": "promptless-for-oss",
@@ -21471,13 +22254,13 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
-    "lastActor": "promptless-for-oss",
+    "labels": ["needs-backport"],
+    "lastActor": "andersonjeccel",
     "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-12T19:32:23.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "andersonjeccel",
+    "lastSubstantiveDate": "2026-10-30T13:23:29.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -21504,6 +22287,41 @@
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-10-12T19:32:23Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:14:19Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:14:53Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:16:14Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:17:24Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:17:30Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-30T13:18:16Z"
+      },
+      {
+        "login": "andersonjeccel",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T13:23:29Z"
       }
     ],
     "comments": [
@@ -21542,6 +22360,42 @@
         "createdAt": "2026-10-12T19:32:23Z",
         "isBot": false,
         "mentions": []
+      },
+      {
+        "login": "andersonjeccel",
+        "createdAt": "2026-10-30T13:14:19Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:14:53Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "andersonjeccel",
+        "createdAt": "2026-10-30T13:16:14Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:17:24Z",
+        "isBot": false,
+        "mentions": ["andersonjeccel"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:17:30Z",
+        "isBot": false,
+        "mentions": ["andersonjeccel"]
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-30T13:18:16Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -21562,185 +22416,9 @@
       }
     ],
     "requestedReviewers": ["adiati98", "favour-chibueze"],
-    "mergeableState": "blocked",
-    "baseRef": "7.3",
-    "milestone": "7.3",
-    "linkedCodePrState": "merged"
-  },
-  {
-    "title": "docs: Document Marketplace type filter and richer package details",
-    "url": "https://github.com/mautic/user-documentation/pull/1049",
-    "repo": "mautic/user-documentation",
-    "status": "Request review",
-    "createdAt": "2026-10-12T12:12:34Z",
-    "updatedAt": "2026-10-21T12:10:43Z",
-    "number": 1049,
-    "user": {
-      "login": "promptless-for-oss",
-      "id": 256490899,
-      "node_id": "U_kgDOD0m9kw",
-      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/promptless-for-oss",
-      "html_url": "https://github.com/promptless-for-oss",
-      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
-      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
-      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
-      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
-      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
-      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
-      "type": "User",
-      "user_view_type": "public",
-      "site_admin": false
-    },
-    "isDraft": false,
-    "labels": [],
-    "lastActor": "promptless-for-oss",
-    "isLastActorBot": false,
-    "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-12T12:14:50.000Z",
-    "author": "promptless-for-oss",
-    "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:12:52Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:13:00Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:13:26Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:13:38Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:14:02Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:14:12Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:14:18Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:14:34Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T12:14:50Z"
-      }
-    ],
-    "comments": [
-      {
-        "login": "coderabbitai[bot]",
-        "createdAt": "2026-10-12T12:12:44Z",
-        "isBot": true,
-        "mentions": ["coderabbitai"]
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:12:53Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:13:00Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:13:27Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:13:27Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:13:38Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:14:02Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:14:12Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:14:18Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:14:34Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T12:14:50Z",
-        "isBot": false,
-        "mentions": []
-      }
-    ],
-    "reviewRequests": [
-      {
-        "requestedReviewer": "Education Team Leaders",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-21T12:10:36Z"
-      },
-      {
-        "requestedReviewer": "adiati98",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-21T12:10:36Z"
-      },
-      {
-        "requestedReviewer": "favour-chibueze",
-        "actor": "promptless-for-oss",
-        "createdAt": "2026-10-21T12:10:36Z"
-      }
-    ],
-    "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "7.3",
     "linkedCodePrState": "merged"
   },
   {
@@ -21956,9 +22634,9 @@
     "title": "docs: Replace removed DefaultConfigFormTrait in Integration configuration examples",
     "url": "https://github.com/mautic/developer-documentation-new/pull/780",
     "repo": "mautic/developer-documentation-new",
-    "status": "Request review",
+    "status": "Review in progress",
     "createdAt": "2026-10-11T18:04:37Z",
-    "updatedAt": "2026-10-12T08:59:41Z",
+    "updatedAt": "2026-10-30T15:05:32Z",
     "number": 780,
     "user": {
       "login": "promptless-for-oss",
@@ -21983,12 +22661,12 @@
     },
     "isDraft": false,
     "labels": [],
-    "lastActor": "promptless-for-oss",
+    "lastActor": "TomasVotruba",
     "isLastActorBot": false,
     "hasFormalReview": true,
-    "reviewState": null,
-    "approvedBy": null,
-    "lastSubstantiveDate": "2026-10-11T18:04:48.000Z",
+    "reviewState": "APPROVED",
+    "approvedBy": "TomasVotruba",
+    "lastSubstantiveDate": "2026-10-30T15:05:31.000Z",
     "author": "promptless-for-oss",
     "reviews": [
       {
@@ -22010,6 +22688,11 @@
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-10-11T18:04:48Z"
+      },
+      {
+        "login": "TomasVotruba",
+        "state": "APPROVED",
+        "submittedAt": "2026-10-30T15:05:31Z"
       }
     ],
     "comments": [
@@ -22550,7 +23233,7 @@
     "repo": "mautic/user-documentation",
     "status": "Request review",
     "createdAt": "2026-10-06T13:50:43Z",
-    "updatedAt": "2026-10-20T13:59:29Z",
+    "updatedAt": "2026-10-30T12:35:55Z",
     "number": 1025,
     "user": {
       "login": "promptless-for-oss",
@@ -22574,7 +23257,7 @@
       "site_admin": false
     },
     "isDraft": false,
-    "labels": [],
+    "labels": ["needs-backport"],
     "lastActor": "promptless-for-oss",
     "isLastActorBot": false,
     "hasFormalReview": true,
@@ -22799,7 +23482,7 @@
     "requestedReviewers": ["adiati98", "favour-chibueze"],
     "mergeableState": "behind",
     "baseRef": "7.3",
-    "milestone": null,
+    "milestone": "Mautic 7.3",
     "linkedCodePrState": "merged"
   },
   {
