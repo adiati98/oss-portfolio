@@ -5,10 +5,10 @@
  * branch, e.g. the reviewed 7.3 docs PR copied onto 8.0. These rules decide
  * which earlier PR ("the parent") a PR was copied from.
  *
- * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit 3c5b6357
- * ("fix: Don't link a code PR out of a standalone Promptless docs task"),
- * which moved on from commit 92436323 ("Fix: backport and cherry-pick
- * detection edge cases"). The tracker is the source of truth for these
+ * Source: adiati98/mautic-docs-prs-tracker, tracker.js at commit db88a3f0
+ * ("fix: Show only the code-branch docs PR on the author reminder page").
+ * The newest change copied here is the title marker at the start ("docs: [8.0] …").
+ * The tracker is the source of truth for these
  * rules, and it is used by a team, so it is never changed from here. Only
  * its public file is read. The patterns and functions below are copied as
  * closely as possible — edit them only to follow a change in the tracker,
@@ -46,7 +46,7 @@
  * The tracker commit these rules were copied from. Stored with every cached
  * verdict, so changing it makes the next run check every PR again.
  */
-const TRACKER_RULES_COMMIT = '3c5b6357';
+const TRACKER_RULES_COMMIT = 'db88a3f0';
 
 /** The repos the tracker covers (its REPOS.docs). */
 const TRACKER_REPOS = ['mautic/developer-documentation-new', 'mautic/user-documentation'];
@@ -130,9 +130,21 @@ async function resolveManualDependencyBackport({ repo, number, title, body, base
 const BACKPORT_TITLE_SUFFIX_PATTERN =
   /[\s—-]*[([](?:backport\s+)?([\w.]+)(?:\s+(?:backport|port))?[)\]]\s*$|[\s—-]+branch\s+([\w.]+)\s*$/i;
 
+// Promptless also puts the same marker at the *start* of the title, right
+// after the commit-style "docs:" prefix — "docs: [8.0] Document …" next to a
+// plain "docs: Document …" on 7.3. Only square brackets holding a version-like
+// branch name ("8.0", "5.x") count here, so a leading "[WIP]" or "[Feature]"
+// is never read as a branch. Group 1 keeps the "docs: " part, so removing the
+// marker leaves the rest of the title exactly as the parent's.
+const BACKPORT_TITLE_PREFIX_PATTERN = /^((?:[\w-]+(?:\([^)]*\))?!?:\s*)?)\[(\d+\.\w+)\]\s*/i;
+
+// The branch named by the title marker, at the end of the title or at the
+// start. The end wins when a title has both.
 function backportTitleSuffixBranch(title) {
   const m = (title || '').match(BACKPORT_TITLE_SUFFIX_PATTERN);
-  return m ? (m[1] ?? m[2]) : null;
+  if (m) return m[1] ?? m[2];
+  const p = (title || '').match(BACKPORT_TITLE_PREFIX_PATTERN);
+  return p ? p[2] : null;
 }
 
 // The title with that marker removed, whitespace collapsed, lowercased — so a
@@ -140,6 +152,7 @@ function backportTitleSuffixBranch(title) {
 function normalizeTitleForBackportMatch(title) {
   return (title || '')
     .replace(BACKPORT_TITLE_SUFFIX_PATTERN, '')
+    .replace(BACKPORT_TITLE_PREFIX_PATTERN, '$1')
     .trim()
     .replace(/\s+/g, ' ')
     .toLowerCase();
