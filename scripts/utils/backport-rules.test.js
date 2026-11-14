@@ -115,6 +115,19 @@ function fakePulls(table) {
     assert.equal(backportTitleSuffixBranch('Some title [backport 6.0]'), '6.0');
   });
 
+  await run('T2 · a "[8.0]" marker after the "docs:" prefix names the branch', () => {
+    const copy = 'docs: [8.0] Document the new Roles overview page';
+    const parent = 'docs: Document the new Roles overview page';
+    assert.equal(backportTitleSuffixBranch(copy), '8.0');
+    assert.equal(normalizeTitleForBackportMatch(copy), normalizeTitleForBackportMatch(parent));
+    assert.equal(backportTitleSuffixBranch('[5.x] Fix a typo'), '5.x');
+    // The end of the title wins when a title has both markers.
+    assert.equal(backportTitleSuffixBranch('docs: [8.0] Fix a typo (7.3)'), '7.3');
+    // A leading "[WIP]" or "[Feature]" is not a branch.
+    assert.equal(backportTitleSuffixBranch('docs: [WIP] Fix a typo'), null);
+    assert.equal(backportTitleSuffixBranch('[Feature] Fix a typo'), null);
+  });
+
   // --- findBackportParent ---------------------------------------------------
 
   await run('F1 · #1000 → #973: reference found, parent on another branch', async () => {
