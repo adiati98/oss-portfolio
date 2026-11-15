@@ -38,15 +38,17 @@ Roles, expertise, and the work behind them, across the Open Source ecosystem.
 
 ## ⭐ Highlights
 
-_17 milestones across 7 organizations, 2021–2026._
+_18 milestones across 7 organizations, 2021–2026._
 
+- 🏆 Award — **[Mautician of the Year (Highly commended)](https://mautic.org/blog/learnings-from-mautic-world-conference-2026/)** (2026) — _Mautic_
+  - Named highly commended in Mautic's 2026 Mautician of the Year award, one of the top two contributors recognized among the year's shortlist.
 - 🛠 Project — **[OSS Portfolio](https://github.com/adiati98/oss-portfolio)** (2025–present) — _Personal_
   - Built a self-hosted portfolio generator that pulls GitHub activity via the API and turns it into a static site — with a PR-triage engine that ranks what needs attention now, a theme system that enforces accessible contrast at build time, and auto-generated contribution reports.
 - 🛠 Project — **[Mautic Docs PRs Tracker](https://github.com/adiati98/mautic-docs-prs-tracker)** (2026–present) — _Personal / Mautic_
   - Built a GitHub Actions pipeline that refreshes a live Mautic docs PR dashboard roughly every 30 minutes during work hours, sorting each PR into one of four priority groups by what needs action, with a companion reminder page to prompt code PR authors to review the docs PR against their own changes.
 - 📚 Docs — **[Mautic contributing guidelines: overhaul and migration](https://contribute.mautic.org/en/latest/contributing/contributing_docs.html)** (2025–2026) — _Mautic_
   - Rewrote Mautic's contributing guidelines and consolidated three separate per-repo CONTRIBUTING files into one shared source on the Community Handbook.
-- 🏆 Award — **[Mautician of the Year](https://mautic.org/blog/learnings-from-mautic-world-conference-2025/)** (2025) — _Mautic_
+- 🏆 Award — **[Mautician of the Year (Winner)](https://mautic.org/blog/learnings-from-mautic-world-conference-2025/)** (2025) — _Mautic_
   - Won Mautic's 2025 Mautician of the Year award, selected by a panel from the year's active contributors for exceptional support, ideas, and dedication to the community.
 - 📚 Docs — **[Mautic Community Handbook reStructuredText conversion](https://contribute.mautic.org/)** (2025) — _Mautic_
   - Converted the Community Handbook's content into reStructuredText across roughly 20 sections — one merged PR per role and policy area, from Designer and Translator guides through Governance and Financial Policy.
