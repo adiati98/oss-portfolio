@@ -9,7 +9,16 @@
  */
 module.exports = [
   {
-    title: 'Mautician of the Year',
+    title: 'Mautician of the Year (Highly commended)',
+    org: 'Mautic',
+    year: 2026,
+    url: 'https://mautic.org/blog/learnings-from-mautic-world-conference-2026/',
+    highlight: true,
+    description:
+      "Named highly commended in Mautic's 2026 Mautician of the Year award, one of the top two contributors recognized among the year's shortlist.",
+  },
+  {
+    title: 'Mautician of the Year (Winner)',
     org: 'Mautic',
     year: 2025,
     url: 'https://mautic.org/blog/learnings-from-mautic-world-conference-2025/',
