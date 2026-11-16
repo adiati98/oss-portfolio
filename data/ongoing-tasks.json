@@ -3223,7 +3223,7 @@
     "repo": "mautic/developer-documentation-new",
     "status": "Review in progress",
     "createdAt": "2026-10-10T19:26:08Z",
-    "updatedAt": "2026-11-12T15:50:35Z",
+    "updatedAt": "2026-11-16T06:17:18Z",
     "number": 777,
     "user": {
       "login": "promptless-for-oss",
@@ -3253,24 +3253,9 @@
     "hasFormalReview": true,
     "reviewState": "CHANGES_REQUESTED",
     "approvedBy": null,
-    "lastSubstantiveDate": "2026-11-04T09:03:28.000Z",
+    "lastSubstantiveDate": "2026-11-16T06:17:18.000Z",
     "author": "promptless-for-oss",
     "reviews": [
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T06:20:01Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T06:20:06Z"
-      },
-      {
-        "login": "promptless-for-oss",
-        "state": "COMMENTED",
-        "submittedAt": "2026-10-12T06:20:11Z"
-      },
       {
         "login": "promptless-for-oss",
         "state": "COMMENTED",
@@ -3405,27 +3390,24 @@
         "login": "promptless-for-oss",
         "state": "COMMENTED",
         "submittedAt": "2026-11-04T09:02:37Z"
+      },
+      {
+        "login": "shinde-rahul",
+        "state": "COMMENTED",
+        "submittedAt": "2026-11-16T06:14:57Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-11-16T06:15:51Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-11-16T06:17:18Z"
       }
     ],
     "comments": [
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T06:23:10Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T06:23:15Z",
-        "isBot": false,
-        "mentions": []
-      },
-      {
-        "login": "promptless-for-oss",
-        "createdAt": "2026-10-12T06:30:41Z",
-        "isBot": false,
-        "mentions": ["shinde-rahul"]
-      },
       {
         "login": "promptless-for-oss",
         "createdAt": "2026-10-12T11:08:43Z",
@@ -3587,6 +3569,24 @@
         "createdAt": "2026-11-04T09:03:28Z",
         "isBot": false,
         "mentions": ["shinde-rahul"]
+      },
+      {
+        "login": "shinde-rahul",
+        "createdAt": "2026-11-16T05:55:51Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-11-16T06:15:51Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-11-16T06:17:18Z",
+        "isBot": false,
+        "mentions": []
       }
     ],
     "reviewRequests": [
@@ -3611,8 +3611,8 @@
         "createdAt": "2026-11-04T09:09:29Z"
       }
     ],
-    "requestedReviewers": ["shinde-rahul", "favour-chibueze"],
-    "mergeableState": "blocked",
+    "requestedReviewers": ["favour-chibueze"],
+    "mergeableState": "behind",
     "baseRef": "8.0",
     "milestone": null,
     "linkedCodePrState": null
@@ -11098,6 +11098,360 @@
     "linkedCodePrState": null
   },
   {
+    "title": "fix(deps): update dependencies (non-major)",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1693",
+    "repo": "Virtual-Coffee/virtualcoffee.io",
+    "status": "Request review",
+    "createdAt": "2026-11-16T07:15:15Z",
+    "updatedAt": "2026-11-16T07:17:28Z",
+    "number": 1693,
+    "user": {
+      "login": "renovate[bot]",
+      "id": 29139614,
+      "node_id": "MDM6Qm90MjkxMzk2MTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/2740?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/renovate%5Bbot%5D",
+      "html_url": "https://github.com/apps/renovate",
+      "followers_url": "https://api.github.com/users/renovate%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/renovate%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/renovate%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/renovate%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/renovate%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/renovate%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/renovate%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/renovate%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/renovate%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["dependencies"],
+    "lastActor": "github-actions[bot]",
+    "isLastActorBot": true,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-11-16T07:16:15.000Z",
+    "author": "renovate[bot]",
+    "reviews": [],
+    "comments": [
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-11-16T07:15:19Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "netlify[bot]",
+        "createdAt": "2026-11-16T07:15:21Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "github-actions[bot]",
+        "createdAt": "2026-11-16T07:16:15Z",
+        "isBot": true,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Maintainers",
+        "actor": "renovate[bot]",
+        "createdAt": "2026-11-16T07:15:16Z"
+      },
+      {
+        "requestedReviewer": "Super Contributors",
+        "actor": "renovate[bot]",
+        "createdAt": "2026-11-16T07:15:16Z"
+      }
+    ],
+    "requestedReviewers": [],
+    "mergeableState": "blocked",
+    "baseRef": "main",
+    "milestone": null,
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "chore(deps): update tooling",
+    "url": "https://github.com/Virtual-Coffee/virtualcoffee.io/pull/1692",
+    "repo": "Virtual-Coffee/virtualcoffee.io",
+    "status": "Request review",
+    "createdAt": "2026-11-16T07:14:33Z",
+    "updatedAt": "2026-11-16T07:16:31Z",
+    "number": 1692,
+    "user": {
+      "login": "renovate[bot]",
+      "id": 29139614,
+      "node_id": "MDM6Qm90MjkxMzk2MTQ=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/2740?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/renovate%5Bbot%5D",
+      "html_url": "https://github.com/apps/renovate",
+      "followers_url": "https://api.github.com/users/renovate%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/renovate%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/renovate%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/renovate%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/renovate%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/renovate%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/renovate%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/renovate%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/renovate%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["dependencies"],
+    "lastActor": "github-actions[bot]",
+    "isLastActorBot": true,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-11-16T07:15:41.000Z",
+    "author": "renovate[bot]",
+    "reviews": [],
+    "comments": [
+      {
+        "login": "greptile-apps[bot]",
+        "createdAt": "2026-11-16T07:14:38Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "netlify[bot]",
+        "createdAt": "2026-11-16T07:14:40Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "github-actions[bot]",
+        "createdAt": "2026-11-16T07:15:41Z",
+        "isBot": true,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Maintainers",
+        "actor": "renovate[bot]",
+        "createdAt": "2026-11-16T07:14:34Z"
+      },
+      {
+        "requestedReviewer": "Super Contributors",
+        "actor": "renovate[bot]",
+        "createdAt": "2026-11-16T07:14:34Z"
+      }
+    ],
+    "requestedReviewers": [],
+    "mergeableState": "blocked",
+    "baseRef": "main",
+    "milestone": null,
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "chore(deps): bump rstcheck from 6.3.0 to 6.3.1 in /docs",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/942",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Request review",
+    "createdAt": "2026-11-16T06:59:56Z",
+    "updatedAt": "2026-11-16T06:59:59Z",
+    "number": 942,
+    "user": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["dependencies", "python"],
+    "isLastActorBot": false,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-11-16T06:59:54.000Z",
+    "author": "dependabot[bot]",
+    "reviews": [],
+    "comments": [],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:57Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:58Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:58Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.2",
+    "milestone": null,
+    "linkedCodePrState": null
+  },
+  {
+    "title": "chore(deps): bump myst-parser from 5.1.0 to 5.2.0 in /docs",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/941",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Request review",
+    "createdAt": "2026-11-16T06:59:24Z",
+    "updatedAt": "2026-11-16T06:59:28Z",
+    "number": 941,
+    "user": {
+      "login": "dependabot[bot]",
+      "id": 49699333,
+      "node_id": "MDM6Qm90NDk2OTkzMzM=",
+      "avatar_url": "https://avatars.githubusercontent.com/in/29110?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/dependabot%5Bbot%5D",
+      "html_url": "https://github.com/apps/dependabot",
+      "followers_url": "https://api.github.com/users/dependabot%5Bbot%5D/followers",
+      "following_url": "https://api.github.com/users/dependabot%5Bbot%5D/following{/other_user}",
+      "gists_url": "https://api.github.com/users/dependabot%5Bbot%5D/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/dependabot%5Bbot%5D/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/dependabot%5Bbot%5D/subscriptions",
+      "organizations_url": "https://api.github.com/users/dependabot%5Bbot%5D/orgs",
+      "repos_url": "https://api.github.com/users/dependabot%5Bbot%5D/repos",
+      "events_url": "https://api.github.com/users/dependabot%5Bbot%5D/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/dependabot%5Bbot%5D/received_events",
+      "type": "Bot",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": ["dependencies", "python"],
+    "isLastActorBot": false,
+    "hasFormalReview": false,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-11-16T06:59:21.000Z",
+    "author": "dependabot[bot]",
+    "reviews": [],
+    "comments": [],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:25Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:26Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "dependabot[bot]",
+        "createdAt": "2026-11-16T06:59:26Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.2",
+    "milestone": null,
+    "linkedCodePrState": "merged"
+  },
+  {
+    "title": "docs: Document message_type variable for Theme message templates (7.3)",
+    "url": "https://github.com/mautic/developer-documentation-new/pull/940",
+    "repo": "mautic/developer-documentation-new",
+    "status": "Request review",
+    "createdAt": "2026-11-16T02:06:28Z",
+    "updatedAt": "2026-11-16T02:06:51Z",
+    "number": 940,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": [],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-11-16T02:06:51.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-11-16T02:06:50Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-11-16T02:06:51Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-16T02:06:29Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-16T02:06:29Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-16T02:06:29Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "blocked",
+    "baseRef": "7.3",
+    "milestone": null,
+    "linkedCodePrState": "merged"
+  },
+  {
     "title": "docs: add Bengali (bn-BD) translation to community translations",
     "url": "https://github.com/OpenSource-Communities/intro/pull/326",
     "repo": "OpenSource-Communities/intro",
@@ -13674,6 +14028,99 @@
     "baseRef": "7.2",
     "milestone": null,
     "linkedCodePrState": "open"
+  },
+  {
+    "title": "docs: Update login screen screenshot for the new login page layout",
+    "url": "https://github.com/mautic/user-documentation/pull/1079",
+    "repo": "mautic/user-documentation",
+    "status": "Request review",
+    "createdAt": "2026-10-26T20:02:19Z",
+    "updatedAt": "2026-11-15T23:52:32Z",
+    "number": 1079,
+    "user": {
+      "login": "promptless-for-oss",
+      "id": 256490899,
+      "node_id": "U_kgDOD0m9kw",
+      "avatar_url": "https://avatars.githubusercontent.com/u/256490899?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/promptless-for-oss",
+      "html_url": "https://github.com/promptless-for-oss",
+      "followers_url": "https://api.github.com/users/promptless-for-oss/followers",
+      "following_url": "https://api.github.com/users/promptless-for-oss/following{/other_user}",
+      "gists_url": "https://api.github.com/users/promptless-for-oss/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/promptless-for-oss/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/promptless-for-oss/subscriptions",
+      "organizations_url": "https://api.github.com/users/promptless-for-oss/orgs",
+      "repos_url": "https://api.github.com/users/promptless-for-oss/repos",
+      "events_url": "https://api.github.com/users/promptless-for-oss/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/promptless-for-oss/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "isDraft": false,
+    "labels": [],
+    "lastActor": "promptless-for-oss",
+    "isLastActorBot": false,
+    "hasFormalReview": true,
+    "reviewState": null,
+    "approvedBy": null,
+    "lastSubstantiveDate": "2026-10-26T20:02:45.000Z",
+    "author": "promptless-for-oss",
+    "reviews": [
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T20:02:39Z"
+      },
+      {
+        "login": "promptless-for-oss",
+        "state": "COMMENTED",
+        "submittedAt": "2026-10-26T20:02:45Z"
+      }
+    ],
+    "comments": [
+      {
+        "login": "coderabbitai[bot]",
+        "createdAt": "2026-10-26T20:02:26Z",
+        "isBot": true,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T20:02:39Z",
+        "isBot": false,
+        "mentions": []
+      },
+      {
+        "login": "promptless-for-oss",
+        "createdAt": "2026-10-26T20:02:45Z",
+        "isBot": false,
+        "mentions": []
+      }
+    ],
+    "reviewRequests": [
+      {
+        "requestedReviewer": "Education Team Leaders",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-15T23:50:46Z"
+      },
+      {
+        "requestedReviewer": "adiati98",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-15T23:50:46Z"
+      },
+      {
+        "requestedReviewer": "favour-chibueze",
+        "actor": "promptless-for-oss",
+        "createdAt": "2026-11-15T23:50:46Z"
+      }
+    ],
+    "requestedReviewers": ["adiati98", "favour-chibueze"],
+    "mergeableState": "behind",
+    "baseRef": "7.3",
+    "milestone": null,
+    "linkedCodePrState": "merged"
   },
   {
     "title": "docs: Document how Campaign import handles event references (8.0)",
